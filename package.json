@@ -1,0 +1,31 @@
+{
+  "name": "rambdax",
+  "version": "0.1.0",
+  "description": "rambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "de": "git add . --all&&git commit -m update&&git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selfrefactor/rambdax.git"
+  },
+  "keywords": [
+    "rambda",
+    "ramda",
+    "util"
+  ],
+  "author": "self_refactor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/selfrefactor/rambdax/issues"
+  },
+  "homepage": "https://github.com/selfrefactor/rambdax#readme",
+  "dependencies": {
+    "rambda": "^0.5.6"
+  },
+  "devDependencies": {
+    "jest": "^19.0.2"
+  }
+}
