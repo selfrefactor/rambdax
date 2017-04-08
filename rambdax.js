@@ -81,7 +81,21 @@ function typeEquals(a,b){
 
   return R.type(a) === R.type(b)
 }
+
+function setDefault(inputArgument, defaultArgument){
+  return inputArgument === undefined || !(R.type(inputArgument)===R.type(defaultArgument)) ?
+  defaultArgument :
+  inputArgument
+}
+
+function setDefaultBy(inputArgument, defaultArgument, conditionFn){
+  return conditionFn(inputArgument) === true ?
+    inputArgument :
+    defaultArgument
+}
+
 // TODO benchmark between the static export vs Object.keys(...)
+exports.setDefault = setDefault
 exports.typeEquals = typeEquals
 exports.omitBy = omitBy
 exports.pickBy = pickBy
