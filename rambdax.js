@@ -6,14 +6,22 @@ function rangeBy(startNum, endNum, distance){
   } else if (distance === undefined) {
     return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
   }
-  
-  const willReturn = [startNum]
+
   const isInteger = !distance.toString().includes(".")
+  if(startNum>endNum){
+    const startNumHolder = startNum
+    startNum = endNum
+    endNum = startNumHolder
+    l(startNum, endNum)
+  }
+  const willReturn = [startNum]
   let valueToPush = startNum
+
   if(isInteger){
     const loopIndexes = R.range(0,Math.floor((endNum-startNum)/distance))
     for(const i of loopIndexes){
-      valueToPush += distance 
+      l(valueToPush)
+      valueToPush += distance
       willReturn.push(valueToPush)
     }
   }else{
@@ -22,15 +30,13 @@ function rangeBy(startNum, endNum, distance){
       R.last,
       R.split(".")
     )(distance.toString())
-    console.log(startNum.toFixed(decimalLength))
-    console.log(endNum.toFixed(decimalLength))
     const loopIndexes = R.range(0,Math.floor((endNum-startNum)/distance))
     for(const i of loopIndexes){
-      valueToPush = valueToPush+distance 
+      valueToPush = valueToPush+distance
       willReturn.push(Number(valueToPush.toFixed(decimalLength)))
     }
   }
-  
+
   return willReturn
 }
 
@@ -65,9 +71,18 @@ function pickBy(fn, obj){
 }
 
 function randomIndex(arr){
-  return arr[ Math.floor(arr.length * Math.random()) ] 
+  return arr[ Math.floor(arr.length * Math.random()) ]
+}
+
+function typeEquals(a,b){
+  if(b === undefined){
+    return bHolder => typeEquals(a, bHolder)
+  }
+
+  return R.type(a) === R.type(b)
 }
 // TODO benchmark between the static export vs Object.keys(...)
+exports.typeEquals = typeEquals
 exports.omitBy = omitBy
 exports.pickBy = pickBy
 exports.rangeBy = rangeBy
