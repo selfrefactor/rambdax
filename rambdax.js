@@ -7,7 +7,6 @@ function rangeBy(startNum, endNum, distance){
     return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
   }
   
-  
   const willReturn = [startNum]
   const isInteger = !distance.toString().includes(".")
   let valueToPush = startNum
@@ -35,11 +34,42 @@ function rangeBy(startNum, endNum, distance){
   return willReturn
 }
 
+function omitBy(fn, obj){
+  if (obj === undefined) {
+    return holder => omitBy(fn, holder)
+  }
+
+  const willReturn = {}
+  for (prop in obj) {
+    if (!fn(obj[prop],prop)) {
+      willReturn[ prop ] = obj[ prop ]
+    }
+  }
+
+  return willReturn
+}
+
+function pickBy(fn, obj){
+  if (obj === undefined) {
+    return holder => pickBy(fn, holder)
+  }
+
+  const willReturn = {}
+  for (prop in obj) {
+    if (fn(obj[prop],prop)) {
+      willReturn[ prop ] = obj[ prop ]
+    }
+  }
+
+  return willReturn
+}
+
 function randomIndex(arr){
   return arr[ Math.floor(arr.length * Math.random()) ] 
 }
-
 // TODO benchmark between the static export vs Object.keys(...)
+exports.omitBy = omitBy
+exports.pickBy = pickBy
 exports.rangeBy = rangeBy
 exports.randomIndex = randomIndex
 exports.add = R.add
