@@ -1,4 +1,40 @@
-const R = require("../rambdax")
+const R = require("../rambdaxX")
+const numArr = [0,1,2,3,4]
+const obj = {a:1,b:2}
+describe("allPass",()=>{
+  it("when returns true",()=>{
+    const conditionArr = [
+    val => val.a === 1,
+    val => val.b === 2,
+    ]
+    expect(
+      R.allPass(conditionArr,obj)
+    ).toBeTruthy()
+  })  
+  
+  it("when returns false",()=>{
+    const conditionArr = [
+    val => val.a === 1,
+    val => val.b === 3,
+    ]
+    expect(
+      R.allPass(conditionArr,obj)
+    ).toBeFalsy()
+  })  
+})  
+
+
+describe("all",()=>{
+  it("when returns true",()=>{
+    const fn = val => val > -1
+    expect(R.all(fn,numArr)).toBeTruthy()
+  })  
+  
+  it("when returns false",()=>{
+    const fn = val => val > 2
+    expect(R.all(fn,numArr)).toBeFalsy()
+  })  
+})  
 
 describe("rangeBy",()=>{
     it("",()=>{
