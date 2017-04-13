@@ -46,8 +46,6 @@ function omitBy(fn, obj){
   return willReturn
 }
 
-
-
 function pickBy(fn, obj){
 
   const willReturn = {}
@@ -114,11 +112,17 @@ function curry(fnToCurry){
     }else if(argumentsDiff === 1){
       return holder => fnToCurry(...curryArguments,holder)
     }else{
-      return aHolder => bHolder => fnToCurry(...curryArguments,aHolder, bHolder)
+      return (...helperArguments) => {
+        const argumentsHelperDiff = 2 - helperArguments.length
+        if(argumentsHelperDiff === 0){
+          return fnToCurry(...curryArguments, ...helperArguments)
+        }else{
+          return holder => fnToCurry(...curryArguments, ...helperArguments, holder)
+        }  
+      }
     }
   }
 }
-
 
 
 log("","r.sep")
@@ -126,7 +130,9 @@ const conditionA = x => x>0
 const conditionB = x => x>1 
 
 const a = () => {
-  return rangeBy(0)(1)(0.2)
+  let c = rangeBy(0)(1)
+  
+  return c(0.2)
 }
 
 
