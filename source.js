@@ -1,7 +1,14 @@
 const R = require("rambda")
 const log = require("log-fn");
 
-function rangeByRaw(startNum, endNum, distance){
+
+function rangeBy(startNum, endNum, distance){
+  if (endNum === undefined) {
+    return (endNumHolder, distanceHolder) => rangeBy(startNum, endNumHolder, distanceHolder)
+  } else if (distance === undefined) {
+    return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
+  }
+
   const isInteger = !distance.toString().includes(".")
   if(startNum>endNum){
     const startNumHolder = startNum
@@ -33,9 +40,11 @@ function rangeByRaw(startNum, endNum, distance){
   return willReturn
 }
 
-const rangeBy = curry(rangeByRaw) 
-
 function omitBy(fn, obj){
+  if (obj === undefined) {
+    return holder => omitBy(fn, holder)
+  }
+
   const willReturn = {}
   for (prop in obj) {
     if (!fn(obj[prop],prop)) {
@@ -46,9 +55,10 @@ function omitBy(fn, obj){
   return willReturn
 }
 
-
-
 function pickBy(fn, obj){
+  if (obj === undefined) {
+    return holder => pickBy(fn, holder)
+  }
 
   const willReturn = {}
   for (prop in obj) {
@@ -108,12 +118,16 @@ function both(firstFn,secondFn,input){
 
 function curry(fnToCurry){
   return (...curryArguments)=>{
+    console.log(curryArguments,2)
     const argumentsDiff = fnToCurry.length - curryArguments.length
     if(argumentsDiff <= 0){
+      console.log(0)
       return fnToCurry(...curryArguments)
     }else if(argumentsDiff === 1){
+      console.log(1,curryArguments)
       return holder => fnToCurry(...curryArguments,holder)
     }else{
+      console.log(2,curryArguments)
       return aHolder => bHolder => fnToCurry(...curryArguments,aHolder, bHolder)
     }
   }
@@ -121,12 +135,13 @@ function curry(fnToCurry){
 
 
 
-log("","r.sep")
+log("","box")
 const conditionA = x => x>0 
 const conditionB = x => x>1 
 
 const a = () => {
-  return rangeBy(0)(1)(0.2)
+  
+  return 1
 }
 
 
