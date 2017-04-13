@@ -35,15 +35,18 @@ function rangeByRaw(startNum, endNum, distance){
 
 const rangeBy = curry(rangeByRaw) 
 
-function omitBy(fn, obj){
-  const willReturn = {}
-  for (prop in obj) {
-    if (!fn(obj[prop],prop)) {
-      willReturn[ prop ] = obj[ prop ]
+function omitBy(x,y){
+  const omitByFn = (fn,obj)=>{
+    const willReturn = {}
+    for (prop in obj) {
+      if (!fn(obj[prop],prop)) {
+        willReturn[ prop ] = obj[ prop ]
+      }
     }
+  
+    return willReturn
   }
-
-  return willReturn
+  return curry(omitByFn)(x,y) 
 }
 
 function pickBy(fn, obj){
@@ -130,9 +133,8 @@ const conditionA = x => x>0
 const conditionB = x => x>1 
 
 const a = () => {
-  let c = rangeBy(0)(1)
   
-  return c(0.2)
+  return omitBy(x=>x === 1,{a:2,b:2})
 }
 
 
