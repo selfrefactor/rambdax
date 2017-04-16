@@ -97,6 +97,7 @@ function setDefaultBy(inputArgument, defaultArgument, conditionFn){
 function all(condition, arr){
   return R.filter(condition,arr).length === arr.length
 }
+
 const argb = {
   firstFn: a => a>2,
   secondFn: a => a>1,
@@ -136,19 +137,19 @@ function curry(fnToCurry){
 
 
 log("","box")
-const conditionA = x => x>0 
-const conditionB = x => x>1 
+const conditionA = x => x>0
+const conditionB = x => x>1
 
 const a = () => {
-  
+
   return 1
 }
 
 
 function pluck(keyToPluck,arr){
-  
+
 }
-// 
+//
 //R.pluck('a')([{a: 1}, {a: 2}]); //=> [1, 2]
 
 // TODO benchmark between the static export vs Object.keys(...)
