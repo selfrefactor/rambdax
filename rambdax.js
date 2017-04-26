@@ -70,28 +70,13 @@ function pickBy(fn, obj){
   return willReturn
 }
 
-function randomIndex(arr){
-  return arr[ Math.floor(arr.length * Math.random()) ]
-}
+const arg = {inputArgument: false,defaultArgument:true}
 
-function typeEquals(a,b){
-  if(b === undefined){
-    return bHolder => typeEquals(a, bHolder)
-  }
-
-  return R.type(a) === R.type(b)
-}
-
-function setDefault(inputArgument, defaultArgument){
+function defaultTo({defaultArgument, inputArgument}){
+  if(inputArgument === undefined){}
   return inputArgument === undefined || !(R.type(inputArgument)===R.type(defaultArgument)) ?
   defaultArgument :
   inputArgument
-}
-
-function setDefaultBy(inputArgument, defaultArgument, conditionFn){
-  return conditionFn(inputArgument) === true ?
-    inputArgument :
-    defaultArgument
 }
 
 function flip(fnToCurry){
@@ -134,13 +119,13 @@ function curry(fnToCurry){
   }
 }
 
-// TODO benchmark between the static export vs Object.keys(...)
-exports.setDefault = setDefault
-exports.typeEquals = typeEquals
+exports.curry = curry
+exports.defaultTo = defaultTo
+exports.flip = flip
 exports.omitBy = omitBy
 exports.pickBy = pickBy
 exports.rangeBy = rangeBy
-exports.randomIndex = randomIndex
+
 exports.add = R.add
 exports.adjust = R.adjust
 exports.any = R.any
