@@ -1,6 +1,7 @@
-const R = require("../rambdaxX")
+const R = require("../rambdax")
 const numArr = [0,1,2,3,4]
 const obj = {a:1,b:2}
+
 describe("allPass",()=>{
   it("when returns true",()=>{
     const conditionArr = [

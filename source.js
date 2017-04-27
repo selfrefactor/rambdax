@@ -1,6 +1,5 @@
 const R = require("rambda")
-const log = require("log-fn");
-
+const log = require("log-fn")
 
 function rangeBy(startNum, endNum, distance){
   if (endNum === undefined) {

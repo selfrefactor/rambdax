@@ -20,7 +20,6 @@ function rangeBy(startNum, endNum, distance){
   if(isInteger){
     const loopIndexes = R.range(0,Math.floor((endNum-startNum)/distance))
     for(const i of loopIndexes){
-      l(valueToPush)
       valueToPush += distance
       willReturn.push(valueToPush)
     }
@@ -94,7 +93,16 @@ function setDefaultBy(inputArgument, defaultArgument, conditionFn){
     defaultArgument
 }
 
-// TODO benchmark between the static export vs Object.keys(...)
+function all(condition, arr){
+  return R.filter(condition,arr).length === arr.length
+}
+
+function allPass(conditionArr,obj){
+  return !R.any(condition => !condition(obj))(conditionArr)
+}
+
+exports.all = all
+exports.allPass = allPass
 exports.setDefault = setDefault
 exports.typeEquals = typeEquals
 exports.omitBy = omitBy
