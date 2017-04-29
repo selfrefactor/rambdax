@@ -1,11 +1,36 @@
 const R = require("rambda")
 
+const cache = {}
+
+function memoize(fn,inputArguments){
+  if(inputArguments === undefined){
+    return inputArgumentsHolder => memoize(fn,inputArgumentsHolder)
+  }
+  const prop = `${JSON.stringify(inputArguments)}${R.take(20,fn.toString())}`
+  if(prop in cache){
+    return cache[prop]
+  } 
+  const result = fn(inputArguments)
+  cache[prop] = result
+  return result
+}
+
+exports.memoize = memoize
+
+var myMemoizeFunc = function (passedFunc) {
+    var cache = {};
+    return function (x) {
+        if (x in cache) return cache[x];
+        return cache[x] = passedFunc(x);
+    };
+}
+
 function once(fn,inputArguments){
   let result
   if(inputArguments === undefined){
       return inputArgumentsHolder => {
         if(result === undefined){
-        result = fn(inputArgumentsHolder)  
+          result = fn(inputArgumentsHolder)  
         }
         
         

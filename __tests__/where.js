@@ -1,5 +1,37 @@
 const R = require("../rambdax")
 
+describe("memoize",()=>{
+    it("",()=>{
+      var count = 0
+      var tester = R.memoize(n => {
+        count ++
+        return n+6
+      })  
+      tester(5)
+      tester(5)
+      tester(5)
+      
+      expect(
+        tester(5)
+      ).toEqual(11)
+      
+      expect(
+        count
+      ).toEqual(1)
+      
+      tester(6)
+      
+      expect(
+        tester(6)
+      ).toEqual(12)
+      
+      expect(
+        count
+      ).toEqual(2)
+    })
+    
+})
+
 describe("once",()=>{
     it("",()=>{
       const addOneOnce = R.once(x => x + 1)
