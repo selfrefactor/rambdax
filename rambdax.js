@@ -1,5 +1,24 @@
 const R = require("rambda")
 
+function mergeAll(arr){
+  let willReturn = {}
+  R.map(val =>{
+    willReturn = R.merge(willReturn,val)
+  }, arr)
+  return willReturn
+}
+
+exports.mergeAll = mergeAll
+
+function intersection(a,b){
+  if(b === undefined){
+    return bHolder => intersection(a,bHolder)
+  }
+  return R.filter(val=>b.includes(val))(a)
+}
+
+exports.intersection = intersection
+
 const cache = {}
 
 function memoize(fn,inputArguments){
@@ -9,7 +28,15 @@ function memoize(fn,inputArguments){
   const prop = `${JSON.stringify(inputArguments)}${R.take(20,fn.toString())}`
   if(prop in cache){
     return cache[prop]
-  } 
+  }
+  if(R.type(fn)==="Async"){
+    return new Promise(resolve =>{
+      fn(inputArguments).then(result=>{
+        cache[prop] = result
+        resolve(result)
+      })
+    })
+  }
   const result = fn(inputArguments)
   cache[prop] = result
   return result

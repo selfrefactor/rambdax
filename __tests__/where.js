@@ -1,5 +1,13 @@
 const R = require("../rambdax")
 
+describe("mergeAll",()=>{
+    it("",()=>{
+      expect(
+        R.mergeAll([{foo:1},{bar:2},{baz:3}])
+      ).toEqual({foo:1,bar:2,baz:3})
+    })
+})
+
 describe("memoize",()=>{
     it("",()=>{
       var count = 0
