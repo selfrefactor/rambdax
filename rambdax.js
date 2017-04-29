@@ -21,9 +21,9 @@ function helper({condition,inputArgument,prop}){
     })
 }    
 
-function when(conditions,inputArgument){
+function produce(conditions,inputArgument){
   if(inputArgument === undefined){
-    return inputArgumentHolder => when(conditions,inputArgumentHolder)
+    return inputArgumentHolder => produce(conditions,inputArgumentHolder)
   }
     
   if(R.type(conditions)==="Array"){
@@ -71,7 +71,7 @@ function when(conditions,inputArgument){
   })
 }
 
-exports.when = when
+exports.produce = produce
 
 function mergeAll(arr){
   let willReturn = {}

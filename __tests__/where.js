@@ -9,7 +9,7 @@ const delay = () => new Promise(resolve =>{
 describe("when",()=>{
     it("",async ()=>{
       
-      const whenWrapper = R.when({
+      const whenWrapper = R.produce({
         foo: async () => {
           const result = await delay()
           return result
