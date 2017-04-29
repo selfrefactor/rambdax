@@ -1,5 +1,34 @@
 const R = require("rambda")
 
+function once(fn,inputArguments){
+  let result
+  if(inputArguments === undefined){
+      return inputArgumentsHolder => {
+        if(result === undefined){
+        result = fn(inputArgumentsHolder)  
+        }
+        
+        
+        return result
+      }
+  }
+  
+  return result
+}
+
+exports.once = once
+
+function tap(fn,inputArguments){
+  if(inputArguments === undefined){
+    return inputArgumentsHolder => tap(fn,inputArgumentsHolder)
+  }
+  fn(inputArguments)
+  
+  return inputArguments
+}
+
+exports.tap = tap
+
 function where(conditions, obj){
   if(obj === undefined){
     return objHolder => where(conditions,objHolder)
