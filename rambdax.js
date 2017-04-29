@@ -1,5 +1,38 @@
 const R = require("rambda")
 
+function where(conditions, obj){
+  if(obj === undefined){
+    return objHolder => where(conditions,objHolder)
+  }
+  let flag = true
+  for(const prop in conditions){
+    const result = conditions[prop](obj[prop])
+    if(flag&&result===false){
+      flag = false
+    }
+  }
+  return flag
+}
+
+exports.where = where
+
+function pluck(keyToPluck,arr){
+  if(arr === undefined){
+    return arrHolder => pluck(keyToPluck, arrHolder)
+  }
+  const willReturn = []
+  R.map(
+    val =>{
+      if(!(val[keyToPluck]===undefined)){
+        willReturn.push(val[keyToPluck])
+      }
+    },
+    arr
+  )
+  return willReturn
+}
+exports.pluck = pluck
+
 function rangeBy(startNum, endNum, distance){
   if (endNum === undefined) {
     return (endNumHolder, distanceHolder) => rangeBy(startNum, endNumHolder, distanceHolder)
