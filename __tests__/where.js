@@ -1,5 +1,34 @@
 const R = require("../rambdax")
 
+const delay = () => new Promise(resolve =>{
+  setTimeout(()=>{
+    resolve(R.take(5,`${Math.random()}`))
+  },333)
+})
+
+describe("when",()=>{
+    it("",async ()=>{
+      
+      const whenWrapper = R.when({
+        foo: async () => {
+          const result = await delay()
+          return result
+        },
+        bar: inputArgument => inputArgument === 5
+      })
+      
+      const result = await whenWrapper(5)
+      
+      expect(
+        result.bar
+      ).toEqual(true)
+      
+      expect(
+        typeof result.foo
+      ).toEqual("string")
+    })
+})
+
 describe("intersection",()=>{
     it("",()=>{
       expect(
