@@ -1,9 +1,28 @@
 const R = require("rambda")
 
+function renameProps(renameCondition, inputObject){
+  if(inputObject === undefined){
+    return inputObjectHolder => renameProps(renameCondition, inputObjectHolder)
+  }
+  const renamed = {}
+  Object.keys(renameCondition).map(renameConditionProp =>{
+    if(Object.keys(inputObject).includes(renameConditionProp){
+      renamed[renameConditions[renameConditionProp]] = inputObject[renameConditionProp]
+    }
+  })
+  return R.merge(
+    renamed,
+    R.omit(
+      Object.keys(renameCondition),
+      inputObject
+      )
+    )
+}
+
 function helper({condition,inputArgument,prop}){
   return new Promise((resolve,reject) =>{
       if(!(R.type(condition)==="Async")){
-        resolve({
+        return resolve({
           type:prop,
           payload: condition(inputArgument)
         })
@@ -25,18 +44,12 @@ function produce(conditions,inputArgument){
   if(inputArgument === undefined){
     return inputArgumentHolder => produce(conditions,inputArgumentHolder)
   }
-    
-  if(R.type(conditions)==="Array"){
-      const willReturn = []
-      for(const condition of conditions){
-        willReturn.push(condition(inputArgument))
-      }
-      return willReturn
-  }
-
   let asyncConditionsFlag = false
   for(const prop in conditions){
-    if(R.type(conditions[prop])==="Async"){
+    if(
+    asyncConditionsFlag === false &&
+    R.type(conditions[prop])==="Async"
+    ){
       asyncConditionsFlag = true
     }
   }
