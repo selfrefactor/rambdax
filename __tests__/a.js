@@ -1,3 +1,4 @@
+const R = require("../rambdax")
 
 describe("flip with Rambda method", () => {
   const update = R.flip(R.update)

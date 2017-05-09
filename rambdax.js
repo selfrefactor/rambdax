@@ -1,90 +1,8 @@
 const R = require("rambda")
+exports.curry = require("./modules/curry")
+exports.renameProps = require("./modules/renameProps")
 
-function renameProps(renameCondition, inputObject){
-  if(inputObject === undefined){
-    return inputObjectHolder => renameProps(renameCondition, inputObjectHolder)
-  }
-  const renamed = {}
-  Object.keys(renameCondition).map(renameConditionProp =>{
-    if(Object.keys(inputObject).includes(renameConditionProp)){
-      renamed[renameConditions[renameConditionProp]] = inputObject[renameConditionProp]
-    }
-  })
-  return R.merge(
-    renamed,
-    R.omit(
-      Object.keys(renameCondition),
-      inputObject
-      )
-    )
-}
-
-function helper({condition,inputArgument,prop}){
-  return new Promise((resolve,reject) =>{
-      if(!(R.type(condition)==="Async")){
-        return resolve({
-          type:prop,
-          payload: condition(inputArgument)
-        })
-        
-      }
-      
-      condition(inputArgument)
-      .then(result =>{
-        resolve({
-          type:prop,
-          payload: result
-        })
-      })
-      .catch(err=> reject(err))
-    })
-}    
-
-function produce(conditions,inputArgument){
-  if(inputArgument === undefined){
-    return inputArgumentHolder => produce(conditions,inputArgumentHolder)
-  }
-  let asyncConditionsFlag = false
-  for(const prop in conditions){
-    if(
-    asyncConditionsFlag === false &&
-    R.type(conditions[prop])==="Async"
-    ){
-      asyncConditionsFlag = true
-    }
-  }
-  
-  if(asyncConditionsFlag === false){
-    const willReturn = {}
-    for(const prop in conditions){
-      willReturn[prop] = conditions[prop](inputArgument)
-    }
-    
-    return willReturn  
-  }
-  const promised = []
-  for(const prop in conditions){
-    const condition = conditions[prop]
-    promised.push(helper({inputArgument, condition,prop}))
-  }
-  
-  return new Promise((resolve,reject)=>{
-    Promise.all(promised)
-    .then(results =>{
-      
-      const willReturn = {}
-      
-      R.map(result => {
-        willReturn[result.type] = result.payload  
-      }, results)
-      
-      resolve(willReturn)
-    })
-    .catch(err=> reject(err))
-  })
-}
-
-exports.produce = produce
+exports.produce = require("./modules/produce")
 
 function mergeAll(arr){
   let willReturn = {}
@@ -298,26 +216,6 @@ function flip(fnToCurry){
   }
 }
 
-function curry(fnToCurry){
-  return (...curryArguments)=>{
-    const len = fnToCurry.length
-    if(curryArguments[1]===undefined){
-      if(len > 1){
-        return (...futureArguments) => {
-          if(len === 3 && futureArguments.length === 1){
-            return b => fnToCurry(curryArguments[0],futureArguments[0],b)
-          }
-         return fnToCurry(curryArguments[0],...futureArguments)
-        }
-      }
-    }else if(curryArguments[2]===undefined && len === 3){
-      return (futureArgument) => fnToCurry(...curryArguments,futureArgument)
-    }
-
-    return fnToCurry(...curryArguments)
-  }
-}
-
 function all(condition, arr){
   return R.filter(condition,arr).length === arr.length
 }
@@ -328,6 +226,7 @@ function allPass(conditionArr,obj){
 
 exports.all = all
 exports.allPass = allPass
+exports.flip = flip
 exports.defaultTo = defaultTo
 exports.omitBy = omitBy
 exports.pickBy = pickBy
