@@ -27,26 +27,30 @@ Simple `npm i rambdax` is sufficient
 
 ## API
 
-API documentation of Rambdax is from two parts:
+API documentation of Rambdax is from three parts:
 
-- Rambdax API
+- Rambda methods - a mirror of Rambda API documentation
 
-- Rambda API - methods coming from the parent library Rambda
+- Ramda methods - methods part of Ramda, but not implemented in Rambda
+
+- Custom methods - methods that are not part of neither Rambda nor Ramda
+
+
 ___
-## Rambdax API
+## Custom methods API
 
 #### produce
 
 > Typing:
 
 ```
-produce(
+R.produce(
   fnObject: Object,
   inputArgument: any
 ):Object
 ```
 
-> Example use:
+> Example:
 
 ```
 const conditions = {
@@ -72,6 +76,35 @@ values, which are result of each `conditions` value when
 `inputArgument` is the input. 
 
 #### renameProps
+
+> Typing:
+
+```
+R.renameProps(
+  renameObj: Object,
+  inputObj: Object
+): Object
+```
+
+> Example:
+
+```
+const renameObj = {
+  f: "foo",
+  b: "bar"
+}
+const inputObj = {
+  f:1,
+  b:2
+}
+const result = R.renameProps(renameObj, inputObj)
+const expectedResult = {
+  foo:1,
+  bar:2
+}
+
+```
+
 ___
 ## Rambda API
 
