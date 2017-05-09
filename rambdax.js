@@ -1,18 +1,10 @@
 const R = require("rambda")
+
 exports.curry = require("./modules/curry")
 exports.renameProps = require("./modules/renameProps")
-
 exports.produce = require("./modules/produce")
-
-function mergeAll(arr){
-  let willReturn = {}
-  R.map(val =>{
-    willReturn = R.merge(willReturn,val)
-  }, arr)
-  return willReturn
-}
-
-exports.mergeAll = mergeAll
+exports.mergeAll = require("./modules/mergeAll")
+exports.memoize = require("./modules/memoize")
 
 function intersection(a,b){
   if(b === undefined){
@@ -22,39 +14,6 @@ function intersection(a,b){
 }
 
 exports.intersection = intersection
-
-const cache = {}
-
-function memoize(fn,inputArguments){
-  if(inputArguments === undefined){
-    return inputArgumentsHolder => memoize(fn,inputArgumentsHolder)
-  }
-  const prop = `${JSON.stringify(inputArguments)}${R.take(20,fn.toString())}`
-  if(prop in cache){
-    return cache[prop]
-  }
-  if(R.type(fn)==="Async"){
-    return new Promise(resolve =>{
-      fn(inputArguments).then(result=>{
-        cache[prop] = result
-        resolve(result)
-      })
-    })
-  }
-  const result = fn(inputArguments)
-  cache[prop] = result
-  return result
-}
-
-exports.memoize = memoize
-
-var myMemoizeFunc = function (passedFunc) {
-    var cache = {};
-    return function (x) {
-        if (x in cache) return cache[x];
-        return cache[x] = passedFunc(x);
-    };
-}
 
 function once(fn,inputArguments){
   let result
