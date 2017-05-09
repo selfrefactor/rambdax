@@ -1,6 +1,6 @@
 # Rambdax
 
-Extended version of Rambda - utility library build for high speed and low size
+Extended version of Rambda(utility library) 
 
 ## Simple example
 
@@ -13,11 +13,67 @@ const result = R.compose(
 console.log(result) // => [3,4]
 ```
 
-## How to use?
+## How to use it?
 
 Simple `npm i rambdax` is sufficient
 
+## Differences between Rambda and Ramda
+
+- Rambda's **equals** doesn't protect against circular structures as **Ramda.equals** does
+
+- Rambda's **map/filter** works only for arrays, while Ramda's **map/filter** accept also objects
+
+- Rambda's **type** detect async functions. The returned value is `"Async"`
+
 ## API
+
+API documentation of Rambdax is from two parts:
+
+- Rambdax API
+
+- Rambda API - methods coming from the parent library Rambda
+___
+## Rambdax API
+
+#### produce
+
+> Typing:
+
+```
+produce(
+  fnObject: Object,
+  inputArgument: any
+):Object
+```
+
+> Example use:
+
+```
+const conditions = {
+  foo: a => a > 10,
+  bar: a => ({baz:a})
+}
+
+const result = R.produce(conditions, 7)
+
+const expectedResult = {
+  foo: false,
+  bar: {baz: 7}
+}
+// result === expectedResult
+```
+
+> Description
+
+`conditions` is an object with sync or async functions as values. 
+
+Those functions will be used to generate object with `conditions`'s props and 
+values, which are result of each `conditions` value when
+`inputArgument` is the input. 
+
+#### renameProps
+___
+## Rambda API
 
 #### add
 
