@@ -6,7 +6,7 @@ function renameProps(renameCondition, inputObject){
   }
   const renamed = {}
   Object.keys(renameCondition).map(renameConditionProp =>{
-    if(Object.keys(inputObject).includes(renameConditionProp){
+    if(Object.keys(inputObject).includes(renameConditionProp)){
       renamed[renameConditions[renameConditionProp]] = inputObject[renameConditionProp]
     }
   })
@@ -318,7 +318,6 @@ function curry(fnToCurry){
   }
 }
 
-<<<<<<< HEAD
 function all(condition, arr){
   return R.filter(condition,arr).length === arr.length
 }
@@ -329,13 +328,7 @@ function allPass(conditionArr,obj){
 
 exports.all = all
 exports.allPass = allPass
-exports.setDefault = setDefault
-exports.typeEquals = typeEquals
-=======
-exports.curry = curry
 exports.defaultTo = defaultTo
-exports.flip = flip
->>>>>>> 496252f5d8fc82d2abd42372a815860fae263487
 exports.omitBy = omitBy
 exports.pickBy = pickBy
 exports.rangeBy = rangeBy

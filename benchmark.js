@@ -1,4 +1,4 @@
-const R = require("./rambdaxX")
+const R = require("./rambdax")
 const Ramda = require("ramda")
 const Benchmark = require("benchmark")
 const benchmarks = require("beautify-benchmark")
@@ -29,7 +29,7 @@ if (options.all) {
 }
 
 const allPass = new Benchmark.Suite
-options.allPass = true
+options.allPass = false
 
 if (options.allPass) {
   const conditionArr = [
