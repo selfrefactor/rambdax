@@ -269,30 +269,56 @@ function pickBy(fn, obj){
   return willReturn
 }
 
-function randomIndex(arr){
-  return arr[ Math.floor(arr.length * Math.random()) ]
-}
+const arg = {inputArgument: false,defaultArgument:true}
 
-function typeEquals(a,b){
-  if(b === undefined){
-    return bHolder => typeEquals(a, bHolder)
-  }
-
-  return R.type(a) === R.type(b)
-}
-
-function setDefault(inputArgument, defaultArgument){
+function defaultTo({defaultArgument, inputArgument}){
+  if(inputArgument === undefined){}
   return inputArgument === undefined || !(R.type(inputArgument)===R.type(defaultArgument)) ?
   defaultArgument :
   inputArgument
 }
 
-function setDefaultBy(inputArgument, defaultArgument, conditionFn){
-  return conditionFn(inputArgument) === true ?
-    inputArgument :
-    defaultArgument
+function flip(fnToCurry){
+  return (...curryArguments)=>{
+    const len = fnToCurry.length
+    if(curryArguments[1]===undefined){
+      if(len > 1){
+        return (...futureArguments) => {
+          if(len === 3 && futureArguments.length === 1){
+            return holder => fnToCurry(holder,futureArguments[0],curryArguments[0])
+          }
+         return fnToCurry(...futureArguments.reverse(),curryArguments[0])
+        }
+      }
+    }else if(curryArguments[2]===undefined && len === 3){
+      return (futureArgument) => fnToCurry(futureArgument, ...curryArguments.reverse())
+    }
+
+    return fnToCurry(...curryArguments.reverse())
+  }
 }
 
+function curry(fnToCurry){
+  return (...curryArguments)=>{
+    const len = fnToCurry.length
+    if(curryArguments[1]===undefined){
+      if(len > 1){
+        return (...futureArguments) => {
+          if(len === 3 && futureArguments.length === 1){
+            return b => fnToCurry(curryArguments[0],futureArguments[0],b)
+          }
+         return fnToCurry(curryArguments[0],...futureArguments)
+        }
+      }
+    }else if(curryArguments[2]===undefined && len === 3){
+      return (futureArgument) => fnToCurry(...curryArguments,futureArgument)
+    }
+
+    return fnToCurry(...curryArguments)
+  }
+}
+
+<<<<<<< HEAD
 function all(condition, arr){
   return R.filter(condition,arr).length === arr.length
 }
@@ -305,10 +331,15 @@ exports.all = all
 exports.allPass = allPass
 exports.setDefault = setDefault
 exports.typeEquals = typeEquals
+=======
+exports.curry = curry
+exports.defaultTo = defaultTo
+exports.flip = flip
+>>>>>>> 496252f5d8fc82d2abd42372a815860fae263487
 exports.omitBy = omitBy
 exports.pickBy = pickBy
 exports.rangeBy = rangeBy
-exports.randomIndex = randomIndex
+
 exports.add = R.add
 exports.adjust = R.adjust
 exports.any = R.any
