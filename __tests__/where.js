@@ -91,9 +91,13 @@ describe("once",()=>{
 
 describe("tap",()=>{
     it("",()=>{
-      var sayX = x => console.log('x is ' + x);
+      let a = 1
+      var sayX = x => a = x;
       expect(
         R.tap(sayX, 100)
+      ).toEqual(100)
+      expect(
+        a
       ).toEqual(100)
     })
     
