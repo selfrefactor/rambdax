@@ -60,7 +60,7 @@ const expectedResult = {
   foo: false,
   bar: {baz: 7}
 }
-// result === expectedResult
+result === expectedResult // => true  
 ```
 
 > Description
@@ -95,16 +95,13 @@ R.adjust(a => a+1, 0, [0, 10, 20]) //=> [1, 10, 20]
 
 #### any
 
-- Returns true if at least one of elements of the list match the predicate,
-false otherwise.
-Dispatches to the any method of the second argument, if present.
-Acts as a transducer if a transformer is given in list position.
+> any(condition:Function,arr:Array)
+
+- Returns true if at least one member of `arr` returns true, when passed to the `condition` function.
 
 ```javascript
-var lessThan0 = R.flip(R.lt)(0);
-var lessThan2 = R.flip(R.lt)(2);
-R.any(lessThan0)([1, 2]); //=> false
-R.any(lessThan2)([1, 2]); //=> true
+R.any(a=> a*a>8)([1,2,3]) //=> true
+R.any(a=> a*a>10)([1,2,3]) //=> false
 ```
 
 #### append
