@@ -8,6 +8,7 @@ exports.memoize = require("./modules/memoize")
 exports.pickBy = require("./modules/pickBy")
 exports.once = require("./modules/once")
 exports.rangeBy = require("./modules/rangeBy")
+exports.flip = require("./modules/flip")
 
 function intersection(a,b){
   if(b === undefined){
@@ -89,13 +90,12 @@ function allPass(conditionArr,obj){
 
 exports.all = all
 exports.allPass = allPass
-exports.flip = flip
 exports.defaultTo = defaultTo
 exports.pluck = pluck
 exports.omitBy = omitBy
 exports.tap = tap
-exports.inters = intersection
-exports.rangeBy = rangeBy
+exports.intersection = intersection
+exports.where  = where
 
 exports.add = R.add
 exports.adjust = R.adjust
