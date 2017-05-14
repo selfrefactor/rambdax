@@ -3,8 +3,11 @@ const Ramda = require("ramda")
 const Benchmark = require("benchmark")
 const benchmarks = require("beautify-benchmark")
 
-const numArr = [0,1,2,3,4]
-const obj = {a:1,b:2}
+const numArr = [ 0, 1, 2, 3, 4 ]
+const obj = {
+  a : 1,
+  b : 2,
+}
 
 const options = {}
 
@@ -35,7 +38,7 @@ if (options.allPass) {
   const conditionArr = [
     val => val.a === 1,
     val => val.b === 2,
-    ]
+  ]
   allPass.add("Rambdax.all", () => {
     R.allPass(conditionArr, obj)
   })

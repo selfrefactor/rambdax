@@ -5,118 +5,119 @@ describe("flip with Rambda method", () => {
   it("no curring when single argument", () => {
     const len = R.flip(R.length)
     expect(
-      len([0,7,2])
+      len([ 0, 7, 2 ])
     ).toEqual(3)
   })
 
   it("no curring", () => {
     expect(
-      update([0,7,2],1,1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ], 1, 1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '2'", () => {
     expect(
-      update([0,7,2],1)(1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ], 1)(1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '2' '1'", () => {
     expect(
-      update([0,7,2])(1,1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ])(1, 1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '1' '1", () => {
     expect(
-      update([0,7,2])(1)(1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ])(1)(1)
+    ).toEqual([ 0, 1, 2 ])
   })
 })
 
-
 describe("flip with custom function", () => {
-  function updateFn(index, newValue, arr){
+  function updateFn (index, newValue, arr) {
     const arrClone = Array.from(arr)
+
     return arrClone.fill(newValue, index, index + 1)
   }
   const update = R.flip(updateFn)
 
   it("no curring", () => {
     expect(
-      update([0,7,2],1,1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ], 1, 1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '2'", () => {
     expect(
-      update([0,7,2],1)(1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ], 1)(1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '2' '1'", () => {
     expect(
-      update([0,7,2])(1,1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ])(1, 1)
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '1' '1", () => {
     expect(
-      update([0,7,2])(1)(1)
-    ).toEqual([ 0,1,2 ])
+      update([ 0, 7, 2 ])(1)(1)
+    ).toEqual([ 0, 1, 2 ])
   })
 })
 
 describe("curry with custom function", () => {
-  function updateFn(index, newValue, arr){
+  function updateFn (index, newValue, arr) {
     const arrClone = Array.from(arr)
+
     return arrClone.fill(newValue, index, index + 1)
   }
   const update = R.curry(updateFn)
   it("no curring", () => {
     expect(
-      update(1,1,[0,7,2])
-    ).toEqual([ 0,1,2 ])
+      update(1, 1, [ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '2'", () => {
     expect(
-      update(1)(1,[0,7,2])
-    ).toEqual([ 0,1,2 ])
+      update(1)(1, [ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '2' '1'", () => {
     expect(
-      update(1,1)([0,7,2])
-    ).toEqual([ 0,1,2 ])
+      update(1, 1)([ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curring type '1' '1' '1", () => {
     expect(
-      update(1)(1)([0,7,2])
-    ).toEqual([ 0,1,2 ])
+      update(1)(1)([ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 })
 
 describe("common cases", () => {
   it("curry", () => {
-    const up = R.curry(R.update)(1,1)
+    const up = R.curry(R.update)(1, 1)
     expect(
-      up([0,7,2])
-    ).toEqual([ 0,1,2 ])
+      up([ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curry", () => {
     const up = R.curry(R.update)(1)
     expect(
-      up(1)([0,7,2])
-    ).toEqual([ 0,1,2 ])
+      up(1)([ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
 
   it("curry", () => {
     expect(
-      R.curry(R.update)(1)(1)([0,7,2])
-    ).toEqual([ 0,1,2 ])
+      R.curry(R.update)(1)(1)([ 0, 7, 2 ])
+    ).toEqual([ 0, 1, 2 ])
   })
   it("flip", () => {
     expect(

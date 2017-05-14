@@ -1538,9 +1538,9 @@ qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-rambda@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.5.6.tgz#5240e5a620d18734b830a74bffcb941b00d5e178"
+rambda@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.5.7.tgz#a4cf3c7a78afebf0a372059bb112823d393b2bdf"
 
 ramda@^0.23.0:
   version "0.23.0"

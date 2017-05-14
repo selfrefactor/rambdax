@@ -1,101 +1,21 @@
 const R = require("rambda")
 
+exports.all = require("./modules/all")
+exports.allPass = require("./modules/allPass")
+exports.both = require("./modules/both")
 exports.curry = require("./modules/curry")
-exports.renameProps = require("./modules/renameProps")
-exports.produce = require("./modules/produce")
-exports.mergeAll = require("./modules/mergeAll")
-exports.memoize = require("./modules/memoize")
-exports.pickBy = require("./modules/pickBy")
-exports.once = require("./modules/once")
-exports.rangeBy = require("./modules/rangeBy")
 exports.flip = require("./modules/flip")
-
-function intersection(a,b){
-  if(b === undefined){
-    return bHolder => intersection(a,bHolder)
-  }
-  return R.filter(val=>b.includes(val))(a)
-}
-
-function tap(fn,inputArguments){
-  if(inputArguments === undefined){
-    return inputArgumentsHolder => tap(fn,inputArgumentsHolder)
-  }
-  fn(inputArguments)
-  
-  return inputArguments
-}
-
-function where(conditions, obj){
-  if(obj === undefined){
-    return objHolder => where(conditions,objHolder)
-  }
-  let flag = true
-  for(const prop in conditions){
-    const result = conditions[prop](obj[prop])
-    if(flag&&result===false){
-      flag = false
-    }
-  }
-  return flag
-}
-
-exports.where = where
-
-function pluck(keyToPluck,arr){
-  if(arr === undefined){
-    return arrHolder => pluck(keyToPluck, arrHolder)
-  }
-  const willReturn = []
-  R.map(
-    val =>{
-      if(!(val[keyToPluck]===undefined)){
-        willReturn.push(val[keyToPluck])
-      }
-    },
-    arr
-  )
-  return willReturn
-}
-
-function omitBy(fn, obj){
-  if (obj === undefined) {
-    return holder => omitBy(fn, holder)
-  }
-
-  const willReturn = {}
-  for (prop in obj) {
-    if (!fn(obj[prop],prop)) {
-      willReturn[ prop ] = obj[ prop ]
-    }
-  }
-
-  return willReturn
-}
-
-function defaultTo({defaultArgument, inputArgument}){
-  if(inputArgument === undefined){}
-  return inputArgument === undefined || !(R.type(inputArgument)===R.type(defaultArgument)) ?
-  defaultArgument :
-  inputArgument
-}
-
-function all(condition, arr){
-  return R.filter(condition,arr).length === arr.length
-}
-
-function allPass(conditionArr,obj){
-  return !R.any(condition => !condition(obj))(conditionArr)
-}
-
-exports.all = all
-exports.allPass = allPass
-exports.defaultTo = defaultTo
-exports.pluck = pluck
-exports.omitBy = omitBy
-exports.tap = tap
-exports.intersection = intersection
-exports.where  = where
+exports.intersection = require("./modules/intersection")
+exports.memoize = require("./modules/memoize")
+exports.mergeAll = require("./modules/mergeAll")
+exports.omitBy = require("./modules/omitBy")
+exports.once = require("./modules/once")
+exports.pickBy = require("./modules/pickBy")
+exports.produce = require("./modules/produce")
+exports.rangeBy = require("./modules/rangeBy")
+exports.renameProps = require("./modules/renameProps")
+exports.tap = require("./modules/tap")
+exports.where = require("./modules/where")
 
 exports.add = R.add
 exports.adjust = R.adjust
@@ -104,6 +24,7 @@ exports.append = R.append
 exports.compose = R.compose
 exports.contains = R.contains
 exports.drop = R.drop
+exports.defaultTo = R.defaultTo
 exports.dropLast = R.dropLast
 exports.equals = R.equals
 exports.filter = R.filter
@@ -122,6 +43,7 @@ exports.merge = R.merge
 exports.omit = R.omit
 exports.path = R.path
 exports.pick = R.pick
+exports.pluck = R.pluck
 exports.prepend = R.prepend
 exports.prop = R.prop
 exports.propEq = R.propEq

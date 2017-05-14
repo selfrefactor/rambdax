@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.5.6"
+    "rambda": "^0.5.7"
   },
   "devDependencies": {
     "beautify-benchmark": "^0.2.4",

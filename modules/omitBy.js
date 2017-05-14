@@ -1,11 +1,11 @@
-function pickBy (fn, obj) {
+function omitBy (fn, obj) {
   if (obj === undefined) {
-    return holder => pickBy(fn, holder)
+    return holder => omitBy(fn, holder)
   }
 
   const willReturn = {}
   for (prop in obj) {
-    if (fn(obj[ prop ], prop)) {
+    if (!fn(obj[ prop ], prop)) {
       willReturn[ prop ] = obj[ prop ]
     }
   }
@@ -13,4 +13,4 @@ function pickBy (fn, obj) {
   return willReturn
 }
 
-module.exports = pickBy
+module.exports = omitBy

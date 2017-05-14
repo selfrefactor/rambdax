@@ -27,71 +27,6 @@ Simple `npm i rambdax` is sufficient
 
 ## API
 
-#### produce
-
-> Typing:
-
-```
-R.produce(
-  fnObject: Object,
-  inputArgument: any
-): Object
-```
-
-> Example:
-
-```
-const conditions = {
-  foo: a => a > 10,
-  bar: a => ({baz:a})
-}
-
-const result = R.produce(conditions, 7)
-
-const expectedResult = {
-  foo: false,
-  bar: {baz: 7}
-}
-result === expectedResult // => true
-```
-
-> Description
-
-`conditions` is an object with sync or async functions as values.
-
-Those functions will be used to generate object with `conditions`'s props and
-values, which are result of each `conditions` value when
-`inputArgument` is the input.
-
-#### renameProps
-
-> Typing:
-
-```
-R.renameProps(
-  renameObj: Object,
-  inputObj: Object
-): Object
-```
-
-> Example:
-
-```
-const renameObj = {
-  f: "foo",
-  b: "bar"
-}
-const inputObj = {
-  f:1,
-  b:2
-}
-const result = R.renameProps(renameObj, inputObj)
-const expectedResult = {
-  foo:1,
-  bar:2
-}
-```
-
 ---
 
 #### add
@@ -111,6 +46,17 @@ R.add(2, 3) //=>  5
 ```javascript
 R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
 ```
+
+#### all
+
+> adjust(replaceFn: Function, i:Number, arr:Array): Array
+
+- Replaces `i` index in `arr` with the result of `replaceFn(arr[i])`
+
+```javascript
+R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
+```
+
 
 #### any
 
@@ -597,4 +543,70 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
+```
+
+---
+#### produce
+
+> Typing:
+
+```
+R.produce(
+  fnObject: Object,
+  inputArgument: any
+): Object
+```
+
+> Example:
+
+```
+const conditions = {
+  foo: a => a > 10,
+  bar: a => ({baz:a})
+}
+
+const result = R.produce(conditions, 7)
+
+const expectedResult = {
+  foo: false,
+  bar: {baz: 7}
+}
+result === expectedResult // => true
+```
+
+> Description
+
+`conditions` is an object with sync or async functions as values.
+
+Those functions will be used to generate object with `conditions`'s props and
+values, which are result of each `conditions` value when
+`inputArgument` is the input.
+
+#### renameProps
+
+> Typing:
+
+```
+R.renameProps(
+  renameObj: Object,
+  inputObj: Object
+): Object
+```
+
+> Example:
+
+```
+const renameObj = {
+  f: "foo",
+  b: "bar"
+}
+const inputObj = {
+  f:1,
+  b:2
+}
+const result = R.renameProps(renameObj, inputObj)
+const expectedResult = {
+  foo:1,
+  bar:2
+}
 ```
