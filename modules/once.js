@@ -1,16 +1,24 @@
-function once (fn, inputArguments) {
-  let result
-  if (inputArguments === undefined) {
-    return inputArgumentsHolder => {
-      if (result === undefined) {
-        result = fn(inputArgumentsHolder)
-      }
+const curry = require("./curry")
 
-      return result
-    }
+function onceFn(fn, context) {
+	var result;
+
+	return function() {
+		if(fn) {
+			result = fn.apply(context || this, arguments);
+			fn = null;
+		}
+
+		return result;
+	};
+}
+
+function once(fn, context){
+  if(arguments.length === 1){
+    const a = onceFn(fn,context)
+    return curry(a)
   }
-
-  return result
+  return onceFn(fn,context)
 }
 
 module.exports = once
