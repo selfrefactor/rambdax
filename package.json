@@ -1,8 +1,8 @@
 {
   "name": "rambdax",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "rambda",
-  "main": "index.js",
+  "main": "rambdax.js",
   "scripts": {
     "test": "jest",
     "de": "git add . --all&&git commit -m update&&git push"
