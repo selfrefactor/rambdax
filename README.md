@@ -49,14 +49,29 @@ R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
 
 #### all
 
-> adjust(replaceFn: Function, i:Number, arr:Array): Array
+> all(condition: Function, arr:Array): Boolean
 
-- Replaces `i` index in `arr` with the result of `replaceFn(arr[i])`
+- Returns `true` if all members of `arr` are returning `true` when passed to `condition`
 
 ```javascript
-R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
+const condition = a => a > 0
+R.all(condition, [1, 2]) //=> true
 ```
 
+#### allPass
+
+> allPass(conditions: Array<Function>, obj:Object): Boolean
+
+- Returns `true` if each member of `conditions` is returning `true` when called with `obj`
+
+```javascript
+const conditions = [
+  a => a.foo > 0,
+  a => a.bar > 0,
+]
+R.allPass(conditions, {foo: 1, bar: 2}) //=> true
+R.allPass(conditions, {foo: 1, bar: 0}) //=> pass
+```
 
 #### any
 
@@ -77,6 +92,19 @@ R.any(a => a * a > 10)([1, 2, 3]) //=> false
 R.append('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
 ```
 
+#### both
+
+> both(conditionA: Function, conditionB: Function, input: any): Boolean
+
+Returns `true` if `conditionA` and `conditionB` return `true` when called with `input`
+
+```javascript
+const conditionA = a => a > 1
+const conditionB = a => a < 10
+R.both(conditionA, conditionB, 2) //=> true
+R.both(conditionA, conditionB, 0) //=> false
+```
+
 #### contains
 
 > contains(valueToFind: any, arr: Array): Boolean
@@ -86,6 +114,21 @@ Returns true if `valueToFind` is part of `arr`
 ```javascript
 R.contains(2, [1, 2]) //=> true
 R.contains(3, [1, 2]) //=> false
+```
+
+#### curry
+
+> curry(functionToCurry: Function): Function
+
+Returns a curried equivalent of `functionToCurry`
+
+Note that it works with functions receiving no more than 3 inputs
+
+```javascript
+const fn = (a, b, c) => [].concat(a, b, c)
+const fnCurried = R.curry(fn)
+const fnWrapped = fnCurried(3, 5)
+fnWrapped(7) //=> [3, 5, 7]
 ```
 
 #### defaultTo
@@ -122,6 +165,19 @@ Returns `arrOrStr` with `howManyToDrop` items dropped from the right
 ```javascript
 R.dropLast(1, ['foo', 'bar', 'baz']) //=> ['foo', 'bar']
 R.dropLast(1, 'foo')  //=> 'fo'
+```
+
+#### either
+
+> either(conditionA: Function, conditionB: Function, input: any): Boolean
+
+Returns `true` if `conditionA` or `conditionB` return `true` when called with `input`
+
+```javascript
+const conditionA = a => a % 2 === 0
+const conditionB = a => a < 10
+R.either(conditionA, conditionB, 2) //=> true
+R.either(conditionA, conditionB, 11) //=> false
 ```
 
 #### equals
@@ -183,6 +239,20 @@ R.flatten([ 1, [ 2, [ 3 ] ] ]
 //=> [ 1, 2, 3 ]
 ```
 
+#### flip
+
+> flip(fn: Function): Function
+
+Returns function `fn` but with reversed order of input arguments
+
+Note that it works with functions receiving no more than 3 inputs
+
+```javascript
+const fn = (a, b, c) => [].concat(a, b, c)
+const fnFlipped = R.flip(fn)
+flipped(3,5,7) //=> [7, 5, 3]
+```
+
 #### head
 
 > head(arrOrStr: Array|String): any
@@ -205,6 +275,17 @@ R.indexOf(1, [1, 2]) //=> 0
 ```
 
 #### init
+
+> init(arrOrStr: Array|String): Array|String
+
+- Returns all but the last element of `arrOrStr`
+
+```javascript
+R.init([1, 2, 3])  //=> [1, 2]
+R.init('foo')  //=> 'fo'
+```
+
+#### intersection
 
 > init(arrOrStr: Array|String): Array|String
 
