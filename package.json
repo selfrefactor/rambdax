@@ -2,7 +2,7 @@
   "name": "rambdax",
   "version": "0.3.0",
   "description": "rambda",
-  "main": "index.js",
+  "main": "rambdax.js",
   "scripts": {
     "build": "run-s node-build node-minify",
     "test": "jest",
