@@ -1,6 +1,6 @@
 {
   "name": "rambdax",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "rambda",
   "main": "index.js",
   "scripts": {
