@@ -4,8 +4,10 @@
   "description": "rambda",
   "main": "index.js",
   "scripts": {
+    "build": "run-s node-build node-minify",
     "test": "jest",
-    "de": "git add . --all&&git commit -m update&&git push"
+    "node-build": "webpack",
+    "node-minify": "sr m minify f index.js o _"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.5.7"
+    "rambda": "*"
   },
   "devDependencies": {
     "beautify-benchmark": "^0.2.4",

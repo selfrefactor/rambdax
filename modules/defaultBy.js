@@ -1,0 +1,3 @@
+function defaultBy(conditions, inputArgument){
+  
+}
