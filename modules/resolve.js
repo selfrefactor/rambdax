@@ -1,13 +1,7 @@
 const R = require("rambda")
 
-const delay = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-
-function resolveAll (promises) {
-  return new Promise((resolve, reject) => {
+function resolve (promises) {
+  return new Promise((res, rej) => {
     let counter = 0
     const props = {}
     const promisedArr = []
@@ -18,26 +12,16 @@ function resolveAll (promises) {
     }
     Promise.all(promisedArr)
     .then(result => {
-      console.log(result)
       const willReturn = {}
       result.map((val, key) => {
         const prop = props[ key ]
         willReturn[ prop ] = val
       })
 
-      resolve(willReturn)
+      res(willReturn)
     })
-      .catch(reject)
+      .catch(rej)
   })
 }
 
-const a = async () => {
-  const promises = {
-    a : delay(1),
-    b : delay(2),
-    c : delay(3),
-  }
-  const result = await resolveAll(promises)
-
-  return result
-}
+module.exports = resolve
