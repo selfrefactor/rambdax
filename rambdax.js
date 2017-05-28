@@ -18,6 +18,8 @@ exports.rangeBy = require("./modules/rangeBy")
 exports.renameProps = require("./modules/renameProps")
 exports.tap = require("./modules/tap")
 exports.where = require("./modules/where")
+exports.resolve = require("./modules/resolve")
+exports.race = require("./modules/race")
 
 exports.add = R.add
 exports.adjust = R.adjust
