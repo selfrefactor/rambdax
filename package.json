@@ -6,6 +6,7 @@
   "scripts": {
     "build": "run-s node-build node-minify",
     "test": "jest",
+    "cover": "jest --coverage",
     "node-build": "webpack",
     "node-minify": "sr m minify f index.js o _"
   },
