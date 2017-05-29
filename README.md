@@ -25,9 +25,189 @@ Simple `npm i rambdax` is sufficient
 
 - Rambda's **type** detect async functions. The returned value is `"Async"`
 
+## Differences between Rambda and Ramdax
+
+Rambdax passthrough all `Rambda`'s methods and introduce some new functions.
+
+The idea of `Rambdax` is to extend `Rambda` while keeping the main library lean and focused.
+
 ## API
 
 ---
+
+### API part I - Rambdax own methods
+
+#### produce
+
+> Typing:
+
+```
+R.produce(
+fnObject: Object,
+inputArgument: any
+): Object
+```
+
+> Example:
+
+```
+const conditions = {
+foo: a => a > 10,
+bar: a => ({baz:a})
+}
+
+const result = R.produce(conditions, 7)
+
+const expectedResult = {
+foo: false,
+bar: {baz: 7}
+}
+result === expectedResult // => true
+```
+
+> Description
+
+`conditions` is an object with sync or async functions as values.
+
+Those functions will be used to generate object with `conditions`'s props and
+values, which are result of each `conditions` value when
+`inputArgument` is the input.
+
+#### race
+
+> race(promises: Object): Object
+
+`promises` is object with thenable values.
+
+The thenables are resolved with `Promise.race` to object with a single property.
+This property is the key of the first resolved(rejected) promise in `promises`.
+
+```
+const delay = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : delay(1),
+  b : delay(2),
+}
+
+R.race(promises)
+.then(result =>{
+  // => { a: 1 }
+})
+```
+
+```
+const delay = ms => new Promise((resolve,reject) => {
+  setTimeout(() => {
+    reject(ms)
+  }, ms)
+})
+const promises = {
+  a : delay(1),
+  b : delay(2),
+}
+R.race(promises)
+.then(console.log)
+.catch(err =>{
+  // => { a: 1 }
+})
+```
+
+#### renameProps
+
+> Typing:
+
+```
+R.renameProps(
+  renameObj: Object,
+  inputObj: Object
+): Object
+```
+
+> Example:
+
+```
+const renameObj = {
+  f: "foo",
+  b: "bar"
+}
+const inputObj = {
+  f:1,
+  b:2
+}
+const result = R.renameProps(renameObj, inputObj)
+const expectedResult = {
+  foo:1,
+  bar:2
+}
+```
+
+#### resolve
+
+> resolve(promises: Object): Object
+
+`promises` is object with thenable values.
+
+All the thenables are resolved with `Promise.all` to object, which
+props are the keys of `promises` and which values are the resolved results.
+
+```
+const delay = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : delay(1),
+  b : delay(2),
+  c : delay(3),
+}
+const result = await R.resolve(promises)
+// => { a:1, b:2, c:3 }
+```
+
+#### tap
+
+> tap(fn: Function, inputArgument: T): T
+
+Execute `fn` with `inputArgument` as argument and returns `inputArgument`
+
+```
+const fn = a => console.log(a)
+const result = R.tap(fn, "foo")
+// logs "foo"
+// `result` is "foo"
+```
+
+#### where
+
+> where(conditions: Object, obj: Object): Boolean
+
+```
+const condition = R.where({
+  a : aProp => typeof aProp === "string",
+  b : bProp => bProp === 4
+})
+
+condition({
+  a : "foo",
+  b : 4,
+  c : 11,
+}) //=> true
+
+condition({
+  a : 1,
+  b : 4,
+  c : 11,
+}) //=> false
+```
+
+---
+
+### Methods inherited from Rambda
 
 #### add
 
@@ -624,70 +804,4 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
-```
-
----
-#### produce
-
-> Typing:
-
-```
-R.produce(
-  fnObject: Object,
-  inputArgument: any
-): Object
-```
-
-> Example:
-
-```
-const conditions = {
-  foo: a => a > 10,
-  bar: a => ({baz:a})
-}
-
-const result = R.produce(conditions, 7)
-
-const expectedResult = {
-  foo: false,
-  bar: {baz: 7}
-}
-result === expectedResult // => true
-```
-
-> Description
-
-`conditions` is an object with sync or async functions as values.
-
-Those functions will be used to generate object with `conditions`'s props and
-values, which are result of each `conditions` value when
-`inputArgument` is the input.
-
-#### renameProps
-
-> Typing:
-
-```
-R.renameProps(
-  renameObj: Object,
-  inputObj: Object
-): Object
-```
-
-> Example:
-
-```
-const renameObj = {
-  f: "foo",
-  b: "bar"
-}
-const inputObj = {
-  f:1,
-  b:2
-}
-const result = R.renameProps(renameObj, inputObj)
-const expectedResult = {
-  foo:1,
-  bar:2
-}
 ```
