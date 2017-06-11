@@ -1,6 +1,6 @@
 # Rambdax
 
-Extended version of Rambda(utility library)
+Extended version of Rambda(utility library) - [Documentation](https://selfrefactor.github.io/rambdax/#/)
 
 ## Simple example
 
