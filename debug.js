@@ -1,44 +1,38 @@
 const R = require("./rambdax")
 
-function debounce(func, wait) {
-  let timeout
-  return function() {
-    let context = this,
-      args = arguments
-    const later = function() {
-      timeout = null
-      func.apply(context, args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
+const stringify = a => {
+  if(R.type(a)==="String"){
+    return a
   }
+  let willReturn = ""
+  if(R.type(a)==="Array"){
+    a.map(val=>{
+      willReturn += `${stringify(val)}_`
+    })
+    return R.init(willReturn)
+  }else if(R.type(a)==="Object"){
+    for(const prop in a){
+      willReturn += `${prop}_${stringify(a[prop])}_`
+    }
+    return R.init(willReturn)
+  }else if(["Function","Async"].includes(R.type(a))){
+    return R.replace(/\s/g,"_",R.take(15,a.toString()))
+  }
+  return `${a}`
 }
 
-let counter = 0
-
-const inc = () => {
-  counter++
-}
 
 const delay = ms => new Promise(resolve => {
   setTimeout(resolve, ms)
 })
 
 const debug = async() => {
-  const incWrapped = debounce(inc, 500)
-  incWrapped()
-  console.log(counter === 0, counter)
-  await delay(200)
-  incWrapped()
-  console.log(counter === 0, counter)
-  await delay(200)
-  incWrapped()
-  console.log(counter === 0, counter)
-  await delay(200)
-  incWrapped()
-  console.log(counter === 0, counter)
-  await delay(700)
-  console.log(counter === 1, counter)
+  let a = [1,2,3]
+  console.log(stringify(a))   
+  a = [1,{a:1},3]
+  console.log(stringify(a)) 
+  a = [1,{a:[1,2,null,a => a]},3]
+  console.log(stringify(a))
 }
 
 debug()
