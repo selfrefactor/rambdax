@@ -4,28 +4,13 @@ const cache = {}
 const stringify = a => {
   if(R.type(a)==="String"){
     return a
-  }
-  let willReturn = ""
-  if(R.type(a)==="Array"){
-    R.take(3,a).map(val=>{
-      willReturn += `${stringify(val)}_`
-    })
-    return R.init(willReturn)
-  }else if(R.type(a)==="Object"){
-    let counter = 0
-    for(const prop in a){
-      if(counter<3){
-        willReturn += `${prop}_${stringify(a[prop])}_`
-        counter++
-      }
-    }
-    return R.init(willReturn)
   }else if(["Function","Async"].includes(R.type(a))){
     const compacted = R.replace(/\s{1,}/g," ",a.toString())
     return R.replace(/\s/g,"_",R.take(15,compacted))
   }
-  return `${a}`
+  return JSON.stringify(a)
 }
+
 
 const generateProp = (fn, ...inputArguments) => {
   let propString = ""
@@ -41,6 +26,7 @@ function memoize (fn, ...inputArguments) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder) 
   }
   const prop = generateProp(fn, ...inputArguments)
+  console.log(prop)
   if (prop in cache) {
     return cache[ prop ]
   }
