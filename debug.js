@@ -1,15 +1,17 @@
 const R = require("./rambdax")
-function throttle (callback, limit) {
-    var wait = false;                  // Initially, we're not waiting
-    return function () {               // We return a throttled function
-        if (!wait) {                   // If we're not waiting
-            callback.call();           // Execute users function
-            wait = true;               // Prevent future invocations
-            setTimeout(function () {   // After a period of time
-                wait = false;          // And allow future invocations
-            }, limit);
-        }
+
+function debounce(func, wait) {
+  let timeout
+  return function() {
+    let context = this,
+      args = arguments
+    const later = function() {
+      timeout = null
+      func.apply(context, args)
     }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
 }
 
 let counter = 0
@@ -19,19 +21,24 @@ const inc = () => {
 }
 
 const delay = ms => new Promise(resolve => {
-  setTimeout(resolve,ms)
+  setTimeout(resolve, ms)
 })
 
-const debug = async () => {
-  const incWrapped = throttle(inc,1000)
-  await delay(500)
+const debug = async() => {
+  const incWrapped = debounce(inc, 500)
   incWrapped()
+  console.log(counter === 0, counter)
+  await delay(200)
   incWrapped()
+  console.log(counter === 0, counter)
+  await delay(200)
   incWrapped()
-  console.log(counter === 1)
-  await delay(1500)
+  console.log(counter === 0, counter)
+  await delay(200)
   incWrapped()
-  console.log(counter === 2, counter)
+  console.log(counter === 0, counter)
+  await delay(700)
+  console.log(counter === 1, counter)
 }
 
 debug()
