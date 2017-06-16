@@ -1,3 +1,0 @@
-function defaultBy(conditions, inputArgument){
-  
-}

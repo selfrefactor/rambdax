@@ -63,6 +63,58 @@ expect(
 ).toBeTruthy()
 ```
 
+#### both
+
+```
+const fn = R.both(
+  a => a > 10,
+  a => a < 20
+)
+fn(15) //=> true
+fn(30) //=> false
+```
+
+#### debounce
+
+```
+it("", async() => {
+  let counter = 0
+  const inc = () => {
+    counter++
+  }
+
+  const delay = ms => new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+  const incWrapped = debounce(inc, 500)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(700)
+  expect(counter).toBe(1)
+})
+```
+
+#### either
+
+```
+const fn = R.either(
+  a => a > 10,
+  a => a % 2 === 0
+)
+fn(15) //=> true
+fn(6) //=> true
+fn(7) //=> false
+```
+
 #### flip
 
 Switch first and second arguments of provided function
@@ -70,6 +122,38 @@ Switch first and second arguments of provided function
 const fn = (a,b) => a-b
 const flipped = R.flip(fn)
 flipped(4,1) //=> -3
+```
+
+#### intersection
+
+```
+R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
+```
+
+#### isValid
+
+Full copy of [json-validity](https://github.com/selfrefactor/json-validity) library
+
+```
+const songSchema = {
+  published: "number",
+  style: [ "rock", "jazz" ],
+  title: "string",
+}
+
+const song = {
+  published: 1975,
+  style: "rock",
+  title: "In my time of dying",
+}
+
+R.isValid(song,songSchema) // => true
+```
+
+#### memoize
+
+```
+
 ```
 
 #### omitBy
