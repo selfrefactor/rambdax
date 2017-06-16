@@ -2259,13 +2259,13 @@ querystring@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
-rambda@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.6.1.tgz#efac71532b5be28ffe42c13e22bd196296d40dc4"
+rambda@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.7.0.tgz#689448ea2f7b65399f0534064c33d4afd6303538"
 
-ramda@^0.24.0:
-  version "0.24.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.0.tgz#fb91232d64d239319f78f5a9ba5486e003b91af7"
+ramda@^0.24.1:
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.24.1.tgz#c3b7755197f35b8dc3502228262c4c91ddb6b857"
 
 randomatic@^1.1.3:
   version "1.1.6"

@@ -1,5 +1,4 @@
-const curry = require("./curry")
-
+const {curry} = require("rambda")
 function onceFn(fn, context) {
 	var result;
 
