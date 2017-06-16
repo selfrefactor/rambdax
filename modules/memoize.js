@@ -26,7 +26,6 @@ function memoize (fn, ...inputArguments) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder) 
   }
   const prop = generateProp(fn, ...inputArguments)
-  console.log(prop)
   if (prop in cache) {
     return cache[ prop ]
   }
