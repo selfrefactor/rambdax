@@ -1,21 +1,22 @@
 const {curry} = require("rambda")
+
 function onceFn(fn, context) {
-	var result;
+	let result
 
 	return function() {
 		if(fn) {
-			result = fn.apply(context || this, arguments);
-			fn = null;
+			result = fn.apply(context || this, arguments)
+			fn = null
 		}
 
-		return result;
-	};
+		return result
+	}
 }
 
 function once(fn, context){
   if(arguments.length === 1){
-    const a = onceFn(fn,context)
-    return curry(a)
+    const wrap = onceFn(fn,context)
+    return curry(wrap)
   }
   return onceFn(fn,context)
 }

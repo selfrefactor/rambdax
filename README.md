@@ -29,13 +29,80 @@ Simple `npm i rambdax` is sufficient
 
 Rambdax passthrough all `Rambda`'s methods and introduce some new functions.
 
-The idea of `Rambdax` is to extend `Rambda` while keeping the main library lean and focused.
+The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatability.
 
 ## API
 
 ---
 
 ### API part I - Rambdax own methods
+
+#### all
+
+```
+it("when returns true", () => {
+  const numArr = [ 0, 1, 2, 3, 4 ]  
+  const fn = val => val > -1
+  expect(R.all(fn, numArr)).toBeTruthy()
+})
+```
+
+#### allPass
+
+```
+const obj = {
+  a : 1,
+  b : 2,
+}
+const conditionArr = [
+  val => val.a === 1,
+  val => val.b === 2,
+]
+expect(
+  R.allPass(conditionArr, obj)
+).toBeTruthy()
+```
+
+#### flip
+
+Switch first and second arguments of provided function
+```
+const fn = (a,b) => a-b
+const flipped = R.flip(fn)
+flipped(4,1) //=> -3
+```
+
+#### omitBy
+
+```
+const input = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+}
+const fn = val => val < 3
+const expectedResult = {
+  c: 3,
+  d: 4,
+}
+expect(R.omitBy(fn, input)).toEqual(expectedResult)
+```
+
+#### once
+
+```
+let counter = 0
+const once = R.once((x) => {
+  counter++
+  return x + 2
+})
+once(1)
+once(1)
+once(1)
+once(1)
+expect(counter).toEqual(1)
+```
 
 #### produce
 
@@ -209,6 +276,7 @@ condition({
 
 ### Methods inherited from Rambda
 
+
 #### add
 
 > add(a: Number, b: Number): Number
@@ -225,32 +293,6 @@ R.add(2, 3) //=>  5
 
 ```javascript
 R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
-```
-
-#### all
-
-> all(condition: Function, arr:Array): Boolean
-
-- Returns `true` if all members of `arr` are returning `true` when passed to `condition`
-
-```javascript
-const condition = a => a > 0
-R.all(condition, [1, 2]) //=> true
-```
-
-#### allPass
-
-> allPass(conditions: Array<Function>, obj:Object): Boolean
-
-- Returns `true` if each member of `conditions` is returning `true` when called with `obj`
-
-```javascript
-const conditions = [
-  a => a.foo > 0,
-  a => a.bar > 0,
-]
-R.allPass(conditions, {foo: 1, bar: 2}) //=> true
-R.allPass(conditions, {foo: 1, bar: 0}) //=> pass
 ```
 
 #### any
@@ -272,19 +314,6 @@ R.any(a => a * a > 10)([1, 2, 3]) //=> false
 R.append('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
 ```
 
-#### both
-
-> both(conditionA: Function, conditionB: Function, input: any): Boolean
-
-Returns `true` if `conditionA` and `conditionB` return `true` when called with `input`
-
-```javascript
-const conditionA = a => a > 1
-const conditionB = a => a < 10
-R.both(conditionA, conditionB, 2) //=> true
-R.both(conditionA, conditionB, 0) //=> false
-```
-
 #### contains
 
 > contains(valueToFind: any, arr: Array): Boolean
@@ -298,17 +327,16 @@ R.contains(3, [1, 2]) //=> false
 
 #### curry
 
-> curry(functionToCurry: Function): Function
+> curry(fn: Function): Function
 
-Returns a curried equivalent of `functionToCurry`
-
-Note that it works with functions receiving no more than 3 inputs
+Returns curried version of `fn`
 
 ```javascript
-const fn = (a, b, c) => [].concat(a, b, c)
-const fnCurried = R.curry(fn)
-const fnWrapped = fnCurried(3, 5)
-fnWrapped(7) //=> [3, 5, 7]
+const addFourNumbers = (a, b, c, d) => a + b + c + d
+const curriedAddFourNumbers = R.curry(addFourNumbers)
+const f = curriedAddFourNumbers(1, 2)
+const g = f(3)
+g(4) // => 10
 ```
 
 #### defaultTo
@@ -345,19 +373,6 @@ Returns `arrOrStr` with `howManyToDrop` items dropped from the right
 ```javascript
 R.dropLast(1, ['foo', 'bar', 'baz']) //=> ['foo', 'bar']
 R.dropLast(1, 'foo')  //=> 'fo'
-```
-
-#### either
-
-> either(conditionA: Function, conditionB: Function, input: any): Boolean
-
-Returns `true` if `conditionA` or `conditionB` return `true` when called with `input`
-
-```javascript
-const conditionA = a => a % 2 === 0
-const conditionB = a => a < 10
-R.either(conditionA, conditionB, 2) //=> true
-R.either(conditionA, conditionB, 11) //=> false
 ```
 
 #### equals
@@ -419,18 +434,15 @@ R.flatten([ 1, [ 2, [ 3 ] ] ]
 //=> [ 1, 2, 3 ]
 ```
 
-#### flip
+#### has
 
-> flip(fn: Function): Function
+> has(prop: String, obj: Object): Boolean
 
-Returns function `fn` but with reversed order of input arguments
-
-Note that it works with functions receiving no more than 3 inputs
+- Returns `true` if `obj` has property `prop`
 
 ```javascript
-const fn = (a, b, c) => [].concat(a, b, c)
-const fnFlipped = R.flip(fn)
-flipped(3,5,7) //=> [7, 5, 3]
+R.has("a", {a: 1}) //=> true
+R.has("b", {a: 1}) //=> false
 ```
 
 #### head
@@ -455,17 +467,6 @@ R.indexOf(1, [1, 2]) //=> 0
 ```
 
 #### init
-
-> init(arrOrStr: Array|String): Array|String
-
-- Returns all but the last element of `arrOrStr`
-
-```javascript
-R.init([1, 2, 3])  //=> [1, 2]
-R.init('foo')  //=> 'fo'
-```
-
-#### intersection
 
 > init(arrOrStr: Array|String): Array|String
 
@@ -554,24 +555,47 @@ R.path(['a', 'b'], {a: {b: 2}}) //=> 2
 R.path(['a', 'c'], {a: {b: 2}}) //=> undefined
 ```
 
+#### partialCurry
+
+> partialCurry(fn: Function|Async, a: Object, b: Object): Function|Promise
+
+When called with function `fn` and first set of input `a`, it will return a function.
+
+This function will wait to be called with second set of input `b` and it will invoke `fn` with the merged object of `a` over `b`.
+
+`fn` can be asynchronous function. In that case a `Promise` holding the result of `fn` is returned.
+
+See the example below:
+
+```javascript
+const fn = ({a, b, c}) => {
+  return (a * b) + c
+}
+const curried = R.partialCurry(fn, {a: 2})
+curried({b: 3, c: 10}) //=> 16
+```
+- Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
+
+- You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
+
 #### pick
 
 > pick(propsToPick: Array<String>, obj: Object): Object
 
 - Returns a partial copy of an `obj` containing only `propsToPick` properties
 
-```javascript
+```
 R.pick(['a', 'c'], {a: 1, b: 2}) //=> {a: 1}
 ```
 
 #### pluck
 
-> pluck(prop: String, arr: Array<Object>): Array
+> pluck(property: String, arr: Array): Array
 
-- Returns list of the values of property `prop` taken from the objects in `arr`
+- Returns list of the values of `property` taken from the objects in array of objects `arr`
 
-```javascript
-R.pluck('a')([{a: 1}, {a: 2}]) //=> [1, 2]
+```
+R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) //=> [1, 2]
 ```
 
 #### prepend
@@ -582,13 +606,15 @@ R.pluck('a')([{a: 1}, {a: 2}]) //=> [1, 2]
 R.prepend('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
 ```
 
-#### prop(propToFind: String, obj: Object): any
+#### prop
+
+> prop(propToFind: String, obj: Object): any
 
 Returns `undefined` or the value of property `propToFind` in `obj`
 
 ```javascript
 R.prop('x', {x: 100}) //=> 100
-R.prop('x', {}) //=> undefined
+R.prop('x', {a: 1}) //=> undefined
 ```
 
 #### propEq
@@ -648,6 +674,8 @@ R.sort(sortFn, [3, 1, 2]) //=> [1, 2, 3]
 ```
 
 #### sortBy
+
+> sortBy(sortFn: Function, arr: Array): Array
 
 Returns copy of `arr` sorted by `sortFn`
 
@@ -805,3 +833,4 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
 ```
+---

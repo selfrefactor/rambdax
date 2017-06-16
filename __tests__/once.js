@@ -1,11 +1,11 @@
 const R = require("../rambdax")
 
 describe("once", () => {
-  it("",()=>{
+  it("", () => {
     let counter = 0
-    const once = R.once((x)=>{
+    const once = R.once((x) => {
       counter++
-      return x+2
+      return x + 2
     })
     once(1)
     once(1)
@@ -14,3 +14,4 @@ describe("once", () => {
     expect(counter).toEqual(1)
   })
 })
+

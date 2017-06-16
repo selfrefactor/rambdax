@@ -1,6 +1,6 @@
 const R = require("../rambdax")
 
-describe("path", () => {
+describe.skip("path", () => {
   it("", () => {
     expect(
         R.path("a.b.c")({a:{b:{c:1}}})
