@@ -153,7 +153,62 @@ R.isValid(song,songSchema) // => true
 #### memoize
 
 ```
+describe("memoize", () => {
+  it("normal function", () => {
+    let counter = 0
+    const fn = (a,b) =>{
+      counter++
+      return a+b
+    }
+    const memoized = R.memoize(fn)
+    expect(memoized(1,2)).toBe(3)
+    expect(memoized(1,2)).toBe(3)
+    expect(memoized(1,2)).toBe(3)
+    expect(counter).toBe(1)
+    expect(memoized(2,2)).toBe(4)
+    expect(counter).toBe(2)
+    expect(memoized(1,2)).toBe(3)
+    expect(counter).toBe(2)
+  })
+  
+  it("async function", async () => {
+    let counter = 0
+    const delay = ms => new Promise(resolve => {
+      setTimeout(resolve, ms)
+    })
+    const fn = async (ms,a,b) => {
+      await delay(ms)
+      counter++
+      return a+b
+    }
+    
+    const memoized = R.memoize(fn)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(counter).toBe(1)
+    expect(await memoized(100,2,2)).toBe(4)
+    expect(counter).toBe(2)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(counter).toBe(2)
+  })
+})
+```
 
+#### mergeAll
+
+```
+const arr = [
+  {a:1},
+  {b:2},
+  {c:3}
+]
+const expectedResult = {
+  a:1,
+  b:2,
+  c:3
+}
+expect(R.mergeAll(arr)).toEqual(expectedResult)
 ```
 
 #### omitBy
@@ -176,16 +231,27 @@ expect(R.omitBy(fn, input)).toEqual(expectedResult)
 #### once
 
 ```
-let counter = 0
-const once = R.once((x) => {
-  counter++
-  return x + 2
-})
-once(1)
-once(1)
-once(1)
-once(1)
-expect(counter).toEqual(1)
+const addOneOnce = R.once((a, b, c) => a + b + c)
+
+expect(addOneOnce(10,20,30)).toBe(60)
+expect(addOneOnce(40)).toEqual(60)
+```
+
+#### pickBy
+
+```
+const input = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+}
+const fn = val => val > 2
+const expectedResult = {
+  c: 3,
+  d: 4,
+}
+expect(R.pickBy(fn, input)).toEqual(expectedResult)
 ```
 
 #### produce
@@ -240,13 +306,13 @@ const delay = ms => new Promise(resolve => {
   }, ms)
 })
 const promises = {
-  a : delay(1),
-  b : delay(2),
+  a : delay(20),
+  b : delay(10),
 }
 
 R.race(promises)
 .then(result =>{
-  // => { a: 1 }
+  // => { a: 10 }
 })
 ```
 
@@ -265,6 +331,24 @@ R.race(promises)
 .catch(err =>{
   // => { a: 1 }
 })
+```
+
+#### random
+
+```
+const randomResult = R.random(1, 10)
+expect(randomResult).toBeLessThanOrEqual(10)
+expect(randomResult).toBeGreaterThanOrEqual(1)
+```
+
+#### rangeBy
+```
+expect(
+  R.rangeBy(0, 10, 2)
+).toEqual([0, 2, 4, 6, 8, 10])
+expect(
+  R.rangeBy(0, 2, 0.3)
+).toEqual([0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8])
 ```
 
 #### renameProps
@@ -296,7 +380,7 @@ const expectedResult = {
 }
 ```
 
-#### resolve
+#### resolveObj
 
 > resolve(promises: Object): Object
 
