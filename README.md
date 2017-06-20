@@ -380,7 +380,7 @@ const expectedResult = {
 }
 ```
 
-#### resolveObj
+#### resolve
 
 > resolve(promises: Object): Object
 

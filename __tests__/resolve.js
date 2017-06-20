@@ -8,16 +8,17 @@ describe("resolve", () => {
       }, ms)
     })
     const promises = {
-      a : delay(1),
-      b : delay(2),
-      c : delay(3),
+      a: delay(1),
+      b: delay(2),
+      c: delay(3),
     }
-    const result = await R.resolveObj(promises)
+    const result = await R.resolve(promises)
 
     expect(result).toEqual({
-      a:1,
-      b:2,
-      c:3,
+      a: 1,
+      b: 2,
+      c: 3,
     })
   })
 })
+

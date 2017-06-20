@@ -20,7 +20,7 @@ exports.race = require("./modules/race")
 exports.random = require("./modules/random")
 exports.rangeBy = require("./modules/rangeBy")
 exports.renameProps = require("./modules/renameProps")
-exports.resolveObj = require("./modules/resolveObj")
+exports.resolve = require("./modules/resolve")
 exports.tap = require("./modules/tap")
 exports.where = require("./modules/where")
 
