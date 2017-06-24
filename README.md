@@ -115,6 +115,22 @@ fn(6) //=> true
 fn(7) //=> false
 ```
 
+#### filterObj
+
+```
+const fn = (val, prop) => val > 2 || prop === "b"
+const obj = {
+  a: 1,
+  b: 2,
+  c: 3
+}
+const result = R.filterObj(fn)(obj)
+expect(result).toEqual({
+  b: 2,
+  c: 3
+})
+```
+
 #### flip
 
 Switch first and second arguments of provided function
