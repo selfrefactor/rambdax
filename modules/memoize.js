@@ -1,12 +1,24 @@
 const R = require('rambda') 
 const cache = {}
 
+const normalizeObject = obj => {
+  const sortFn = (a,b) => a > b
+  const willReturn = {}
+  R.compose(
+    R.map(prop => willReturn[prop] = obj[prop]),
+    R.sort(sortFn)
+  )(Object.keys(obj))
+  return willReturn
+}
+
 const stringify = a => {
   if(R.type(a)==="String"){
     return a
   }else if(["Function","Async"].includes(R.type(a))){
     const compacted = R.replace(/\s{1,}/g," ",a.toString())
     return R.replace(/\s/g,"_",R.take(15,compacted))
+  }else if(R.type(a) === "Object"){
+    a = normalizeObject(a)
   }
   return JSON.stringify(a)
 }

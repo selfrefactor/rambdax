@@ -3,6 +3,29 @@ const R = require("../rambdax")
 describe("memoize", () => {
   it("normal function", () => {
     let counter = 0
+    const fn = ({a,b,c}) =>{
+      counter++
+      return a+b-c
+    }
+    const memoized = R.memoize(fn)
+    expect(memoized({
+      a:1,
+      c:3,
+      b:2
+    })).toBe(0)
+    expect(counter).toBe(1)
+    expect(memoized({
+      b:2,
+      c:3,
+      a:1,
+    })).toBe(0)
+    expect(counter).toBe(1)
+  })
+})
+
+describe("memoize", () => {
+  it("normal function", () => {
+    let counter = 0
     const fn = (a,b) =>{
       counter++
       return a+b
