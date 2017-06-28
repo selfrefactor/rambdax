@@ -1,6 +1,6 @@
 # Rambdax
 
-Extended version of Rambda(utility library)
+Extended version of Rambda(utility library) - [Documentation](https://selfrefactor.github.io/rambdax/#/)
 
 ## Simple example
 
@@ -29,13 +29,266 @@ Simple `npm i rambdax` is sufficient
 
 Rambdax passthrough all `Rambda`'s methods and introduce some new functions.
 
-The idea of `Rambdax` is to extend `Rambda` while keeping the main library lean and focused.
+The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatability.
 
 ## API
 
 ---
 
 ### API part I - Rambdax own methods
+
+#### all
+
+```
+it("when returns true", () => {
+  const numArr = [ 0, 1, 2, 3, 4 ]  
+  const fn = val => val > -1
+  expect(R.all(fn, numArr)).toBeTruthy()
+})
+```
+
+#### allPass
+
+```
+const obj = {
+  a : 1,
+  b : 2,
+}
+const conditionArr = [
+  val => val.a === 1,
+  val => val.b === 2,
+]
+expect(
+  R.allPass(conditionArr, obj)
+).toBeTruthy()
+```
+
+#### both
+
+```
+const fn = R.both(
+  a => a > 10,
+  a => a < 20
+)
+fn(15) //=> true
+fn(30) //=> false
+```
+
+#### compact
+
+```
+const arr = [
+  1,
+  null,
+  undefined,
+  false,
+  "",
+  " ",
+  "foo", {},
+  [],
+  [1],
+  /\s/g
+]
+const result = R.compact(arr)
+const expectedResult = [1, false, " ", "foo", [1]]
+expect(result).toEqual(expectedResult)
+```
+
+#### debounce
+
+```
+it("", async() => {
+  let counter = 0
+  const inc = () => {
+    counter++
+  }
+
+  const delay = ms => new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+  const incWrapped = debounce(inc, 500)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(200)
+  incWrapped()
+  expect(counter).toBe(0)
+  await delay(700)
+  expect(counter).toBe(1)
+})
+```
+
+#### either
+
+```
+const fn = R.either(
+  a => a > 10,
+  a => a % 2 === 0
+)
+fn(15) //=> true
+fn(6) //=> true
+fn(7) //=> false
+```
+
+#### filterObj
+
+```
+const fn = (val, prop) => val > 2 || prop === "b"
+const obj = {
+  a: 1,
+  b: 2,
+  c: 3
+}
+const result = R.filterObj(fn)(obj)
+expect(result).toEqual({
+  b: 2,
+  c: 3
+})
+```
+
+#### flip
+
+Switch first and second arguments of provided function
+```
+const fn = (a,b) => a-b
+const flipped = R.flip(fn)
+flipped(4,1) //=> -3
+```
+
+#### intersection
+
+```
+R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
+```
+
+#### isValid
+
+Full copy of [json-validity](https://github.com/selfrefactor/json-validity) library
+
+```
+const songSchema = {
+  published: "number",
+  style: [ "rock", "jazz" ],
+  title: "string",
+}
+
+const song = {
+  published: 1975,
+  style: "rock",
+  title: "In my time of dying",
+}
+
+R.isValid(song,songSchema) // => true
+```
+
+#### memoize
+
+```
+describe("memoize", () => {
+  it("normal function", () => {
+    let counter = 0
+    const fn = (a,b) =>{
+      counter++
+      return a+b
+    }
+    const memoized = R.memoize(fn)
+    expect(memoized(1,2)).toBe(3)
+    expect(memoized(1,2)).toBe(3)
+    expect(memoized(1,2)).toBe(3)
+    expect(counter).toBe(1)
+    expect(memoized(2,2)).toBe(4)
+    expect(counter).toBe(2)
+    expect(memoized(1,2)).toBe(3)
+    expect(counter).toBe(2)
+  })
+  
+  it("async function", async () => {
+    let counter = 0
+    const delay = ms => new Promise(resolve => {
+      setTimeout(resolve, ms)
+    })
+    const fn = async (ms,a,b) => {
+      await delay(ms)
+      counter++
+      return a+b
+    }
+    
+    const memoized = R.memoize(fn)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(counter).toBe(1)
+    expect(await memoized(100,2,2)).toBe(4)
+    expect(counter).toBe(2)
+    expect(await memoized(100,1,2)).toBe(3)
+    expect(counter).toBe(2)
+  })
+})
+```
+
+#### mergeAll
+
+```
+const arr = [
+  {a:1},
+  {b:2},
+  {c:3}
+]
+const expectedResult = {
+  a:1,
+  b:2,
+  c:3
+}
+expect(R.mergeAll(arr)).toEqual(expectedResult)
+```
+
+#### omitBy
+
+```
+const input = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+}
+const fn = val => val < 3
+const expectedResult = {
+  c: 3,
+  d: 4,
+}
+expect(R.omitBy(fn, input)).toEqual(expectedResult)
+```
+
+#### once
+
+```
+const addOneOnce = R.once((a, b, c) => a + b + c)
+
+expect(addOneOnce(10,20,30)).toBe(60)
+expect(addOneOnce(40)).toEqual(60)
+```
+
+#### pickBy
+
+```
+const input = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+}
+const fn = val => val > 2
+const expectedResult = {
+  c: 3,
+  d: 4,
+}
+expect(R.pickBy(fn, input)).toEqual(expectedResult)
+```
 
 #### produce
 
@@ -89,13 +342,13 @@ const delay = ms => new Promise(resolve => {
   }, ms)
 })
 const promises = {
-  a : delay(1),
-  b : delay(2),
+  a : delay(20),
+  b : delay(10),
 }
 
 R.race(promises)
 .then(result =>{
-  // => { a: 1 }
+  // => { a: 10 }
 })
 ```
 
@@ -114,6 +367,24 @@ R.race(promises)
 .catch(err =>{
   // => { a: 1 }
 })
+```
+
+#### random
+
+```
+const randomResult = R.random(1, 10)
+expect(randomResult).toBeLessThanOrEqual(10)
+expect(randomResult).toBeGreaterThanOrEqual(1)
+```
+
+#### rangeBy
+```
+expect(
+  R.rangeBy(0, 10, 2)
+).toEqual([0, 2, 4, 6, 8, 10])
+expect(
+  R.rangeBy(0, 2, 0.3)
+).toEqual([0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8])
 ```
 
 #### renameProps
@@ -169,6 +440,12 @@ const result = await R.resolve(promises)
 // => { a:1, b:2, c:3 }
 ```
 
+#### shuffle
+
+> shuffle(arr: Array): Array
+
+Returns randomized copy of `arr` 
+
 #### tap
 
 > tap(fn: Function, inputArgument: T): T
@@ -180,6 +457,30 @@ const fn = a => console.log(a)
 const result = R.tap(fn, "foo")
 // logs "foo"
 // `result` is "foo"
+```
+
+#### throttle
+
+> throttle(callback: Function, ms: Number): Function
+
+```
+let counter = 0
+const inc = () => {
+  counter++
+}
+
+const delay = ms => new Promise(resolve => {
+  setTimeout(resolve, ms)
+})
+const incWrapped = throttle(inc, 1000)
+await delay(500)
+incWrapped()
+incWrapped()
+incWrapped()
+expect(counter).toBe(1)
+await delay(1500)
+incWrapped()
+expect(counter).toBe(2)
 ```
 
 #### where
@@ -209,6 +510,7 @@ condition({
 
 ### Methods inherited from Rambda
 
+
 #### add
 
 > add(a: Number, b: Number): Number
@@ -225,32 +527,6 @@ R.add(2, 3) //=>  5
 
 ```javascript
 R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
-```
-
-#### all
-
-> all(condition: Function, arr:Array): Boolean
-
-- Returns `true` if all members of `arr` are returning `true` when passed to `condition`
-
-```javascript
-const condition = a => a > 0
-R.all(condition, [1, 2]) //=> true
-```
-
-#### allPass
-
-> allPass(conditions: Array<Function>, obj:Object): Boolean
-
-- Returns `true` if each member of `conditions` is returning `true` when called with `obj`
-
-```javascript
-const conditions = [
-  a => a.foo > 0,
-  a => a.bar > 0,
-]
-R.allPass(conditions, {foo: 1, bar: 2}) //=> true
-R.allPass(conditions, {foo: 1, bar: 0}) //=> pass
 ```
 
 #### any
@@ -272,17 +548,17 @@ R.any(a => a * a > 10)([1, 2, 3]) //=> false
 R.append('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
 ```
 
-#### both
+#### compose
 
-> both(conditionA: Function, conditionB: Function, input: any): Boolean
+> compose(fn1: Function, ... , fnN: Function): any
 
-Returns `true` if `conditionA` and `conditionB` return `true` when called with `input`
-
-```javascript
-const conditionA = a => a > 1
-const conditionB = a => a < 10
-R.both(conditionA, conditionB, 2) //=> true
-R.both(conditionA, conditionB, 0) //=> false
+Performs right-to-left function composition
+```
+const result = R.compose(
+  R.map(a => a*2)
+  R.filter(val => val>2),
+)([1, 2, 3, 4])
+console.log(result) // => [6, 8]
 ```
 
 #### contains
@@ -298,17 +574,16 @@ R.contains(3, [1, 2]) //=> false
 
 #### curry
 
-> curry(functionToCurry: Function): Function
+> curry(fn: Function): Function
 
-Returns a curried equivalent of `functionToCurry`
-
-Note that it works with functions receiving no more than 3 inputs
+Returns curried version of `fn`
 
 ```javascript
-const fn = (a, b, c) => [].concat(a, b, c)
-const fnCurried = R.curry(fn)
-const fnWrapped = fnCurried(3, 5)
-fnWrapped(7) //=> [3, 5, 7]
+const addFourNumbers = (a, b, c, d) => a + b + c + d
+const curriedAddFourNumbers = R.curry(addFourNumbers)
+const f = curriedAddFourNumbers(1, 2)
+const g = f(3)
+g(4) // => 10
 ```
 
 #### defaultTo
@@ -345,19 +620,6 @@ Returns `arrOrStr` with `howManyToDrop` items dropped from the right
 ```javascript
 R.dropLast(1, ['foo', 'bar', 'baz']) //=> ['foo', 'bar']
 R.dropLast(1, 'foo')  //=> 'fo'
-```
-
-#### either
-
-> either(conditionA: Function, conditionB: Function, input: any): Boolean
-
-Returns `true` if `conditionA` or `conditionB` return `true` when called with `input`
-
-```javascript
-const conditionA = a => a % 2 === 0
-const conditionB = a => a < 10
-R.either(conditionA, conditionB, 2) //=> true
-R.either(conditionA, conditionB, 11) //=> false
 ```
 
 #### equals
@@ -419,18 +681,15 @@ R.flatten([ 1, [ 2, [ 3 ] ] ]
 //=> [ 1, 2, 3 ]
 ```
 
-#### flip
+#### has
 
-> flip(fn: Function): Function
+> has(prop: String, obj: Object): Boolean
 
-Returns function `fn` but with reversed order of input arguments
-
-Note that it works with functions receiving no more than 3 inputs
+- Returns `true` if `obj` has property `prop`
 
 ```javascript
-const fn = (a, b, c) => [].concat(a, b, c)
-const fnFlipped = R.flip(fn)
-flipped(3,5,7) //=> [7, 5, 3]
+R.has("a", {a: 1}) //=> true
+R.has("b", {a: 1}) //=> false
 ```
 
 #### head
@@ -455,17 +714,6 @@ R.indexOf(1, [1, 2]) //=> 0
 ```
 
 #### init
-
-> init(arrOrStr: Array|String): Array|String
-
-- Returns all but the last element of `arrOrStr`
-
-```javascript
-R.init([1, 2, 3])  //=> [1, 2]
-R.init('foo')  //=> 'fo'
-```
-
-#### intersection
 
 > init(arrOrStr: Array|String): Array|String
 
@@ -545,14 +793,38 @@ R.omit(['a', 'd'], {a: 1, b: 2, c: 3}) //=> {b: 2, c: 3}
 
 #### path
 
-> path(pathToSearch: Array<String>, obj: Object): any
+> path(pathToSearch: Array<String>|String, obj: Object): any
 
 - Retrieve the value at `pathToSearch` in object `obj`
 
 ```javascript
+R.path('a.b', {a: {b: 2}}) //=> 2
 R.path(['a', 'b'], {a: {b: 2}}) //=> 2
 R.path(['a', 'c'], {a: {b: 2}}) //=> undefined
 ```
+
+#### partialCurry
+
+> partialCurry(fn: Function|Async, a: Object, b: Object): Function|Promise
+
+When called with function `fn` and first set of input `a`, it will return a function.
+
+This function will wait to be called with second set of input `b` and it will invoke `fn` with the merged object of `a` over `b`.
+
+`fn` can be asynchronous function. In that case a `Promise` holding the result of `fn` is returned.
+
+See the example below:
+
+```javascript
+const fn = ({a, b, c}) => {
+  return (a * b) + c
+}
+const curried = R.partialCurry(fn, {a: 2})
+curried({b: 3, c: 10}) //=> 16
+```
+- Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
+
+- You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
 
 #### pick
 
@@ -560,18 +832,18 @@ R.path(['a', 'c'], {a: {b: 2}}) //=> undefined
 
 - Returns a partial copy of an `obj` containing only `propsToPick` properties
 
-```javascript
+```
 R.pick(['a', 'c'], {a: 1, b: 2}) //=> {a: 1}
 ```
 
 #### pluck
 
-> pluck(prop: String, arr: Array<Object>): Array
+> pluck(property: String, arr: Array): Array
 
-- Returns list of the values of property `prop` taken from the objects in `arr`
+- Returns list of the values of `property` taken from the objects in array of objects `arr`
 
-```javascript
-R.pluck('a')([{a: 1}, {a: 2}]) //=> [1, 2]
+```
+R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) //=> [1, 2]
 ```
 
 #### prepend
@@ -582,13 +854,15 @@ R.pluck('a')([{a: 1}, {a: 2}]) //=> [1, 2]
 R.prepend('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
 ```
 
-#### prop(propToFind: String, obj: Object): any
+#### prop
+
+> prop(propToFind: String, obj: Object): any
 
 Returns `undefined` or the value of property `propToFind` in `obj`
 
 ```javascript
 R.prop('x', {x: 100}) //=> 100
-R.prop('x', {}) //=> undefined
+R.prop('x', {a: 1}) //=> undefined
 ```
 
 #### propEq
@@ -612,6 +886,19 @@ R.propEq(propToFind, valueToMatch)({foo: 1}) //=> false
 
 ```javascript
 R.range(0, 2)   //=> [0, 1]
+```
+
+#### reduce 
+
+> reduce(iteratorFn: Function, accumulator: any, array: Array): any
+
+- Returns a single item by iterating through the list, successively calling the iterator function `iteratorFn` and passing it an `accumulator` value and the current value from the array, and then passing the result to the next call.
+
+The iterator function behaves like the native callback of the [`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) method.
+
+```javascript
+const iteratorFn = (acc, val) => acc + val
+R.reduce(iteratorFn, 1, [1, 2, 3])   //=> 7
 ```
 
 #### repeat
@@ -648,6 +935,8 @@ R.sort(sortFn, [3, 1, 2]) //=> [1, 2, 3]
 ```
 
 #### sortBy
+
+> sortBy(sortFn: Function, arr: Array): Array
 
 Returns copy of `arr` sorted by `sortFn`
 
@@ -805,3 +1094,4 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
 ```
+
