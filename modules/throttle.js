@@ -1,4 +1,4 @@
-function throttle (callback, limit) {
+function throttle (callback, ms) {
     let wait = false       
     return function () {   
         if (!wait) {       
@@ -6,7 +6,7 @@ function throttle (callback, limit) {
             wait = true    
             setTimeout(function () {
                 wait = false        
-            }, limit)
+            }, ms)
         }
     }
 }

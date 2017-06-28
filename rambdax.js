@@ -59,6 +59,7 @@ exports.prepend = R.prepend
 exports.prop = R.prop
 exports.propEq = R.propEq
 exports.range = R.range
+exports.reduce = R.reduce
 exports.repeat = R.repeat
 exports.replace = R.replace
 exports.sort = R.sort

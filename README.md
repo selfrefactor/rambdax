@@ -440,6 +440,12 @@ const result = await R.resolve(promises)
 // => { a:1, b:2, c:3 }
 ```
 
+#### shuffle
+
+> shuffle(arr: Array): Array
+
+Returns randomized copy of `arr` 
+
 #### tap
 
 > tap(fn: Function, inputArgument: T): T
@@ -451,6 +457,30 @@ const fn = a => console.log(a)
 const result = R.tap(fn, "foo")
 // logs "foo"
 // `result` is "foo"
+```
+
+#### throttle
+
+> throttle(callback: Function, ms: Number): Function
+
+```
+let counter = 0
+const inc = () => {
+  counter++
+}
+
+const delay = ms => new Promise(resolve => {
+  setTimeout(resolve, ms)
+})
+const incWrapped = throttle(inc, 1000)
+await delay(500)
+incWrapped()
+incWrapped()
+incWrapped()
+expect(counter).toBe(1)
+await delay(1500)
+incWrapped()
+expect(counter).toBe(2)
 ```
 
 #### where
@@ -516,6 +546,19 @@ R.any(a => a * a > 10)([1, 2, 3]) //=> false
 
 ```javascript
 R.append('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
+```
+
+#### compose
+
+> compose(fn1: Function, ... , fnN: Function): any
+
+Performs right-to-left function composition
+```
+const result = R.compose(
+  R.map(a => a*2)
+  R.filter(val => val>2),
+)([1, 2, 3, 4])
+console.log(result) // => [6, 8]
 ```
 
 #### contains
@@ -750,11 +793,12 @@ R.omit(['a', 'd'], {a: 1, b: 2, c: 3}) //=> {b: 2, c: 3}
 
 #### path
 
-> path(pathToSearch: Array<String>, obj: Object): any
+> path(pathToSearch: Array<String>|String, obj: Object): any
 
 - Retrieve the value at `pathToSearch` in object `obj`
 
 ```javascript
+R.path('a.b', {a: {b: 2}}) //=> 2
 R.path(['a', 'b'], {a: {b: 2}}) //=> 2
 R.path(['a', 'c'], {a: {b: 2}}) //=> undefined
 ```
@@ -842,6 +886,19 @@ R.propEq(propToFind, valueToMatch)({foo: 1}) //=> false
 
 ```javascript
 R.range(0, 2)   //=> [0, 1]
+```
+
+#### reduce 
+
+> reduce(iteratorFn: Function, accumulator: any, array: Array): any
+
+- Returns a single item by iterating through the list, successively calling the iterator function `iteratorFn` and passing it an `accumulator` value and the current value from the array, and then passing the result to the next call.
+
+The iterator function behaves like the native callback of the [`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) method.
+
+```javascript
+const iteratorFn = (acc, val) => acc + val
+R.reduce(iteratorFn, 1, [1, 2, 3])   //=> 7
 ```
 
 #### repeat
@@ -1037,4 +1094,4 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
 ```
----
+

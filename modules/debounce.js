@@ -1,14 +1,14 @@
-function debounce(func, wait) {
+function debounce(func, ms) {
   let timeout
   return function() {
-    let context = this,
-      args = arguments
+    const thisHolder = this
+    const args = arguments
     const later = function() {
       timeout = null
-      func.apply(context, args)
+      func.apply(thisHolder, args)
     }
     clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
+    timeout = setTimeout(later, ms)
   }
 }
 
