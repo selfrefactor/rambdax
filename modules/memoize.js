@@ -1,4 +1,4 @@
-const R = require('rambda') 
+const R = require('rambda')
 const cache = {}
 
 const normalizeObject = obj => {
@@ -23,7 +23,6 @@ const stringify = a => {
   return JSON.stringify(a)
 }
 
-
 const generateProp = (fn, ...inputArguments) => {
   let propString = ""
   inputArguments.map(inputArgument => {
@@ -35,7 +34,7 @@ const generateProp = (fn, ...inputArguments) => {
 
 function memoize (fn, ...inputArguments) {
   if(arguments.length === 1){
-    return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder) 
+    return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder)
   }
   const prop = generateProp(fn, ...inputArguments)
   if (prop in cache) {

@@ -1,5 +1,4 @@
 const R = require("rambda")
-const log = require("log-fn")
 
 const composeAsync = (...inputArguments) => {
   try{
@@ -16,17 +15,13 @@ const composeAsync = (...inputArguments) => {
         const fn = inputArguments.pop()
         if(R.type(fn) === "Async"){
           argumentsToPass = await fn(argumentsToPass)
-          log(`async | ${fn.toString()} ${fn.toString().startsWith("async")}`,"box")
         }else if(R.type(fn) === "Promise"){
-          log(`promise | ${fn.toString()} ${argumentsToPass}`,"box")
-
           argumentsToPass = await fn(argumentsToPass)
         }else{
-          log(`plain ${fn.toString()} ${argumentsToPass}`,"box")
-
           argumentsToPass = fn(argumentsToPass)
         }
       }
+
       return argumentsToPass
     }
   }catch(err){
@@ -34,19 +29,4 @@ const composeAsync = (...inputArguments) => {
   }
 }
 
-
-const delayAsync = async ms => delay(ms)
-
-const delay = ms => new Promise(resolve=>{
-  setTimeout(function () {
-    log({ms})
-    resolve(ms+110)
-  }, ms);
-})
-
-const a = async () => composeAsync(
-  a => a -1000,
-  a => a,
-  async a => delayAsync(a),
-  a => a+11
-)(delay(20))
+module.exports = composeAsync

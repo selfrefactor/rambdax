@@ -26,12 +26,13 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.7.1"
+    "rambda": "^0.7.2"
   },
   "devDependencies": {
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "jest": "^20.0.4",
+    "log-fn": "^2.0.4",
     "npm-run-all": "^4.0.2",
     "ramda": "^0.24.1",
     "webpack": "^3.0.0"
