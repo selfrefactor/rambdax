@@ -41,7 +41,7 @@ The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatab
 
 ```
 it("when returns true", () => {
-  const numArr = [ 0, 1, 2, 3, 4 ]  
+  const numArr = [ 0, 1, 2, 3, 4 ]
   const fn = val => val > -1
   expect(R.all(fn, numArr)).toBeTruthy()
 })
@@ -92,6 +92,34 @@ const arr = [
 const result = R.compact(arr)
 const expectedResult = [1, false, " ", "foo", [1]]
 expect(result).toEqual(expectedResult)
+```
+
+#### composeAsync
+
+> composeAsync(fn1: Function|Async, .. , fnN:Function|Async)(startValue): Async
+
+- `compose` that accepts `async` functions as arguments
+
+- `startValue` can be unresolved `Promise` or plain data
+
+```
+const delayAsync = async ms => delay(ms)
+
+const delay = ms => new Promise(resolve=>{
+  setTimeout(function () {
+    resolve(ms+110)
+  }, ms)
+})
+
+const result = await composeAsync(
+  a => a - 1000,
+  a => a,
+  async a => delayAsync(a),
+  a => a+11
+)(delay(20))
+expect(
+  result
+).toEqual(-749)
 ```
 
 #### debounce
@@ -206,7 +234,7 @@ describe("memoize", () => {
     expect(memoized(1,2)).toBe(3)
     expect(counter).toBe(2)
   })
-  
+
   it("async function", async () => {
     let counter = 0
     const delay = ms => new Promise(resolve => {
@@ -217,7 +245,7 @@ describe("memoize", () => {
       counter++
       return a+b
     }
-    
+
     const memoized = R.memoize(fn)
     expect(await memoized(100,1,2)).toBe(3)
     expect(await memoized(100,1,2)).toBe(3)
@@ -444,7 +472,7 @@ const result = await R.resolve(promises)
 
 > shuffle(arr: Array): Array
 
-Returns randomized copy of `arr` 
+Returns randomized copy of `arr`
 
 #### tap
 
@@ -888,7 +916,7 @@ R.propEq(propToFind, valueToMatch)({foo: 1}) //=> false
 R.range(0, 2)   //=> [0, 1]
 ```
 
-#### reduce 
+#### reduce
 
 > reduce(iteratorFn: Function, accumulator: any, array: Array): any
 
@@ -1094,4 +1122,3 @@ R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
 ```javascript
 R.values({a: 1, b: 2}) //=> [1, 2]
 ```
-
