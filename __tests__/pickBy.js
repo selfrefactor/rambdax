@@ -8,10 +8,10 @@ describe("pickBy", () => {
       c: 3,
       d: 4,
     }
-    const fn = val => val > 2
+    const fn = prop => ["a","c"].includes(prop) 
     const expectedResult = {
+      a: 1,
       c: 3,
-      d: 4,
     }
     expect(R.pickBy(fn, input)).toEqual(expectedResult)
   })

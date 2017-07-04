@@ -5,7 +5,7 @@ function omitBy (fn, obj) {
 
   const willReturn = {}
   for (prop in obj) {
-    if (!fn(obj[ prop ], prop)) {
+    if (!fn(prop, obj[ prop ])) {
       willReturn[ prop ] = obj[ prop ]
     }
   }

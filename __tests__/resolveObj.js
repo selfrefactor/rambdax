@@ -12,7 +12,7 @@ describe("resolve", () => {
       b: delay(2),
       c: delay(3),
     }
-    const result = await R.resolve(promises)
+    const result = await R.resolveObj(promises)
 
     expect(result).toEqual({
       a: 1,

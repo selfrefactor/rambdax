@@ -8,7 +8,7 @@ describe("omitBy", () => {
       c: 3,
       d: 4,
     }
-    const fn = val => val < 3
+    const fn = (prop, val) => val < 3
     const expectedResult = {
       c: 3,
       d: 4,

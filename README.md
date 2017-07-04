@@ -284,7 +284,7 @@ const input = {
   c: 3,
   d: 4,
 }
-const fn = val => val < 3
+const fn = (prop, val) => val < 3
 const expectedResult = {
   c: 3,
   d: 4,
@@ -310,7 +310,7 @@ const input = {
   c: 3,
   d: 4,
 }
-const fn = val => val > 2
+const fn = (prop,val) => val > 2
 const expectedResult = {
   c: 3,
   d: 4,
@@ -444,9 +444,9 @@ const expectedResult = {
 }
 ```
 
-#### resolve
+#### resolveObj
 
-> resolve(promises: Object): Object
+> resolveObj(promises: Object): Object
 
 `promises` is object with thenable values.
 
@@ -464,8 +464,44 @@ const promises = {
   b : delay(2),
   c : delay(3),
 }
-const result = await R.resolve(promises)
+const result = await R.resolveObj(promises)
 // => { a:1, b:2, c:3 }
+```
+
+#### resolveSecure
+
+> resolveObj(promises: Array): Array<{type: 'result'|'error', payload:any}>
+
+`promises` is array with thenable values.
+
+All the thenables are resolved with `Promise.all` to object, which
+props are the keys of `promises` and which values are the resolved results.
+
+```
+const delay = ms => new Promise(res => {
+  setTimeout(() => res(ms), ms)
+})
+
+const fail = async ms => {
+  try {
+    JSON.parse("{:a")
+  }
+  catch (err) {
+    throw new Error(err)
+  }
+}
+
+const arr = [delay(2000), fail(1000), delay(1000)]
+const result = await R.resolveSecure(arr)
+expect(result[0]).toEqual({
+  "payload": 2000,
+  "type": "result"
+})
+expect(result[1].type).toBe("error")
+expect(result[2]).toEqual({
+  "payload": 1000,
+  "type": "result"
+})
 ```
 
 #### shuffle
