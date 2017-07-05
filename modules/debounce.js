@@ -1,14 +1,20 @@
-function debounce(func, ms) {
+function debounce(func, ms, immediate = false) {
   let timeout
   return function() {
     const thisHolder = this
     const args = arguments
     const later = function() {
       timeout = null
-      func.apply(thisHolder, args)
+      if (!immediate){
+        func.apply(thisHolder, args)
+      }
     }
+    const callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, ms)
+    if (callNow){
+      func.apply(thisHolder, args)
+    }
   }
 }
 
