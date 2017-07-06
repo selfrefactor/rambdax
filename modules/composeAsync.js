@@ -11,7 +11,6 @@ const composeAsync = (...inputArguments) => {
           startArgument
 
       while(inputArguments.length!==0){
-        console.log(argumentsToPass)
         const fn = inputArguments.pop()
         if(R.type(fn) === "Async"){
           argumentsToPass = await fn(argumentsToPass)
