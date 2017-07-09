@@ -4,11 +4,7 @@ const composeAsync = (...inputArguments) => {
   try{
 
     return async function(startArgument){
-      let argumentsToPass = R.type(startArgument) === "Async"  ?
-        await startArgument() :
-          R.equals(startArgument.toString(),"[object Promise]") ?
-          await startArgument :
-          startArgument
+      let argumentsToPass = startArgument
 
       while(inputArguments.length!==0){
         const fn = inputArguments.pop()

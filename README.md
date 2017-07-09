@@ -96,11 +96,9 @@ expect(result).toEqual(expectedResult)
 
 #### composeAsync
 
-> composeAsync(fn1: Function|Async, .. , fnN:Function|Async)(startValue): Async
+> composeAsync(fn1: Function|Async, .. , fnN: Function|Async)(startValue: any): Async
 
 - `compose` that accepts `async` functions as arguments
-
-- `startValue` can be unresolved `Promise` or plain data
 
 ```
 const delayAsync = async ms => delay(ms)
@@ -116,7 +114,7 @@ const result = await composeAsync(
   a => a,
   async a => delayAsync(a),
   a => a+11
-)(delay(20))
+)(await delay(20))
 expect(
   result
 ).toEqual(-749)
