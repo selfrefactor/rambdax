@@ -1,9 +1,7 @@
-const {
-  debounce
-} = require("../rambdax")
+const { debounce } = require("../rambdax")
 
 describe("", () => {
-  it("", async() => {
+  it("", async () => {
     let counter = 0
     const inc = () => {
       counter++

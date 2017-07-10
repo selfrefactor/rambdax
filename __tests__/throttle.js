@@ -1,9 +1,7 @@
-const {
-  throttle
-} = require("../rambdax")
+const { throttle } = require("../rambdax")
 
 describe("", () => {
-  it("", async() => {
+  it("", async () => {
     let counter = 0
     const inc = () => {
       counter++

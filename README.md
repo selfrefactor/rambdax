@@ -212,6 +212,27 @@ const song = {
 R.isValid(song,songSchema) // => true
 ```
 
+#### mapAsync
+
+> mapAsync(fn: Async|Promise, arr: Array): Promise<Array>
+
+Sequential asynchronous mapping with `fn` over members of `arr`
+
+```
+const fn = a => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(a + 100)
+  }, 100)
+})
+
+const result = await R.composeAsync(
+  R.mapAsync(async a => await fn(a)),
+  R.mapAsync(fn),
+  R.map(a => a * 10)
+)([1, 2, 3])
+expect(result).toEqual([210, 220, 230])
+```
+
 #### memoize
 
 ```

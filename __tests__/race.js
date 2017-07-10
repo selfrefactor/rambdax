@@ -1,13 +1,13 @@
 const R = require("../rambdax")
 
 describe("race", () => {
-  it("", async() => {
+  it("", async () => {
     const delay = ms => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 0) {
           resolve(ms)
         } else {
-          reject(ms+10)
+          reject(ms + 10)
         }
       }, ms)
     })
@@ -22,7 +22,7 @@ describe("race", () => {
         const result = await R.race(promises)
         expect(
           result
-        ).toEqual({a:1})
+        ).toEqual({ a : 1 })
       } catch (err) {
         console.log(err)
         expect(true).toBeFalsy()
@@ -33,7 +33,7 @@ describe("race", () => {
 })
 
 describe("race", () => {
-  it("", async() => {
+  it("", async () => {
     const delay = ms => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 1) {
@@ -56,7 +56,7 @@ describe("race", () => {
       } catch (err) {
         expect(
           err
-        ).toEqual({a:11})
+        ).toEqual({ a : 11 })
       }
     }
     test()

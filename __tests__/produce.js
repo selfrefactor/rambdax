@@ -20,11 +20,11 @@ describe("produce", () => {
     const result = await fn(5)
 
     expect(
-        result.bar
-      ).toEqual(true)
+      result.bar
+    ).toEqual(true)
 
     expect(
-        typeof result.foo
-      ).toEqual("string")
+      typeof result.foo
+    ).toEqual("string")
   })
 })

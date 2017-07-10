@@ -7,13 +7,13 @@ describe("where", () => {
       b : R.equals("bar"),
     })
     expect(
-        pred({
-          a : "foo",
-          b : "bar",
-          x : 11,
-          y : 19,
-        })
-      ).toEqual(true)
+      pred({
+        a : "foo",
+        b : "bar",
+        x : 11,
+        y : 19,
+      })
+    ).toEqual(true)
   })
 
   it("", () => {
@@ -22,12 +22,12 @@ describe("where", () => {
       b : R.equals("baz"),
     })
     expect(
-        pred({
-          a : "foo",
-          b : "bar",
-          x : 11,
-          y : 19,
-        })
-      ).toEqual(false)
+      pred({
+        a : "foo",
+        b : "bar",
+        x : 11,
+        y : 19,
+      })
+    ).toEqual(false)
   })
 })
