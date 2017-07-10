@@ -27,7 +27,8 @@ describe("mapAsync", () => {
   it.only("composeAsync", async () => {
     const result = await R.composeAsync(
       //R.mapAsync(delay),
-      R.mapAsync(async a => await delay(a)),
+      // R.mapAsync(async a => await delay(a)),
+      R.tap(console.log),
       R.mapAsync(async a => await delay(a)),
       R.map(a => a * 10)
     )(await tap([ 1, 2, 3 ]))

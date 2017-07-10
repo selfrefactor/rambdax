@@ -6,7 +6,6 @@ async function mapAsyncFn(fn,arr){
     }
     return willReturn  
   }catch(err){
-    // throw new Error(err)
     throw err
   }
   
