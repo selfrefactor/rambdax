@@ -5,6 +5,14 @@ const delay = a => new Promise(resolve => {
     resolve(a + 20)
   }, 100)
 })
+const fn = a => new Promise(resolve => {
+  setTimeout(() => {
+    if(a.length === undefined){
+      return resolve(typeof a)
+    }
+    resolve(a.length)
+  }, 100)
+})
 
 const tap = a => new Promise(resolve => {
   setTimeout(() => {
@@ -20,19 +28,17 @@ const rejectDelay = a => new Promise((_, reject) => {
 
 describe("mapAsync", () => {
   it("", async () => {
-    const result = await R.mapAsync(delay)([ 1, 2, 3 ])
+    const result = await R.mapAsync(delay,[ 1, 2, 3 ])
     expect(result).toEqual([ 21, 22, 23 ])
   })
 
-  it.only("composeAsync", async () => {
+  it("composeAsync", async () => {
     const result = await R.composeAsync(
-      //R.mapAsync(delay),
-      // R.mapAsync(async a => await delay(a)),
-      R.tap(console.log),
-      R.mapAsync(async a => await delay(a)),
+      R.mapAsync(delay),
+      R.mapAsync(async a => delay(a)),
       R.map(a => a * 10)
     )(await tap([ 1, 2, 3 ]))
-    expect(result).toEqual([ 30, 40, 50 ])
+    expect(result).toEqual([ 50, 60, 70 ])
   })
 
   it("error", async () => {

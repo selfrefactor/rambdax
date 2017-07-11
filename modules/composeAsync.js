@@ -2,7 +2,6 @@ const R = require("rambda")
 
 const composeAsync = (...inputArguments) => {
   try{
-
     return async function(startArgument){
       let argumentsToPass = startArgument
 
@@ -16,7 +15,7 @@ const composeAsync = (...inputArguments) => {
           argumentsToPass = fn(argumentsToPass)
         }
       }
-
+      
       return argumentsToPass
     }
   }catch(err){

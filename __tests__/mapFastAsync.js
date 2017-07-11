@@ -30,7 +30,7 @@ describe("mapFastAsync", () => {
       R.mapFastAsync(delay),
       R.map(a => a * 10)
     )(await tap([ 1, 2, 3 ]))
-    expect(result).toEqual([ 30, 40, 50 ])
+    expect(result).toEqual([ 50, 60, 70 ])
   })
 
   it("error", async () => {

@@ -13,9 +13,9 @@ async function mapAsyncFn(fn,arr){
 
 function mapAsync(fn,arr){
   if(arr === undefined){
-    return holder => new Promise((resolve,reject) =>{
-      mapAsync(fn,holder).then(resolve).catch(reject)
-    })
+    return async holder => {
+      return await mapAsyncFn(fn,holder)
+    }
   }
   return new Promise((resolve,reject) =>{
     mapAsyncFn(fn,arr).then(resolve).catch(reject)  

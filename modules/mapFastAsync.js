@@ -8,11 +8,11 @@ async function mapFastAsyncFn(fn,arr){
   
 }
 
-function mapFastAsync(fn,arr){
-  if(arr === undefined){
-    return holder => new Promise((resolve,reject) =>{
-      mapFastAsync(fn,holder).then(resolve).catch(reject)
-    })
+function mapFastAsync(fn, arr){
+   if(arr === undefined){
+    return async holder => {
+      return await mapFastAsyncFn(fn,holder)
+    }
   }
   return new Promise((resolve,reject) =>{
     mapFastAsyncFn(fn,arr).then(resolve).catch(reject)  
