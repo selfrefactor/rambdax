@@ -7,9 +7,7 @@ const composeAsync = (...inputArguments) => {
 
       while(inputArguments.length!==0){
         const fn = inputArguments.pop()
-        if(R.type(fn) === "Async"){
-          argumentsToPass = await fn(argumentsToPass)
-        }else if(R.type(fn) === "Promise"){
+        if(R.type(fn) === "Async" || R.type(fn) === "Promise"){
           argumentsToPass = await fn(argumentsToPass)
         }else{
           argumentsToPass = fn(argumentsToPass)
@@ -19,7 +17,7 @@ const composeAsync = (...inputArguments) => {
       return argumentsToPass
     }
   }catch(err){
-    throw new Error(err)
+    throw err
   }
 }
 

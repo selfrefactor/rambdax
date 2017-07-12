@@ -96,7 +96,7 @@ expect(result).toEqual(expectedResult)
 
 #### composeAsync
 
-> composeAsync(fn1: Function|Async, .. , fnN: Function|Async)(startValue: any): Async
+> composeAsync(fn1: Function|Async, .. , fnN: Function|Async)(startValue: any): Promise
 
 - `compose` that accepts `async` functions as arguments
 
