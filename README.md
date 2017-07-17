@@ -161,32 +161,23 @@ fn(6) //=> true
 fn(7) //=> false
 ```
 
-#### filterObj
-
-```
-const fn = (val, prop) => val > 2 || prop === "b"
-const obj = {
-  a: 1,
-  b: 2,
-  c: 3
-}
-const result = R.filterObj(fn)(obj)
-expect(result).toEqual({
-  b: 2,
-  c: 3
-})
-```
-
 #### flip
 
-Switch first and second arguments of provided function
+> flip(fn: Function): Function
+
+It returns copy of the function `fn` with exchanged order of the first and second function arguments.
 ```
-const fn = (a,b) => a-b
+const fn = (a,b) => a - b
 const flipped = R.flip(fn)
-flipped(4,1) //=> -3
+fn(4,1)      // =>  3 
+flipped(4,1) // => -3
 ```
 
 #### intersection
+
+> intersection(a: Array, b: Array): Array
+
+It returns array with the overlapped members of `a` and `b`.
 
 ```
 R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
@@ -194,7 +185,11 @@ R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
 
 #### isValid
 
-Full copy of [json-validity](https://github.com/selfrefactor/json-validity) library
+> isValid(input: Object, schema: Object): Boolean
+
+It checks if `input` is following `schema` specifications.
+
+This is full copy of [json-validity](https://github.com/selfrefactor/json-validity) library.
 
 ```
 const songSchema = {
@@ -256,6 +251,10 @@ expect(result).toEqual([210, 220, 230])
 
 #### memoize
 
+> memoize(fn: Function|Promise): any
+
+When `fn` is called for a second time with the same input, then the cache result is returned instead of calling `fn`.
+
 ```
 describe("memoize", () => {
   it("normal function", () => {
@@ -301,6 +300,10 @@ describe("memoize", () => {
 
 #### mergeAll
 
+> mergeAll(input: Array<Object>): Object
+
+It merges all objects of `input` array sequentially and returns the result.  
+
 ```
 const arr = [
   {a:1},
@@ -316,6 +319,10 @@ expect(R.mergeAll(arr)).toEqual(expectedResult)
 ```
 
 #### omitBy
+
+> omitBy(fn: function, input: Object): Object
+
+It returns only those properties of `input` that return `false` when passed to `fn`.
 
 ```
 const input = {
@@ -334,6 +341,10 @@ expect(R.omitBy(fn, input)).toEqual(expectedResult)
 
 #### once
 
+> once(fn: Function): Function
+
+It returns a function, which invokes only once`fn`.
+
 ```
 const addOneOnce = R.once((a, b, c) => a + b + c)
 
@@ -343,6 +354,10 @@ expect(addOneOnce(40)).toEqual(60)
 
 #### pickBy
 
+> pickBy(fn: Function, input: Object): Object
+
+It returns only those properties of `input` that return `true` when passed to `fn`.
+
 ```
 const input = {
   a: 1,
@@ -350,9 +365,9 @@ const input = {
   c: 3,
   d: 4,
 }
-const fn = (prop,val) => val > 2
+const fn = (prop,val) => val > 3 || prop === 'a'
 const expectedResult = {
-  c: 3,
+  a: 1,
   d: 4,
 }
 expect(R.pickBy(fn, input)).toEqual(expectedResult)
@@ -360,48 +375,35 @@ expect(R.pickBy(fn, input)).toEqual(expectedResult)
 
 #### produce
 
-> Typing:
-
-```
-R.produce(
-fnObject: Object,
-inputArgument: any
-): Object
-```
-
-> Example:
+> produce( conditions: Object, input: any): Promise|Object
 
 ```
 const conditions = {
-foo: a => a > 10,
-bar: a => ({baz:a})
+  foo: a => a > 10,
+  bar: a => ({baz:a})
 }
 
 const result = R.produce(conditions, 7)
 
 const expectedResult = {
-foo: false,
-bar: {baz: 7}
+  foo: false,
+  bar: {baz: 7}
 }
 result === expectedResult // => true
 ```
 
-> Description
-
 `conditions` is an object with sync or async functions as values.
 
-Those functions will be used to generate object with `conditions`'s props and
-values, which are result of each `conditions` value when
-`inputArgument` is the input.
+The values of the returned object `returnValue` are the results of those functions when `input` is passed. 
+The properties of the returned object are equal to `input`.
+
+If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`. 
 
 #### race
 
-> race(promises: Object): Object
+> race(promised: Object): Object
 
-`promises` is object with thenable values.
-
-The thenables are resolved with `Promise.race` to object with a single property.
-This property is the key of the first resolved(rejected) promise in `promises`.
+It acts as `Promise.race` for object with promises.
 
 ```
 const delay = ms => new Promise(resolve => {
@@ -565,13 +567,14 @@ It returns randomized copy of `arr`.
 
 > tap(fn: Function, inputArgument: T): T
 
-It executes `fn` with `inputArgument` as argument and returns `inputArgument`.
+It returns back `inputArgument` after calling `fn` with `inputArgument`. 
+
 
 ```
-const fn = a => console.log(a)
-const result = R.tap(fn, "foo")
-// logs "foo"
-// `result` is "foo"
+const log = a => console.log(a)
+const result = R.tap(log, "foo")
+// the console logs `foo`
+// `result` is equal to "foo"
 ```
 
 #### throttle
@@ -602,7 +605,11 @@ expect(counter).toBe(2)
 
 #### where
 
-> where(conditions: Object, obj: Object): Boolean
+> where(conditions: Object, input: Object): Boolean
+
+Each property `prop` in `conditions` is a function. 
+
+This function is called with `input(prop)`. If all such function calls return `true`, then the final result is also `true`.  
 
 ```
 const condition = R.where({
