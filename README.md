@@ -439,6 +439,10 @@ R.race(promises)
 
 #### random
 
+> random(min: Number, max: Number)
+
+It returns a random number between `min` inclusive and `max` inclusive.  
+
 ```
 const randomResult = R.random(1, 10)
 expect(randomResult).toBeLessThanOrEqual(10)
@@ -446,6 +450,11 @@ expect(randomResult).toBeGreaterThanOrEqual(1)
 ```
 
 #### rangeBy
+
+> rangeBy(start: Number, end: Number, step: Number)
+
+It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
+
 ```
 expect(
   R.rangeBy(0, 10, 2)
@@ -460,24 +469,23 @@ expect(
 > Typing:
 
 ```
-R.renameProps(
-  renameObj: Object,
-  inputObj: Object
-): Object
+R.renameProps(rules: Object, input: Object): Object
 ```
+
+If property `prop` of `rules` is also a property in `input`, then rename `input` property to `rules[prop]`.
 
 > Example:
 
 ```
-const renameObj = {
+const rules = {
   f: "foo",
   b: "bar"
 }
-const inputObj = {
+const input = {
   f:1,
   b:2
 }
-const result = R.renameProps(renameObj, inputObj)
+const result = R.renameProps(rules, input)
 const expectedResult = {
   foo:1,
   bar:2
@@ -488,10 +496,7 @@ const expectedResult = {
 
 > resolveObj(promises: Object): Object
 
-`promises` is object with thenable values.
-
-All the thenables are resolved with `Promise.all` to object, which
-props are the keys of `promises` and which values are the resolved results.
+It acts as `Promise.all` for object with Promises.
 
 ```
 const delay = ms => new Promise(resolve => {
@@ -512,10 +517,10 @@ const result = await R.resolveObj(promises)
 
 > resolveObj(promises: Array): Array<{type: 'result'|'error', payload:any}>
 
-`promises` is array with thenable values.
+It acts as `Promise.all` with fault tollerance.
 
-All the thenables are resolved with `Promise.all` to object, which
-props are the keys of `promises` and which values are the resolved results.
+Error `err` in any of the `promises` would simply add `{type: 'error', payload: err}` to the returned array.
+Result `result` in any of the `promises` adds `{type: 'result', payload: result}`.
 
 ```
 const delay = ms => new Promise(res => {
@@ -533,28 +538,34 @@ const fail = async ms => {
 
 const arr = [delay(2000), fail(1000), delay(1000)]
 const result = await R.resolveSecure(arr)
-expect(result[0]).toEqual({
-  "payload": 2000,
-  "type": "result"
-})
-expect(result[1].type).toBe("error")
-expect(result[2]).toEqual({
-  "payload": 1000,
-  "type": "result"
-})
+const expectedResult = [
+  {
+    "payload": 2000,
+    "type": "result"
+  },
+  {
+    payload:"Unexpected token : in JSON at position 1",
+    type: "error"
+  },
+  {
+    "payload": 2000,
+    "type": "result"
+  }
+]  
+// => result === expectedResult
 ```
 
 #### shuffle
 
 > shuffle(arr: Array): Array
 
-Returns randomized copy of `arr`
+It returns randomized copy of `arr`.
 
 #### tap
 
 > tap(fn: Function, inputArgument: T): T
 
-Execute `fn` with `inputArgument` as argument and returns `inputArgument`
+It executes `fn` with `inputArgument` as argument and returns `inputArgument`.
 
 ```
 const fn = a => console.log(a)
@@ -565,7 +576,9 @@ const result = R.tap(fn, "foo")
 
 #### throttle
 
-> throttle(callback: Function, ms: Number): Function
+> throttle(fn: Function, period: Number): Function
+
+It creates a throttled function that invokes `fn` maximum once for a `period` of milliseconds.
 
 ```
 let counter = 0
