@@ -1,20 +1,20 @@
 const R = require("rambda")
 
-function renameProps (renameCondition, inputObject) {
+function renameProps (conditions, inputObject) {
   if (inputObject === undefined) {
-    return inputObjectHolder => renameProps(renameCondition, inputObjectHolder)
+    return inputObjectHolder => renameProps(conditions, inputObjectHolder)
   }
   const renamed = {}
-  Object.keys(renameCondition).map(renameConditionProp => {
+  Object.keys(conditions).map(renameConditionProp => {
     if (Object.keys(inputObject).includes(renameConditionProp)) {
-      renamed[ renameConditions[ renameConditionProp ] ] = inputObject[ renameConditionProp ]
+      renamed[ conditions[ renameConditionProp ] ] = inputObject[ renameConditionProp ]
     }
   })
 
   return R.merge(
     renamed,
     R.omit(
-      Object.keys(renameCondition),
+      Object.keys(conditions),
       inputObject
       )
     )
