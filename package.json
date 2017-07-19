@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.7.2"
+    "rambda": "^0.7.4"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -37,6 +37,6 @@
     "jest": "^20.0.4",
     "log-fn": "^2.0.4",
     "npm-run-all": "^4.0.2",
-    "webpack": "^3.0.0"
+    "webpack": "^3.3.0"
   }
 }
