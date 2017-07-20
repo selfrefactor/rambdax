@@ -2871,9 +2871,9 @@ rambda@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.6.1.tgz#efac71532b5be28ffe42c13e22bd196296d40dc4"
 
-rambda@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.7.4.tgz#2708311b62ed25b48a8f03d2fdc735f787e26139"
+rambda@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.7.5.tgz#5ef33668c6a299d4d859de25a333b90c5f065c60"
 
 randomatic@^1.1.3:
   version "1.1.6"
