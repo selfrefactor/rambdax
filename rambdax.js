@@ -28,6 +28,7 @@ exports.resolveObj = require("./modules/resolveObj")
 exports.resolveSecure = require("./modules/resolveSecure")
 exports.tap = require("./modules/tap")
 exports.where = require("./modules/where")
+exports.wrap = require("./modules/wrap")
 
 exports.add = R.add
 exports.adjust = R.adjust
