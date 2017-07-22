@@ -39,15 +39,21 @@ The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatib
 
 #### all
 
+> all(fn: Function, arr: Array): Boolean
+
+It returns `true` if all members of array `arr` returns `true`, when applied as argument to function `fn`. 
+
 ```
-it("when returns true", () => {
-  const numArr = [ 0, 1, 2, 3, 4 ]
-  const fn = val => val > -1
-  expect(R.all(fn, numArr)).toBeTruthy()
-})
+const numArr = [ 0, 1, 2, 3, 4 ]
+const fn = x => x > -1
+expect(R.all(fn, numArr)).toBeTruthy()
 ```
 
 #### allPass
+
+> allPass(rules: Array<Function>, input: any): Boolean
+
+It returns `true` if all functions of `rules` return `true`, when `input` is their argument.
 
 ```
 const obj = {
@@ -65,6 +71,10 @@ expect(
 
 #### both
 
+> both(x: Function, y: Function, input: any): Boolean
+
+It returns `true` if both function `x` and function `y` return `true`, when `input` is their argument.
+
 ```
 const fn = R.both(
   a => a > 10,
@@ -75,6 +85,10 @@ fn(30) //=> false
 ```
 
 #### compact
+
+> compact(arr: Array)
+
+It removes the empty values from an array `arr`.
 
 ```
 const arr = [
@@ -121,6 +135,8 @@ expect(
 ```
 
 #### debounce
+
+> debounce(fn: Function, wait: Number): any
 
 ```
 it("", async() => {
@@ -628,6 +644,35 @@ condition({
   b : 4,
   c : 11,
 }) //=> false
+```
+
+#### wrap
+
+> wrap(fn: Function, {rule: Function|Async, defaultTo: any}): Promise|Function
+
+It returns a function or a Promise with input argument `input`.
+
+- When `fn` is called with `input`, then `intermediateResult` is obtained.
+
+- `fn` can be from the asynchronous entity, i.e. `Promise` or `Async`
+
+- if that is the case, `rule` can also be a Promise-like
+
+- `rule` is called with `intermediateResult` to obtain `ruleResult`. 
+
+- If `ruleResult` is `true`, then the final result is `intermediateResult`. 
+
+- If `ruleResult` is `false`, then the final result is `defaultTo`. 
+```
+const result = R.wrap(
+  R.filter(a => a > 3), 
+  { 
+    defaultTo:  [4],
+    rule:        x => R.length(x) > 0
+})([1, 2, 3])
+
+expect(result)
+.toEqual([4])
 ```
 
 ---
