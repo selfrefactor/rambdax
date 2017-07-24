@@ -316,7 +316,7 @@ describe("memoize", () => {
 
 #### mergeAll
 
-> mergeAll(input: Array<Object>): Object
+> mergeAll(input: Array): Object
 
 It merges all objects of `input` array sequentially and returns the result.  
 
