@@ -33,8 +33,6 @@ The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatib
 
 ## API
 
----
-
 ### API part I - Rambdax own methods
 
 #### all
@@ -675,7 +673,6 @@ expect(result)
 .toEqual([4])
 ```
 
----
 
 ### Methods inherited from Rambda
 
