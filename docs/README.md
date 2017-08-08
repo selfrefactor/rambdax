@@ -661,6 +661,8 @@ It returns a function or a Promise with input argument `input`.
 - If `ruleResult` is `true`, then the final result is `intermediateResult`. 
 
 - If `ruleResult` is `false`, then the final result is `defaultTo`. 
+
+
 ```
 const result = R.wrap(
   R.filter(a => a > 3), 
