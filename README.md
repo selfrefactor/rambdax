@@ -646,7 +646,7 @@ condition({
 
 #### wrap
 
-> wrap(fn: Function, {rule: Function|Async, defaultTo: any}): Promise|Function
+> wrap(fn: Function, {when: Function|Async, defaultTo: any}): Promise|Function
 
 It returns a function or a Promise with input argument `input`.
 
@@ -654,7 +654,7 @@ It returns a function or a Promise with input argument `input`.
 
 - `fn` can be from the asynchronous entity, i.e. `Promise` or `Async`
 
-- if that is the case, `rule` can also be a Promise-like
+- if that is the case, `when` can also be a Promise-like
 
 - `rule` is called with `intermediateResult` to obtain `ruleResult`. 
 
@@ -667,8 +667,8 @@ It returns a function or a Promise with input argument `input`.
 const result = R.wrap(
   R.filter(a => a > 3), 
   { 
-    defaultTo:  [4],
-    rule:        x => R.length(x) > 0
+    defaultTo:  [ 4 ],
+    when:       x => R.length(x) === 0
 })([1, 2, 3])
 
 expect(result)

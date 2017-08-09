@@ -2,39 +2,39 @@ const R = require("rambda")
 
 const isPromiseLike = x => [ "Async", "Promise" ].includes(R.type(x))
 
-function wrap (fn, { rule, defaultTo }) {
+function wrap (fn, { when, defaultTo }) {
   if (isPromiseLike(fn)) {
     return input => new Promise((resolve, reject) => {
       fn(input).then(intermediateResult => {
-        if (isPromiseLike(rule)) {
-          rule(input)
-          .then(ruleResult => {
-            const result = ruleResult === true ?
-              intermediateResult :
-              defaultTo
+        if (isPromiseLike(when)) {
+          when(input)
+          .then(whenResult => {
+            const result = whenResult === true ?
+              defaultTo :
+              intermediateResult
 
             resolve()
           })
           .catch(reject)
         } else {
-          const result = rule(intermediateResult) === true ?
-          intermediateResult :
-          defaultTo
+          const result = when(intermediateResult) === true ?
+          defaultTo :
+          intermediateResult
 
           resolve(result)
         }
       }).catch(reject)
     })
   }
-  if (isPromiseLike(rule)) {
+  if (isPromiseLike(when)) {
     return input => new Promise((resolve, reject) => {
       const intermediateResult = fn(input)
 
-      rule(intermediateResult)
-      .then(ruleResult => {
-        const result = ruleResult === true ?
-          intermediateResult :
-          defaultTo
+      when(intermediateResult)
+      .then(whenResult => {
+        const result = whenResult === true ?
+          defaultTo :
+          intermediateResult
 
         resolve(result)
       })
@@ -45,9 +45,9 @@ function wrap (fn, { rule, defaultTo }) {
   return function (input) {
     const intermediateResult = fn(input)
 
-    return rule(intermediateResult) === true ?
-      intermediateResult :
-      defaultTo
+    return when(intermediateResult) === true ?
+      defaultTo :
+      intermediateResult
   }
 }
 
