@@ -4,7 +4,7 @@
   "description": "rambda",
   "main": "index.js",
   "scripts": {
-    "build": "run-s node-build node-minify",
+    "build": "run-s node-build",
     "test": "jest",
     "docs": "docsify init ./docs",
     "dev": "jest __tests__/evolve.js",
