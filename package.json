@@ -10,7 +10,7 @@
     "dev": "jest __tests__/wrap.js",
     "cover": "jest --coverage",
     "node-build": "webpack",
-    "node-minify": "sr m minify f index.js o _"
+    "node-minify": "run m minify f index.js o _"
   },
   "repository": {
     "type": "git",
