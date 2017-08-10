@@ -1,4 +1,4 @@
-const { type, has, curry, filter } = require("rambda")
+const { type, curry, filter } = require("rambda")
 function evolve (rules, input) {
   const clone = Object.assign({}, input)
   const propRules = filter(

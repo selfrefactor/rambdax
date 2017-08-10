@@ -175,6 +175,46 @@ fn(6) //=> true
 fn(7) //=> false
 ```
 
+#### evolve
+
+> evolve (rules: Object, input: Object): Object
+
+Properties of `input` object are transformed according to `rules` object that contains functions as values.
+
+If property `prop` of `rules` is a function and also a property of `input`, then `input[prop]` will be equal to the result of `rules[prop](input[prop])`.
+
+
+`rules[prop]` can be also a object that contains functions, as you can see in the example below:
+
+```
+const input = {
+    firstName : "  Tomato ",
+    data      : {
+      elapsed   : 100,
+      remaining : 1400,
+    },
+    id : 123,
+  }
+const rules = {
+    firstName : R.trim,
+    lastName  : R.trim, //Will not get invoked.
+    data      : {
+      elapsed   : R.add(1),
+      remaining : R.add(-1),
+    },
+  }
+  
+const result = R.evolve(transformations, tomato)
+expect(result).toEqual({
+  firstName: "Tomato",
+  data: {
+    elapsed: 101,
+    remaining: 1399,
+  },
+  id: 123,
+})  
+```
+
 #### flip
 
 > flip(fn: Function): Function
