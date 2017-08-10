@@ -27,7 +27,7 @@ function produce (conditions, inputArgument) {
   let asyncConditionsFlag = false
   for (const prop in conditions) {
     if (
-    asyncConditionsFlag === false &&
+      asyncConditionsFlag === false &&
     R.type(conditions[ prop ]) === "Async"
     ) {
       asyncConditionsFlag = true
@@ -54,16 +54,16 @@ function produce (conditions, inputArgument) {
 
   return new Promise((resolve, reject) => {
     Promise.all(promised)
-    .then(results => {
-      const willReturn = {}
+      .then(results => {
+        const willReturn = {}
 
-      R.map(result => {
-        willReturn[ result.type ] = result.payload
-      }, results)
+        R.map(result => {
+          willReturn[ result.type ] = result.payload
+        }, results)
 
-      resolve(willReturn)
-    })
-    .catch(err => reject(err))
+        resolve(willReturn)
+      })
+      .catch(err => reject(err))
   })
 }
 

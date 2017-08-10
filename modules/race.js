@@ -25,9 +25,9 @@ function race (promises) {
       }))
     }
     Promise.race(promisedArr)
-    .then(result => {
-      resolve({ [ result.prop ] : result.result })
-    })
+      .then(result => {
+        resolve({ [ result.prop ] : result.result })
+      })
       .catch(err => {
         resolve({ [ err.prop ] : err.error })
       })

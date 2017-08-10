@@ -49,10 +49,10 @@ describe("composeAsync", () => {
 
 describe("composeAsync", () => {
   it("", async () => {
-    try{
+    try {
       const delayAsync = async ms => delay(ms)
 
-      const delay = ms => new Promise((_,reject) => {
+      const delay = ms => new Promise((_, reject) => {
         setTimeout(() => {
           reject("error")
         }, ms)
@@ -61,10 +61,10 @@ describe("composeAsync", () => {
         a => a - 1000,
         delayAsync
       )(20)
-    }catch(err){
+    } catch (err) {
       expect(
         err
-      ).toEqual("error") 
+      ).toEqual("error")
     }
   })
 })

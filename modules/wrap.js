@@ -8,18 +8,18 @@ function wrap (fn, { when, defaultTo }) {
       fn(input).then(intermediateResult => {
         if (isPromiseLike(when)) {
           when(input)
-          .then(whenResult => {
-            const result = whenResult === true ?
-              defaultTo :
-              intermediateResult
+            .then(whenResult => {
+              const result = whenResult === true ?
+                defaultTo :
+                intermediateResult
 
-            resolve()
-          })
-          .catch(reject)
+              resolve()
+            })
+            .catch(reject)
         } else {
           const result = when(intermediateResult) === true ?
-          defaultTo :
-          intermediateResult
+            defaultTo :
+            intermediateResult
 
           resolve(result)
         }
@@ -31,14 +31,14 @@ function wrap (fn, { when, defaultTo }) {
       const intermediateResult = fn(input)
 
       when(intermediateResult)
-      .then(whenResult => {
-        const result = whenResult === true ?
-          defaultTo :
-          intermediateResult
+        .then(whenResult => {
+          const result = whenResult === true ?
+            defaultTo :
+            intermediateResult
 
-        resolve(result)
-      })
-      .catch(reject)
+          resolve(result)
+        })
+        .catch(reject)
     })
   }
 

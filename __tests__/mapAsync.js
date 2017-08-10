@@ -7,7 +7,7 @@ const delay = a => new Promise(resolve => {
 })
 const fn = a => new Promise(resolve => {
   setTimeout(() => {
-    if(a.length === undefined){
+    if (a.length === undefined) {
       return resolve(typeof a)
     }
     resolve(a.length)
@@ -28,7 +28,7 @@ const rejectDelay = a => new Promise((_, reject) => {
 
 describe("mapAsync", () => {
   it("", async () => {
-    const result = await R.mapAsync(delay,[ 1, 2, 3 ])
+    const result = await R.mapAsync(delay, [ 1, 2, 3 ])
     expect(result).toEqual([ 21, 22, 23 ])
   })
 

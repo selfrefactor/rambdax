@@ -1,4 +1,4 @@
-const {filter} = require("rambda")
+const { filter } = require("rambda")
 
 function all (condition, arr) {
   if (arr === undefined) {

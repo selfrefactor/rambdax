@@ -1,5 +1,5 @@
 module.exports = ms => new Promise(resolve => {
-  setTimeout(function () {
+  setTimeout(() => {
     resolve("RAMBDAX_DELAY")
   }, ms)
 })

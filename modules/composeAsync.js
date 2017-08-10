@@ -1,22 +1,22 @@
 const R = require("rambda")
 
 const composeAsync = (...inputArguments) => {
-  try{
-    return async function(startArgument){
+  try {
+    return async function (startArgument) {
       let argumentsToPass = startArgument
 
-      while(inputArguments.length!==0){
+      while (inputArguments.length !== 0) {
         const fn = inputArguments.pop()
-        if(R.type(fn) === "Async" || R.type(fn) === "Promise"){
+        if (R.type(fn) === "Async" || R.type(fn) === "Promise") {
           argumentsToPass = await fn(argumentsToPass)
-        }else{
+        } else {
           argumentsToPass = fn(argumentsToPass)
         }
       }
-      
+
       return argumentsToPass
     }
-  }catch(err){
+  } catch (err) {
     throw err
   }
 }

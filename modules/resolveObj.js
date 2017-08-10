@@ -11,15 +11,15 @@ function resolve (promises) {
       counter++
     }
     Promise.all(promisedArr)
-    .then(result => {
-      const willReturn = {}
-      result.map((val, key) => {
-        const prop = props[ key ]
-        willReturn[ prop ] = val
-      })
+      .then(result => {
+        const willReturn = {}
+        result.map((val, key) => {
+          const prop = props[ key ]
+          willReturn[ prop ] = val
+        })
 
-      res(willReturn)
-    })
+        res(willReturn)
+      })
       .catch(rej)
   })
 }

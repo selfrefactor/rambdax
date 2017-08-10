@@ -1,11 +1,12 @@
-const {filter, equals} = require("rambda")
+const { filter, equals } = require("rambda")
 
-function ignore(element, arr){
-  if(arr === undefined){
+function ignore (element, arr) {
+  if (arr === undefined) {
     return holder => ignore(a, holder)
   }
+
   return filter(
-    a => !equals(a,element),
+    a => !equals(a, element),
     arr
   )
 }

@@ -16,7 +16,7 @@ function renameProps (conditions, inputObject) {
     R.omit(
       Object.keys(conditions),
       inputObject
-      )
     )
+  )
 }
 module.exports = renameProps
