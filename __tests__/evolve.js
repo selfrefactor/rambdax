@@ -2,7 +2,7 @@ const R = require("../rambdax")
 
 test("", () => {
   const tomato = {
-    firstName: "  Tomato ",
+    firstName: "  Foo ",
     data: {
       elapsed: 100,
       remaining: 1400,
@@ -19,7 +19,7 @@ test("", () => {
   }
   const result = R.evolve(transformations, tomato)
   expect(result).toEqual({
-    firstName: "Tomato",
+    firstName: "Foo",
     data: {
       elapsed: 101,
       remaining: 1399,

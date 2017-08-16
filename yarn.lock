@@ -2919,9 +2919,9 @@ rambda@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.6.1.tgz#efac71532b5be28ffe42c13e22bd196296d40dc4"
 
-rambda@^0.7.6:
-  version "0.7.6"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.7.6.tgz#877c84a2f64aeceec9c3079382dd15f836997572"
+rambda@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.1.tgz#4eb546fea6fc45594dd5f1207437588e747a4a7f"
 
 randomatic@^1.1.3:
   version "1.1.6"
@@ -3604,9 +3604,9 @@ webpack-sources@^1.0.1:
     source-list-map "^2.0.0"
     source-map "~0.5.3"
 
-webpack@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.4.1.tgz#4c3f4f3fb318155a4db0cb6a36ff05c5697418f4"
+webpack@^3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.5.4.tgz#5583eb263ed27b78b5bd17bfdfb0eb1b1cd1bf81"
   dependencies:
     acorn "^5.0.0"
     acorn-dynamic-import "^2.0.0"
