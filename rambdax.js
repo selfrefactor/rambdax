@@ -1,11 +1,7 @@
 const R = require("rambda")
 
-exports.all = require("./modules/all")
-exports.allPass = require("./modules/allPass")
-exports.both = require("./modules/both")
 exports.compact = require("./modules/compact")
 exports.composeAsync = require("./modules/composeAsync")
-exports.either = require("./modules/either")
 exports.flip = require("./modules/flip")
 exports.intersection = require("./modules/intersection")
 exports.isValid = require("./modules/isValid")
