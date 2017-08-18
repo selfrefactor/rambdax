@@ -686,7 +686,7 @@ condition({
 
 #### wrap
 
-> wrap(fn: Function, {when: Function|Async, defaultTo: any}): Promise|Function
+> wrap({fn: Function, when: Function|Async, defaultTo: any}): Promise|Function
 
 It returns a function or a Promise with input argument `input`.
 
@@ -704,11 +704,10 @@ It returns a function or a Promise with input argument `input`.
 
 
 ```
-const result = R.wrap(
-  R.filter(a => a > 3), 
-  { 
-    defaultTo:  [ 4 ],
-    when:       x => R.length(x) === 0
+const result = R.wrap({
+  fn: R.filter(a => a > 3), 
+  defaultTo:  [ 4 ],
+  when:       x => R.length(x) === 0
 })([1, 2, 3])
 
 expect(result)
