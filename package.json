@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "docs": "docsify init ./docs",
-    "dev": "jest __tests__/evolve.js",
+    "dev": "jest __tests__/wrap.js",
     "cover": "jest --coverage",
     "build": "webpack",
     "node-minify": "run m minify f index.js o _"
