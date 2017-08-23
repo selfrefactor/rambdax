@@ -20,7 +20,7 @@ describe("resolve", () => {
       payload : 2000,
       type    : "RESULT",
     })
-    expect(result[ 1 ].type).toBe("error")
+    expect(result[ 1 ].type).toBe("ERROR")
     expect(result[ 2 ]).toEqual({
       payload : 1000,
       type    : "RESULT",
