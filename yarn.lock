@@ -326,9 +326,9 @@ babel-jest@^20.0.3:
     babel-plugin-istanbul "^4.0.0"
     babel-preset-jest "^20.0.3"
 
-babel-loader@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-7.1.1.tgz#b87134c8b12e3e4c2a94e0546085bc680a2b8488"
+babel-loader@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-7.1.2.tgz#f6cbe122710f1aa2af4d881c6d5b54358ca24126"
   dependencies:
     find-cache-dir "^1.0.0"
     loader-utils "^1.0.2"
@@ -2799,9 +2799,9 @@ rambda@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.6.1.tgz#efac71532b5be28ffe42c13e22bd196296d40dc4"
 
-rambda@^0.8.5:
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.5.tgz#83e98c62bdaceef1a877910f8816f20264b2ac3d"
+rambda@^0.8.7:
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.7.tgz#9a93117ac580a75aedb2a81aa33e131c70194c83"
 
 randomatic@^1.1.3:
   version "1.1.6"

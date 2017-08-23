@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.8.5"
+    "rambda": "^0.8.7"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.1",
+    "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.24.1",
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",

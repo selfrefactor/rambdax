@@ -4,17 +4,17 @@ const wrapper = promise => new Promise(resolve => {
   promise.then(result => {
     resolve({
       payload : result,
-      type    : "result",
+      type    : "RESULT",
     })
   }).catch(err => {
     resolve({
       payload : err,
-      type    : "error",
+      type    : "ERROR",
     })
   })
 })
 
-async function resolveExport (input) {
+async function resolve (input) {
   try {
     const promised = R.map(
       a => wrapper(a),
@@ -27,4 +27,4 @@ async function resolveExport (input) {
   }
 }
 
-module.exports = resolveExport
+module.exports = resolve
