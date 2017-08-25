@@ -26,6 +26,7 @@ exports.renameProps = require("./modules/renameProps")
 exports.resolve = require("./modules/resolve")
 exports.resolveSecure = require("./modules/resolveSecure")
 exports.tap = require("./modules/tap")
+exports.tapAsync = require("./modules/tapAsync")
 exports.where = require("./modules/where")
 exports.wrap = require("./modules/wrap")
 

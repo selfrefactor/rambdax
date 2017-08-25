@@ -623,10 +623,25 @@ It returns randomized copy of `arr`.
 
 It returns back `inputArgument` after calling `fn` with `inputArgument`. 
 
-
 ```
 const log = a => console.log(a)
 const result = R.tap(log, "foo")
+// the console logs `foo`
+// `result` is equal to "foo"
+```
+
+#### tapAsync
+
+> tapAsync(fn: Function|Async|Promise, inputArgument: T): T
+
+It is `R.tap` that accept promise-like `fn` argument. 
+
+```
+const log = async a => {
+  await R.delay(1000)
+  console.log(a)
+}
+const result = R.tapAsync(log, "foo")
 // the console logs `foo`
 // `result` is equal to "foo"
 ```
