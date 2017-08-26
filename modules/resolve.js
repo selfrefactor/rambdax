@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 
 function resolve (promises) {
   return new Promise((res, rej) => {

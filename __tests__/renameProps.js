@@ -1,9 +1,9 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-test("renameProps", () => {
+test('renameProps', () => {
   const rules = {
-    f : "foo",
-    b : "bar",
+    f : 'foo',
+    b : 'bar',
   }
   const input = {
     f : 1,

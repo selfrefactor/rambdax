@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 
 const helper = ({ promise, prop }) => new Promise((resolve, reject) => {
   promise.then(result => {

@@ -1,4 +1,4 @@
-const { filter, equals } = require("rambda")
+const { filter, equals } = require('rambda')
 
 function ignore (element, arr) {
   if (arr === undefined) {

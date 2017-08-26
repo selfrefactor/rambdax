@@ -1,4 +1,4 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
 const delay = () => new Promise(resolve => {
   setTimeout(() => {
@@ -6,8 +6,8 @@ const delay = () => new Promise(resolve => {
   }, 333)
 })
 
-describe("produce", () => {
-  it("", async () => {
+describe('produce', () => {
+  it('', async () => {
     const fn = R.produce({
       foo : async () => {
         const result = await delay()
@@ -25,6 +25,6 @@ describe("produce", () => {
 
     expect(
       typeof result.foo
-    ).toEqual("string")
+    ).toEqual('string')
   })
 })

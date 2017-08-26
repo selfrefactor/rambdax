@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 
 function rangeBy (startNum, endNum, distance) {
   if (endNum === undefined) {
@@ -7,7 +7,7 @@ function rangeBy (startNum, endNum, distance) {
     return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
   }
 
-  const isInteger = !distance.toString().includes(".")
+  const isInteger = !distance.toString().includes('.')
   if (startNum > endNum) {
     const startNumHolder = startNum
     startNum = endNum
@@ -26,7 +26,7 @@ function rangeBy (startNum, endNum, distance) {
     const decimalLength = R.compose(
       R.length,
       R.last,
-      R.split(".")
+      R.split('.')
     )(distance.toString())
     const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance))
     for (const i of loopIndexes) {

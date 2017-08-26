@@ -1,4 +1,4 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
 const delay = a => new Promise(resolve => {
   setTimeout(() => {
@@ -26,13 +26,13 @@ const rejectDelay = a => new Promise((_, reject) => {
   }, 100)
 })
 
-describe("mapAsync", () => {
-  it("", async () => {
+describe('mapAsync', () => {
+  it('', async () => {
     const result = await R.mapAsync(delay, [ 1, 2, 3 ])
     expect(result).toEqual([ 21, 22, 23 ])
   })
 
-  it("composeAsync", async () => {
+  it('composeAsync', async () => {
     const result = await R.composeAsync(
       R.mapAsync(delay),
       R.mapAsync(async a => delay(a)),
@@ -41,7 +41,7 @@ describe("mapAsync", () => {
     expect(result).toEqual([ 50, 60, 70 ])
   })
 
-  it("error", async () => {
+  it('error', async () => {
     try {
       const result = await R.mapAsync(rejectDelay)([ 1, 2, 3 ])
     } catch (err) {

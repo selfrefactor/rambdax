@@ -9,7 +9,11 @@
     "dev": "jest --watch __tests__/tapAsync.js",
     "cover": "jest --coverage",
     "build": "webpack",
-    "node-minify": "run m minify f index.js o _"
+    "node-minify": "run m minify f index.js o _",
+    "lintall": "run-p lint-test lint-modules lint-rambdax",
+    "lint-test": "cd __tests__&&run m lintFolder",
+    "lint-modules": "cd modules&&run m lintFolder",
+    "lint-rambdax": "run m lint f rambdax.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +31,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
+    "npm-run-all": "^4.0.2",
     "rambda": "^0.8.7"
   },
   "devDependencies": {

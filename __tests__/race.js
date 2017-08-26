@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("race", () => {
-  it("", async () => {
+describe('race', () => {
+  it('', async () => {
     const delay = ms => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 0) {
@@ -32,8 +32,8 @@ describe("race", () => {
   })
 })
 
-describe("race", () => {
-  it("", async () => {
+describe('race', () => {
+  it('', async () => {
     const delay = ms => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (Math.random() > 1) {

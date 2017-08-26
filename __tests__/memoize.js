@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("memoize", () => {
-  it("normal function", () => {
+describe('memoize', () => {
+  it('normal function', () => {
     let counter = 0
     const fn = ({ a, b, c }) => {
       counter++
@@ -24,8 +24,8 @@ describe("memoize", () => {
   })
 })
 
-describe("memoize", () => {
-  it("normal function", () => {
+describe('memoize', () => {
+  it('normal function', () => {
     let counter = 0
     const fn = (a, b) => {
       counter++
@@ -43,7 +43,7 @@ describe("memoize", () => {
     expect(counter).toBe(2)
   })
 
-  it("async function", async () => {
+  it('async function', async () => {
     let counter = 0
     const delay = ms => new Promise(resolve => {
       setTimeout(resolve, ms)
@@ -66,7 +66,7 @@ describe("memoize", () => {
     expect(counter).toBe(2)
   })
 
-  it("", () => {
+  it('', () => {
     let count = 0
     const tester = R.memoize(n => {
       count++

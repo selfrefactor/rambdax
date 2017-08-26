@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 
 function mergeAll (arr) {
   let willReturn = {}

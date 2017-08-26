@@ -1,7 +1,7 @@
-const {type} = require("rambda")
+const { type } = require('rambda')
 
-function isPromiseLike(x){
-  return ['Async', 'Promise'].includes(type(x))
+function isPromiseLike (x) {
+  return [ 'Async', 'Promise' ].includes(type(x))
 }
 
 module.exports = isPromiseLike

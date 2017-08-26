@@ -1,15 +1,15 @@
-const R = require("rambda")
+const R = require('rambda')
 
 const wrapper = promise => new Promise(resolve => {
   promise.then(result => {
     resolve({
       payload : result,
-      type    : "RESULT",
+      type    : 'RESULT',
     })
   }).catch(err => {
     resolve({
       payload : err,
-      type    : "ERROR",
+      type    : 'ERROR',
     })
   })
 })

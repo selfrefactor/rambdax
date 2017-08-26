@@ -1,22 +1,21 @@
-const isPromiseLike = x => ['Async', 'Promise'].includes(x)
+const isPromiseLike = x => [ 'Async', 'Promise' ].includes(x)
 
 function tapAsync (fn, input) {
   if (input === undefined) {
     return inputHolder => tapAsync(fn, inputHolder)
   }
-  if(isPromiseLike(fn) === true){
-    return new Promise((resolve,reject)=>{
+  if (isPromiseLike(fn) === true) {
+    return new Promise((resolve, reject) => {
       fn(input)
-      .then(()=>{
-        resolve(input)
-      })
-      .catch(reject)
+        .then(() => {
+          resolve(input)
+        })
+        .catch(reject)
     })
-  }else{
-    fn(input)
+  }
+  fn(input)
 
-    return input
-  }  
+  return input
 }
 
 module.exports = tapAsync

@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 const cache = {}
 
 const normalizeObject = obj => {
@@ -13,13 +13,13 @@ const normalizeObject = obj => {
 }
 
 const stringify = a => {
-  if (R.type(a) === "String") {
+  if (R.type(a) === 'String') {
     return a
-  } else if ([ "Function", "Async" ].includes(R.type(a))) {
-    const compacted = R.replace(/\s{1,}/g, " ", a.toString())
+  } else if ([ 'Function', 'Async' ].includes(R.type(a))) {
+    const compacted = R.replace(/\s{1,}/g, ' ', a.toString())
 
-    return R.replace(/\s/g, "_", R.take(15, compacted))
-  } else if (R.type(a) === "Object") {
+    return R.replace(/\s/g, '_', R.take(15, compacted))
+  } else if (R.type(a) === 'Object') {
     a = normalizeObject(a)
   }
 
@@ -27,7 +27,7 @@ const stringify = a => {
 }
 
 const generateProp = (fn, ...inputArguments) => {
-  let propString = ""
+  let propString = ''
   inputArguments.map(inputArgument => {
     propString += `${ stringify(inputArgument) }_`
   })
@@ -43,7 +43,7 @@ function memoize (fn, ...inputArguments) {
   if (prop in cache) {
     return cache[ prop ]
   }
-  if (R.type(fn) === "Async") {
+  if (R.type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
         cache[ prop ] = result

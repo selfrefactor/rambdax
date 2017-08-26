@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("resolve", () => {
-  it("", async () => {
+describe('resolve', () => {
+  it('', async () => {
     const delay = ms => new Promise(resolve => {
       setTimeout(() => {
         resolve(ms)

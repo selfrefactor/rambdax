@@ -1,4 +1,4 @@
-const { type, curry, filter } = require("rambda")
+const { type, curry, filter } = require('rambda')
 function evolve (rules, input) {
   const clone = Object.assign({}, input)
   const propRules = filter(
@@ -11,9 +11,9 @@ function evolve (rules, input) {
 
   propRules.map(prop => {
     const fn = rules[ prop ]
-    if (type(fn) === "Function") {
+    if (type(fn) === 'Function') {
       clone[ prop ] = fn(clone[ prop ])
-    } else if (type(fn) === "Object") {
+    } else if (type(fn) === 'Object') {
       clone[ prop ] = evolve(fn, clone[ prop ])
     }
   })

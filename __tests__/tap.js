@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("tap", () => {
-  it("", () => {
+describe('tap', () => {
+  it('', () => {
     let a = 1
     const sayX = x => a = x
     expect(

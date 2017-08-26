@@ -1,8 +1,8 @@
-const R = require("rambda")
+const R = require('rambda')
 
-const isPromiseLike = x => [ "Async", "Promise" ].includes(R.type(x))
+const isPromiseLike = x => [ 'Async', 'Promise' ].includes(R.type(x))
 
-function wrap ({fn, when, defaultTo }) {
+function wrap ({ fn, when, defaultTo }) {
   if (isPromiseLike(fn)) {
     return input => new Promise((resolve, reject) => {
       fn(input).then(intermediateResult => {

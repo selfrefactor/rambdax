@@ -1,8 +1,8 @@
-const R = require("rambda")
+const R = require('rambda')
 
 function helper ({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
-    if (!(R.type(condition) === "Async")) {
+    if (!(R.type(condition) === 'Async')) {
       return resolve({
         type    : prop,
         payload : condition(inputArgument),
@@ -28,7 +28,7 @@ function produce (conditions, inputArgument) {
   for (const prop in conditions) {
     if (
       asyncConditionsFlag === false &&
-    R.type(conditions[ prop ]) === "Async"
+    R.type(conditions[ prop ]) === 'Async'
     ) {
       asyncConditionsFlag = true
     }

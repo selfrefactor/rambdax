@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("once", () => {
-  it("", () => {
+describe('once', () => {
+  it('', () => {
     let counter = 0
     const once = R.once(x => {
       counter++
@@ -15,7 +15,7 @@ describe("once", () => {
     expect(counter).toEqual(1)
   })
 
-  it("", () => {
+  it('', () => {
     const addOneOnce = R.once((a, b, c) => a + b + c)
 
     expect(addOneOnce(10, 20, 30)).toBe(60)

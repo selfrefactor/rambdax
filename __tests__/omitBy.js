@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("omitBy", () => {
-  it("should remove omitted props", () => {
+describe('omitBy', () => {
+  it('should remove omitted props', () => {
     const input = {
       a : 1,
       b : 2,

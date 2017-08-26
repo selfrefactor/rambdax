@@ -1,11 +1,11 @@
-const R = require("rambda")
+const R = require('rambda')
 
 const types = [
-  "Null",
-  "Undefined",
-  "RegExp",
-  "Function",
-  "Async",
+  'Null',
+  'Undefined',
+  'RegExp',
+  'Function',
+  'Async',
 ]
 
 function compact (arr) {
@@ -16,7 +16,7 @@ function compact (arr) {
       if (types.includes(currentType)) {
         return false
       }
-      if (currentType === "Object") {
+      if (currentType === 'Object') {
         return !R.equals(a, {})
       }
 

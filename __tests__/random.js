@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("random", () => {
-  it("when returns true", () => {
+describe('random', () => {
+  it('when returns true', () => {
     R.range(0, 100).map(() => {
       const randomResult = R.random(1, 10)
       expect(randomResult).toBeLessThanOrEqual(10)

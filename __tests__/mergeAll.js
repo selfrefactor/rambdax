@@ -1,7 +1,7 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
-describe("mergeAll", () => {
-  it("", () => {
+describe('mergeAll', () => {
+  it('', () => {
     const arr = [
       { a : 1 },
       { b : 2 },
@@ -15,7 +15,7 @@ describe("mergeAll", () => {
     expect(R.mergeAll(arr)).toEqual(expectedResult)
   })
 
-  it("", () => {
+  it('', () => {
     expect(
       R.mergeAll([ { foo : 1 }, { bar : 2 }, { baz : 3 } ])
     ).toEqual({

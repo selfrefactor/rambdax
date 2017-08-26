@@ -1,15 +1,15 @@
-const R = require("../rambdax")
+const R = require('../rambdax')
 
 test('isPromiseLike', () => {
   expect(
     R.isPromiseLike(
-      ()=>{}
+      () => {}
     )
   ).toBeFalsy()
 
   expect(
     R.isPromiseLike(
-      async ()=>{}
+      async () => {}
     )
   ).toBeTruthy()
 
@@ -26,7 +26,7 @@ test('isPromiseLike', () => {
   ).toBeTruthy()
 })
 
-test('isType', ()=> {
-  expect(R.isType('String','foo')).toBeTruthy()
-  expect(R.isType('Array','foo')).toBeFalsy()
+test('isType', () => {
+  expect(R.isType('String', 'foo')).toBeTruthy()
+  expect(R.isType('Array', 'foo')).toBeFalsy()
 })

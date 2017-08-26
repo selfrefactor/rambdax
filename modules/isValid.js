@@ -1,7 +1,7 @@
-const R = require("rambda")
+const R = require('rambda')
 
 const isValid = (obj, schema) => {
-  if (R.type(obj) === "Object" && R.type(schema) === "Object") {
+  if (R.type(obj) === 'Object' && R.type(schema) === 'Object') {
     let flag = true
     for (requirement in schema) {
       if (flag) {
@@ -10,7 +10,7 @@ const isValid = (obj, schema) => {
         const objProp = obj[ requirement ]
         const objPropType = R.type(obj[ requirement ])
 
-        if (ruleType === "Object" && rule.type === "ArrayOfSchemas" && objPropType === "Array") {
+        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && objPropType === 'Array') {
           objProp.map(val => {
             let localFlag = false
             rule.rule.map(singleRule => {
@@ -23,7 +23,7 @@ const isValid = (obj, schema) => {
             }
           })
         } else if (
-          ruleType === "String"
+          ruleType === 'String'
         ) {
           if (objProp !== undefined) {
             if (R.toLower(objPropType) !== rule) {
@@ -33,14 +33,14 @@ const isValid = (obj, schema) => {
             flag = false
           }
         } else if (
-          typeof rule === "function"
+          typeof rule === 'function'
         ) {
           if (rule(objProp) === false) {
             flag = false
           }
         } else if (
-          ruleType === "Object" &&
-          objPropType === "Object"
+          ruleType === 'Object' &&
+          objPropType === 'Object'
         ) {
           if (
             !isValid(objProp, rule)
@@ -48,21 +48,21 @@ const isValid = (obj, schema) => {
             flag = false
           }
         } else if (
-          ruleType === "Array" &&
-          objPropType === "String"
+          ruleType === 'Array' &&
+          objPropType === 'String'
         ) {
           if (!R.contains(objProp, rule)) {
             flag = false
           }
         } else if (
-          ruleType === "Array" &&
-          objPropType === "Array" &&
+          ruleType === 'Array' &&
+          objPropType === 'Array' &&
           rule.length === 1 &&
           objProp.length > 0
         ) {
           const arrayRuleType = R.type(rule[ 0 ])
 
-          if (arrayRuleType === "String") {
+          if (arrayRuleType === 'String') {
             const result = R.any(
               val => R.toLower(R.type(val)) !== rule[ 0 ],
               objProp
@@ -71,7 +71,7 @@ const isValid = (obj, schema) => {
             if (result) {
               flag = false
             }
-          } else if (arrayRuleType === "Object") {
+          } else if (arrayRuleType === 'Object') {
             const result = R.any(
               val => !isValid(val, rule[ 0 ])
             )(objProp)
@@ -80,8 +80,8 @@ const isValid = (obj, schema) => {
             }
           }
         } else if (
-          ruleType === "RegExp" &&
-          objPropType === "String"
+          ruleType === 'RegExp' &&
+          objPropType === 'String'
         ) {
           if (!R.test(rule, objProp)) {
             flag = false

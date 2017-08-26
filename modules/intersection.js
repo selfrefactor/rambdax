@@ -1,4 +1,4 @@
-const R = require("rambda")
+const R = require('rambda')
 
 function intersection (a, b) {
   if (b === undefined) {
