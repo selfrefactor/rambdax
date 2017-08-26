@@ -1,5 +1,7 @@
 const R = require("rambda")
 
+const isType = require("./modules/isType")
+
 exports.compact = require("./modules/compact")
 exports.composeAsync = require("./modules/composeAsync")
 exports.flip = require("./modules/flip")
@@ -19,7 +21,13 @@ exports.produce = require("./modules/produce")
 exports.shuffle = require("./modules/shuffle")
 exports.throttle = require("./modules/throttle")
 exports.debounce = require("./modules/debounce")
+exports.isType = isType
+exports.isString = x => isType('String',x)
+exports.isString = x => isType('Array',x)
+exports.isObject = x => isType('Object',x)
+exports.isPromiseLike = require("./modules/isPromiseLike")
 exports.race = require("./modules/race")
+exports.isString = require("./modules/race")
 exports.random = require("./modules/random")
 exports.rangeBy = require("./modules/rangeBy")
 exports.renameProps = require("./modules/renameProps")
