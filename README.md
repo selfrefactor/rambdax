@@ -732,34 +732,88 @@ expect(result)
 
 ### Methods inherited from Rambda
 
-
 #### add
 
 > add(a: Number, b: Number): Number
 
 ```javascript
-R.add(2, 3) //=>  5
+R.add(2, 3) // =>  5
+```
+
+#### addIndex
+
+> addIndex(fn: Function): Function
+
+```javascript
+const mapWithIndex = R.addIndex(R.map)
+mapWithIndex(
+  (val, index) => `${val} - ${index}`,
+  ["A", "B", "C"]
+) // => ["A - 0", "B - 1", "C - 2"]
 ```
 
 #### adjust
 
 > adjust(replaceFn: Function, i:Number, arr:Array): Array
 
-- Replaces `i` index in `arr` with the result of `replaceFn(arr[i])`
+It replaces `i` index in `arr` with the result of `replaceFn(arr[i])`.
 
 ```javascript
-R.adjust(a => a + 1, 0, [0, 100]) //=> [1, 100]
+R.adjust(a => a + 1, 0, [0, 100]) // => [1, 100]
+```
+
+#### all
+
+> all(fn: Function, arr: Array): Boolean
+
+It returns `true` if all members of array `arr` returns `true`, when applied as argument to function `fn`.
+
+```
+const arr = [ 0, 1, 2, 3, 4 ]
+const fn = x => x > -1
+R.all(fn, arr) // => true
+```
+
+#### allPass
+
+> allPass(rules: Array<Function>, input: any): Boolean
+
+It returns `true` if all functions of `rules` return `true`, when `input` is their argument.
+
+```
+const input = {
+  a : 1,
+  b : 2,
+}
+const rules = [
+  x => x.a === 1,
+  x => x.b === 2,
+]
+R.allPass(conditionArr, obj) // => true
+```
+
+#### always
+
+> always(x: any): Function
+
+It returns function that always returns `x`.
+```
+const fn = R.always(7)
+
+fn()// => 7
+fn()// => 7
 ```
 
 #### any
 
 > any(condition: Function, arr: Array): Boolean
 
-- Returns true if at least one member of `arr` returns true, when passed to the `condition` function
+It returns true if at least one member of `arr` returns true,
+when passed to the `condition` function.
 
 ```javascript
-R.any(a => a * a > 8)([1, 2, 3]) //=> true
-R.any(a => a * a > 10)([1, 2, 3]) //=> false
+R.any(a => a * a > 8)([1, 2, 3]) // => true
+R.any(a => a * a > 10)([1, 2, 3]) // => false
 ```
 
 #### append
@@ -767,14 +821,29 @@ R.any(a => a * a > 10)([1, 2, 3]) //=> false
 > append(valueToAppend: any, arr: Array): Array
 
 ```javascript
-R.append('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
+R.append('foo', ['bar', 'baz']) // => ['foo', 'bar', 'baz']
+```
+
+#### both
+
+> both(x: Function, y: Function, input: any): Boolean
+
+It returns `true` if both function `x` and function `y` return `true`, when `input` is their argument.
+
+```
+const fn = R.both(
+  a => a > 10,
+  a => a < 20
+)
+fn(15) //=> true
+fn(30) //=> false
 ```
 
 #### compose
 
 > compose(fn1: Function, ... , fnN: Function): any
 
-Performs right-to-left function composition
+It performs right-to-left function composition.
 ```
 const result = R.compose(
   R.map(a => a*2)
@@ -783,22 +852,46 @@ const result = R.compose(
 console.log(result) // => [6, 8]
 ```
 
+#### complement
+
+> complement(fn: Function): Function
+
+It returns `complemented` function that accept `input` as argument.
+
+The return value of `complemented` is the negative boolean value of `fn(input)`.
+
+```
+R.complement(R.always(0)) // => true
+R.complement(R.always(true)) // => false
+```
+
+#### concat
+
+> concat(x: Array|String, y: Array|String): Array|String
+
+It returns new string or array, which is result merging `x` and `y`.
+
+```
+R.concat([1, 2])([3, 4]) // => [1, 2, 3, 4]
+R.concat('foo', 'bar') // => 'foobar'
+```
+
 #### contains
 
 > contains(valueToFind: any, arr: Array): Boolean
 
-Returns true if `valueToFind` is part of `arr`
+It returns true if `valueToFind` is part of `arr`.
 
 ```javascript
-R.contains(2, [1, 2]) //=> true
-R.contains(3, [1, 2]) //=> false
+R.contains(2, [1, 2]) // => true
+R.contains(3, [1, 2]) // => false
 ```
 
 #### curry
 
 > curry(fn: Function): Function
 
-Returns curried version of `fn`
+It returns curried version of `fn`.
 
 ```javascript
 const addFourNumbers = (a, b, c, d) => a + b + c + d
@@ -812,51 +905,89 @@ g(4) // => 10
 
 > defaultTo(defaultArgument: T, inputArgument: any): T
 
-Returns `defaultArgument` if `inputArgument` is `undefined` or the type of `inputArgument` is different of the type of `defaultArgument`.
+It returns `defaultArgument` if `inputArgument` is `undefined` or the type of `inputArgument` is different of the type of `defaultArgument`.
 
-Returns `inputArgument` in any other case.
+It returns `inputArgument` in any other case.
 
 ```javascript
-R.defaultTo('foo', undefined) //=> 'foo'
-R.defaultTo('foo')('bar') //=> 'bar'
-R.defaultTo('foo')(1) //=> 'foo'
+R.defaultTo('foo', undefined) // => 'foo'
+R.defaultTo('foo')('bar') // => 'bar'
+R.defaultTo('foo')(1) // => 'foo'
+```
+
+#### divide
+
+```javascript
+R.divide(71, 100) // => 0.71
 ```
 
 #### drop
 
 > drop(howManyToDrop: Number, arrOrStr: Array|String): Array|String
 
-Returns `arrOrStr` with `howManyToDrop` items dropped from the left
+It returns `arrOrStr` with `howManyToDrop` items dropped from the left.
 
 ```javascript
-R.drop(1, ['foo', 'bar', 'baz']) //=> ['bar', 'baz']
-R.drop(1, 'foo')  //=> 'oo'
+R.drop(1, ['foo', 'bar', 'baz']) // => ['bar', 'baz']
+R.drop(1, 'foo')  // => 'oo'
 ```
 
 #### dropLast
 
 > dropLast(howManyToDrop: Number, arrOrStr: Array|String): Array|String
 
-Returns `arrOrStr` with `howManyToDrop` items dropped from the right
+It returns `arrOrStr` with `howManyToDrop` items dropped from the right.
 
 ```javascript
-R.dropLast(1, ['foo', 'bar', 'baz']) //=> ['foo', 'bar']
-R.dropLast(1, 'foo')  //=> 'fo'
+R.dropLast(1, ['foo', 'bar', 'baz']) // => ['foo', 'bar']
+R.dropLast(1, 'foo')  // => 'fo'
+```
+
+#### endsWith
+
+> endsWith(x: any, arrOrStr: Array|String): Boolean
+
+```
+R.endsWith(
+  'bar',
+  "foo-bar"
+) // => true
+
+R.endsWith(
+  'baz',
+  "foo-bar"
+) // => false
+```
+
+#### either
+
+```
+const fn = R.either(
+  a => a > 10,
+  a => a % 2 === 0
+)
+fn(15) //=> true
+fn(6) //=> true
+fn(7) //=> false
 ```
 
 #### equals
 
 > equals(a: any, b: any): Boolean
 
-- Returns equality match between `a` and `b`
+It returns equality match between `a` and `b`.
 
-Doesn't handles cyclical data structures
+It doesn't handle cyclical data structures.
 
 ```javascript
-R.equals(1, 1) //=> true
-R.equals({}, {}) //=> false
-R.equals([1, 2, 3], [1, 2, 3]) //=> true
+R.equals(1, 1) // => true
+R.equals({}, {}) // => false
+R.equals([1, 2, 3], [1, 2, 3]) // => true
 ```
+
+#### F
+
+`R.F() // => false`
 
 #### filter
 
@@ -867,31 +998,31 @@ Filters `arr` throw boolean returning `filterFn`
 ```javascript
 const filterFn = a => a % 2 === 0
 
-R.filter(filterFn, [1, 2, 3, 4]) //=> [2, 4]
+R.filter(filterFn, [1, 2, 3, 4]) // => [2, 4]
 ```
 
 #### find
 
 > find(findFn: Function, arr: Array<T>): T|undefined
 
-Returns `undefined` or the first element of `arr` satisfying `findFn`
+It returns `undefined` or the first element of `arr` satisfying `findFn`.
 
 ```javascript
 const findFn = a => R.type(a.foo) === "Number"
 const arr = [{foo: "bar"}, {foo: 1}]
-R.find(findFn, arr) //=> {foo: 1}
+R.find(findFn, arr) // => {foo: 1}
 ```
 
 #### findIndex
 
 > findIndex(findFn: Function, arr: Array): Number
 
-Returns `-1` or the index of the first element of `arr` satisfying `findFn`
+It returns `-1` or the index of the first element of `arr` satisfying `findFn`.
 
 ```javascript
 const findFn = a => R.type(a.foo) === "Number"
 const arr = [{foo: "bar"}, {foo: 1}]
-R.find(findFn, arr) //=> 1
+R.find(findFn, arr) // => 1
 ```
 
 #### flatten
@@ -899,51 +1030,95 @@ R.find(findFn, arr) //=> 1
 > flatten(arr: Array): Array
 
 ```javascript
-R.flatten([ 1, [ 2, [ 3 ] ] ]
-//=> [ 1, 2, 3 ]
+R.flatten([ 1, [ 2, [ 3 ] ] ])
+// => [ 1, 2, 3 ]
 ```
+
+#### flip
+
+> flip(fn: Function): Function
+
+It returns function which calls `fn` with exchanged first and second argument.
+
+```javascript
+const subtractFlip = R.flip(R.subtract)
+R.subtractFlip(1,7)
+// => 6
+```
+
+Note that it works only for functions that expects two arguments. If third argument is passed, then `undefined` is returned.
 
 #### has
 
 > has(prop: String, obj: Object): Boolean
 
-- Returns `true` if `obj` has property `prop`
+- It returns `true` if `obj` has property `prop`.
 
 ```javascript
-R.has("a", {a: 1}) //=> true
-R.has("b", {a: 1}) //=> false
+R.has("a", {a: 1}) // => true
+R.has("b", {a: 1}) // => false
 ```
 
 #### head
 
 > head(arrOrStr: Array|String): any
 
-- Returns the first element of `arrOrStr`
+It returns the first element of `arrOrStr`.
 
 ```javascript
-R.head([1, 2, 3]) //=> 1
-R.head('foo') //=> 'f'
+R.head([1, 2, 3]) // => 1
+R.head('foo') // => 'f'
+```
+
+#### identity
+
+> identity(x: T): T
+
+It just passes back the supplied arguments.
+```
+R.identity(7) // => 7
+```
+
+#### ifElse
+
+> ifElse(condition: Function, ifFn: Function, elseFn: Function): Function
+
+It returns function, which expect `input` as argument and returns `finalResult`.
+
+When the function is called, a value `answer` is generated as a result of `condition(input)`.
+
+If `answer` is `true`, then `finalResult` is equal to `ifFn(input)`.
+If `answer` is `false`, then `finalResult` is equal to `elseFn(input)`.
+
+```
+const fn = R.ifElse(
+ x => x > 10,
+ x => x*2,
+ x => x*10
+)
+fn(8) // => 80
+fn(11) // => 22
 ```
 
 #### indexOf
 
 > indexOf(valueToFind: any, arr: Array): Number
 
-Returns `-1` or the index of the first element of `arr` equal of `valueToFind`
+It returns `-1` or the index of the first element of `arr` equal of `valueToFind`.
 
 ```javascript
-R.indexOf(1, [1, 2]) //=> 0
+R.indexOf(1, [1, 2]) // => 0
 ```
 
 #### init
 
 > init(arrOrStr: Array|String): Array|String
 
-- Returns all but the last element of `arrOrStr`
+- It returns all but the last element of `arrOrStr`.
 
 ```javascript
-R.init([1, 2, 3])  //=> [1, 2]
-R.init('foo')  //=> 'fo'
+R.init([1, 2, 3])  // => [1, 2]
+R.init('foo')  // => 'fo'
 ```
 
 #### join
@@ -951,18 +1126,27 @@ R.init('foo')  //=> 'fo'
 > join(separator: String, arr: Array): String
 
 ```javascript
-R.join('-', [1, 2, 3])  //=> '1-2-3'
+R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 
 #### last
 
 > last(arrOrStr: Array|String): any
 
-- Returns the last element of `arrOrStr`
+- It returns the last element of `arrOrStr`.
 
 ```javascript
-R.last(['foo', 'bar', 'baz']) //=> 'baz'
-R.last('foo') //=> 'o'
+R.last(['foo', 'bar', 'baz']) // => 'baz'
+R.last('foo') // => 'o'
+```
+
+#### lastIndexOf
+
+> lastIndexOf(x: any, arr: Array): Number
+
+```
+R.lastIndexOf(1, [1, 2, 3, 1, 2]) // => 3
+R.lastIndexOf(10, [1, 2, 3, 1, 2]) // => -1
 ```
 
 #### length
@@ -970,59 +1154,92 @@ R.last('foo') //=> 'o'
 > length(arrOrStr: Array|String): Number
 
 ```javascript
-R.length([1, 2, 3]) //=> 3
+R.length([1, 2, 3]) // => 3
 ```
 
 #### map
 
 > map(mapFn: Function, arr: Array): Array
 
-Returns the result of looping through `arr` with `mapFn`
+It returns the result of looping through `arr` with `mapFn`.
 
 ```javascript
 const mapFn = x => x * 2;
-R.map(mapFn, [1, 2, 3]) //=> [2, 4, 6]
+R.map(mapFn, [1, 2, 3]) // => [2, 4, 6]
 ```
 
 #### match
 
-> map(regExpression: Regex, str: String): Array
+> match(regExpression: Regex, str: String): Array
 
 ```javascript
-R.match(/([a-z]a)/g, 'bananas') //=> ['ba', 'na', 'na']
+R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
 
 #### merge
 
 > merge(a: Object, b: Object)
 
-Returns result of `Object.assign({}, a, b)`
+It returns result of `Object.assign({}, a, b)`.
 
 ```javascript
 R.merge({ 'foo': 0, 'bar': 1 }, { 'foo': 7 })
-//=> { 'foo': 7, 'bar': 1 }
+// => { 'foo': 7, 'bar': 1 }
+```
+
+#### modulo
+
+> modulo(a: Number, b: Number): Number
+
+It returns the remainder of operation `a/b`.
+
+```javascript
+R.module(14,3) // => 2
+```
+
+#### multiply
+
+> multiply(a: Number, b: Number): Number
+
+It returns the result of operation `a*b`.
+
+```javascript
+R.module(14,3) // => 2
+```
+
+#### not
+
+> not(x: any): Boolean
+
+It returns inverted boolean version of input `x`.
+
+```
+R.not(true); //=> false
+R.not(false); //=> true
+R.not(0); //=> true
+R.not(1); //=> false
 ```
 
 #### omit
 
 > omit(propsToOmit: Array<String>, obj: Object): Object
 
-- Returns a partial copy of an `obj` with omitting `propsToOmit`
+It returns a partial copy of an `obj` with omitting `propsToOmit`
 
 ```javascript
-R.omit(['a', 'd'], {a: 1, b: 2, c: 3}) //=> {b: 2, c: 3}
+R.omit(['a', 'd'], {a: 1, b: 2, c: 3}) // => {b: 2, c: 3}
 ```
 
 #### path
 
 > path(pathToSearch: Array<String>|String, obj: Object): any
 
-- Retrieve the value at `pathToSearch` in object `obj`
+Retrieve the value at `pathToSearch` in object `obj`
 
 ```javascript
-R.path('a.b', {a: {b: 2}}) //=> 2
-R.path(['a', 'b'], {a: {b: 2}}) //=> 2
-R.path(['a', 'c'], {a: {b: 2}}) //=> undefined
+R.path('a.b', {a: {b: 2}}) // => 2
+R.path(['a', 'b'], {a: {b: 2}}) // => 2
+R.path(['a', 'c'], {a: {b: 2}}) // => undefined
 ```
 
 #### partialCurry
@@ -1042,8 +1259,9 @@ const fn = ({a, b, c}) => {
   return (a * b) + c
 }
 const curried = R.partialCurry(fn, {a: 2})
-curried({b: 3, c: 10}) //=> 16
+curried({b: 3, c: 10}) // => 16
 ```
+
 - Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
 
 - You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
@@ -1052,75 +1270,77 @@ curried({b: 3, c: 10}) //=> 16
 
 > pick(propsToPick: Array<String>, obj: Object): Object
 
-- Returns a partial copy of an `obj` containing only `propsToPick` properties
+It returns a partial copy of an `obj` containing only `propsToPick` properties.
 
 ```
-R.pick(['a', 'c'], {a: 1, b: 2}) //=> {a: 1}
+R.pick(['a', 'c'], {a: 1, b: 2}) // => {a: 1}
 ```
 
 #### pluck
 
 > pluck(property: String, arr: Array): Array
 
-- Returns list of the values of `property` taken from the objects in array of objects `arr`
+It returns list of the values of `property` taken from the objects in array of objects `arr`.
 
 ```
-R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) //=> [1, 2]
+R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) // => [1, 2]
 ```
 
 #### prepend
 
-> prepend(valueToPrepend: any, arr: Array): Array
+> prepend(x: any, arr: Array): Array
+
+It adds `x` to the start of the array `arr`.
 
 ```javascript
-R.prepend('foo', ['bar', 'baz']) //=> ['foo', 'bar', 'baz']
+R.prepend('foo', ['bar', 'baz']) // => ['foo', 'bar', 'baz']
 ```
 
 #### prop
 
 > prop(propToFind: String, obj: Object): any
 
-Returns `undefined` or the value of property `propToFind` in `obj`
+It returns `undefined` or the value of property `propToFind` in `obj`
 
 ```javascript
-R.prop('x', {x: 100}) //=> 100
-R.prop('x', {a: 1}) //=> undefined
+R.prop('x', {x: 100}) // => 100
+R.prop('x', {a: 1}) // => undefined
 ```
 
 #### propEq
 
 > propEq(propToFind: String, valueToMatch: any, obj: Object): Boolean
 
-Returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`
+It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`
 
 ```javascript
 const propToFind = "foo"
 const valueToMatch = 0
-R.propEq(propToFind, valueToMatch)({foo: 0}) //=> true
-R.propEq(propToFind, valueToMatch)({foo: 1}) //=> false
+R.propEq(propToFind, valueToMatch)({foo: 0}) // => true
+R.propEq(propToFind, valueToMatch)({foo: 1}) // => false
 ```
 
 #### range
 
 > range(start: Number, end: Number): Array<Number>
 
-- Returns a array of numbers from `start`(inclusive) to `end`(exclusive)
+It returns a array of numbers from `start`(inclusive) to `end`(exclusive).
 
 ```javascript
-R.range(0, 2)   //=> [0, 1]
+R.range(0, 2)   // => [0, 1]
 ```
 
 #### reduce
 
 > reduce(iteratorFn: Function, accumulator: any, array: Array): any
 
-- Returns a single item by iterating through the list, successively calling the iterator function `iteratorFn` and passing it an `accumulator` value and the current value from the array, and then passing the result to the next call.
+It returns a single item by iterating through the list, successively calling the iterator function `iteratorFn` and passing it an `accumulator` value and the current value from the array, and then passing the result to the next call.
 
 The iterator function behaves like the native callback of the [`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) method.
 
 ```javascript
 const iteratorFn = (acc, val) => acc + val
-R.reduce(iteratorFn, 1, [1, 2, 3])   //=> 7
+R.reduce(iteratorFn, 1, [1, 2, 3])   // => 7
 ```
 
 #### repeat
@@ -1128,7 +1348,7 @@ R.reduce(iteratorFn, 1, [1, 2, 3])   //=> 7
 > repeat(valueToRepeat: T, num: Number): Array<T>
 
 ```javascript
-R.repeat('foo', 2) //=> ['foo', 'foo']
+R.repeat('foo', 2) // => ['foo', 'foo']
 ```
 
 #### replace
@@ -1138,29 +1358,39 @@ R.repeat('foo', 2) //=> ['foo', 'foo']
 Replace `strOrRegex` found in `str` with `replacer`
 
 ```javascript
-R.replace('foo', 'bar', 'foo foo') //=> 'bar foo'
-R.replace(/foo/, 'bar', 'foo foo') //=> 'bar foo'
-R.replace(/foo/g, 'bar', 'foo foo') //=> 'bar bar'
+R.replace('foo', 'bar', 'foo foo') // => 'bar foo'
+R.replace(/foo/, 'bar', 'foo foo') // => 'bar foo'
+R.replace(/foo/g, 'bar', 'foo foo') // => 'bar bar'
+```
+
+#### reverse
+
+!!! It modifies the array instead of returning new copy, as original `Ramda` method does.
+
+```
+const arr = [1, 2]
+R.reverse(arr)
+console.log(arr) // => [2, 1]
 ```
 
 #### sort
 
 > sort(sortFn: Function, arr: Array): Array
 
-Returns copy of `arr` sorted by `sortFn`
+It returns copy of `arr` sorted by `sortFn`.
 
 `sortFn` must return `Number`
 
 ```javascript
 const sortFn = (a, b) => a - b
-R.sort(sortFn, [3, 1, 2]) //=> [1, 2, 3]
+R.sort(sortFn, [3, 1, 2]) // => [1, 2, 3]
 ```
 
 #### sortBy
 
 > sortBy(sortFn: Function, arr: Array): Array
 
-Returns copy of `arr` sorted by `sortFn`
+It returns copy of `arr` sorted by `sortFn`.
 
 `sortFn` must return value for comparison
 
@@ -1170,7 +1400,7 @@ R.sortBy(sortFn, [
   {foo: 1},
   {foo: 0}
 ])
-//=> [{foo: 0}, {foo: 1}]
+// => [{foo: 0}, {foo: 1}]
 ```
 
 #### split
@@ -1178,7 +1408,7 @@ R.sortBy(sortFn, [
 > split(separator: String, str: String): Array
 
 ```javascript
-R.split('-', 'a-b-c') //=> ['a', 'b', 'c']
+R.split('-', 'a-b-c') // => ['a', 'b', 'c']
 ```
 
 #### splitEvery
@@ -1188,51 +1418,69 @@ R.split('-', 'a-b-c') //=> ['a', 'b', 'c']
 - Splits `arrOrStr` into slices of `sliceLength`
 
 ```javascript
-R.splitEvery(2, [1, 2, 3]) //=> [[1, 2], [3]]
-R.splitEvery(3, 'foobar') //=> ['foo', 'bar']
+R.splitEvery(2, [1, 2, 3]) // => [[1, 2], [3]]
+R.splitEvery(3, 'foobar') // => ['foo', 'bar']
+```
+
+#### startsWith
+
+> startsWith(x: any, arrOrStr: Array|String): Boolean
+
+```
+R.endsWith(
+  'bar',
+  "foo-bar"
+) // => true
+
+R.endsWith(
+  'baz',
+  "foo-bar"
+) // => false
 ```
 
 #### subtract
 
 > subtract(a: Number, b: Number): Number
 
-Returns `a` minus `b`
-
 ```javascript
-R.subtract(3, 1) //=> 2
+R.subtract(3, 1) // => 2
 ```
+
+#### T
+
+`R.T() // => true`
 
 #### tail
 
 > tail(arrOrStr: Array|String): Array|String
 
-- Returns all but the first element of `arrOrStr`
+- It returns all but the first element of `arrOrStr`
 
 ```javascript
-R.tail([1, 2, 3])  //=> [2, 3]
-R.tail('foo')  //=> 'oo'
+R.tail([1, 2, 3])  // => [2, 3]
+R.tail('foo')  // => 'oo'
 ```
 
 #### take
 
 > take(num: Number, arrOrStr: Array|String): Array|String
 
-- Returns the first `num` elements of `arrOrStr`
+- It returns the first `num` elements of `arrOrStr`.
 
 ```javascript
-R.take(1, ['foo', 'bar']) //=> ['foo']
-R.take(2, ['foo']) //=> 'fo'
+R.take(1, ['foo', 'bar']) // => ['foo']
+R.take(2, ['foo']) // => 'fo'
 ```
 
 #### takeLast
 
 > takeLast(num: Number, arrOrStr: Array|String): Array|String
 
-- Returns the last `num` elements of `arrOrStr`
+- It returns the last `num` elements of `arrOrStr`.
 
 ```javascript
-R.takeLast(1, ['foo', 'bar']) //=> ['bar']
-R.takeLast(2, ['foo']) //=> 'oo'
+R.takeLast(1, ['foo', 'bar']) // => ['bar']
+R.takeLast(2, ['foo']) // => 'oo'
 ```
 
 #### test
@@ -1242,8 +1490,8 @@ R.takeLast(2, ['foo']) //=> 'oo'
 - Determines whether `str` matches `regExpression`
 
 ```javascript
-R.test(/^f/, 'foo') //=> true
-R.test(/^f/, 'bar') //=> false
+R.test(/^f/, 'foo') // => true
+R.test(/^f/, 'bar') // => false
 ```
 
 #### toLower
@@ -1251,22 +1499,27 @@ R.test(/^f/, 'bar') //=> false
 > toLower(str: String): String
 
 ```javascript
-R.toLower('FOO') //=> 'foo'
+R.toLower('FOO') // => 'foo'
 ```
+
+#### toString
+> toString(x: any): String
+
+`R.toString([1, 2]) // => '1,2'`
 
 #### toUpper
 
 > toUpper(str: String): String
 
 ```javascript
-R.toUpper('foo') //=> 'FOO'
+R.toUpper('foo') // => 'FOO'
 ```
 
 #### trim
 
 > trim(str: String): String
 ```javascript
-R.trim('  foo  ') //=> 'foo'
+R.trim('  foo  ') // => 'foo'
 ```
 
 #### type
@@ -1274,45 +1527,81 @@ R.trim('  foo  ') //=> 'foo'
 > type(a: any): String
 
 ```javascript
-R.type(() => {}) //=> "Function"
-R.type(async () => {}) //=> "Async"
-R.type([]) //=> "Array"
-R.type({}) //=> "Object"
-R.type('s') //=> "String"
-R.type(1) //=> "Number"
-R.type(false) //=> "Boolean"
-R.type(null) //=> "Null"
-R.type(/[A-z]/) //=> "RegExp"
+R.type(() => {}) // => "Function"
+R.type(async () => {}) // => "Async"
+R.type([]) // => "Array"
+R.type({}) // => "Object"
+R.type('foo') // => "String"
+R.type(1) // => "Number"
+R.type(true) // => "Boolean"
+R.type(null) // => "Null"
+R.type(/[A-z]/) // => "RegExp"
+
+const delay = ms => new Promise(resolve => {
+  setTimeout(function () {
+    resolve()
+  }, ms)
+})
+R.type(delay) // => "Promise"
 ```
 
 #### uniq
 
 > uniq(arr: Array): Array
 
-- Returns a new array containing only one copy of each element in `arr`
+It returns a new array containing only one copy of each element in `arr`.
 
 ```javascript
-R.uniq([1, 1, 2, 1]) //=> [1, 2]
-R.uniq([1, '1'])     //=> [1, '1']
+R.uniq([1, 1, 2, 1]) // => [1, 2]
+R.uniq([1, '1'])     // => [1, '1']
 ```
 
 #### update
 
 > update(i: Number, replaceValue: any, arr: Array): Array
 
-- Returns a new copy of the `arr` with the element at `i` index
-replaced with `replaceValue`
+It returns a new copy of the `arr` with the element at `i` index
+replaced with `replaceValue`.
 
 ```javascript
-R.update(0, "foo", ['bar', 'baz']) //=> ['foo', baz]
+R.update(0, "foo", ['bar', 'baz']) // => ['foo', baz]
 ```
 
 #### values
 
 > values(obj: Object): Array
 
-- Returns array with of all values in `obj`
+It returns array with of all values in `obj`.
 
 ```javascript
-R.values({a: 1, b: 2}) //=> [1, 2]
+R.values({a: 1, b: 2}) // => [1, 2]
 ```
+
+#### includes
+
+> includes(x: any, arrOrStr: Array|String): Boolean
+
+```
+R.includes(1, [1, 2]) // => true
+R.includes('oo', 'foo') // => true
+R.includes('z', 'foo') // => false
+```
+
+Note that this method is not part of `Ramda` API.
+
+#### padEnd
+
+> padEnd(x: Number, str: String): String
+
+`R.padEnd(3, 'foo') // => 'foo   '`
+
+Note that this method is not part of `Ramda` API.
+
+#### padStart
+
+> padStart(x: Number, str: String): String
+
+`R.padStart(3, 'foo') // => '   foo'`
+
+Note that this method is not part of `Ramda` API.
+
