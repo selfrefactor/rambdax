@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,39 +76,42 @@ module.exports =
 
 const R = __webpack_require__(0)
 
-exports.compact = __webpack_require__(2)
-exports.composeAsync = __webpack_require__(3)
-exports.flip = __webpack_require__(4)
-exports.intersection = __webpack_require__(5)
-exports.isValid = __webpack_require__(6)
-exports.ifElseAsync = __webpack_require__(7)
-exports.delay = __webpack_require__(8)
-exports.evolve = __webpack_require__(9)
-exports.mapAsync = __webpack_require__(10)
-exports.mapFastAsync = __webpack_require__(11)
-exports.memoize = __webpack_require__(12)
-exports.mergeAll = __webpack_require__(13)
-exports.omitBy = __webpack_require__(14)
-exports.once = __webpack_require__(15)
-exports.pickBy = __webpack_require__(16)
-exports.produce = __webpack_require__(17)
-exports.shuffle = __webpack_require__(18)
-exports.throttle = __webpack_require__(19)
-exports.debounce = __webpack_require__(20)
-exports.race = __webpack_require__(21)
-exports.random = __webpack_require__(22)
-exports.rangeBy = __webpack_require__(23)
-exports.renameProps = __webpack_require__(24)
-exports.resolve = __webpack_require__(25)
-exports.resolveSecure = __webpack_require__(26)
-exports.tap = __webpack_require__(27)
-exports.tapAsync = __webpack_require__(28)
-exports.where = __webpack_require__(29)
-exports.wrap = __webpack_require__(30)
-
-Object.keys(R).map(method =>{
-  exports[method] = R[method]
+const helper = ({ promise, prop }) => new Promise((resolve, reject) => {
+  promise.then(result => {
+    resolve({
+      prop   : prop,
+      result : result,
+    })
+  }).catch(err => {
+    reject({
+      prop  : prop,
+      error : err,
+    })
+  })
 })
+
+function race (promises) {
+  return new Promise((resolve, reject) => {
+    const props = {}
+    const promisedArr = []
+    for (const prop in promises) {
+      promisedArr.push(helper({
+        promise : promises[ prop ],
+        prop    : prop,
+      }))
+    }
+    Promise.race(promisedArr)
+      .then(result => {
+        resolve({ [ result.prop ] : result.result })
+      })
+      .catch(err => {
+        resolve({ [ err.prop ] : err.error })
+      })
+  })
+}
+
+module.exports = race
+
 
 /***/ }),
 /* 2 */
@@ -116,12 +119,77 @@ Object.keys(R).map(method =>{
 
 const R = __webpack_require__(0)
 
+const isType = __webpack_require__(3)
+
+exports.compact = __webpack_require__(4)
+exports.composeAsync = __webpack_require__(5)
+exports.intersection = __webpack_require__(6)
+exports.isValid = __webpack_require__(7)
+exports.ifElseAsync = __webpack_require__(8)
+exports.delay = __webpack_require__(9)
+exports.evolve = __webpack_require__(10)
+exports.mapAsync = __webpack_require__(11)
+exports.mapFastAsync = __webpack_require__(12)
+exports.memoize = __webpack_require__(13)
+exports.mergeAll = __webpack_require__(14)
+exports.omitBy = __webpack_require__(15)
+exports.once = __webpack_require__(16)
+exports.pickBy = __webpack_require__(17)
+exports.produce = __webpack_require__(18)
+exports.shuffle = __webpack_require__(19)
+exports.throttle = __webpack_require__(20)
+exports.debounce = __webpack_require__(21)
+exports.isType = isType
+exports.isString = x => isType('String', x)
+exports.isString = x => isType('Array', x)
+exports.isObject = x => isType('Object', x)
+exports.isPromiseLike = __webpack_require__(22)
+exports.race = __webpack_require__(1)
+exports.isString = __webpack_require__(1)
+exports.random = __webpack_require__(23)
+exports.rangeBy = __webpack_require__(24)
+exports.renameProps = __webpack_require__(25)
+exports.resolve = __webpack_require__(26)
+exports.resolveSecure = __webpack_require__(27)
+exports.tap = __webpack_require__(28)
+exports.tapAsync = __webpack_require__(29)
+exports.where = __webpack_require__(30)
+exports.wrap = __webpack_require__(31)
+
+Object.keys(R).map(method => {
+  exports[ method ] = R[ method ]
+})
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { type } = __webpack_require__(0)
+
+function isType (xType, x) {
+  if (arguments.length === 1) {
+    return xHolder => isType(xType, xHolder)
+  }
+
+  return type(x) === xType
+}
+
+module.exports = isType
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const R = __webpack_require__(0)
+
 const types = [
-  "Null",
-  "Undefined",
-  "RegExp",
-  "Function",
-  "Async",
+  'Null',
+  'Undefined',
+  'RegExp',
+  'Function',
+  'Async',
 ]
 
 function compact (arr) {
@@ -132,7 +200,7 @@ function compact (arr) {
       if (types.includes(currentType)) {
         return false
       }
-      if (currentType === "Object") {
+      if (currentType === 'Object') {
         return !R.equals(a, {})
       }
 
@@ -145,7 +213,7 @@ module.exports = compact
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -157,7 +225,7 @@ const composeAsync = (...inputArguments) => {
 
       while (inputArguments.length !== 0) {
         const fn = inputArguments.pop()
-        if (R.type(fn) === "Async" || R.type(fn) === "Promise") {
+        if (R.type(fn) === 'Async' || R.type(fn) === 'Promise') {
           argumentsToPass = await fn(argumentsToPass)
         } else {
           argumentsToPass = fn(argumentsToPass)
@@ -175,35 +243,7 @@ module.exports = composeAsync
 
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-function flip (fnToCurry) {
-  return (...curryArguments) => {
-    const len = fnToCurry.length
-    if (curryArguments[ 1 ] === undefined) {
-      if (len > 1) {
-        return (...futureArguments) => {
-          if (len === 3 && futureArguments.length === 1) {
-            return holder => fnToCurry(holder, futureArguments[ 0 ], curryArguments[ 0 ])
-          }
-
-          return fnToCurry(...futureArguments.reverse(), curryArguments[ 0 ])
-        }
-      }
-    } else if (curryArguments[ 2 ] === undefined && len === 3) {
-      return futureArgument => fnToCurry(futureArgument, ...curryArguments.reverse())
-    }
-
-    return fnToCurry(...curryArguments.reverse())
-  }
-}
-
-module.exports = flip
-
-
-/***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -220,13 +260,13 @@ module.exports = intersection
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
 
 const isValid = (obj, schema) => {
-  if (R.type(obj) === "Object" && R.type(schema) === "Object") {
+  if (R.type(obj) === 'Object' && R.type(schema) === 'Object') {
     let flag = true
     for (requirement in schema) {
       if (flag) {
@@ -235,7 +275,7 @@ const isValid = (obj, schema) => {
         const objProp = obj[ requirement ]
         const objPropType = R.type(obj[ requirement ])
 
-        if (ruleType === "Object" && rule.type === "ArrayOfSchemas" && objPropType === "Array") {
+        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && objPropType === 'Array') {
           objProp.map(val => {
             let localFlag = false
             rule.rule.map(singleRule => {
@@ -248,7 +288,7 @@ const isValid = (obj, schema) => {
             }
           })
         } else if (
-          ruleType === "String"
+          ruleType === 'String'
         ) {
           if (objProp !== undefined) {
             if (R.toLower(objPropType) !== rule) {
@@ -258,14 +298,14 @@ const isValid = (obj, schema) => {
             flag = false
           }
         } else if (
-          typeof rule === "function"
+          typeof rule === 'function'
         ) {
           if (rule(objProp) === false) {
             flag = false
           }
         } else if (
-          ruleType === "Object" &&
-          objPropType === "Object"
+          ruleType === 'Object' &&
+          objPropType === 'Object'
         ) {
           if (
             !isValid(objProp, rule)
@@ -273,21 +313,21 @@ const isValid = (obj, schema) => {
             flag = false
           }
         } else if (
-          ruleType === "Array" &&
-          objPropType === "String"
+          ruleType === 'Array' &&
+          objPropType === 'String'
         ) {
           if (!R.contains(objProp, rule)) {
             flag = false
           }
         } else if (
-          ruleType === "Array" &&
-          objPropType === "Array" &&
+          ruleType === 'Array' &&
+          objPropType === 'Array' &&
           rule.length === 1 &&
           objProp.length > 0
         ) {
           const arrayRuleType = R.type(rule[ 0 ])
 
-          if (arrayRuleType === "String") {
+          if (arrayRuleType === 'String') {
             const result = R.any(
               val => R.toLower(R.type(val)) !== rule[ 0 ],
               objProp
@@ -296,7 +336,7 @@ const isValid = (obj, schema) => {
             if (result) {
               flag = false
             }
-          } else if (arrayRuleType === "Object") {
+          } else if (arrayRuleType === 'Object') {
             const result = R.any(
               val => !isValid(val, rule[ 0 ])
             )(objProp)
@@ -305,8 +345,8 @@ const isValid = (obj, schema) => {
             }
           }
         } else if (
-          ruleType === "RegExp" &&
-          objPropType === "String"
+          ruleType === 'RegExp' &&
+          objPropType === 'String'
         ) {
           if (!R.test(rule, objProp)) {
             flag = false
@@ -327,40 +367,38 @@ module.exports = isValid
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
 
-const isThenable = x => ['Async','Promise'].includes(R.type(x))
+const isThenable = x => [ 'Async', 'Promise' ].includes(R.type(x))
 
-const createThenable = x => async input => {
-  return await x(input)
-}
+const createThenable = x => async input => await x(input)
 
 function ifElseAsync (condition, ifFn, elseFn) {
   if (ifFn === undefined) {
     return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder)
-  }else if(elseFn === undefined){
+  } else if (elseFn === undefined) {
     return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder)
   }
 
-  return input => new Promise((resolve,reject)=>{
+  return input => new Promise((resolve, reject) => {
     const conditionPromise = createThenable(condition)
     const ifFnPromise = createThenable(ifFn)
     const elseFnPromise = createThenable(elseFn)
-    // console.log(condition, conditionPromise, isThenable(condition), R.type(condition))
+    //console.log(condition, conditionPromise, isThenable(condition), R.type(condition))
     conditionPromise(input)
-    .then(conditionResult => {
-      const promised = conditionResult === true ?
-        ifFnPromise :
-        elseFnPromise
-        
-      promised(input)
-      .then(resolve)
+      .then(conditionResult => {
+        const promised = conditionResult === true ?
+          ifFnPromise :
+          elseFnPromise
+
+        promised(input)
+          .then(resolve)
+          .catch(reject)
+      })
       .catch(reject)
-    })
-    .catch(reject)
   })
 }
 
@@ -368,18 +406,18 @@ module.exports = ifElseAsync
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = ms => new Promise(resolve => {
   setTimeout(() => {
-    resolve("RAMBDAX_DELAY")
+    resolve('RAMBDAX_DELAY')
   }, ms)
 })
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const { type, curry, filter } = __webpack_require__(0)
@@ -395,9 +433,9 @@ function evolve (rules, input) {
 
   propRules.map(prop => {
     const fn = rules[ prop ]
-    if (type(fn) === "Function") {
+    if (type(fn) === 'Function') {
       clone[ prop ] = fn(clone[ prop ])
-    } else if (type(fn) === "Object") {
+    } else if (type(fn) === 'Object') {
       clone[ prop ] = evolve(fn, clone[ prop ])
     }
   })
@@ -409,7 +447,7 @@ module.exports = curry(evolve)
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 async function mapAsyncFn (fn, arr) {
@@ -439,7 +477,7 @@ module.exports = mapAsync
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 async function mapFastAsyncFn (fn, arr) {
@@ -466,7 +504,7 @@ module.exports = mapFastAsync
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -484,13 +522,13 @@ const normalizeObject = obj => {
 }
 
 const stringify = a => {
-  if (R.type(a) === "String") {
+  if (R.type(a) === 'String') {
     return a
-  } else if ([ "Function", "Async" ].includes(R.type(a))) {
-    const compacted = R.replace(/\s{1,}/g, " ", a.toString())
+  } else if ([ 'Function', 'Async' ].includes(R.type(a))) {
+    const compacted = R.replace(/\s{1,}/g, ' ', a.toString())
 
-    return R.replace(/\s/g, "_", R.take(15, compacted))
-  } else if (R.type(a) === "Object") {
+    return R.replace(/\s/g, '_', R.take(15, compacted))
+  } else if (R.type(a) === 'Object') {
     a = normalizeObject(a)
   }
 
@@ -498,7 +536,7 @@ const stringify = a => {
 }
 
 const generateProp = (fn, ...inputArguments) => {
-  let propString = ""
+  let propString = ''
   inputArguments.map(inputArgument => {
     propString += `${ stringify(inputArgument) }_`
   })
@@ -514,7 +552,7 @@ function memoize (fn, ...inputArguments) {
   if (prop in cache) {
     return cache[ prop ]
   }
-  if (R.type(fn) === "Async") {
+  if (R.type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
         cache[ prop ] = result
@@ -532,7 +570,7 @@ module.exports = memoize
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -550,7 +588,7 @@ module.exports = mergeAll
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 function omitBy (fn, obj) {
@@ -572,7 +610,7 @@ module.exports = omitBy
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 function curry (fnToCurry) {
@@ -623,7 +661,7 @@ module.exports = once
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 function pickBy (fn, obj) {
@@ -645,14 +683,14 @@ module.exports = pickBy
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
 
 function helper ({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
-    if (!(R.type(condition) === "Async")) {
+    if (!(R.type(condition) === 'Async')) {
       return resolve({
         type    : prop,
         payload : condition(inputArgument),
@@ -678,7 +716,7 @@ function produce (conditions, inputArgument) {
   for (const prop in conditions) {
     if (
       asyncConditionsFlag === false &&
-    R.type(conditions[ prop ]) === "Async"
+    R.type(conditions[ prop ]) === 'Async'
     ) {
       asyncConditionsFlag = true
     }
@@ -721,7 +759,7 @@ module.exports = produce
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 const shuffle = arrayRaw => {
@@ -742,7 +780,7 @@ module.exports = shuffle
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 function throttle (callback, ms) {
@@ -763,7 +801,7 @@ module.exports = throttle
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 function debounce (func, ms, immediate = false) {
@@ -791,50 +829,20 @@ module.exports = debounce
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const R = __webpack_require__(0)
+const { type } = __webpack_require__(0)
 
-const helper = ({ promise, prop }) => new Promise((resolve, reject) => {
-  promise.then(result => {
-    resolve({
-      prop   : prop,
-      result : result,
-    })
-  }).catch(err => {
-    reject({
-      prop  : prop,
-      error : err,
-    })
-  })
-})
-
-function race (promises) {
-  return new Promise((resolve, reject) => {
-    const props = {}
-    const promisedArr = []
-    for (const prop in promises) {
-      promisedArr.push(helper({
-        promise : promises[ prop ],
-        prop    : prop,
-      }))
-    }
-    Promise.race(promisedArr)
-      .then(result => {
-        resolve({ [ result.prop ] : result.result })
-      })
-      .catch(err => {
-        resolve({ [ err.prop ] : err.error })
-      })
-  })
+function isPromiseLike (x) {
+  return [ 'Async', 'Promise' ].includes(type(x))
 }
 
-module.exports = race
+module.exports = isPromiseLike
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 const random = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
@@ -843,7 +851,7 @@ module.exports = random
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -855,7 +863,7 @@ function rangeBy (startNum, endNum, distance) {
     return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
   }
 
-  const isInteger = !distance.toString().includes(".")
+  const isInteger = !distance.toString().includes('.')
   if (startNum > endNum) {
     const startNumHolder = startNum
     startNum = endNum
@@ -874,7 +882,7 @@ function rangeBy (startNum, endNum, distance) {
     const decimalLength = R.compose(
       R.length,
       R.last,
-      R.split(".")
+      R.split('.')
     )(distance.toString())
     const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance))
     for (const i of loopIndexes) {
@@ -890,7 +898,7 @@ module.exports = rangeBy
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -918,7 +926,7 @@ module.exports = renameProps
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -951,7 +959,7 @@ module.exports = resolve
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
@@ -960,12 +968,12 @@ const wrapper = promise => new Promise(resolve => {
   promise.then(result => {
     resolve({
       payload : result,
-      type    : "RESULT",
+      type    : 'RESULT',
     })
   }).catch(err => {
     resolve({
       payload : err,
-      type    : "ERROR",
+      type    : 'ERROR',
     })
   })
 })
@@ -987,7 +995,7 @@ module.exports = resolve
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 function tap (fn, inputArguments) {
@@ -1003,35 +1011,34 @@ module.exports = tap
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
-const isPromiseLike = x => ['Async', 'Promise'].includes(x)
+const isPromiseLike = x => [ 'Async', 'Promise' ].includes(x)
 
 function tapAsync (fn, input) {
   if (input === undefined) {
     return inputHolder => tapAsync(fn, inputHolder)
   }
-  if(isPromiseLike(fn) === true){
-    return new Promise((resolve,reject)=>{
+  if (isPromiseLike(fn) === true) {
+    return new Promise((resolve, reject) => {
       fn(input)
-      .then(()=>{
-        resolve(input)
-      })
-      .catch(reject)
+        .then(() => {
+          resolve(input)
+        })
+        .catch(reject)
     })
-  }else{
-    fn(input)
+  }
+  fn(input)
 
-    return input
-  }  
+  return input
 }
 
 module.exports = tapAsync
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 function where (conditions, obj) {
@@ -1053,14 +1060,14 @@ module.exports = where
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const R = __webpack_require__(0)
 
-const isPromiseLike = x => [ "Async", "Promise" ].includes(R.type(x))
+const isPromiseLike = x => [ 'Async', 'Promise' ].includes(R.type(x))
 
-function wrap ({fn, when, defaultTo }) {
+function wrap ({ fn, when, defaultTo }) {
   if (isPromiseLike(fn)) {
     return input => new Promise((resolve, reject) => {
       fn(input).then(intermediateResult => {
