@@ -4,7 +4,6 @@ const isType = require('./modules/isType')
 
 exports.compact = require('./modules/compact')
 exports.composeAsync = require('./modules/composeAsync')
-exports.flip = require('./modules/flip')
 exports.intersection = require('./modules/intersection')
 exports.isValid = require('./modules/isValid')
 exports.ifElseAsync = require('./modules/ifElseAsync')

@@ -7,7 +7,7 @@
     "test": "jest",
     "docs": "docsify init ./docs",
     "dev": "jest --watch __tests__/tapAsync.js",
-    "cover": "jest --coverage",
+    "cover": "jest __tests__ --coverage",
     "build": "webpack",
     "node-minify": "run m minify f index.js o _",
     "lintall": "run-p lint-test lint-modules lint-rambdax",
