@@ -2,6 +2,7 @@ const R = require('rambda')
 
 const isType = require('./modules/isType')
 
+exports.delayReturnValue = 'RAMBDAX_DELAY'
 exports.compact = require('./modules/compact')
 exports.composeAsync = require('./modules/composeAsync')
 exports.intersection = require('./modules/intersection')

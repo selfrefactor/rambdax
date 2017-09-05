@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "docs": "docsify init ./docs",
-    "dev": "jest --watch __tests__/tapAsync.js",
+    "dev": "jest --watch __tests__/isValid.js",
     "cover": "jest __tests__ --coverage",
     "build": "webpack",
     "node-minify": "run m minify f index.js o _",

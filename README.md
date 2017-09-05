@@ -215,18 +215,6 @@ expect(result).toEqual({
 })  
 ```
 
-#### flip
-
-> flip(fn: Function): Function
-
-It returns copy of the function `fn` with exchanged order of the first and second function arguments.
-```
-const fn = (a,b) => a - b
-const flipped = R.flip(fn)
-fn(4,1)      // =>  3 
-flipped(4,1) // => -3
-```
-
 #### intersection
 
 > intersection(a: Array, b: Array): Array

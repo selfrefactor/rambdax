@@ -1,17 +1,17 @@
 const R = require('rambda')
 
-const isValid = (obj, schema) => {
-  if (R.type(obj) === 'Object' && R.type(schema) === 'Object') {
+const isValid = ({input, schema}) => {
+  if (R.type(input) === 'Object' && R.type(schema) === 'Object') {
     let flag = true
     for (requirement in schema) {
       if (flag) {
         const rule = schema[ requirement ]
         const ruleType = R.type(rule)
-        const objProp = obj[ requirement ]
-        const objPropType = R.type(obj[ requirement ])
+        const inputProp = input[ requirement ]
+        const inputPropType = R.type(input[ requirement ])
 
-        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && objPropType === 'Array') {
-          objProp.map(val => {
+        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
+          inputProp.map(val => {
             let localFlag = false
             rule.rule.map(singleRule => {
               if (isValid(val, singleRule)) {
@@ -25,8 +25,8 @@ const isValid = (obj, schema) => {
         } else if (
           ruleType === 'String'
         ) {
-          if (objProp !== undefined) {
-            if (R.toLower(objPropType) !== rule) {
+          if (inputProp !== undefined) {
+            if (R.toLower(inputPropType) !== rule) {
               flag = false
             }
           } else {
@@ -35,37 +35,37 @@ const isValid = (obj, schema) => {
         } else if (
           typeof rule === 'function'
         ) {
-          if (rule(objProp) === false) {
+          if (rule(inputProp) === false) {
             flag = false
           }
         } else if (
           ruleType === 'Object' &&
-          objPropType === 'Object'
+          inputPropType === 'Object'
         ) {
           if (
-            !isValid(objProp, rule)
+            !isValid(inputProp, rule)
           ) {
             flag = false
           }
         } else if (
           ruleType === 'Array' &&
-          objPropType === 'String'
+          inputPropType === 'String'
         ) {
-          if (!R.contains(objProp, rule)) {
+          if (!R.contains(inputProp, rule)) {
             flag = false
           }
         } else if (
           ruleType === 'Array' &&
-          objPropType === 'Array' &&
+          inputPropType === 'Array' &&
           rule.length === 1 &&
-          objProp.length > 0
+          inputProp.length > 0
         ) {
           const arrayRuleType = R.type(rule[ 0 ])
 
           if (arrayRuleType === 'String') {
             const result = R.any(
               val => R.toLower(R.type(val)) !== rule[ 0 ],
-              objProp
+              inputProp
             )
 
             if (result) {
@@ -74,16 +74,16 @@ const isValid = (obj, schema) => {
           } else if (arrayRuleType === 'Object') {
             const result = R.any(
               val => !isValid(val, rule[ 0 ])
-            )(objProp)
+            )(inputProp)
             if (result) {
               flag = false
             }
           }
         } else if (
           ruleType === 'RegExp' &&
-          objPropType === 'String'
+          inputPropType === 'String'
         ) {
-          if (!R.test(rule, objProp)) {
+          if (!R.test(rule, inputProp)) {
             flag = false
           }
         } else {
