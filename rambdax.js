@@ -1,13 +1,21 @@
 const R = require('rambda')
 
 const isType = require('./modules/isType')
+function nox(x){
+  if(R.type(x) === 'Function'){
+    return inputHolder => !x(inputHolder)
+  }
+  console.log('else',x)
+  return !x
+}
 
-exports.delayReturnValue = 'RAMBDAX_DELAY'
+exports.nox = nox
 exports.compact = require('./modules/compact')
 exports.composeAsync = require('./modules/composeAsync')
 exports.intersection = require('./modules/intersection')
 exports.isValid = require('./modules/isValid')
 exports.ifElseAsync = require('./modules/ifElseAsync')
+exports.DELAY = 'RAMBDAX_DELAY'
 exports.delay = require('./modules/delay')
 exports.evolve = require('./modules/evolve')
 exports.mapAsync = require('./modules/mapAsync')
@@ -25,6 +33,7 @@ exports.isType = isType
 exports.isString = x => isType('String', x)
 exports.isString = x => isType('Array', x)
 exports.isObject = x => isType('Object', x)
+exports.isNil = x => isType('Undefined', x)||isType('Null', x)
 exports.isPromiseLike = require('./modules/isPromiseLike')
 exports.race = require('./modules/race')
 exports.isString = require('./modules/race')
