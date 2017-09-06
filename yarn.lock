@@ -2937,13 +2937,17 @@ querystring@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
 
-rambda@^0.8.6, rambda@^0.8.8:
+rambda@^0.8.6:
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.8.tgz#0aec94cc2b6061adbe7c50d91c6ec65570623689"
 
 rambda@^0.8.7:
   version "0.8.7"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.7.tgz#9a93117ac580a75aedb2a81aa33e131c70194c83"
+
+rambda@^0.8.9:
+  version "0.8.9"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-0.8.9.tgz#962a4ffe7a2f700aa1960408a69f11f3a8acd26a"
 
 rambdax@^0.5.2:
   version "0.5.5"
