@@ -34,6 +34,7 @@ exports.shuffle = require('./modules/shuffle')
 exports.tap = require('./modules/tap')
 exports.tapAsync = require('./modules/tapAsync')
 exports.throttle = require('./modules/throttle')
+exports.when = require('./modules/when')
 exports.where = require('./modules/where')
 exports.wrap = require('./modules/wrap')
 
