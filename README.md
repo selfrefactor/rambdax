@@ -737,11 +737,11 @@ It returns a function or a Promise with input argument `input`.
 
 - if that is the case, `when` can also be a Promise-like
 
-- `rule` is called with `intermediateResult` to obtain `ruleResult`.
+- `when` is called with `intermediateResult` to obtain `whenResult`.
 
-- If `ruleResult` is `true`, then the final result is `intermediateResult`.
+- If `whenResult` is `true`, then the final result is `defaultTo`.
 
-- If `ruleResult` is `false`, then the final result is `defaultTo`.
+- If `whenResult` is `false`, then the final result is `intermediateResult`.
 
 
 ```
@@ -754,6 +754,20 @@ const result = R.wrap({
 expect(result)
 .toEqual([4])
 ```
+
+#### when
+
+> when(rule: Function, fn: Function): Function
+
+`
+var truncate = R.when(
+  x => x.length > 5,
+  R.compose(x => `${x}...`, R.take(5))
+)
+
+expect(truncate('1234')).toEqual('1234')
+expect(truncate('12345678')).toEqual('12345...')
+`
 
 
 ### Methods inherited from Rambda
