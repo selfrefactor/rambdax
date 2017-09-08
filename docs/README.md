@@ -39,7 +39,7 @@ The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatib
 
 > all(fn: Function, arr: Array): Boolean
 
-It returns `true` if all members of array `arr` returns `true`, when applied as argument to function `fn`. 
+It returns `true` if all members of array `arr` returns `true`, when applied as argument to function `fn`.
 
 ```
 const numArr = [ 0, 1, 2, 3, 4 ]
@@ -163,7 +163,23 @@ it("", async() => {
 })
 ```
 
+#### delay
+
+> delay(ms: Number): Promise<R.DELAY>
+
+`setTimeout` as a promise that resolves to`R.DELAY` variable.
+
+```
+R.delay(1000).then( result => {
+  console.assert( result === R.DELAY )
+})
+```
+
 #### either
+
+> either(x: Function, y: Function, input: any): Boolean
+
+It returns `true` if one of `x(input)` and `y(input)` returns `true`.
 
 ```
 const fn = R.either(
@@ -203,7 +219,7 @@ const rules = {
       remaining : R.add(-1),
     },
   }
-  
+
 const result = R.evolve(transformations, tomato)
 expect(result).toEqual({
   firstName: "Tomato",
@@ -212,19 +228,7 @@ expect(result).toEqual({
     remaining: 1399,
   },
   id: 123,
-})  
-```
-
-#### flip
-
-> flip(fn: Function): Function
-
-It returns copy of the function `fn` with exchanged order of the first and second function arguments.
-```
-const fn = (a,b) => a - b
-const flipped = R.flip(fn)
-fn(4,1)      // =>  3 
-flipped(4,1) // => -3
+})
 ```
 
 #### intersection
@@ -236,6 +240,28 @@ It returns array with the overlapped members of `a` and `b`.
 ```
 R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
 ```
+
+#### isType
+
+> isType(xType: string, x: any): Boolean
+
+It returns `true` if `R.type` of `x` is equal to `xType`.
+
+#### isArray
+
+> isArray(x: any): Boolean
+
+#### isString
+
+> isString(x: any): Boolean
+
+#### isObject
+
+> isObject(x: any): Boolean
+
+#### isPromiseLike
+
+> isPromiseLike(x: any): Boolean
 
 #### isValid
 
@@ -356,7 +382,7 @@ describe("memoize", () => {
 
 > mergeAll(input: Array): Object
 
-It merges all objects of `input` array sequentially and returns the result.  
+It merges all objects of `input` array sequentially and returns the result.
 
 ```
 const arr = [
@@ -448,10 +474,10 @@ result === expectedResult // => true
 
 `conditions` is an object with sync or async functions as values.
 
-The values of the returned object `returnValue` are the results of those functions when `input` is passed. 
+The values of the returned object `returnValue` are the results of those functions when `input` is passed.
 The properties of the returned object are equal to `input`.
 
-If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`. 
+If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
 
 #### race
 
@@ -497,7 +523,7 @@ R.race(promises)
 
 > random(min: Number, max: Number)
 
-It returns a random number between `min` inclusive and `max` inclusive.  
+It returns a random number between `min` inclusive and `max` inclusive.
 
 ```
 const randomResult = R.random(1, 10)
@@ -548,9 +574,9 @@ const expectedResult = {
 }
 ```
 
-#### resolveObj
+#### resolve
 
-> resolveObj(promises: Object): Object
+> resolve(promises: Object): Object
 
 It acts as `Promise.all` for object with Promises.
 
@@ -607,7 +633,7 @@ const expectedResult = [
     "payload": 2000,
     "type": "result"
   }
-]  
+]
 // => result === expectedResult
 ```
 
@@ -621,7 +647,7 @@ It returns randomized copy of `arr`.
 
 > tap(fn: Function, inputArgument: T): T
 
-It returns back `inputArgument` after calling `fn` with `inputArgument`. 
+It returns back `inputArgument` after calling `fn` with `inputArgument`.
 
 ```
 const log = a => console.log(a)
@@ -634,7 +660,7 @@ const result = R.tap(log, "foo")
 
 > tapAsync(fn: Function|Async|Promise, inputArgument: T): T
 
-It is `R.tap` that accept promise-like `fn` argument. 
+It is `R.tap` that accept promise-like `fn` argument.
 
 ```
 const log = async a => {
@@ -676,9 +702,9 @@ expect(counter).toBe(2)
 
 > where(conditions: Object, input: Object): Boolean
 
-Each property `prop` in `conditions` is a function. 
+Each property `prop` in `conditions` is a function.
 
-This function is called with `input(prop)`. If all such function calls return `true`, then the final result is also `true`.  
+This function is called with `input(prop)`. If all such function calls return `true`, then the final result is also `true`.
 
 ```
 const condition = R.where({
@@ -711,16 +737,16 @@ It returns a function or a Promise with input argument `input`.
 
 - if that is the case, `when` can also be a Promise-like
 
-- `rule` is called with `intermediateResult` to obtain `ruleResult`. 
+- `when` is called with `intermediateResult` to obtain `whenResult`.
 
-- If `ruleResult` is `true`, then the final result is `intermediateResult`. 
+- If `whenResult` is `true`, then the final result is `defaultTo`.
 
-- If `ruleResult` is `false`, then the final result is `defaultTo`. 
+- If `whenResult` is `false`, then the final result is `intermediateResult`.
 
 
 ```
 const result = R.wrap({
-  fn: R.filter(a => a > 3), 
+  fn: R.filter(a => a > 3),
   defaultTo:  [ 4 ],
   when:       x => R.length(x) === 0
 })([1, 2, 3])
@@ -728,6 +754,20 @@ const result = R.wrap({
 expect(result)
 .toEqual([4])
 ```
+
+#### when
+
+> when(rule: Function, fn: Function): Function
+
+`
+var truncate = R.when(
+  x => x.length > 5,
+  R.compose(x => `${x}...`, R.take(5))
+)
+
+expect(truncate('1234')).toEqual('1234')
+expect(truncate('12345678')).toEqual('12345...')
+`
 
 
 ### Methods inherited from Rambda
@@ -1604,4 +1644,3 @@ Note that this method is not part of `Ramda` API.
 `R.padStart(3, 'foo') // => '   foo'`
 
 Note that this method is not part of `Ramda` API.
-
