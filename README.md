@@ -479,46 +479,6 @@ The properties of the returned object are equal to `input`.
 
 If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
 
-#### race
-
-> race(promised: Object): Object
-
-It acts as `Promise.race` for object with promises.
-
-```
-const delay = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : delay(20),
-  b : delay(10),
-}
-
-R.race(promises)
-.then(result =>{
-  // => { a: 10 }
-})
-```
-
-```
-const delay = ms => new Promise((resolve,reject) => {
-  setTimeout(() => {
-    reject(ms)
-  }, ms)
-})
-const promises = {
-  a : delay(1),
-  b : delay(2),
-}
-R.race(promises)
-.then(console.log)
-.catch(err =>{
-  // => { a: 1 }
-})
-```
-
 #### random
 
 > random(min: Number, max: Number)
