@@ -1,6 +1,4 @@
-const R = require('rambda')
-
-function resolve (promises) {
+export default function resolve (promises) {
   return new Promise((res, rej) => {
     let counter = 0
     const props = {}
@@ -23,5 +21,3 @@ function resolve (promises) {
       .catch(rej)
   })
 }
-
-module.exports = resolve

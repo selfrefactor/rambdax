@@ -1,13 +1,13 @@
-const R = require('rambda')
+import {type} from 'rambda'
 
-const composeAsync = (...inputArguments) => {
+export default function composeAsync(...inputArguments){
   try {
     return async function (startArgument) {
       let argumentsToPass = startArgument
 
       while (inputArguments.length !== 0) {
         const fn = inputArguments.pop()
-        if (R.type(fn) === 'Async' || R.type(fn) === 'Promise') {
+        if (type(fn) === 'Async' || type(fn) === 'Promise') {
           argumentsToPass = await fn(argumentsToPass)
         } else {
           argumentsToPass = fn(argumentsToPass)
@@ -20,5 +20,3 @@ const composeAsync = (...inputArguments) => {
     throw err
   }
 }
-
-module.exports = composeAsync

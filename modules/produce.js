@@ -1,8 +1,11 @@
-const R = require('rambda')
+import {
+  type,
+  map,
+} from 'rambda'
 
 function helper ({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
-    if (!(R.type(condition) === 'Async')) {
+    if (!(type(condition) === 'Async')) {
       return resolve({
         type    : prop,
         payload : condition(inputArgument),
@@ -20,15 +23,15 @@ function helper ({ condition, inputArgument, prop }) {
   })
 }
 
-function produce (conditions, inputArgument) {
-  if (inputArgument === undefined) {
+export default function produce (conditions, inputArgument) {
+  if (arguments.length === 1) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder)
   }
   let asyncConditionsFlag = false
   for (const prop in conditions) {
     if (
       asyncConditionsFlag === false &&
-    R.type(conditions[ prop ]) === 'Async'
+    type(conditions[ prop ]) === 'Async'
     ) {
       asyncConditionsFlag = true
     }
@@ -57,14 +60,13 @@ function produce (conditions, inputArgument) {
       .then(results => {
         const willReturn = {}
 
-        R.map(result => {
-          willReturn[ result.type ] = result.payload
-        }, results)
+        map(
+          result => willReturn[ result.type ] = result.payload,
+          results
+        )
 
         resolve(willReturn)
       })
       .catch(err => reject(err))
   })
 }
-
-module.exports = produce

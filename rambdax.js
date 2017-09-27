@@ -1,11 +1,16 @@
-const R = require('rambda')
+import R from 'rambda'
 
-const isType = require('./modules/isType')
+import isTypeMethod from './modules/isType'
 
-exports.compact = require('./modules/compact')
-exports.composeAsync = require('./modules/composeAsync')
-exports.debounce = require('./modules/debounce')
-exports.DELAY = 'RAMBDAX_DELAY'
+export {default as compact} from './modules/compact'
+export {default as composeAsync} from './modules/composeAsync'
+export {default as debounce} from './modules/debounce'
+export const DELAY = 'RAMBDAX_DELAY'
+export {default as delay} from './modules/delay'
+export {default as evolve} from './modules/evolve'
+export {default as ifElseAsync} from './modules/ifElseAsync'
+export {default as intersection} from './modules/intersection'
+
 exports.delay = require('./modules/delay')
 exports.evolve = require('./modules/evolve')
 exports.ifElseAsync = require('./modules/ifElseAsync')
@@ -14,7 +19,7 @@ exports.isArray = x => isType('Array', x)
 exports.isObject = x => isType('Object', x)
 exports.isPromiseLike = require('./modules/isPromiseLike')
 exports.isString = x => isType('String', x)
-exports.isType = isType
+export const isType = isTypeMethod
 exports.isValid = require('./modules/isValid')
 exports.mapAsync = require('./modules/mapAsync')
 exports.mapFastAsync = require('./modules/mapFastAsync')

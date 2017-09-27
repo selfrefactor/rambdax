@@ -1,4 +1,4 @@
-const R = require('rambda')
+import {map} from 'rambda'
 
 const wrapper = promise => new Promise(resolve => {
   promise.then(result => {
@@ -14,7 +14,7 @@ const wrapper = promise => new Promise(resolve => {
   })
 })
 
-async function resolve (input) {
+export default async function resolve (input) {
   try {
     const promised = R.map(
       a => wrapper(a),
@@ -26,5 +26,3 @@ async function resolve (input) {
     console.log(err)
   }
 }
-
-module.exports = resolve

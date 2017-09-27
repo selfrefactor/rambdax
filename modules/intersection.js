@@ -1,11 +1,9 @@
-const R = require('rambda')
+import {filter} from 'rambda'
 
-function intersection (a, b) {
+export default function intersection (a, b) {
   if (b === undefined) {
     return bHolder => intersection(a, bHolder)
   }
 
-  return R.filter(val => b.includes(val))(a)
+  return filter(val => b.includes(val))(a)
 }
-
-module.exports = intersection

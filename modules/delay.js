@@ -1,5 +1,8 @@
-module.exports = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve('RAMBDAX_DELAY')
-  }, ms)
-})
+export default function delay(ms){
+  
+  return new Promise(resolve => {
+   setTimeout(() => {
+     resolve('RAMBDAX_DELAY')
+   }, ms)
+ })
+}

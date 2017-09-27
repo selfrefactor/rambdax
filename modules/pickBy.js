@@ -1,4 +1,4 @@
-function pickBy (fn, obj) {
+export default function pickBy (fn, obj) {
   if (obj === undefined) {
     return holder => pickBy(fn, holder)
   }
@@ -12,5 +12,3 @@ function pickBy (fn, obj) {
 
   return willReturn
 }
-
-module.exports = pickBy

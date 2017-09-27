@@ -1,4 +1,5 @@
 const { type, curry, filter } = require('rambda')
+
 function evolve (rules, input) {
   const clone = Object.assign({}, input)
   const propRules = filter(
@@ -21,4 +22,4 @@ function evolve (rules, input) {
   return clone
 }
 
-module.exports = curry(evolve)
+export default curry(evolve)

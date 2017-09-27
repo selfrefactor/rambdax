@@ -1,23 +1,4 @@
-function curry (fnToCurry) {
-  return (...curryArguments) => {
-    const len = fnToCurry.length
-    if (curryArguments[ 1 ] === undefined) {
-      if (len > 1) {
-        return (...futureArguments) => {
-          if (len === 3 && futureArguments.length === 1) {
-            return b => fnToCurry(curryArguments[ 0 ], futureArguments[ 0 ], b)
-          }
-
-          return fnToCurry(curryArguments[ 0 ], ...futureArguments)
-        }
-      }
-    } else if (curryArguments[ 2 ] === undefined && len === 3) {
-      return futureArgument => fnToCurry(...curryArguments, futureArgument)
-    }
-
-    return fnToCurry(...curryArguments)
-  }
-}
+import {curry} from 'rambda'
 
 function onceFn (fn, context) {
   let result
@@ -32,7 +13,7 @@ function onceFn (fn, context) {
   }
 }
 
-function once (fn, context) {
+export default function once (fn, context) {
   if (arguments.length === 1) {
     const wrap = onceFn(fn, context)
 
@@ -41,5 +22,3 @@ function once (fn, context) {
 
   return onceFn(fn, context)
 }
-
-module.exports = once

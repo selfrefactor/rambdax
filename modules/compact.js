@@ -1,28 +1,25 @@
-const R = require('rambda')
+import {filter, type, equals} from 'rambda'
 
 const types = [
   'Null',
   'Undefined',
   'RegExp',
-  'Function',
-  'Async',
 ]
 
-function compact (arr) {
-  return R.filter(
+export default function compact (arr) {
 
+  return filter(
     a => {
-      const currentType = R.type(a)
+      const currentType = type(a)
       if (types.includes(currentType)) {
         return false
       }
       if (currentType === 'Object') {
-        return !R.equals(a, {})
+        return !equals(a, {})
       }
 
       return a.length !== 0
     },
-    arr)
+    arr
+  )
 }
-
-module.exports = compact

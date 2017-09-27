@@ -1,14 +1,12 @@
-function when(rule, fn){
-  if(rule === undefined){
-    return ruleHolder => when(ruleHolder, fn)
+export default function when(condition, whenTrueFn){
+  if(whenTrueFn === undefined){
+    return whenTrueFnHolder => when(condition, whenTrueFnHolder)
   }
-  
+
   return input => {
-    if(rule(input) === true){
-      return fn(input)
+    if(condition(input) === true){
+      return whenTrueFn(input)
     }
     return input
   }
 }
-
-module.exports = when

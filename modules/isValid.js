@@ -1,14 +1,14 @@
-const R = require('rambda')
+import {type, toLower, contains, test, any} from 'rambda'
 
-const isValid = ({input, schema}) => {
-  if (R.type(input) === 'Object' && R.type(schema) === 'Object') {
+export default function isValid({input, schema}){
+  if (type(input) === 'Object' && type(schema) === 'Object') {
     let flag = true
     for (requirement in schema) {
       if (flag) {
         const rule = schema[ requirement ]
-        const ruleType = R.type(rule)
+        const ruleType = type(rule)
         const inputProp = input[ requirement ]
-        const inputPropType = R.type(input[ requirement ])
+        const inputPropType = type(input[ requirement ])
 
         if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
           inputProp.map(val => {
@@ -26,7 +26,7 @@ const isValid = ({input, schema}) => {
           ruleType === 'String'
         ) {
           if (inputProp !== undefined) {
-            if (R.toLower(inputPropType) !== rule) {
+            if (toLower(inputPropType) !== rule) {
               flag = false
             }
           } else {
@@ -51,7 +51,7 @@ const isValid = ({input, schema}) => {
           ruleType === 'Array' &&
           inputPropType === 'String'
         ) {
-          if (!R.contains(inputProp, rule)) {
+          if (!contains(inputProp, rule)) {
             flag = false
           }
         } else if (
@@ -60,11 +60,11 @@ const isValid = ({input, schema}) => {
           rule.length === 1 &&
           inputProp.length > 0
         ) {
-          const arrayRuleType = R.type(rule[ 0 ])
+          const arrayRuleType = type(rule[ 0 ])
 
           if (arrayRuleType === 'String') {
-            const result = R.any(
-              val => R.toLower(R.type(val)) !== rule[ 0 ],
+            const result = any(
+              val => toLower(type(val)) !== rule[ 0 ],
               inputProp
             )
 
@@ -72,7 +72,7 @@ const isValid = ({input, schema}) => {
               flag = false
             }
           } else if (arrayRuleType === 'Object') {
-            const result = R.any(
+            const result = any(
               val => !isValid(val, rule[ 0 ])
             )(inputProp)
             if (result) {
@@ -83,7 +83,7 @@ const isValid = ({input, schema}) => {
           ruleType === 'RegExp' &&
           inputPropType === 'String'
         ) {
-          if (!R.test(rule, inputProp)) {
+          if (!test(rule, inputProp)) {
             flag = false
           }
         } else {
@@ -97,5 +97,3 @@ const isValid = ({input, schema}) => {
 
   return false
 }
-
-module.exports = isValid

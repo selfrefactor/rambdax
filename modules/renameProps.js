@@ -1,6 +1,6 @@
-const R = require('rambda')
+import {merge, omit} from 'rambda'
 
-function renameProps (conditions, inputObject) {
+export default function renameProps (conditions, inputObject) {
   if (inputObject === undefined) {
     return inputObjectHolder => renameProps(conditions, inputObjectHolder)
   }
@@ -11,12 +11,11 @@ function renameProps (conditions, inputObject) {
     }
   })
 
-  return R.merge(
+  return merge(
     renamed,
-    R.omit(
+    omit(
       Object.keys(conditions),
       inputObject
     )
   )
 }
-module.exports = renameProps

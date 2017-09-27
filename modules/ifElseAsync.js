@@ -4,7 +4,7 @@ const isThenable = x => [ 'Async', 'Promise' ].includes(R.type(x))
 
 const createThenable = x => async input => await x(input)
 
-function ifElseAsync (condition, ifFn, elseFn) {
+export default function ifElseAsync (condition, ifFn, elseFn) {
   if (ifFn === undefined) {
     return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder)
   } else if (elseFn === undefined) {
@@ -29,5 +29,3 @@ function ifElseAsync (condition, ifFn, elseFn) {
       .catch(reject)
   })
 }
-
-module.exports = ifElseAsync

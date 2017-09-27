@@ -1,4 +1,4 @@
-function omitBy (fn, obj) {
+export default function omitBy (fn, obj) {
   if (obj === undefined) {
     return holder => omitBy(fn, holder)
   }
@@ -12,5 +12,3 @@ function omitBy (fn, obj) {
 
   return willReturn
 }
-
-module.exports = omitBy

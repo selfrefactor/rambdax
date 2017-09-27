@@ -1,7 +1,7 @@
-const isPromiseLike = x => [ 'Async', 'Promise' ].includes(x)
+import isPromiseLike from './isPromiseLike'
 
-function tapAsync (fn, input) {
-  if (input === undefined) {
+export default function tapAsync (fn, input) {
+  if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder)
   }
   if (isPromiseLike(fn) === true) {
@@ -17,5 +17,3 @@ function tapAsync (fn, input) {
 
   return input
 }
-
-module.exports = tapAsync

@@ -1,25 +1,32 @@
-const R = require('rambda')
+import {
+  compose,
+  map,
+  sort,
+  type,
+  replace,
+  take,
+} from 'rambda'
 const cache = {}
 
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b
   const willReturn = {}
-  R.compose(
-    R.map(prop => willReturn[ prop ] = obj[ prop ]),
-    R.sort(sortFn)
+  compose(
+    map(prop => willReturn[ prop ] = obj[ prop ]),
+    sort(sortFn)
   )(Object.keys(obj))
 
   return willReturn
 }
 
 const stringify = a => {
-  if (R.type(a) === 'String') {
+  if (type(a) === 'String') {
     return a
-  } else if ([ 'Function', 'Async' ].includes(R.type(a))) {
-    const compacted = R.replace(/\s{1,}/g, ' ', a.toString())
+  } else if ([ 'Function', 'Async' ].includes(type(a))) {
+    const compacted = replace(/\s{1,}/g, ' ', a.toString())
 
-    return R.replace(/\s/g, '_', R.take(15, compacted))
-  } else if (R.type(a) === 'Object') {
+    return replace(/\s/g, '_', take(15, compacted))
+  } else if (type(a) === 'Object') {
     a = normalizeObject(a)
   }
 
@@ -35,7 +42,7 @@ const generateProp = (fn, ...inputArguments) => {
   return `${ propString }${ stringify(fn) }`
 }
 
-function memoize (fn, ...inputArguments) {
+export default function memoize (fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder)
   }
@@ -43,7 +50,7 @@ function memoize (fn, ...inputArguments) {
   if (prop in cache) {
     return cache[ prop ]
   }
-  if (R.type(fn) === 'Async') {
+  if (type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
         cache[ prop ] = result
@@ -56,5 +63,3 @@ function memoize (fn, ...inputArguments) {
 
   return result
 }
-
-module.exports = memoize

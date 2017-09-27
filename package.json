@@ -3,13 +3,14 @@
   "version": "0.5.11",
   "description": "rambda",
   "main": "index.js",
+  "typings": "./index.d.ts",
   "scripts": {
+    "all-build": "rollup -c files/rollup.config.js",
     "test": "jest",
     "docs": "docsify init ./docs",
     "dev": "jest --watch __tests__/when.js",
     "cover": "jest __tests__ --coverage",
-    "build": "webpack",
-    "lintall": "run-p lint-test lint-modules lint-rambdax",
+    "lint": "run-p lint-test lint-modules lint-rambdax",
     "lint-test": "cd __tests__&&run m lintFolder",
     "lint-modules": "cd modules&&run m lintFolder",
     "lint-rambdax": "run m lint f rambdax.js"
@@ -40,7 +41,6 @@
     "benchmark": "^2.1.4",
     "jest": "^21.1.0",
     "log-fn": "^2.0.8",
-    "npm-run-all": "^4.1.1",
-    "webpack": "^3.6.0"
+    "npm-run-all": "^4.1.1"
   }
 }

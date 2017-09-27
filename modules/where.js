@@ -1,4 +1,4 @@
-function where (conditions, obj) {
+export default function where (conditions, obj) {
   if (obj === undefined) {
     return objHolder => where(conditions, objHolder)
   }
@@ -12,5 +12,3 @@ function where (conditions, obj) {
 
   return flag
 }
-
-module.exports = where

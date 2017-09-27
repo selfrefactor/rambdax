@@ -1,4 +1,4 @@
-async function mapAsyncFn (fn, arr) {
+export default async function mapAsyncFn (fn, arr) {
   try {
     const willReturn = []
     for (const a of arr) {
@@ -20,5 +20,3 @@ function mapAsync (fn, arr) {
     mapAsyncFn(fn, arr).then(resolve).catch(reject)
   })
 }
-
-module.exports = mapAsync

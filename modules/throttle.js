@@ -1,4 +1,4 @@
-function throttle (callback, ms) {
+export default function throttle (callback, ms) {
   let wait = false
 
   return function () {
@@ -11,5 +11,3 @@ function throttle (callback, ms) {
     }
   }
 }
-
-module.exports = throttle
