@@ -2,10 +2,7 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
 var R = require('rambda');
-var R__default = _interopDefault(R);
 
 function isType$1(xType, x) {
   if (arguments.length === 1) {
@@ -93,12 +90,12 @@ function evolve(rules, input) {
     return input;
   }
 
-  propRules.map(prop => {
-    const fn = rules[prop];
+  propRules.map(prop$$1 => {
+    const fn = rules[prop$$1];
     if (type$2(fn) === 'Function') {
-      clone[prop] = fn(clone[prop]);
+      clone[prop$$1] = fn(clone[prop$$1]);
     } else if (type$2(fn) === 'Object') {
-      clone[prop] = evolve(fn, clone[prop]);
+      clone[prop$$1] = evolve(fn, clone[prop$$1]);
     }
   });
 
@@ -268,7 +265,7 @@ const cache = {};
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b;
   const willReturn = {};
-  R.compose(R.map(prop => willReturn[prop] = obj[prop]), R.sort(sortFn))(Object.keys(obj));
+  R.compose(R.map(prop$$1 => willReturn[prop$$1] = obj[prop$$1]), R.sort(sortFn))(Object.keys(obj));
 
   return willReturn;
 };
@@ -300,20 +297,20 @@ function memoize(fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder);
   }
-  const prop = generateProp(fn, ...inputArguments);
-  if (prop in cache) {
-    return cache[prop];
+  const prop$$1 = generateProp(fn, ...inputArguments);
+  if (prop$$1 in cache) {
+    return cache[prop$$1];
   }
   if (R.type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
-        cache[prop] = result;
+        cache[prop$$1] = result;
         resolve(result);
       });
     });
   }
   const result = fn(...inputArguments);
-  cache[prop] = result;
+  cache[prop$$1] = result;
 
   return result;
 }
@@ -333,9 +330,9 @@ function omitBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (!fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (!fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
@@ -371,27 +368,27 @@ function pickBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
   return willReturn;
 }
 
-function helper({ condition, inputArgument, prop }) {
+function helper({ condition, inputArgument, prop: prop$$1 }) {
   return new Promise((resolve, reject) => {
     if (!(R.type(condition) === 'Async')) {
       return resolve({
-        type: prop,
+        type: prop$$1,
         payload: condition(inputArgument)
       });
     }
 
     condition(inputArgument).then(result => {
       resolve({
-        type: prop,
+        type: prop$$1,
         payload: result
       });
     }).catch(err => reject(err));
@@ -403,27 +400,27 @@ function produce(conditions, inputArgument) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder);
   }
   let asyncConditionsFlag = false;
-  for (const prop in conditions) {
-    if (asyncConditionsFlag === false && R.type(conditions[prop]) === 'Async') {
+  for (const prop$$1 in conditions) {
+    if (asyncConditionsFlag === false && R.type(conditions[prop$$1]) === 'Async') {
       asyncConditionsFlag = true;
     }
   }
 
   if (asyncConditionsFlag === false) {
     const willReturn = {};
-    for (const prop in conditions) {
-      willReturn[prop] = conditions[prop](inputArgument);
+    for (const prop$$1 in conditions) {
+      willReturn[prop$$1] = conditions[prop$$1](inputArgument);
     }
 
     return willReturn;
   }
   const promised = [];
-  for (const prop in conditions) {
-    const condition = conditions[prop];
+  for (const prop$$1 in conditions) {
+    const condition = conditions[prop$$1];
     promised.push(helper({
       inputArgument,
       condition,
-      prop
+      prop: prop$$1
     }));
   }
 
@@ -495,16 +492,16 @@ function resolveMethod(promises) {
     let counter = 0;
     const props = {};
     const promisedArr = [];
-    for (const prop in promises) {
-      props[counter] = prop;
-      promisedArr.push(promises[prop]);
+    for (const prop$$1 in promises) {
+      props[counter] = prop$$1;
+      promisedArr.push(promises[prop$$1]);
       counter++;
     }
     Promise.all(promisedArr).then(result => {
       const willReturn = {};
       result.map((val, key) => {
-        const prop = props[key];
-        willReturn[prop] = val;
+        const prop$$1 = props[key];
+        willReturn[prop$$1] = val;
       });
 
       res(willReturn);
@@ -598,8 +595,8 @@ function where(conditions, obj) {
     return objHolder => where(conditions, objHolder);
   }
   let flag = true;
-  for (const prop in conditions) {
-    const result = conditions[prop](obj[prop]);
+  for (const prop$$1 in conditions) {
+    const result = conditions[prop$$1](obj[prop$$1]);
     if (flag && result === false) {
       flag = false;
     }
@@ -614,186 +611,190 @@ const isObject = x => isType$1('Object', x);
 const isString = x => isType$1('String', x);
 const isType = isType$1;
 // Follows code generated by `run rambda`
-const add = R__default.add;
-const always = R__default.always;
-const complement = R__default.complement;
-const concat = R__default.concat;
-const divide = R__default.divide;
-const endsWith = R__default.endsWith;
-const F = R__default.F;
-const identity = R__default.identity;
-const includes = R__default.includes;
-const join = R__default.join;
-const lastIndexOf = R__default.lastIndexOf;
-const length$1 = R__default.length;
-const modulo = R__default.modulo;
-const multiply = R__default.multiply;
-const not = R__default.not;
-const padEnd = R__default.padEnd;
-const padStart = R__default.padStart;
-const reverse = R__default.reverse;
-const startsWith = R__default.startsWith;
-const subtract = R__default.subtract;
-const T = R__default.T;
-const toLower$1 = R__default.toLower;
-const toString = R__default.toString;
-const toUpper = R__default.toUpper;
-const trim = R__default.trim;
-const addIndex = R__default.addIndex;
-const adjust = R__default.adjust;
-const all = R__default.all;
-const allPass = R__default.allPass;
-const anyPass = R__default.anyPass;
-const any$1 = R__default.any;
-const append = R__default.append;
-const both = R__default.both;
-const compose$1 = R__default.compose;
-const contains$1 = R__default.contains;
-const curry$1 = R__default.curry;
-const dec = R__default.dec;
-const defaultTo = R__default.defaultTo;
-const drop = R__default.drop;
-const dropLast = R__default.dropLast;
-const either = R__default.either;
-const inc = R__default.inc;
-const equals$1 = R__default.equals;
-const filter$1 = R__default.filter;
-const find = R__default.find;
-const findIndex = R__default.findIndex;
-const flatten = R__default.flatten;
-const flip = R__default.flip;
-const has = R__default.has;
-const head = R__default.head;
-const ifElse = R__default.ifElse;
-const isNil = R__default.isNil;
-const indexOf = R__default.indexOf;
-const init = R__default.init;
-const last$1 = R__default.last;
-const map$1 = R__default.map;
-const match = R__default.match;
-const merge$1 = R__default.merge;
-const omit$1 = R__default.omit;
-const partialCurry = R__default.partialCurry;
-const path = R__default.path;
-const pathOr = R__default.pathOr;
-const pick = R__default.pick;
-const pipe = R__default.pipe;
-const pluck = R__default.pluck;
-const prepend = R__default.prepend;
-const prop = R__default.prop;
-const propEq = R__default.propEq;
-const range$1 = R__default.range;
-const reduce = R__default.reduce;
-const repeat = R__default.repeat;
-const replace$1 = R__default.replace;
-const sort$1 = R__default.sort;
-const sortBy = R__default.sortBy;
-const split$1 = R__default.split;
-const splitEvery = R__default.splitEvery;
-const tap = R__default.tap;
-const tail = R__default.tail;
-const take$1 = R__default.take;
-const takeLast = R__default.takeLast;
-const test$1 = R__default.test;
-const type$1 = R__default.type;
-const typedPathOr = R__default.typedPathOr;
-const typedDefaultTo = R__default.typedDefaultTo;
-const uniq = R__default.uniq;
-const update = R__default.update;
-const values = R__default.values;
+const add$1 = R.add;
+const always$1 = R.always;
+const complement$1 = R.complement;
+const concat$1 = R.concat;
+const divide$1 = R.divide;
+const endsWith$1 = R.endsWith;
+const F$1 = R.F;
+const identity$1 = R.identity;
+const includes$1 = R.includes;
+const join$1 = R.join;
+const lastIndexOf$1 = R.lastIndexOf;
+const length$1 = R.length;
+const modulo$1 = R.modulo;
+const multiply$1 = R.multiply;
+const not$1 = R.not;
+const padEnd$1 = R.padEnd;
+const padStart$1 = R.padStart;
+const reverse$1 = R.reverse;
+const startsWith$1 = R.startsWith;
+const subtract$1 = R.subtract;
+const T$1 = R.T;
+const toLower$1 = R.toLower;
+const toString$1 = R.toString;
+const toUpper$1 = R.toUpper;
+const trim$1 = R.trim;
+const addIndex$1 = R.addIndex;
+const adjust$1 = R.adjust;
+const all$1 = R.all;
+const allPass$1 = R.allPass;
+const anyPass$1 = R.anyPass;
+const any$1 = R.any;
+const append$1 = R.append;
+const both$1 = R.both;
+const compose$1 = R.compose;
+const contains$1 = R.contains;
+const curry$1 = R.curry;
+const dec$1 = R.dec;
+const defaultTo$1 = R.defaultTo;
+const drop$1 = R.drop;
+const dropLast$1 = R.dropLast;
+const either$1 = R.either;
+const inc$1 = R.inc;
+const equals$1 = R.equals;
+const filter$1 = R.filter;
+const find$1 = R.find;
+const findIndex$1 = R.findIndex;
+const flatten$1 = R.flatten;
+const flip$1 = R.flip;
+const forEach$1 = R.forEach;
+const has$1 = R.has;
+const head$1 = R.head;
+const ifElse$1 = R.ifElse;
+const isNil$1 = R.isNil;
+const indexOf$1 = R.indexOf;
+const init$1 = R.init;
+const last$1 = R.last;
+const map$1 = R.map;
+const match$1 = R.match;
+const merge$1 = R.merge;
+const omit$1 = R.omit;
+const partialCurry$1 = R.partialCurry;
+const path$1 = R.path;
+const pathOr$1 = R.pathOr;
+const pick$1 = R.pick;
+const pipe$1 = R.pipe;
+const pluck$1 = R.pluck;
+const prepend$1 = R.prepend;
+const prop$1 = R.prop;
+const propEq$1 = R.propEq;
+const range$1 = R.range;
+const reduce$1 = R.reduce;
+const repeat$1 = R.repeat;
+const replace$1 = R.replace;
+const sort$1 = R.sort;
+const sortBy$1 = R.sortBy;
+const split$1 = R.split;
+const splitEvery$1 = R.splitEvery;
+const tap$1 = R.tap;
+const tail$1 = R.tail;
+const take$1 = R.take;
+const takeLast$1 = R.takeLast;
+const test$1 = R.test;
+const times$1 = R.times;
+const type$1 = R.type;
+const typedPathOr$1 = R.typedPathOr;
+const typedDefaultTo$1 = R.typedDefaultTo;
+const uniq$1 = R.uniq;
+const update$1 = R.update;
+const values$1 = R.values;
 
 exports.DELAY = DELAY;
 exports.isArray = isArray;
 exports.isObject = isObject;
 exports.isString = isString;
 exports.isType = isType;
-exports.add = add;
-exports.always = always;
-exports.complement = complement;
-exports.concat = concat;
-exports.divide = divide;
-exports.endsWith = endsWith;
-exports.F = F;
-exports.identity = identity;
-exports.includes = includes;
-exports.join = join;
-exports.lastIndexOf = lastIndexOf;
+exports.add = add$1;
+exports.always = always$1;
+exports.complement = complement$1;
+exports.concat = concat$1;
+exports.divide = divide$1;
+exports.endsWith = endsWith$1;
+exports.F = F$1;
+exports.identity = identity$1;
+exports.includes = includes$1;
+exports.join = join$1;
+exports.lastIndexOf = lastIndexOf$1;
 exports.length = length$1;
-exports.modulo = modulo;
-exports.multiply = multiply;
-exports.not = not;
-exports.padEnd = padEnd;
-exports.padStart = padStart;
-exports.reverse = reverse;
-exports.startsWith = startsWith;
-exports.subtract = subtract;
-exports.T = T;
+exports.modulo = modulo$1;
+exports.multiply = multiply$1;
+exports.not = not$1;
+exports.padEnd = padEnd$1;
+exports.padStart = padStart$1;
+exports.reverse = reverse$1;
+exports.startsWith = startsWith$1;
+exports.subtract = subtract$1;
+exports.T = T$1;
 exports.toLower = toLower$1;
-exports.toString = toString;
-exports.toUpper = toUpper;
-exports.trim = trim;
-exports.addIndex = addIndex;
-exports.adjust = adjust;
-exports.all = all;
-exports.allPass = allPass;
-exports.anyPass = anyPass;
+exports.toString = toString$1;
+exports.toUpper = toUpper$1;
+exports.trim = trim$1;
+exports.addIndex = addIndex$1;
+exports.adjust = adjust$1;
+exports.all = all$1;
+exports.allPass = allPass$1;
+exports.anyPass = anyPass$1;
 exports.any = any$1;
-exports.append = append;
-exports.both = both;
+exports.append = append$1;
+exports.both = both$1;
 exports.compose = compose$1;
 exports.contains = contains$1;
 exports.curry = curry$1;
-exports.dec = dec;
-exports.defaultTo = defaultTo;
-exports.drop = drop;
-exports.dropLast = dropLast;
-exports.either = either;
-exports.inc = inc;
+exports.dec = dec$1;
+exports.defaultTo = defaultTo$1;
+exports.drop = drop$1;
+exports.dropLast = dropLast$1;
+exports.either = either$1;
+exports.inc = inc$1;
 exports.equals = equals$1;
 exports.filter = filter$1;
-exports.find = find;
-exports.findIndex = findIndex;
-exports.flatten = flatten;
-exports.flip = flip;
-exports.has = has;
-exports.head = head;
-exports.ifElse = ifElse;
-exports.isNil = isNil;
-exports.indexOf = indexOf;
-exports.init = init;
+exports.find = find$1;
+exports.findIndex = findIndex$1;
+exports.flatten = flatten$1;
+exports.flip = flip$1;
+exports.forEach = forEach$1;
+exports.has = has$1;
+exports.head = head$1;
+exports.ifElse = ifElse$1;
+exports.isNil = isNil$1;
+exports.indexOf = indexOf$1;
+exports.init = init$1;
 exports.last = last$1;
 exports.map = map$1;
-exports.match = match;
+exports.match = match$1;
 exports.merge = merge$1;
 exports.omit = omit$1;
-exports.partialCurry = partialCurry;
-exports.path = path;
-exports.pathOr = pathOr;
-exports.pick = pick;
-exports.pipe = pipe;
-exports.pluck = pluck;
-exports.prepend = prepend;
-exports.prop = prop;
-exports.propEq = propEq;
+exports.partialCurry = partialCurry$1;
+exports.path = path$1;
+exports.pathOr = pathOr$1;
+exports.pick = pick$1;
+exports.pipe = pipe$1;
+exports.pluck = pluck$1;
+exports.prepend = prepend$1;
+exports.prop = prop$1;
+exports.propEq = propEq$1;
 exports.range = range$1;
-exports.reduce = reduce;
-exports.repeat = repeat;
+exports.reduce = reduce$1;
+exports.repeat = repeat$1;
 exports.replace = replace$1;
 exports.sort = sort$1;
-exports.sortBy = sortBy;
+exports.sortBy = sortBy$1;
 exports.split = split$1;
-exports.splitEvery = splitEvery;
-exports.tap = tap;
-exports.tail = tail;
+exports.splitEvery = splitEvery$1;
+exports.tap = tap$1;
+exports.tail = tail$1;
 exports.take = take$1;
-exports.takeLast = takeLast;
+exports.takeLast = takeLast$1;
 exports.test = test$1;
+exports.times = times$1;
 exports.type = type$1;
-exports.typedPathOr = typedPathOr;
-exports.typedDefaultTo = typedDefaultTo;
-exports.uniq = uniq;
-exports.update = update;
-exports.values = values;
+exports.typedPathOr = typedPathOr$1;
+exports.typedDefaultTo = typedDefaultTo$1;
+exports.uniq = uniq$1;
+exports.update = update$1;
+exports.values = values$1;
 exports.compact = compact;
 exports.composeAsync = composeAsync;
 exports.debounce = debounce;

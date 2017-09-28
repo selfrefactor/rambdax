@@ -1,4 +1,4 @@
-import R, { any, compose, contains, curry, equals, filter, last, length, map, merge, omit, range, replace, sort, split, take, test, toLower, type } from 'rambda';
+import { F, T, add, addIndex, adjust, all, allPass, always, any, anyPass, append, both, complement, compose, concat, contains, curry, dec, defaultTo, divide, drop, dropLast, either, endsWith, equals, filter, find, findIndex, flatten, flip, forEach, has, head, identity, ifElse, inc, includes, indexOf, init, isNil, join, last, lastIndexOf, length, map, match, merge, modulo, multiply, not, omit, padEnd, padStart, partialCurry, path, pathOr, pick, pipe, pluck, prepend, prop, propEq, range, reduce, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, tail, take, takeLast, tap, test, times, toLower, toString, toUpper, trim, type, typedDefaultTo, typedPathOr, uniq, update, values } from 'rambda';
 
 function isType$1(xType, x) {
   if (arguments.length === 1) {
@@ -86,12 +86,12 @@ function evolve(rules, input) {
     return input;
   }
 
-  propRules.map(prop => {
-    const fn = rules[prop];
+  propRules.map(prop$$1 => {
+    const fn = rules[prop$$1];
     if (type$2(fn) === 'Function') {
-      clone[prop] = fn(clone[prop]);
+      clone[prop$$1] = fn(clone[prop$$1]);
     } else if (type$2(fn) === 'Object') {
-      clone[prop] = evolve(fn, clone[prop]);
+      clone[prop$$1] = evolve(fn, clone[prop$$1]);
     }
   });
 
@@ -261,7 +261,7 @@ const cache = {};
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b;
   const willReturn = {};
-  compose(map(prop => willReturn[prop] = obj[prop]), sort(sortFn))(Object.keys(obj));
+  compose(map(prop$$1 => willReturn[prop$$1] = obj[prop$$1]), sort(sortFn))(Object.keys(obj));
 
   return willReturn;
 };
@@ -293,20 +293,20 @@ function memoize(fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder);
   }
-  const prop = generateProp(fn, ...inputArguments);
-  if (prop in cache) {
-    return cache[prop];
+  const prop$$1 = generateProp(fn, ...inputArguments);
+  if (prop$$1 in cache) {
+    return cache[prop$$1];
   }
   if (type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
-        cache[prop] = result;
+        cache[prop$$1] = result;
         resolve(result);
       });
     });
   }
   const result = fn(...inputArguments);
-  cache[prop] = result;
+  cache[prop$$1] = result;
 
   return result;
 }
@@ -326,9 +326,9 @@ function omitBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (!fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (!fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
@@ -364,27 +364,27 @@ function pickBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
   return willReturn;
 }
 
-function helper({ condition, inputArgument, prop }) {
+function helper({ condition, inputArgument, prop: prop$$1 }) {
   return new Promise((resolve, reject) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
-        type: prop,
+        type: prop$$1,
         payload: condition(inputArgument)
       });
     }
 
     condition(inputArgument).then(result => {
       resolve({
-        type: prop,
+        type: prop$$1,
         payload: result
       });
     }).catch(err => reject(err));
@@ -396,27 +396,27 @@ function produce(conditions, inputArgument) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder);
   }
   let asyncConditionsFlag = false;
-  for (const prop in conditions) {
-    if (asyncConditionsFlag === false && type(conditions[prop]) === 'Async') {
+  for (const prop$$1 in conditions) {
+    if (asyncConditionsFlag === false && type(conditions[prop$$1]) === 'Async') {
       asyncConditionsFlag = true;
     }
   }
 
   if (asyncConditionsFlag === false) {
     const willReturn = {};
-    for (const prop in conditions) {
-      willReturn[prop] = conditions[prop](inputArgument);
+    for (const prop$$1 in conditions) {
+      willReturn[prop$$1] = conditions[prop$$1](inputArgument);
     }
 
     return willReturn;
   }
   const promised = [];
-  for (const prop in conditions) {
-    const condition = conditions[prop];
+  for (const prop$$1 in conditions) {
+    const condition = conditions[prop$$1];
     promised.push(helper({
       inputArgument,
       condition,
-      prop
+      prop: prop$$1
     }));
   }
 
@@ -488,16 +488,16 @@ function resolveMethod(promises) {
     let counter = 0;
     const props = {};
     const promisedArr = [];
-    for (const prop in promises) {
-      props[counter] = prop;
-      promisedArr.push(promises[prop]);
+    for (const prop$$1 in promises) {
+      props[counter] = prop$$1;
+      promisedArr.push(promises[prop$$1]);
       counter++;
     }
     Promise.all(promisedArr).then(result => {
       const willReturn = {};
       result.map((val, key) => {
-        const prop = props[key];
-        willReturn[prop] = val;
+        const prop$$1 = props[key];
+        willReturn[prop$$1] = val;
       });
 
       res(willReturn);
@@ -591,8 +591,8 @@ function where(conditions, obj) {
     return objHolder => where(conditions, objHolder);
   }
   let flag = true;
-  for (const prop in conditions) {
-    const result = conditions[prop](obj[prop]);
+  for (const prop$$1 in conditions) {
+    const result = conditions[prop$$1](obj[prop$$1]);
     if (flag && result === false) {
       flag = false;
     }
@@ -607,93 +607,95 @@ const isObject = x => isType$1('Object', x);
 const isString = x => isType$1('String', x);
 const isType = isType$1;
 // Follows code generated by `run rambda`
-const add = R.add;
-const always = R.always;
-const complement = R.complement;
-const concat = R.concat;
-const divide = R.divide;
-const endsWith = R.endsWith;
-const F = R.F;
-const identity = R.identity;
-const includes = R.includes;
-const join = R.join;
-const lastIndexOf = R.lastIndexOf;
-const length$1 = R.length;
-const modulo = R.modulo;
-const multiply = R.multiply;
-const not = R.not;
-const padEnd = R.padEnd;
-const padStart = R.padStart;
-const reverse = R.reverse;
-const startsWith = R.startsWith;
-const subtract = R.subtract;
-const T = R.T;
-const toLower$1 = R.toLower;
-const toString = R.toString;
-const toUpper = R.toUpper;
-const trim = R.trim;
-const addIndex = R.addIndex;
-const adjust = R.adjust;
-const all = R.all;
-const allPass = R.allPass;
-const anyPass = R.anyPass;
-const any$1 = R.any;
-const append = R.append;
-const both = R.both;
-const compose$1 = R.compose;
-const contains$1 = R.contains;
-const curry$1 = R.curry;
-const dec = R.dec;
-const defaultTo = R.defaultTo;
-const drop = R.drop;
-const dropLast = R.dropLast;
-const either = R.either;
-const inc = R.inc;
-const equals$1 = R.equals;
-const filter$1 = R.filter;
-const find = R.find;
-const findIndex = R.findIndex;
-const flatten = R.flatten;
-const flip = R.flip;
-const has = R.has;
-const head = R.head;
-const ifElse = R.ifElse;
-const isNil = R.isNil;
-const indexOf = R.indexOf;
-const init = R.init;
-const last$1 = R.last;
-const map$1 = R.map;
-const match = R.match;
-const merge$1 = R.merge;
-const omit$1 = R.omit;
-const partialCurry = R.partialCurry;
-const path = R.path;
-const pathOr = R.pathOr;
-const pick = R.pick;
-const pipe = R.pipe;
-const pluck = R.pluck;
-const prepend = R.prepend;
-const prop = R.prop;
-const propEq = R.propEq;
-const range$1 = R.range;
-const reduce = R.reduce;
-const repeat = R.repeat;
-const replace$1 = R.replace;
-const sort$1 = R.sort;
-const sortBy = R.sortBy;
-const split$1 = R.split;
-const splitEvery = R.splitEvery;
-const tap = R.tap;
-const tail = R.tail;
-const take$1 = R.take;
-const takeLast = R.takeLast;
-const test$1 = R.test;
-const type$1 = R.type;
-const typedPathOr = R.typedPathOr;
-const typedDefaultTo = R.typedDefaultTo;
-const uniq = R.uniq;
-const update = R.update;
-const values = R.values;
+const add$1 = add;
+const always$1 = always;
+const complement$1 = complement;
+const concat$1 = concat;
+const divide$1 = divide;
+const endsWith$1 = endsWith;
+const F$1 = F;
+const identity$1 = identity;
+const includes$1 = includes;
+const join$1 = join;
+const lastIndexOf$1 = lastIndexOf;
+const length$1 = length;
+const modulo$1 = modulo;
+const multiply$1 = multiply;
+const not$1 = not;
+const padEnd$1 = padEnd;
+const padStart$1 = padStart;
+const reverse$1 = reverse;
+const startsWith$1 = startsWith;
+const subtract$1 = subtract;
+const T$1 = T;
+const toLower$1 = toLower;
+const toString$1 = toString;
+const toUpper$1 = toUpper;
+const trim$1 = trim;
+const addIndex$1 = addIndex;
+const adjust$1 = adjust;
+const all$1 = all;
+const allPass$1 = allPass;
+const anyPass$1 = anyPass;
+const any$1 = any;
+const append$1 = append;
+const both$1 = both;
+const compose$1 = compose;
+const contains$1 = contains;
+const curry$1 = curry;
+const dec$1 = dec;
+const defaultTo$1 = defaultTo;
+const drop$1 = drop;
+const dropLast$1 = dropLast;
+const either$1 = either;
+const inc$1 = inc;
+const equals$1 = equals;
+const filter$1 = filter;
+const find$1 = find;
+const findIndex$1 = findIndex;
+const flatten$1 = flatten;
+const flip$1 = flip;
+const forEach$1 = forEach;
+const has$1 = has;
+const head$1 = head;
+const ifElse$1 = ifElse;
+const isNil$1 = isNil;
+const indexOf$1 = indexOf;
+const init$1 = init;
+const last$1 = last;
+const map$1 = map;
+const match$1 = match;
+const merge$1 = merge;
+const omit$1 = omit;
+const partialCurry$1 = partialCurry;
+const path$1 = path;
+const pathOr$1 = pathOr;
+const pick$1 = pick;
+const pipe$1 = pipe;
+const pluck$1 = pluck;
+const prepend$1 = prepend;
+const prop$1 = prop;
+const propEq$1 = propEq;
+const range$1 = range;
+const reduce$1 = reduce;
+const repeat$1 = repeat;
+const replace$1 = replace;
+const sort$1 = sort;
+const sortBy$1 = sortBy;
+const split$1 = split;
+const splitEvery$1 = splitEvery;
+const tap$1 = tap;
+const tail$1 = tail;
+const take$1 = take;
+const takeLast$1 = takeLast;
+const test$1 = test;
+const times$1 = times;
+const type$1 = type;
+const typedPathOr$1 = typedPathOr;
+const typedDefaultTo$1 = typedDefaultTo;
+const uniq$1 = uniq;
+const update$1 = update;
+const values$1 = values;
 
-export { DELAY, isArray, isObject, isString, isType, add, always, complement, concat, divide, endsWith, F, identity, includes, join, lastIndexOf, length$1 as length, modulo, multiply, not, padEnd, padStart, reverse, startsWith, subtract, T, toLower$1 as toLower, toString, toUpper, trim, addIndex, adjust, all, allPass, anyPass, any$1 as any, append, both, compose$1 as compose, contains$1 as contains, curry$1 as curry, dec, defaultTo, drop, dropLast, either, inc, equals$1 as equals, filter$1 as filter, find, findIndex, flatten, flip, has, head, ifElse, isNil, indexOf, init, last$1 as last, map$1 as map, match, merge$1 as merge, omit$1 as omit, partialCurry, path, pathOr, pick, pipe, pluck, prepend, prop, propEq, range$1 as range, reduce, repeat, replace$1 as replace, sort$1 as sort, sortBy, split$1 as split, splitEvery, tap, tail, take$1 as take, takeLast, test$1 as test, type$1 as type, typedPathOr, typedDefaultTo, uniq, update, values, compact, composeAsync, debounce, delay, evolve$1 as evolve, ifElseAsync, intersection, isPromiseLike, isValid, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, tapAsync, throttle, when, where };
+export { DELAY, isArray, isObject, isString, isType, add$1 as add, always$1 as always, complement$1 as complement, concat$1 as concat, divide$1 as divide, endsWith$1 as endsWith, F$1 as F, identity$1 as identity, includes$1 as includes, join$1 as join, lastIndexOf$1 as lastIndexOf, length$1 as length, modulo$1 as modulo, multiply$1 as multiply, not$1 as not, padEnd$1 as padEnd, padStart$1 as padStart, reverse$1 as reverse, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, toLower$1 as toLower, toString$1 as toString, toUpper$1 as toUpper, trim$1 as trim, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, any$1 as any, append$1 as append, both$1 as both, compose$1 as compose, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, inc$1 as inc, equals$1 as equals, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, ifElse$1 as ifElse, isNil$1 as isNil, indexOf$1 as indexOf, init$1 as init, last$1 as last, map$1 as map, match$1 as match, merge$1 as merge, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, repeat$1 as repeat, replace$1 as replace, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, type$1 as type, typedPathOr$1 as typedPathOr, typedDefaultTo$1 as typedDefaultTo, uniq$1 as uniq, update$1 as update, values$1 as values, compact, composeAsync, debounce, delay, evolve$1 as evolve, ifElseAsync, intersection, isPromiseLike, isValid, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, tapAsync, throttle, when, where };
 //# sourceMappingURL=rambdax.esm.js.map
