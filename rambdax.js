@@ -1,4 +1,4 @@
-import R from 'rambda'
+import  * as R from 'rambda'
 
 import isTypeMethod from './modules/isType'
 
