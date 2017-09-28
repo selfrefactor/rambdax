@@ -4,6 +4,7 @@ import pkg from '../package.json'
 export default {
   input     : './rambdax.js',
   sourcemap : true,
+  external: [ 'rambda' ],
   plugins   : [ babel() ],
   output    : [
     {
@@ -13,11 +14,6 @@ export default {
     {
       file   : pkg.module,
       format : 'es',
-    },
-    {
-      file   : pkg.browser,
-      format : 'umd',
-      name   : 'R',
-    },
+    }
   ],
 }

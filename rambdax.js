@@ -1,4 +1,4 @@
-import * as R from 'rambda'
+import Rambda from 'rambda'
 
 import isTypeMethod from './modules/isType'
 
@@ -35,6 +35,6 @@ export {default as throttle} from './modules/throttle'
 export {default as when} from './modules/when'
 export {default as where} from './modules/where'
 
-Object.keys(R).map(method => {
-  exports[ method ] = R[ method ]
+Object.keys(Rambda).map(method => {
+  exports[ method ] = Rambda[ method ]
 })

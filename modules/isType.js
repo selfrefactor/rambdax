@@ -1,4 +1,4 @@
-const { type } = require('rambda')
+import { type } from 'rambda'
 
 export default function isType (xType, x) {
   if (arguments.length === 1) {
