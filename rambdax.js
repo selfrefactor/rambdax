@@ -1,4 +1,4 @@
-import R from 'rambda'
+import * as R from 'rambda'
 
 import isTypeMethod from './modules/isType'
 
@@ -10,37 +10,30 @@ export {default as delay} from './modules/delay'
 export {default as evolve} from './modules/evolve'
 export {default as ifElseAsync} from './modules/ifElseAsync'
 export {default as intersection} from './modules/intersection'
-
-exports.delay = require('./modules/delay')
-exports.evolve = require('./modules/evolve')
-exports.ifElseAsync = require('./modules/ifElseAsync')
-exports.intersection = require('./modules/intersection')
-exports.isArray = x => isType('Array', x)
-exports.isObject = x => isType('Object', x)
-exports.isPromiseLike = require('./modules/isPromiseLike')
-exports.isString = x => isType('String', x)
+export const isArray = x => isTypeMethod('Array', x)
+export const isObject = x => isTypeMethod('Object', x)
+export const isString = x => isTypeMethod('String', x)
 export const isType = isTypeMethod
-exports.isValid = require('./modules/isValid')
-exports.mapAsync = require('./modules/mapAsync')
-exports.mapFastAsync = require('./modules/mapFastAsync')
-exports.memoize = require('./modules/memoize')
-exports.mergeAll = require('./modules/mergeAll')
-exports.omitBy = require('./modules/omitBy')
-exports.once = require('./modules/once')
-exports.pickBy = require('./modules/pickBy')
-exports.produce = require('./modules/produce')
-exports.random = require('./modules/random')
-exports.rangeBy = require('./modules/rangeBy')
-exports.renameProps = require('./modules/renameProps')
-exports.resolve = require('./modules/resolve')
-exports.resolveSecure = require('./modules/resolveSecure')
-exports.shuffle = require('./modules/shuffle')
-exports.tap = require('./modules/tap')
-exports.tapAsync = require('./modules/tapAsync')
-exports.throttle = require('./modules/throttle')
-exports.when = require('./modules/when')
-exports.where = require('./modules/where')
-exports.wrap = require('./modules/wrap')
+export {default as isPromiseLike} from './modules/isPromiseLike'
+export {default as isValid} from './modules/isValid'
+export {default as mapAsync} from './modules/mapAsync'
+export {default as mapFastAsync} from './modules/mapFastAsync'
+export {default as memoize} from './modules/memoize'
+export {default as mergeAll} from './modules/mergeAll'
+export {default as omitBy} from './modules/omitBy'
+export {default as once} from './modules/once'
+export {default as pickBy} from './modules/pickBy'
+export {default as produce} from './modules/produce'
+export {default as random} from './modules/random'
+export {default as rangeBy} from './modules/rangeBy'
+export {default as renameProps} from './modules/renameProps'
+export {default as resolve} from './modules/resolve'
+export {default as resolveSecure} from './modules/resolveSecure'
+export {default as shuffle} from './modules/shuffle'
+export {default as tapAsync} from './modules/tapAsync'
+export {default as throttle} from './modules/throttle'
+export {default as when} from './modules/when'
+export {default as where} from './modules/where'
 
 Object.keys(R).map(method => {
   exports[ method ] = R[ method ]

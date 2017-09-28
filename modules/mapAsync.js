@@ -1,4 +1,4 @@
-export default async function mapAsyncFn (fn, arr) {
+async function mapAsyncFn (fn, arr) {
   try {
     const willReturn = []
     for (const a of arr) {
@@ -11,7 +11,7 @@ export default async function mapAsyncFn (fn, arr) {
   }
 }
 
-function mapAsync (fn, arr) {
+export default function mapAsync (fn, arr) {
   if (arr === undefined) {
     return async holder => await mapAsyncFn(fn, holder)
   }

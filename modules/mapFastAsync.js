@@ -1,4 +1,4 @@
-export default async function mapFastAsyncFn (fn, arr) {
+async function mapFastAsyncFn (fn, arr) {
   try {
     const promised = arr.map(a => fn(a))
 
@@ -8,7 +8,7 @@ export default async function mapFastAsyncFn (fn, arr) {
   }
 }
 
-function mapFastAsync (fn, arr) {
+export default function mapFastAsync (fn, arr) {
   if (arr === undefined) {
     return async holder => await mapFastAsyncFn(fn, holder)
   }

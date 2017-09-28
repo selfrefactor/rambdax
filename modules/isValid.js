@@ -3,7 +3,7 @@ import {type, toLower, contains, test, any} from 'rambda'
 export default function isValid({input, schema}){
   if (type(input) === 'Object' && type(schema) === 'Object') {
     let flag = true
-    for (requirement in schema) {
+    for (const requirement in schema) {
       if (flag) {
         const rule = schema[ requirement ]
         const ruleType = type(rule)

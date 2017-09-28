@@ -16,7 +16,7 @@ const wrapper = promise => new Promise(resolve => {
 
 export default async function resolve (input) {
   try {
-    const promised = R.map(
+    const promised = map(
       a => wrapper(a),
       input
     )

@@ -1,10 +1,10 @@
 export default function pickBy (fn, obj) {
-  if (obj === undefined) {
+  if (arguments.length === 1) {
     return holder => pickBy(fn, holder)
   }
 
   const willReturn = {}
-  for (prop in obj) {
+  for (const prop in obj) {
     if (fn(prop, obj[ prop ])) {
       willReturn[ prop ] = obj[ prop ]
     }
