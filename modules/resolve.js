@@ -1,4 +1,4 @@
-export default function resolve (promises) {
+export default function resolveMethod (promises) {
   return new Promise((res, rej) => {
     let counter = 0
     const props = {}

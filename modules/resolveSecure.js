@@ -1,23 +1,23 @@
 import {map} from 'rambda'
 
-const wrapper = promise => new Promise(resolve => {
+const resolveSecureWrapper = promise => new Promise(res => {
   promise.then(result => {
-    resolve({
+    res({
       payload : result,
       type    : 'RESULT',
     })
   }).catch(err => {
-    resolve({
+    res({
       payload : err,
       type    : 'ERROR',
     })
   })
 })
 
-export default async function resolve (input) {
+async function resolveSecure (input) {
   try {
     const promised = map(
-      a => wrapper(a),
+      a => resolveSecureWrapper(a),
       input
     )
 
@@ -26,3 +26,5 @@ export default async function resolve (input) {
     console.log(err)
   }
 }
+
+export default resolveSecure
