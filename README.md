@@ -159,10 +159,6 @@ It returns array with the overlapped members of `a` and `b`.
 R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
 ```
 
-#### isType
-
-> isType(xType: string, x: any): Boolean
-
 It returns `true` if `R.type` of `x` is equal to `xType`.
 
 #### isArray
@@ -182,6 +178,10 @@ It returns `true` if `R.type` of `x` is equal to `xType`.
 > isPromiseLike(x: any): Boolean
 
 It returns true if `x` is either async function or unresolved promise.
+
+#### isType
+
+> isType(xType: String, x: any): Boolean
 
 #### isValid
 
@@ -248,7 +248,7 @@ console.log(result) //=> [11, 21, 31]
 
 #### memoize
 
-> memoize(fn: Function|Promise): any
+> memoize(fn: Function|Promise<any>): any
 
 When `fn` is called for a second time with the same input, then the cache result is returned instead of calling `fn`.
 
@@ -266,7 +266,7 @@ console.log(counter) //=> 1
 
 #### mergeAll
 
-> mergeAll(input: Array): Object
+> mergeAll(input: object[]): object
 
 It merges all objects of `input` array sequentially and returns the result.
 
@@ -370,7 +370,7 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 
 #### random
 
-> random(min: Number, max: Number)
+> random(min: number, max: number): number
 
 It returns a random number between `min` inclusive and `max` inclusive.
 
@@ -382,7 +382,7 @@ expect(randomResult).toBeGreaterThanOrEqual(1)
 
 #### rangeBy
 
-> rangeBy(start: Number, end: Number, step: Number)
+> rangeBy(start: number, end: number, step: number): number[]
 
 It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
 
@@ -397,7 +397,7 @@ expect(
 
 #### renameProps
 
-> renameProps(rules: Object, input: Object): Object
+> renameProps(rules: object, input: object): object
 
 If property `prop` of `rules` is also a property in `input`, then rename `input` property to `rules[prop]`.
 
@@ -420,7 +420,7 @@ const expectedResult = {
 
 #### resolve
 
-> resolve(promises: Object): Object
+> resolve(promises: object): Promise<object>
 
 It acts as `Promise.all` for object with Promises.
 
@@ -478,22 +478,9 @@ const expectedResult = [
 
 #### shuffle
 
-> shuffle(arr: Array): Array
+> shuffle(arr: any[]): any[]
 
 It returns randomized copy of array.
-
-#### tap
-
-> tap(fn: Function, input: T): T
-
-It returns back `input` after calling `fn` with `input`.
-
-```
-const log = a => console.log(a)
-const result = R.tap(log, "foo")
-// the console logs `foo`
-// `result` is equal to "foo"
-```
 
 #### tapAsync
 
@@ -513,7 +500,7 @@ const result = R.tapAsync(log, "foo")
 
 #### throttle
 
-> throttle(fn: Function, period: Number): Function
+> throttle(fn: Function, period: number): Function
 
 It creates a throttled function that invokes `fn` maximum once for a `period` of milliseconds.
 
@@ -532,7 +519,7 @@ console.log(counter) // => 1
 
 #### where
 
-> where(conditions: Object, input: Object): Boolean
+> where(conditions: object, input: object): boolean
 
 Each property `prop` in `conditions` is a function.
 

@@ -1,5 +1,3 @@
-declare let R: R.Static;
-
 declare namespace R {
     type Ord = number | string | boolean;
 
@@ -9,7 +7,6 @@ declare namespace R {
         0: K;
         1: V;
     }
-
 
     type Arity1Fn = (a: any) => any;
 
@@ -90,8 +87,99 @@ declare namespace R {
         [index: string]: any;
     }
 
+    interface ProduceConditions {
+        [key: string]: Function|Promise<any>
+    }
+
+    interface ObjectWithPromises {
+        [key: string]: Promise<any>
+    }
+
+    interface ResolveSecureResult{
+        type: 'RESULT'|'ERROR';
+        payload: any;
+    }
+
+    type SchemaStringTypes = 'array'|'string'|'number'|'boolean'|RegExp|Function;
+
+    interface Schema{
+        [key: string]: SchemaStringTypes|Array<SchemaStringTypes>|Array<Schema>;
+    }
+
+    interface IsValid{
+        input: object;
+        schema: Schema;
+    }
+
+    type RambdaTypes = 'Async' |
+    'Promise' |
+    'Object' |
+    'Boolean' |
+    'String' |
+    'Null' |
+    'Array' |
+    'RegExp' |
+    'Function';
+
     interface Static {
-        add(a: number, b: number): number;
+        // Rambdax types
+        compact(x: any[]): any[];
+
+        composeAsync(...fns: Array<Promise<any>|Function>):(input: any) => Promise<any>;
+
+        debounce(fn: Function, ms: number): any;
+
+        delay(ms: Number): Promise<string>;
+
+        evolve (rules: object, input: object): object;
+
+        intersection(a: any[], b: any[]): any[];
+
+        isType(xType: RambdaTypes, x: any): boolean;
+        isArray(x: any): boolean;
+        isString(x: any): boolean;
+        isObject(x: any): boolean;
+        isPromiseLike(x: any): boolean;
+
+        isValid(input: IsValid): boolean;
+
+        mapAsync(fn: Promise<any>,arr: any[]): Promise<Array<any>>;
+        mapFastAsync(fn: Promise<any>,arr: any[]): Promise<Array<any>>;
+
+        memoize(fn: Function|Promise<any>): any;
+
+        mergeAll(input: object[]): object;
+
+        omitBy(fn: Function, input: object): object;
+
+        once(fn: Function): Function;
+
+        pickBy(fn: Function, input: object): object;
+
+        produce(conditions: ProduceConditions, input: any): Promise<object>|object;
+
+        random(min: number, max: number): number;
+
+        rangeBy(start: number, end: number, step: number): number[];
+
+        renameProps(rules: object, input: object): object;
+
+        resolve(input: ObjectWithPromises): Promise<object>;
+
+        resolveSecure(input: Array<Promise<any>>): Array<ResolveSecureResult>;
+
+        shuffle(arr: any[]): any[];
+
+        tapAsync<T>(fn: Function|Promise<any>, input: T): T;
+
+        throttle(fn: Function, ms: number): Function;
+
+        where(conditions: object, input: object): boolean;
+
+        when(rule: Function, fn: Function): Function;
+
+        // Rambda types
+                add(a: number, b: number): number;
         add(a: string, b: string): string;
         add(a: number): (b: number) => number;
         add(a: string): (b: string) => string;
@@ -226,6 +314,9 @@ declare namespace R {
 
         flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0: T) => TResult;
 
+        forEach<T>(fn: (x: T) => void, list: T[]): T[];
+        forEach<T>(fn: (x: T) => void): (list: T[]) => T[];
+
         has<T>(s: string, obj: T): boolean;
         has(s: string): <T>(obj: T) => boolean;
 
@@ -352,6 +443,9 @@ declare namespace R {
         test(regexp: RegExp, str: string): boolean;
         test(regexp: RegExp): (str: string) => boolean;
 
+        times<T>(fn: (i: number) => T, n: number): T[];
+        times<T>(fn: (i: number) => T): (n: number) => T[];
+
         toLower(str: string): string;
 
         toString<T>(val: T): string;
@@ -377,6 +471,7 @@ declare namespace R {
         values<T extends object, K extends keyof T>(obj: T): Array<T[K]>;
     }
 }
+declare let Rambda: R.Static;
 
-export = R;
+export = Rambda;
 export as namespace R;
