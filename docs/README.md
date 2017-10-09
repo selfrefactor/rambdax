@@ -420,9 +420,10 @@ const expectedResult = {
 
 #### resolve
 
-> resolve(promises: object): Promise<object>
+> resolve(promises: object): Promise
 
 It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
 
 ```
 const fn = ms => new Promise(resolve => {
