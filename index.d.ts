@@ -198,7 +198,7 @@ declare namespace R {
     shuffle(arr: any[]): any[]
 
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
-    tapAsync<T>(fn: Function | Promise<any>)(input: T) => T
+    tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle(fn: Function, ms: number): Function
 
