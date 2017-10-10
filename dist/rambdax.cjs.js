@@ -117,7 +117,7 @@ function ifElseAsync(condition, ifFn, elseFn) {
     return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder);
   }
 
-  return input => new Promise((resolve, reject) => {
+  return input => new Promise((resolve, reject$$1) => {
     const conditionPromise = createThenable(condition);
     const ifFnPromise = createThenable(ifFn);
     const elseFnPromise = createThenable(elseFn);
@@ -125,8 +125,8 @@ function ifElseAsync(condition, ifFn, elseFn) {
     conditionPromise(input).then(conditionResult => {
       const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
 
-      promised(input).then(resolve).catch(reject);
-    }).catch(reject);
+      promised(input).then(resolve).catch(reject$$1);
+    }).catch(reject$$1);
   });
 }
 
@@ -235,8 +235,8 @@ function mapAsync(fn, arr) {
     return async holder => await mapAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -255,8 +255,8 @@ function mapFastAsync(fn, arr) {
     return async holder => await mapFastAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapFastAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -378,7 +378,7 @@ function pickBy(fn, obj) {
 }
 
 function helper({ condition, inputArgument, prop: prop$$1 }) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject$$1) => {
     if (!(R.type(condition) === 'Async')) {
       return resolve({
         type: prop$$1,
@@ -391,7 +391,7 @@ function helper({ condition, inputArgument, prop: prop$$1 }) {
         type: prop$$1,
         payload: result
       });
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -424,14 +424,14 @@ function produce(conditions, inputArgument) {
     }));
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject$$1) => {
     Promise.all(promised).then(results => {
       const willReturn = {};
 
       R.map(result => willReturn[result.type] = result.payload, results);
 
       resolve(willReturn);
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -552,10 +552,10 @@ function tapAsync(fn, input) {
     return inputHolder => tapAsync(fn, inputHolder);
   }
   if (isPromiseLike(fn) === true) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject$$1) => {
       fn(input).then(() => {
         resolve(input);
-      }).catch(reject);
+      }).catch(reject$$1);
     });
   }
   fn(input);
@@ -682,6 +682,7 @@ const prop$1 = R.prop;
 const propEq$1 = R.propEq;
 const range$1 = R.range;
 const reduce$1 = R.reduce;
+const reject$1 = R.reject;
 const repeat$1 = R.repeat;
 const replace$1 = R.replace;
 const sort$1 = R.sort;
@@ -700,6 +701,7 @@ const typedDefaultTo$1 = R.typedDefaultTo;
 const uniq$1 = R.uniq;
 const update$1 = R.update;
 const values$1 = R.values;
+const without$1 = R.without;
 
 exports.DELAY = DELAY;
 exports.isArray = isArray;
@@ -777,6 +779,7 @@ exports.prop = prop$1;
 exports.propEq = propEq$1;
 exports.range = range$1;
 exports.reduce = reduce$1;
+exports.reject = reject$1;
 exports.repeat = repeat$1;
 exports.replace = replace$1;
 exports.sort = sort$1;
@@ -795,6 +798,7 @@ exports.typedDefaultTo = typedDefaultTo$1;
 exports.uniq = uniq$1;
 exports.update = update$1;
 exports.values = values$1;
+exports.without = without$1;
 exports.compact = compact;
 exports.composeAsync = composeAsync;
 exports.debounce = debounce;

@@ -1,4 +1,4 @@
-import { F, T, add, addIndex, adjust, all, allPass, always, any, anyPass, append, both, complement, compose, concat, contains, curry, dec, defaultTo, divide, drop, dropLast, either, endsWith, equals, filter, find, findIndex, flatten, flip, forEach, has, head, identity, ifElse, inc, includes, indexOf, init, isNil, join, last, lastIndexOf, length, map, match, merge, modulo, multiply, not, omit, padEnd, padStart, partialCurry, path, pathOr, pick, pipe, pluck, prepend, prop, propEq, range, reduce, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, tail, take, takeLast, tap, test, times, toLower, toString, toUpper, trim, type, typedDefaultTo, typedPathOr, uniq, update, values } from 'rambda';
+import { F, T, add, addIndex, adjust, all, allPass, always, any, anyPass, append, both, complement, compose, concat, contains, curry, dec, defaultTo, divide, drop, dropLast, either, endsWith, equals, filter, find, findIndex, flatten, flip, forEach, has, head, identity, ifElse, inc, includes, indexOf, init, isNil, join, last, lastIndexOf, length, map, match, merge, modulo, multiply, not, omit, padEnd, padStart, partialCurry, path, pathOr, pick, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, tail, take, takeLast, tap, test, times, toLower, toString, toUpper, trim, type, typedDefaultTo, typedPathOr, uniq, update, values, without } from 'rambda';
 
 function isType$1(xType, x) {
   if (arguments.length === 1) {
@@ -113,7 +113,7 @@ function ifElseAsync(condition, ifFn, elseFn) {
     return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder);
   }
 
-  return input => new Promise((resolve, reject) => {
+  return input => new Promise((resolve, reject$$1) => {
     const conditionPromise = createThenable(condition);
     const ifFnPromise = createThenable(ifFn);
     const elseFnPromise = createThenable(elseFn);
@@ -121,8 +121,8 @@ function ifElseAsync(condition, ifFn, elseFn) {
     conditionPromise(input).then(conditionResult => {
       const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
 
-      promised(input).then(resolve).catch(reject);
-    }).catch(reject);
+      promised(input).then(resolve).catch(reject$$1);
+    }).catch(reject$$1);
   });
 }
 
@@ -231,8 +231,8 @@ function mapAsync(fn, arr) {
     return async holder => await mapAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -251,8 +251,8 @@ function mapFastAsync(fn, arr) {
     return async holder => await mapFastAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapFastAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -374,7 +374,7 @@ function pickBy(fn, obj) {
 }
 
 function helper({ condition, inputArgument, prop: prop$$1 }) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject$$1) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
         type: prop$$1,
@@ -387,7 +387,7 @@ function helper({ condition, inputArgument, prop: prop$$1 }) {
         type: prop$$1,
         payload: result
       });
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -420,14 +420,14 @@ function produce(conditions, inputArgument) {
     }));
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject$$1) => {
     Promise.all(promised).then(results => {
       const willReturn = {};
 
       map(result => willReturn[result.type] = result.payload, results);
 
       resolve(willReturn);
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -548,10 +548,10 @@ function tapAsync(fn, input) {
     return inputHolder => tapAsync(fn, inputHolder);
   }
   if (isPromiseLike(fn) === true) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject$$1) => {
       fn(input).then(() => {
         resolve(input);
-      }).catch(reject);
+      }).catch(reject$$1);
     });
   }
   fn(input);
@@ -678,6 +678,7 @@ const prop$1 = prop;
 const propEq$1 = propEq;
 const range$1 = range;
 const reduce$1 = reduce;
+const reject$1 = reject;
 const repeat$1 = repeat;
 const replace$1 = replace;
 const sort$1 = sort;
@@ -696,6 +697,7 @@ const typedDefaultTo$1 = typedDefaultTo;
 const uniq$1 = uniq;
 const update$1 = update;
 const values$1 = values;
+const without$1 = without;
 
-export { DELAY, isArray, isObject, isString, isType, add$1 as add, always$1 as always, complement$1 as complement, concat$1 as concat, divide$1 as divide, endsWith$1 as endsWith, F$1 as F, identity$1 as identity, includes$1 as includes, join$1 as join, lastIndexOf$1 as lastIndexOf, length$1 as length, modulo$1 as modulo, multiply$1 as multiply, not$1 as not, padEnd$1 as padEnd, padStart$1 as padStart, reverse$1 as reverse, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, toLower$1 as toLower, toString$1 as toString, toUpper$1 as toUpper, trim$1 as trim, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, any$1 as any, append$1 as append, both$1 as both, compose$1 as compose, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, inc$1 as inc, equals$1 as equals, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, ifElse$1 as ifElse, isNil$1 as isNil, indexOf$1 as indexOf, init$1 as init, last$1 as last, map$1 as map, match$1 as match, merge$1 as merge, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, repeat$1 as repeat, replace$1 as replace, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, type$1 as type, typedPathOr$1 as typedPathOr, typedDefaultTo$1 as typedDefaultTo, uniq$1 as uniq, update$1 as update, values$1 as values, compact, composeAsync, debounce, delay, evolve$1 as evolve, ifElseAsync, intersection, isPromiseLike, isValid, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, tapAsync, throttle, when, where };
+export { DELAY, isArray, isObject, isString, isType, add$1 as add, always$1 as always, complement$1 as complement, concat$1 as concat, divide$1 as divide, endsWith$1 as endsWith, F$1 as F, identity$1 as identity, includes$1 as includes, join$1 as join, lastIndexOf$1 as lastIndexOf, length$1 as length, modulo$1 as modulo, multiply$1 as multiply, not$1 as not, padEnd$1 as padEnd, padStart$1 as padStart, reverse$1 as reverse, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, toLower$1 as toLower, toString$1 as toString, toUpper$1 as toUpper, trim$1 as trim, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, any$1 as any, append$1 as append, both$1 as both, compose$1 as compose, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, inc$1 as inc, equals$1 as equals, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, ifElse$1 as ifElse, isNil$1 as isNil, indexOf$1 as indexOf, init$1 as init, last$1 as last, map$1 as map, match$1 as match, merge$1 as merge, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$1 as replace, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, type$1 as type, typedPathOr$1 as typedPathOr, typedDefaultTo$1 as typedDefaultTo, uniq$1 as uniq, update$1 as update, values$1 as values, without$1 as without, compact, composeAsync, debounce, delay, evolve$1 as evolve, ifElseAsync, intersection, isPromiseLike, isValid, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, tapAsync, throttle, when, where };
 //# sourceMappingURL=rambdax.esm.js.map
