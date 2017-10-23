@@ -121,8 +121,7 @@ declare namespace R {
     schema: Schema
   }
 
-  type RambdaTypes =
-    | "Async"
+  type RambdaTypes = "Async"
     | "Promise"
     | "Object"
     | "Boolean"
