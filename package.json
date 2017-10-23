@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^0.9.1"
+    "rambda": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
