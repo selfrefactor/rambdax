@@ -149,6 +149,13 @@ const expectedResult = {
 // result === expectedResult
 ```
 
+#### greater
+
+> greater(x: string, y: string)
+
+It return true if the second argument is greater than the first argument.
+Note that this is opposite direction compared to Rambda's `gt` method.
+
 #### intersection
 
 > intersection(a: Array, b: Array): Array
@@ -205,6 +212,13 @@ const song = {
 
 R.isValid({input,schema}) // => true
 ```
+
+#### less
+
+> less(x: string, y: string)
+
+It return true if the second argument is less than the first argument.
+Note that this is opposite direction compared to Rambda's `lt` method.
 
 #### mapAsync
 

@@ -109,6 +109,14 @@ function evolve(rules, input) {
 
 var evolve$1 = curry$2(evolve);
 
+function greater(x, y) {
+  if (y === undefined) {
+    return yHolder => greater(x, yHolder);
+  }
+
+  return y > x;
+}
+
 function createThenable(x) {
   return async function (input) {
     return x(input);
@@ -220,6 +228,14 @@ function isValid({ input, schema }) {
   }
 
   return false;
+}
+
+function less(x, y) {
+  if (y === undefined) {
+    return yHolder => less(x, yHolder);
+  }
+
+  return y < x;
 }
 
 async function mapAsyncFn(fn, arr) {
@@ -806,10 +822,12 @@ exports.debounce = debounce;
 exports.delay = delay;
 exports.debug = debug;
 exports.evolve = evolve$1;
+exports.greater = greater;
 exports.ifElseAsync = ifElseAsync;
 exports.intersection = intersection;
 exports.isPromiseLike = isPromiseLike;
 exports.isValid = isValid;
+exports.less = less;
 exports.mapAsync = mapAsync;
 exports.mapFastAsync = mapFastAsync;
 exports.memoize = memoize;
