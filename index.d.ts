@@ -150,6 +150,11 @@ declare namespace R {
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
 
+    greater(x: string, y: string): boolean
+    greater(x: string) : (y: string) => boolean
+    less(x: string, y: string): boolean
+    less(x: string) : (y: string) => boolean
+
     ifElseAsync(condition: Async|Function, ifFn: Async|Function, elseFn: Async|Function): Async
 
     intersection<T>(list1: T[], list2: T[]): T[]

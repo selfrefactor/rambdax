@@ -9,6 +9,7 @@ export const DELAY = 'RAMBDAX_DELAY'
 export {default as delay} from './modules/delay'
 export {default as debug} from './modules/debug'
 export {default as evolve} from './modules/evolve'
+export {default as greater} from './modules/greater'
 export {default as ifElseAsync} from './modules/ifElseAsync'
 export {default as intersection} from './modules/intersection'
 export const isArray = x => isTypeMethod('Array', x)
@@ -17,6 +18,7 @@ export const isString = x => isTypeMethod('String', x)
 export const isType = isTypeMethod
 export {default as isPromiseLike} from './modules/isPromiseLike'
 export {default as isValid} from './modules/isValid'
+export {default as less} from './modules/less'
 export {default as mapAsync} from './modules/mapAsync'
 export {default as mapFastAsync} from './modules/mapFastAsync'
 export {default as memoize} from './modules/memoize'
