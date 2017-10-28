@@ -2580,6 +2580,12 @@ rambda@^1.0.0:
   dependencies:
     babel-preset-latest "^6.24.1"
 
+"rambda@https://github.com/selfrefactor/rambda#1.0.1":
+  version "1.0.0"
+  resolved "https://github.com/selfrefactor/rambda#3648ae086a40a4e9c6f38093285bbfcb05821b92"
+  dependencies:
+    babel-preset-latest "^6.24.1"
+
 rambdax@^0.6.1:
   version "0.6.3"
   resolved "https://registry.yarnpkg.com/rambdax/-/rambdax-0.6.3.tgz#69b05cb60eff7b33592ee8cdb1dcee156ba53468"

@@ -77,6 +77,7 @@ export const forEach = R.forEach
 export const has = R.has
 export const head = R.head
 export const ifElse = R.ifElse
+export const is = R.is
 export const isNil = R.isNil
 export const includes = R.includes
 export const indexOf = R.indexOf
