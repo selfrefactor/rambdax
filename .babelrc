@@ -3,7 +3,7 @@
     "development": {
       "presets": [
         ["env", {
-          "targets": {"node": 8},
+          "targets": {"node": "current"},
           "modules" : false
         }]
       ],
@@ -12,7 +12,7 @@
     "test": {
       "presets": [
         ["env", {
-          "targets": {"node": 8}
+          "targets": {"node": "current"}
         }]
       ]
     }

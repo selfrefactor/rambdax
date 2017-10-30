@@ -1,24 +1,35 @@
-const { throttle } = require('../rambdax')
+const R = require('../rambdax')
 
-describe('', () => {
-  it('', async () => {
-    let counter = 0
-    const inc = () => {
-      counter++
-    }
+test('', async () => {
+  let counter = 0
+  let aHolder
+  let bHolder
 
-    const delay = ms => new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
-    const incWrapped = throttle(inc, 1000)
-    await delay(500)
-    incWrapped()
-    incWrapped()
-    incWrapped()
-    expect(counter).toBe(1)
-    await delay(1500)
-    incWrapped()
-    expect(counter).toBe(2)
-  })
+  const inc = (a,b) => {
+    aHolder = a
+    bHolder = b
+    counter++
+  }
+
+  const incWrapped = R.throttle(inc, 1000)
+  
+  incWrapped(1,2)
+  
+  await R.delay(500)
+
+  incWrapped(2,3)
+  incWrapped(3,4)
+  
+  expect(counter).toBe(1)
+  expect(aHolder).toBe(1)
+  expect(bHolder).toBe(2)
+  
+  await R.delay(1000)
+  
+  incWrapped(5,6)
+  
+  expect(counter).toBe(2)
+  expect(aHolder).toBe(5)
+  expect(bHolder).toBe(6)
 })
 

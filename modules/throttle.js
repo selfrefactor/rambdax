@@ -1,9 +1,9 @@
-export default function throttle (callback, ms) {
+export default function throttle (fn, ms) {
   let wait = false
 
-  return function () {
+  return function (...input) {
     if (!wait) {
-      callback.call()
+      fn.apply(undefined, input)
       wait = true
       setTimeout(() => {
         wait = false
