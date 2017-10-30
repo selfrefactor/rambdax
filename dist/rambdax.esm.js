@@ -9,14 +9,14 @@ function isType$1(xType, x) {
 }
 
 const types = ['Null', 'Undefined', 'RegExp'];
-
 function compact(arr) {
-
   return filter(a => {
     const currentType = type(a);
+
     if (types.includes(currentType)) {
       return false;
     }
+
     if (currentType === 'Object') {
       return !equals(a, {});
     }
@@ -32,6 +32,7 @@ function composeAsync(...inputArguments) {
 
       while (inputArguments.length !== 0) {
         const fn = inputArguments.pop();
+
         if (type(fn) === 'Async' || type(fn) === 'Promise') {
           argumentsToPass = await fn(argumentsToPass);
         } else {
@@ -48,19 +49,22 @@ function composeAsync(...inputArguments) {
 
 function debounce(func, ms, immediate = false) {
   let timeout;
-
   return function () {
     const thisHolder = this;
     const args = arguments;
+
     const later = function () {
       timeout = null;
+
       if (!immediate) {
         func.apply(thisHolder, args);
       }
     };
+
     const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, ms);
+
     if (callNow) {
       func.apply(thisHolder, args);
     }
@@ -68,7 +72,6 @@ function debounce(func, ms, immediate = false) {
 }
 
 function delay(ms) {
-
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('RAMBDAX_DELAY');
@@ -81,7 +84,11 @@ function debug(...input) {
   process.exit();
 }
 
-const { type: type$2, curry: curry$2, filter: filter$2 } = require('rambda');
+const {
+  type: type$2,
+  curry: curry$2,
+  filter: filter$2
+} = require('rambda');
 
 function evolve(rules, input) {
   const clone = Object.assign({}, input);
@@ -93,13 +100,13 @@ function evolve(rules, input) {
 
   propRules.map(prop$$1 => {
     const fn = rules[prop$$1];
+
     if (type$2(fn) === 'Function') {
       clone[prop$$1] = fn(clone[prop$$1]);
     } else if (type$2(fn) === 'Object') {
       clone[prop$$1] = evolve(fn, clone[prop$$1]);
     }
   });
-
   return clone;
 }
 
@@ -130,10 +137,8 @@ function ifElseAsync(condition, ifFn, elseFn) {
     const conditionPromise = createThenable(condition);
     const ifFnPromise = createThenable(ifFn);
     const elseFnPromise = createThenable(elseFn);
-
     conditionPromise(input).then(conditionResult => {
       const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
-
       promised(input).then(resolve).catch(reject$$1);
     }).catch(reject$$1);
   });
@@ -147,15 +152,21 @@ function intersection(a, b) {
   return filter(val => b.includes(val))(a);
 }
 
-const { type: type$3 } = require('rambda');
+const {
+  type: type$3
+} = require('rambda');
 
 function isPromiseLike(x) {
   return ['Async', 'Promise'].includes(type$3(x));
 }
 
-function isValid({ input, schema }) {
+function isValid({
+  input,
+  schema
+}) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
     let flag = true;
+
     for (const requirement in schema) {
       if (flag) {
         const rule = schema[requirement];
@@ -171,6 +182,7 @@ function isValid({ input, schema }) {
                 localFlag = true;
               }
             });
+
             if (localFlag === false) {
               flag = false;
             }
@@ -206,6 +218,7 @@ function isValid({ input, schema }) {
             }
           } else if (arrayRuleType === 'Object') {
             const result = any(val => !isValid(val, rule[0]))(inputProp);
+
             if (result) {
               flag = false;
             }
@@ -237,6 +250,7 @@ function less(x, y) {
 async function mapAsyncFn(fn, arr) {
   try {
     const willReturn = [];
+
     for (const a of arr) {
       willReturn.push((await fn(a)));
     }
@@ -260,7 +274,6 @@ function mapAsync(fn, arr) {
 async function mapFastAsyncFn(fn, arr) {
   try {
     const promised = arr.map(a => fn(a));
-
     return await Promise.all(promised);
   } catch (err) {
     throw err;
@@ -281,9 +294,9 @@ const cache = {};
 
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b;
+
   const willReturn = {};
   compose(map(prop$$1 => willReturn[prop$$1] = obj[prop$$1]), sort(sortFn))(Object.keys(obj));
-
   return willReturn;
 };
 
@@ -292,7 +305,6 @@ const stringify = a => {
     return a;
   } else if (['Function', 'Async'].includes(type(a))) {
     const compacted = replace(/\s{1,}/g, ' ', a.toString());
-
     return replace(/\s/g, '_', take(15, compacted));
   } else if (type(a) === 'Object') {
     a = normalizeObject(a);
@@ -306,7 +318,6 @@ const generateProp = (fn, ...inputArguments) => {
   inputArguments.map(inputArgument => {
     propString += `${stringify(inputArgument)}_`;
   });
-
   return `${propString}${stringify(fn)}`;
 };
 
@@ -314,10 +325,13 @@ function memoize(fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder);
   }
+
   const prop$$1 = generateProp(fn, ...inputArguments);
+
   if (prop$$1 in cache) {
     return cache[prop$$1];
   }
+
   if (type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
@@ -326,9 +340,9 @@ function memoize(fn, ...inputArguments) {
       });
     });
   }
+
   const result = fn(...inputArguments);
   cache[prop$$1] = result;
-
   return result;
 }
 
@@ -337,7 +351,6 @@ function mergeAll(arr) {
   map(val => {
     willReturn = merge(willReturn, val);
   }, arr);
-
   return willReturn;
 }
 
@@ -347,6 +360,7 @@ function omitBy(fn, obj) {
   }
 
   const willReturn = {};
+
   for (const prop$$1 in obj) {
     if (!fn(prop$$1, obj[prop$$1])) {
       willReturn[prop$$1] = obj[prop$$1];
@@ -358,7 +372,6 @@ function omitBy(fn, obj) {
 
 function onceFn(fn, context) {
   let result;
-
   return function () {
     if (fn) {
       result = fn.apply(context || this, arguments);
@@ -372,7 +385,6 @@ function onceFn(fn, context) {
 function once(fn, context) {
   if (arguments.length === 1) {
     const wrap = onceFn(fn, context);
-
     return curry(wrap);
   }
 
@@ -385,6 +397,7 @@ function pickBy(fn, obj) {
   }
 
   const willReturn = {};
+
   for (const prop$$1 in obj) {
     if (fn(prop$$1, obj[prop$$1])) {
       willReturn[prop$$1] = obj[prop$$1];
@@ -394,7 +407,11 @@ function pickBy(fn, obj) {
   return willReturn;
 }
 
-function helper({ condition, inputArgument, prop: prop$$1 }) {
+function helper({
+  condition,
+  inputArgument,
+  prop: prop$$1
+}) {
   return new Promise((resolve, reject$$1) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
@@ -416,7 +433,9 @@ function produce(conditions, inputArgument) {
   if (arguments.length === 1) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder);
   }
+
   let asyncConditionsFlag = false;
+
   for (const prop$$1 in conditions) {
     if (asyncConditionsFlag === false && type(conditions[prop$$1]) === 'Async') {
       asyncConditionsFlag = true;
@@ -425,13 +444,16 @@ function produce(conditions, inputArgument) {
 
   if (asyncConditionsFlag === false) {
     const willReturn = {};
+
     for (const prop$$1 in conditions) {
       willReturn[prop$$1] = conditions[prop$$1](inputArgument);
     }
 
     return willReturn;
   }
+
   const promised = [];
+
   for (const prop$$1 in conditions) {
     const condition = conditions[prop$$1];
     promised.push(helper({
@@ -444,9 +466,7 @@ function produce(conditions, inputArgument) {
   return new Promise((resolve, reject$$1) => {
     Promise.all(promised).then(results => {
       const willReturn = {};
-
       map(result => willReturn[result.type] = result.payload, results);
-
       resolve(willReturn);
     }).catch(err => reject$$1(err));
   });
@@ -464,16 +484,19 @@ function rangeBy(startNum, endNum, distance) {
   }
 
   const isInteger = !distance.toString().includes('.');
+
   if (startNum > endNum) {
     const startNumHolder = startNum;
     startNum = endNum;
     endNum = startNumHolder;
   }
+
   const willReturn = [startNum];
   let valueToPush = startNum;
 
   if (isInteger) {
     const loopIndexes = range(0, Math.floor((endNum - startNum) / distance));
+
     for (const i of loopIndexes) {
       valueToPush += distance;
       willReturn.push(valueToPush);
@@ -481,6 +504,7 @@ function rangeBy(startNum, endNum, distance) {
   } else {
     const decimalLength = compose(length, last, split('.'))(distance.toString());
     const loopIndexes = range(0, Math.floor((endNum - startNum) / distance));
+
     for (const i of loopIndexes) {
       valueToPush += distance;
       willReturn.push(Number(valueToPush.toFixed(decimalLength)));
@@ -494,13 +518,13 @@ function renameProps(conditions, inputObject) {
   if (inputObject === undefined) {
     return inputObjectHolder => renameProps(conditions, inputObjectHolder);
   }
+
   const renamed = {};
   Object.keys(conditions).map(renameConditionProp => {
     if (Object.keys(inputObject).includes(renameConditionProp)) {
       renamed[conditions[renameConditionProp]] = inputObject[renameConditionProp];
     }
   });
-
   return merge(renamed, omit(Object.keys(conditions), inputObject));
 }
 
@@ -509,18 +533,19 @@ function resolveMethod(promises) {
     let counter = 0;
     const props = {};
     const promisedArr = [];
+
     for (const prop$$1 in promises) {
       props[counter] = prop$$1;
       promisedArr.push(promises[prop$$1]);
       counter++;
     }
+
     Promise.all(promisedArr).then(result => {
       const willReturn = {};
       result.map((val, key) => {
         const prop$$1 = props[key];
         willReturn[prop$$1] = val;
       });
-
       res(willReturn);
     }).catch(rej);
   });
@@ -543,7 +568,6 @@ const resolveSecureWrapper = promise => new Promise(res => {
 async function resolveSecure(input) {
   try {
     const promised = map(a => resolveSecureWrapper(a), input);
-
     return await Promise.all(promised);
   } catch (err) {
     console.log(err);
@@ -553,6 +577,7 @@ async function resolveSecure(input) {
 function shuffle(arrayRaw) {
   const array = arrayRaw.concat();
   let counter = array.length;
+
   while (counter > 0) {
     const index = Math.floor(Math.random() * counter);
     counter--;
@@ -568,6 +593,7 @@ function tapAsync(fn, input) {
   if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder);
   }
+
   if (isPromiseLike(fn) === true) {
     return new Promise((resolve, reject$$1) => {
       fn(input).then(() => {
@@ -575,14 +601,13 @@ function tapAsync(fn, input) {
       }).catch(reject$$1);
     });
   }
-  fn(input);
 
+  fn(input);
   return input;
 }
 
 function throttle(callback, ms) {
   let wait = false;
-
   return function () {
     if (!wait) {
       callback.call();
@@ -596,6 +621,7 @@ function throttle(callback, ms) {
 
 function tryCatch(fn, input) {
   const fnType = type(fn);
+
   if (fnType === 'Async' || fnType === 'Promise') {
     return new Promise(resolve => {
       fn(input).then(resolve).catch(resolve);
@@ -618,6 +644,7 @@ function when(condition, whenTrueFn) {
     if (condition(input) === true) {
       return whenTrueFn(input);
     }
+
     return input;
   };
 }
@@ -626,9 +653,12 @@ function where(conditions, obj) {
   if (obj === undefined) {
     return objHolder => where(conditions, objHolder);
   }
+
   let flag = true;
+
   for (const prop$$1 in conditions) {
     const result = conditions[prop$$1](obj[prop$$1]);
+
     if (flag && result === false) {
       flag = false;
     }
@@ -642,7 +672,6 @@ const isArray = x => isType$1('Array', x);
 const isObject = x => isType$1('Object', x);
 const isString = x => isType$1('String', x);
 const isType = isType$1;
-// Follows code generated by `run rambda`
 const always$1 = always;
 const complement$1 = complement;
 const F$1 = F;
