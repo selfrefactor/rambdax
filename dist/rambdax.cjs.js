@@ -598,6 +598,21 @@ function throttle(callback, ms) {
   };
 }
 
+function tryCatch(fn, input) {
+  const fnType = R.type(fn);
+  if (fnType === 'Async' || fnType === 'Promise') {
+    return new Promise(resolve => {
+      fn(input).then(resolve).catch(resolve);
+    });
+  }
+
+  try {
+    return fn(input);
+  } catch (err) {
+    return err;
+  }
+}
+
 function when(condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
     return whenTrueFnHolder => when(condition, whenTrueFnHolder);
@@ -846,6 +861,7 @@ exports.resolveSecure = resolveSecure;
 exports.shuffle = shuffle;
 exports.tapAsync = tapAsync;
 exports.throttle = throttle;
+exports.tryCatch = tryCatch;
 exports.when = when;
 exports.where = where;
 //# sourceMappingURL=rambdax.cjs.js.map

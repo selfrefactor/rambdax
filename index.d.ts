@@ -206,7 +206,9 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle(fn: Function, ms: number): Function
-
+    
+    tryCatch<T>(fn: Function|Async, input?: any): T|Promise<T>
+    
     where(conditions: object, input: object): boolean
 
     when(rule: Function, fn: Function): Function
@@ -358,7 +360,7 @@ declare namespace R {
 
     identity<T>(a: T): T
 
-    ifElse(fn: Pred, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
+    ifElse(fn: Pred|boolean, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
 
     init<T>(list: T[]): T[]
     init(list: string): string
@@ -393,6 +395,9 @@ declare namespace R {
     multiply(a: number, b: number): number
     multiply(a: number): (b: number) => number
 
+    none<T>(fn: (a: T) => boolean, list: T[]): boolean;
+    none<T>(fn: (a: T) => boolean): (list: T[]) => boolean;
+
     not(value: any): boolean
 
     omit<T>(names: string[]|string, obj: T): T
@@ -411,6 +416,9 @@ declare namespace R {
 
     pick<T, K extends keyof T>(names: Array<K | string>|string, obj: T): Pick<T, K>
     pick(names: string[]|string): <T, U>(obj: T) => U
+
+    pickAll<T, U>(names: string[], obj: T): U;
+    pickAll(names: string[]): <T, U>(obj: T) => U;
 
     pluck<T>(p: string | number, list: any[]): T[]
     pluck(p: string | number): <T>(list: any[]) => T[]
