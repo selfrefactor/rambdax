@@ -5,14 +5,14 @@ export default function debounce (func, ms, immediate = false) {
     const later = function () {
       timeout = null
       if (!immediate) {
-        func.apply(undefined, input)
+        func.apply(null, input)
       }
     }
     const callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, ms)
     if (callNow) {
-      func.apply(undefined, input)
+      func.apply(null, input)
     }
   }
 }

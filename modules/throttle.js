@@ -3,7 +3,7 @@ export default function throttle (fn, ms) {
 
   return function (...input) {
     if (!wait) {
-      fn.apply(undefined, input)
+      fn.apply(null, input)
       wait = true
       setTimeout(() => {
         wait = false
