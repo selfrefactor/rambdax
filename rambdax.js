@@ -1,7 +1,6 @@
-import  * as R from 'rambda'
+import * as R from 'rambda';
 
-import isTypeMethod from './modules/isType'
-
+export {default as assocPath} from './modules/assocPath'
 export {default as compact} from './modules/compact'
 export {default as composeAsync} from './modules/composeAsync'
 export {default as debounce} from './modules/debounce'
@@ -12,10 +11,6 @@ export {default as evolve} from './modules/evolve'
 export {default as greater} from './modules/greater'
 export {default as ifElseAsync} from './modules/ifElseAsync'
 export {default as intersection} from './modules/intersection'
-export const isArray = x => isTypeMethod('Array', x)
-export const isObject = x => isTypeMethod('Object', x)
-export const isString = x => isTypeMethod('String', x)
-export const isType = isTypeMethod
 export {default as isPromiseLike} from './modules/isPromiseLike'
 export {default as isValid} from './modules/isValid'
 export {default as less} from './modules/less'

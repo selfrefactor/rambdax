@@ -136,6 +136,10 @@ declare namespace R {
 
   interface X {
     // Rambdax types
+    assocPath<T, U>(path: Path|string, val: T, obj: U): U
+    assocPath<T, U>(path: Path|string, val: T): (obj: U) => U
+    assocPath<T, U>(path: Path|string): CurriedFunction2<T, U, U>
+
     compact(x: any[]): any[]
 
     composeAsync(
