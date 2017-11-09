@@ -27,6 +27,18 @@ The idea of `Rambdax` is to extend `Rambda` without worring for `Ramda` compatib
 
 ### API part I - Rambdax own methods
 
+#### assocPath
+
+> assocPath(path: string[]|string, x: any, obj: object): object
+
+It creates a shallow copy of object `obj` with value `x` and object path `path`.
+If the object don't have object path `path`, then this path is created.
+
+```
+R.assocPath('a.b.c', 42, {a: {b: {c: 0}}})
+//=> {a: {b: {c: 42} } }
+```
+
 #### compact
 
 > compact(arr: Array<any>)
@@ -154,7 +166,7 @@ const expectedResult = {
 > greater(x: string, y: string)
 
 It return true if the second argument is greater than the first argument.
-Note that this is opposite direction compared to Rambda's `gt` method.
+Note that this is opposite direction compared to Rambda's `gt` method, because it makes more sense in `R.compose` context.
 
 #### intersection
 
@@ -163,32 +175,16 @@ Note that this is opposite direction compared to Rambda's `gt` method.
 It returns array with the overlapped members of `a` and `b`.
 
 ```
-R.intersection([1,2,3,4], [7,6,5,4,3]); //=> [4, 3]
+R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ]) //=> [3, 5]
 ```
 
 It returns `true` if `R.type` of `x` is equal to `xType`.
-
-#### isArray
-
-> isArray(x: any): Boolean
-
-#### isString
-
-> isString(x: any): Boolean
-
-#### isObject
-
-> isObject(x: any): Boolean
 
 #### isPromiseLike
 
 > isPromiseLike(x: any): Boolean
 
 It returns true if `x` is either async function or unresolved promise.
-
-#### isType
-
-> isType(xType: String, x: any): Boolean
 
 #### isValid
 
@@ -218,7 +214,7 @@ R.isValid({input,schema}) // => true
 > less(x: string, y: string)
 
 It return true if the second argument is less than the first argument.
-Note that this is opposite direction compared to Rambda's `lt` method.
+Note that this is opposite direction compared to Rambda's `lt` method, because it makes more sense in `R.compose` context.
 
 #### mapAsync
 
