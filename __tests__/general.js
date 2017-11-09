@@ -31,8 +31,3 @@ test('isPromiseLike', () => {
     )
   ).toBeTruthy()
 })
-
-test('isType', () => {
-  expect(R.isType('String', 'foo')).toBeTruthy()
-  expect(R.isType('Array', 'foo')).toBeFalsy()
-})
