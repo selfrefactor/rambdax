@@ -2,8 +2,8 @@
 	"name": "rambdax",
 	"version": "0.6.10",
 	"description": "Lightweight alternative to Ramda - extended version",
-	"main": "dist/rambdax.cjs.js",
-	"module": "dist/rambdax.esm.js",
+	"main": "./dist/rambdax.cjs.js",
+	"module": "./dist/rambdax.esm.js",
 	"typings": "./index.d.ts",
 	"scripts": {
 		"build": "run-p rambda rollup",
@@ -28,13 +28,13 @@
 		"util"
 	],
 	"author": "self_refactor",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/selfrefactor/rambdax/issues"
 	},
 	"homepage": "https://github.com/selfrefactor/rambdax#readme",
 	"dependencies": {
-		"rambda": "https://github.com/selfrefactor/rambda#1.0.3"
+		"rambda": "https://github.com/selfrefactor/rambda#1.0.4"
 	},
 	"devDependencies": {
 		"babel-plugin-external-helpers": "^7.0.0-beta.3",

@@ -529,4 +529,3 @@ declare namespace R {
 declare let Rambdax: R.X
 
 export = Rambdax
-export as namespace R
