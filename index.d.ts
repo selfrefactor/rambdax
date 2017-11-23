@@ -149,6 +149,7 @@ declare namespace R {
     debounce(fn: Function, ms: number): any
 
     delay(ms: Number): Promise<string>
+    DELAY: string
     debug(...input: Array<any>): never
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
