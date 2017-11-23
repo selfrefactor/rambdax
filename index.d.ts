@@ -447,6 +447,9 @@ declare namespace R {
 
     reject<T>(fn: (value: T) => boolean): (list: T[]) => T[]
     reject<T>(fn: (value: T) => boolean, list: T[]): T[]
+    
+    repeat<T>(x: T, numRepeat: number): T[]
+    repeat<T>(x: T): (numRepeat: number) => T[]
 
     replace(pattern: RegExp | string, replacement: string, str: string): string
     replace(pattern: RegExp | string, replacement: string): (str: string) => string
