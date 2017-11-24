@@ -134,6 +134,10 @@ declare namespace R {
 
   type Async = (x: any) => Promise<any>
 
+  interface TypedObject<T>{
+    [key: string]: T
+  }
+
   interface X {
     // Rambdax types
     assocPath<T, U>(path: Path|string, val: T, obj: U): U
@@ -433,8 +437,8 @@ declare namespace R {
     prepend<T>(el: T, list: T[]): T[]
     prepend<T>(el: T): (list: T[]) => T[]
 
-    prop<T>(p: string, obj: any): T
-    prop<T>(p: string): <T>(obj: any) => T
+    prop<T>(p: string, obj: TypedObject<T>): T
+    prop<T>(p: string): <T>(obj: TypedObject<T>) => T
 
     propEq<T>(name: string, val: T, obj: any): boolean
     propEq<T>(name: string, val: T): (obj: any) => boolean
