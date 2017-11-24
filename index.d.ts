@@ -313,6 +313,8 @@ declare namespace R {
     defaultTo<T, U>(a: T, b: U): T | U
     defaultTo<T>(a: T): <U>(b: U) => T | U
 
+    debug(...input: any[]): void
+
     divide(a: number, b: number): number
     divide(a: number): (b: number) => number
 
