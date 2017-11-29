@@ -163,10 +163,14 @@ const expectedResult = {
 
 #### greater
 
-> greater(x: string, y: string)
+> greater(x: number, y: number)
 
 It return true if the second argument is greater than the first argument.
 Note that this is opposite direction compared to Rambda's `gt` method, because it makes more sense in `R.compose` context.
+
+```
+R.greater(1,2) // => true
+```
 
 #### intersection
 
@@ -211,10 +215,14 @@ R.isValid({input,schema}) // => true
 
 #### less
 
-> less(x: string, y: string)
+> less(x: number, y: number)
 
 It return true if the second argument is less than the first argument.
 Note that this is opposite direction compared to Rambda's `lt` method, because it makes more sense in `R.compose` context.
+
+```
+R.less(2,1) // => true
+```
 
 #### mapAsync
 
