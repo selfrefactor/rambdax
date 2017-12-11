@@ -5,18 +5,18 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var R = require('rambda');
 
 function assocPath(path$$1, x, obj) {
-  var pathValue = typeof path$$1 === 'string' ? path$$1.split('.') : path$$1;
+  const pathValue = typeof path$$1 === 'string' ? path$$1.split('.') : path$$1;
 
-  var lastProp = pathValue[pathValue.length - 1];
+  const lastProp = pathValue[pathValue.length - 1];
 
-  var newProps = {
+  let newProps = {
     [lastProp]: x
   };
 
-  var counter = pathValue.length - 2;
+  let counter = pathValue.length - 2;
 
   while (counter > -1) {
-    var prop$$1 = pathValue[counter];
+    const prop$$1 = pathValue[counter];
     newProps = {
       [prop$$1]: newProps
     };
@@ -29,12 +29,12 @@ function assocPath(path$$1, x, obj) {
 
 var assocPath$1 = R.curry(assocPath);
 
-var types = ['Null', 'Undefined', 'RegExp'];
+const types = ['Null', 'Undefined', 'RegExp'];
 
 function compact(arr) {
 
-  return R.filter(function (a) {
-    var currentType = R.type(a);
+  return R.filter(a => {
+    const currentType = R.type(a);
     if (types.includes(currentType)) {
       return false;
     }
@@ -46,230 +46,38 @@ function compact(arr) {
   }, arr);
 }
 
-var asyncGenerator = function () {
-  function AwaitValue(value) {
-    this.value = value;
-  }
-
-  function AsyncGenerator(gen) {
-    var front, back;
-
-    function send(key, arg) {
-      return new Promise(function (resolve, reject$$1) {
-        var request = {
-          key: key,
-          arg: arg,
-          resolve: resolve,
-          reject: reject$$1,
-          next: null
-        };
-
-        if (back) {
-          back = back.next = request;
-        } else {
-          front = back = request;
-          resume(key, arg);
-        }
-      });
-    }
-
-    function resume(key, arg) {
-      try {
-        var result = gen[key](arg);
-        var value = result.value;
-
-        if (value instanceof AwaitValue) {
-          Promise.resolve(value.value).then(function (arg) {
-            resume("next", arg);
-          }, function (arg) {
-            resume("throw", arg);
-          });
-        } else {
-          settle(result.done ? "return" : "normal", result.value);
-        }
-      } catch (err) {
-        settle("throw", err);
-      }
-    }
-
-    function settle(type$$1, value) {
-      switch (type$$1) {
-        case "return":
-          front.resolve({
-            value: value,
-            done: true
-          });
-          break;
-
-        case "throw":
-          front.reject(value);
-          break;
-
-        default:
-          front.resolve({
-            value: value,
-            done: false
-          });
-          break;
-      }
-
-      front = front.next;
-
-      if (front) {
-        resume(front.key, front.arg);
-      } else {
-        back = null;
-      }
-    }
-
-    this._invoke = send;
-
-    if (typeof gen.return !== "function") {
-      this.return = undefined;
-    }
-  }
-
-  if (typeof Symbol === "function" && Symbol.asyncIterator) {
-    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-      return this;
-    };
-  }
-
-  AsyncGenerator.prototype.next = function (arg) {
-    return this._invoke("next", arg);
-  };
-
-  AsyncGenerator.prototype.throw = function (arg) {
-    return this._invoke("throw", arg);
-  };
-
-  AsyncGenerator.prototype.return = function (arg) {
-    return this._invoke("return", arg);
-  };
-
-  return {
-    wrap: function (fn) {
-      return function () {
-        return new AsyncGenerator(fn.apply(this, arguments));
-      };
-    },
-    await: function (value) {
-      return new AwaitValue(value);
-    }
-  };
-}();
-
-
-
-var asyncToGenerator = function (fn) {
-  return function () {
-    var gen = fn.apply(this, arguments);
-    return new Promise(function (resolve, reject$$1) {
-      function step(key, arg) {
-        try {
-          var info = gen[key](arg);
-          var value = info.value;
-        } catch (error) {
-          reject$$1(error);
-          return;
-        }
-
-        if (info.done) {
-          resolve(value);
-        } else {
-          return Promise.resolve(value).then(function (value) {
-            step("next", value);
-          }, function (err) {
-            step("throw", err);
-          });
-        }
-      }
-
-      return step("next");
-    });
-  };
-};
-
-function composeAsync() {
-  for (var _len = arguments.length, inputArguments = Array(_len), _key = 0; _key < _len; _key++) {
-    inputArguments[_key] = arguments[_key];
-  }
-
+function composeAsync(...inputArguments) {
   try {
-    return function () {
-      var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(startArgument) {
-        var argumentsToPass, fn;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                argumentsToPass = startArgument;
+    return async function (startArgument) {
+      let argumentsToPass = startArgument;
 
-              case 1:
-                if (!(inputArguments.length !== 0)) {
-                  _context.next = 12;
-                  break;
-                }
+      while (inputArguments.length !== 0) {
+        const fn = inputArguments.pop();
+        if (R.type(fn) === 'Async' || R.type(fn) === 'Promise') {
+          argumentsToPass = await fn(argumentsToPass);
+        } else {
+          argumentsToPass = fn(argumentsToPass);
+        }
+      }
 
-                fn = inputArguments.pop();
-
-                if (!(R.type(fn) === 'Async' || R.type(fn) === 'Promise')) {
-                  _context.next = 9;
-                  break;
-                }
-
-                _context.next = 6;
-                return fn(argumentsToPass);
-
-              case 6:
-                argumentsToPass = _context.sent;
-                _context.next = 10;
-                break;
-
-              case 9:
-                argumentsToPass = fn(argumentsToPass);
-
-              case 10:
-                _context.next = 1;
-                break;
-
-              case 12:
-                return _context.abrupt('return', argumentsToPass);
-
-              case 13:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      return function (_x) {
-        return _ref.apply(this, arguments);
-      };
-    }();
+      return argumentsToPass;
+    };
   } catch (err) {
     throw err;
   }
 }
 
-function debounce(func, ms) {
-  var immediate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+function debounce(func, ms, immediate = false) {
+  let timeout;
 
-  var timeout = void 0;
-
-  return function () {
-    for (var _len = arguments.length, input = Array(_len), _key = 0; _key < _len; _key++) {
-      input[_key] = arguments[_key];
-    }
-
-    var later = function later() {
+  return function (...input) {
+    const later = function () {
       timeout = null;
       if (!immediate) {
         func.apply(null, input);
       }
     };
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, ms);
     if (callNow) {
@@ -280,37 +88,30 @@ function debounce(func, ms) {
 
 function delay(ms) {
 
-  return new Promise(function (resolve) {
-    setTimeout(function () {
+  return new Promise(resolve => {
+    setTimeout(() => {
       resolve('RAMBDAX_DELAY');
     }, ms);
   });
 }
 
-function debug() {
-  var _console;
-
-  (_console = console).log.apply(_console, arguments);
+function debug(...input) {
+  console.log(...input);
   process.exit();
 }
 
-var _require = require('rambda');
-var type$2 = _require.type;
-var curry$2 = _require.curry;
-var filter$2 = _require.filter;
+const { type: type$2, curry: curry$2, filter: filter$2 } = require('rambda');
 
 function evolve(rules, input) {
-  var clone = Object.assign({}, input);
-  var propRules = filter$2(function (x) {
-    return clone[x] !== undefined;
-  })(Object.keys(rules));
+  const clone = Object.assign({}, input);
+  const propRules = filter$2(x => clone[x] !== undefined)(Object.keys(rules));
 
   if (propRules.length === 0) {
     return input;
   }
 
-  propRules.map(function (prop$$1) {
-    var fn = rules[prop$$1];
+  propRules.map(prop$$1 => {
+    const fn = rules[prop$$1];
     if (type$2(fn) === 'Function') {
       clone[prop$$1] = fn(clone[prop$$1]);
     } else if (type$2(fn) === 'Object') {
@@ -325,155 +126,116 @@ var evolve$1 = curry$2(evolve);
 
 function greater(x, y) {
   if (y === undefined) {
-    return function (yHolder) {
-      return greater(x, yHolder);
-    };
+    return yHolder => greater(x, yHolder);
   }
 
   return y > x;
 }
 
 function createThenable(x) {
-  return function () {
-    var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(input) {
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              return _context.abrupt("return", x(input));
-
-            case 1:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }();
+  return async function (input) {
+    return x(input);
+  };
 }
 
 function ifElseAsync(condition, ifFn, elseFn) {
   if (ifFn === undefined) {
-    return function (ifFnHolder, elseFnHolder) {
-      return ifElseAsync(condition, ifFnHolder, elseFnHolder);
-    };
+    return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder);
   } else if (elseFn === undefined) {
-    return function (elseFnHolder) {
-      return ifElseAsync(condition, ifFn, elseFnHolder);
-    };
+    return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder);
   }
 
-  return function (input) {
-    return new Promise(function (resolve, reject$$1) {
-      var conditionPromise = createThenable(condition);
-      var ifFnPromise = createThenable(ifFn);
-      var elseFnPromise = createThenable(elseFn);
+  return input => new Promise((resolve, reject$$1) => {
+    const conditionPromise = createThenable(condition);
+    const ifFnPromise = createThenable(ifFn);
+    const elseFnPromise = createThenable(elseFn);
 
-      conditionPromise(input).then(function (conditionResult) {
-        var promised = conditionResult === true ? ifFnPromise : elseFnPromise;
+    conditionPromise(input).then(conditionResult => {
+      const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
 
-        promised(input).then(resolve).catch(reject$$1);
-      }).catch(reject$$1);
-    });
-  };
+      promised(input).then(resolve).catch(reject$$1);
+    }).catch(reject$$1);
+  });
 }
 
 function intersection(a, b) {
   if (b === undefined) {
-    return function (bHolder) {
-      return intersection(a, bHolder);
-    };
+    return bHolder => intersection(a, bHolder);
   }
 
-  return R.filter(function (val) {
-    return b.includes(val);
-  })(a);
+  return R.filter(val => b.includes(val))(a);
 }
 
-var _require$1 = require('rambda');
-var type$3 = _require$1.type;
+const { type: type$3 } = require('rambda');
 
 function isPromiseLike(x) {
   return ['Async', 'Promise'].includes(type$3(x));
 }
 
-function isValid(_ref) {
-  var input = _ref.input,
-      schema = _ref.schema;
-
+function isValid({ input, schema }) {
   if (R.type(input) === 'Object' && R.type(schema) === 'Object') {
-    var flag = true;
-    for (var requirement in schema) {
+    let flag = true;
+    for (const requirement in schema) {
       if (flag) {
-        (function () {
-          var rule = schema[requirement];
-          var ruleType = R.type(rule);
-          var inputProp = input[requirement];
-          var inputPropType = R.type(input[requirement]);
+        const rule = schema[requirement];
+        const ruleType = R.type(rule);
+        const inputProp = input[requirement];
+        const inputPropType = R.type(input[requirement]);
 
-          if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
-            inputProp.map(function (val) {
-              var localFlag = false;
-              rule.rule.map(function (singleRule) {
-                if (isValid(val, singleRule)) {
-                  localFlag = true;
-                }
-              });
-              if (localFlag === false) {
-                flag = false;
+        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
+          inputProp.map(val => {
+            let localFlag = false;
+            rule.rule.map(singleRule => {
+              if (isValid(val, singleRule)) {
+                localFlag = true;
               }
             });
-          } else if (ruleType === 'String') {
-            if (inputProp !== undefined) {
-              if (R.toLower(inputPropType) !== rule) {
-                flag = false;
-              }
-            } else {
+            if (localFlag === false) {
               flag = false;
             }
-          } else if (typeof rule === 'function') {
-            if (rule(inputProp) === false) {
-              flag = false;
-            }
-          } else if (ruleType === 'Object' && inputPropType === 'Object') {
-            if (!isValid(inputProp, rule)) {
-              flag = false;
-            }
-          } else if (ruleType === 'Array' && inputPropType === 'String') {
-            if (!R.contains(inputProp, rule)) {
-              flag = false;
-            }
-          } else if (ruleType === 'Array' && inputPropType === 'Array' && rule.length === 1 && inputProp.length > 0) {
-            var arrayRuleType = R.type(rule[0]);
-
-            if (arrayRuleType === 'String') {
-              var result = R.any(function (val) {
-                return R.toLower(R.type(val)) !== rule[0];
-              }, inputProp);
-
-              if (result) {
-                flag = false;
-              }
-            } else if (arrayRuleType === 'Object') {
-              var _result = R.any(function (val) {
-                return !isValid(val, rule[0]);
-              })(inputProp);
-              if (_result) {
-                flag = false;
-              }
-            }
-          } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-            if (!R.test(rule, inputProp)) {
+          });
+        } else if (ruleType === 'String') {
+          if (inputProp !== undefined) {
+            if (R.toLower(inputPropType) !== rule) {
               flag = false;
             }
           } else {
             flag = false;
           }
-        })();
+        } else if (typeof rule === 'function') {
+          if (rule(inputProp) === false) {
+            flag = false;
+          }
+        } else if (ruleType === 'Object' && inputPropType === 'Object') {
+          if (!isValid(inputProp, rule)) {
+            flag = false;
+          }
+        } else if (ruleType === 'Array' && inputPropType === 'String') {
+          if (!R.contains(inputProp, rule)) {
+            flag = false;
+          }
+        } else if (ruleType === 'Array' && inputPropType === 'Array' && rule.length === 1 && inputProp.length > 0) {
+          const arrayRuleType = R.type(rule[0]);
+
+          if (arrayRuleType === 'String') {
+            const result = R.any(val => R.toLower(R.type(val)) !== rule[0], inputProp);
+
+            if (result) {
+              flag = false;
+            }
+          } else if (arrayRuleType === 'Object') {
+            const result = R.any(val => !isValid(val, rule[0]))(inputProp);
+            if (result) {
+              flag = false;
+            }
+          }
+        } else if (ruleType === 'RegExp' && inputPropType === 'String') {
+          if (!R.test(rule, inputProp)) {
+            flag = false;
+          }
+        } else {
+          flag = false;
+        }
       }
     }
 
@@ -485,230 +247,70 @@ function isValid(_ref) {
 
 function less(x, y) {
   if (y === undefined) {
-    return function (yHolder) {
-      return less(x, yHolder);
-    };
+    return yHolder => less(x, yHolder);
   }
 
   return y < x;
 }
 
-var mapAsyncFn = function () {
-  var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(fn, arr) {
-    var willReturn, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, a;
+async function mapAsyncFn(fn, arr) {
+  try {
+    const willReturn = [];
+    for (const a of arr) {
+      willReturn.push((await fn(a)));
+    }
 
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            willReturn = [];
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            _context.prev = 5;
-            _iterator = arr[Symbol.iterator]();
-
-          case 7:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context.next = 17;
-              break;
-            }
-
-            a = _step.value;
-            _context.t0 = willReturn;
-            _context.next = 12;
-            return fn(a);
-
-          case 12:
-            _context.t1 = _context.sent;
-
-            _context.t0.push.call(_context.t0, _context.t1);
-
-          case 14:
-            _iteratorNormalCompletion = true;
-            _context.next = 7;
-            break;
-
-          case 17:
-            _context.next = 23;
-            break;
-
-          case 19:
-            _context.prev = 19;
-            _context.t2 = _context["catch"](5);
-            _didIteratorError = true;
-            _iteratorError = _context.t2;
-
-          case 23:
-            _context.prev = 23;
-            _context.prev = 24;
-
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-
-          case 26:
-            _context.prev = 26;
-
-            if (!_didIteratorError) {
-              _context.next = 29;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 29:
-            return _context.finish(26);
-
-          case 30:
-            return _context.finish(23);
-
-          case 31:
-            return _context.abrupt("return", willReturn);
-
-          case 34:
-            _context.prev = 34;
-            _context.t3 = _context["catch"](0);
-            throw _context.t3;
-
-          case 37:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[0, 34], [5, 19, 23, 31], [24,, 26, 30]]);
-  }));
-
-  return function mapAsyncFn(_x, _x2) {
-    return _ref.apply(this, arguments);
-  };
-}();
+    return willReturn;
+  } catch (err) {
+    throw err;
+  }
+}
 
 function mapAsync(fn, arr) {
-  var _this = this;
-
   if (arr === undefined) {
-    return function () {
-      var _ref2 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(holder) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return mapAsyncFn(fn, holder);
-
-              case 2:
-                return _context2.abrupt("return", _context2.sent);
-
-              case 3:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, _this);
-      }));
-
-      return function (_x3) {
-        return _ref2.apply(this, arguments);
-      };
-    }();
+    return async holder => await mapAsyncFn(fn, holder);
   }
 
-  return new Promise(function (resolve, reject$$1) {
+  return new Promise((resolve, reject$$1) => {
     mapAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
-var mapFastAsyncFn = function () {
-  var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(fn, arr) {
-    var promised;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            promised = arr.map(function (a) {
-              return fn(a);
-            });
-            _context.next = 4;
-            return Promise.all(promised);
+async function mapFastAsyncFn(fn, arr) {
+  try {
+    const promised = arr.map(a => fn(a));
 
-          case 4:
-            return _context.abrupt("return", _context.sent);
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context["catch"](0);
-            throw _context.t0;
-
-          case 10:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[0, 7]]);
-  }));
-
-  return function mapFastAsyncFn(_x, _x2) {
-    return _ref.apply(this, arguments);
-  };
-}();
+    return await Promise.all(promised);
+  } catch (err) {
+    throw err;
+  }
+}
 
 function mapFastAsync(fn, arr) {
-  var _this = this;
-
   if (arr === undefined) {
-    return function () {
-      var _ref2 = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(holder) {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return mapFastAsyncFn(fn, holder);
-
-              case 2:
-                return _context2.abrupt("return", _context2.sent);
-
-              case 3:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, _this);
-      }));
-
-      return function (_x3) {
-        return _ref2.apply(this, arguments);
-      };
-    }();
+    return async holder => await mapFastAsyncFn(fn, holder);
   }
 
-  return new Promise(function (resolve, reject$$1) {
+  return new Promise((resolve, reject$$1) => {
     mapFastAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
-var cache = {};
+const cache = {};
 
-var normalizeObject = function normalizeObject(obj) {
-  var sortFn = function sortFn(a, b) {
-    return a > b;
-  };
-  var willReturn = {};
-  R.compose(R.map(function (prop$$1) {
-    return willReturn[prop$$1] = obj[prop$$1];
-  }), R.sort(sortFn))(Object.keys(obj));
+const normalizeObject = obj => {
+  const sortFn = (a, b) => a > b;
+  const willReturn = {};
+  R.compose(R.map(prop$$1 => willReturn[prop$$1] = obj[prop$$1]), R.sort(sortFn))(Object.keys(obj));
 
   return willReturn;
 };
 
-var stringify = function stringify(a) {
+const stringify = a => {
   if (R.type(a) === 'String') {
     return a;
   } else if (['Function', 'Async'].includes(R.type(a))) {
-    var compacted = R.replace(/\s{1,}/g, ' ', a.toString());
+    const compacted = R.replace(/\s{1,}/g, ' ', a.toString());
 
     return R.replace(/\s/g, '_', R.take(15, compacted));
   } else if (R.type(a) === 'Object') {
@@ -718,54 +320,40 @@ var stringify = function stringify(a) {
   return JSON.stringify(a);
 };
 
-var generateProp = function generateProp(fn) {
-  for (var _len = arguments.length, inputArguments = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    inputArguments[_key - 1] = arguments[_key];
-  }
-
-  var propString = '';
-  inputArguments.map(function (inputArgument) {
+const generateProp = (fn, ...inputArguments) => {
+  let propString = '';
+  inputArguments.map(inputArgument => {
     propString += `${stringify(inputArgument)}_`;
   });
 
   return `${propString}${stringify(fn)}`;
 };
 
-function memoize(fn) {
-  for (var _len2 = arguments.length, inputArguments = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-    inputArguments[_key2 - 1] = arguments[_key2];
-  }
-
+function memoize(fn, ...inputArguments) {
   if (arguments.length === 1) {
-    return function () {
-      for (var _len3 = arguments.length, inputArgumentsHolder = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        inputArgumentsHolder[_key3] = arguments[_key3];
-      }
-
-      return memoize.apply(undefined, [fn].concat(inputArgumentsHolder));
-    };
+    return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder);
   }
-  var prop$$1 = generateProp.apply(undefined, [fn].concat(inputArguments));
+  const prop$$1 = generateProp(fn, ...inputArguments);
   if (prop$$1 in cache) {
     return cache[prop$$1];
   }
   if (R.type(fn) === 'Async') {
-    return new Promise(function (resolve) {
-      fn.apply(undefined, inputArguments).then(function (result) {
+    return new Promise(resolve => {
+      fn(...inputArguments).then(result => {
         cache[prop$$1] = result;
         resolve(result);
       });
     });
   }
-  var result = fn.apply(undefined, inputArguments);
+  const result = fn(...inputArguments);
   cache[prop$$1] = result;
 
   return result;
 }
 
 function mergeAll(arr) {
-  var willReturn = {};
-  R.map(function (val) {
+  let willReturn = {};
+  R.map(val => {
     willReturn = R.merge(willReturn, val);
   }, arr);
 
@@ -774,13 +362,11 @@ function mergeAll(arr) {
 
 function omitBy(fn, obj) {
   if (arguments.length === 1) {
-    return function (holder) {
-      return omitBy(fn, holder);
-    };
+    return holder => omitBy(fn, holder);
   }
 
-  var willReturn = {};
-  for (var prop$$1 in obj) {
+  const willReturn = {};
+  for (const prop$$1 in obj) {
     if (!fn(prop$$1, obj[prop$$1])) {
       willReturn[prop$$1] = obj[prop$$1];
     }
@@ -790,7 +376,7 @@ function omitBy(fn, obj) {
 }
 
 function onceFn(fn, context) {
-  var result = void 0;
+  let result;
 
   return function () {
     if (fn) {
@@ -804,7 +390,7 @@ function onceFn(fn, context) {
 
 function once(fn, context) {
   if (arguments.length === 1) {
-    var wrap = onceFn(fn, context);
+    const wrap = onceFn(fn, context);
 
     return R.curry(wrap);
   }
@@ -814,13 +400,11 @@ function once(fn, context) {
 
 function pickBy(fn, obj) {
   if (arguments.length === 1) {
-    return function (holder) {
-      return pickBy(fn, holder);
-    };
+    return holder => pickBy(fn, holder);
   }
 
-  var willReturn = {};
-  for (var prop$$1 in obj) {
+  const willReturn = {};
+  for (const prop$$1 in obj) {
     if (fn(prop$$1, obj[prop$$1])) {
       willReturn[prop$$1] = obj[prop$$1];
     }
@@ -829,12 +413,8 @@ function pickBy(fn, obj) {
   return willReturn;
 }
 
-function helper(_ref) {
-  var condition = _ref.condition,
-      inputArgument = _ref.inputArgument,
-      prop$$1 = _ref.prop;
-
-  return new Promise(function (resolve, reject$$1) {
+function helper({ condition, inputArgument, prop: prop$$1 }) {
+  return new Promise((resolve, reject$$1) => {
     if (!(R.type(condition) === 'Async')) {
       return resolve({
         type: prop$$1,
@@ -842,60 +422,52 @@ function helper(_ref) {
       });
     }
 
-    condition(inputArgument).then(function (result) {
+    condition(inputArgument).then(result => {
       resolve({
         type: prop$$1,
         payload: result
       });
-    }).catch(function (err) {
-      return reject$$1(err);
-    });
+    }).catch(err => reject$$1(err));
   });
 }
 
 function produce(conditions, inputArgument) {
   if (arguments.length === 1) {
-    return function (inputArgumentHolder) {
-      return produce(conditions, inputArgumentHolder);
-    };
+    return inputArgumentHolder => produce(conditions, inputArgumentHolder);
   }
-  var asyncConditionsFlag = false;
-  for (var prop$$1 in conditions) {
+  let asyncConditionsFlag = false;
+  for (const prop$$1 in conditions) {
     if (asyncConditionsFlag === false && R.type(conditions[prop$$1]) === 'Async') {
       asyncConditionsFlag = true;
     }
   }
 
   if (asyncConditionsFlag === false) {
-    var willReturn = {};
-    for (var _prop in conditions) {
-      willReturn[_prop] = conditions[_prop](inputArgument);
+    const willReturn = {};
+    for (const prop$$1 in conditions) {
+      willReturn[prop$$1] = conditions[prop$$1](inputArgument);
     }
 
     return willReturn;
   }
-  var promised = [];
-  for (var _prop2 in conditions) {
-    var condition = conditions[_prop2];
+  const promised = [];
+  for (const prop$$1 in conditions) {
+    const condition = conditions[prop$$1];
     promised.push(helper({
       inputArgument,
       condition,
-      prop: _prop2
+      prop: prop$$1
     }));
   }
 
-  return new Promise(function (resolve, reject$$1) {
-    Promise.all(promised).then(function (results) {
-      var willReturn = {};
+  return new Promise((resolve, reject$$1) => {
+    Promise.all(promised).then(results => {
+      const willReturn = {};
 
-      R.map(function (result) {
-        return willReturn[result.type] = result.payload;
-      }, results);
+      R.map(result => willReturn[result.type] = result.payload, results);
 
       resolve(willReturn);
-    }).catch(function (err) {
-      return reject$$1(err);
-    });
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -905,74 +477,32 @@ function random(min, max) {
 
 function rangeBy(startNum, endNum, distance) {
   if (endNum === undefined) {
-    return function (endNumHolder, distanceHolder) {
-      return rangeBy(startNum, endNumHolder, distanceHolder);
-    };
+    return (endNumHolder, distanceHolder) => rangeBy(startNum, endNumHolder, distanceHolder);
   } else if (distance === undefined) {
-    return function (distanceHolder) {
-      return rangeBy(startNum, endNum, distanceHolder);
-    };
+    return distanceHolder => rangeBy(startNum, endNum, distanceHolder);
   }
 
-  var isInteger = !distance.toString().includes('.');
+  const isInteger = !distance.toString().includes('.');
   if (startNum > endNum) {
-    var startNumHolder = startNum;
+    const startNumHolder = startNum;
     startNum = endNum;
     endNum = startNumHolder;
   }
-  var willReturn = [startNum];
-  var valueToPush = startNum;
+  const willReturn = [startNum];
+  let valueToPush = startNum;
 
   if (isInteger) {
-    var loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = loopIndexes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        valueToPush += distance;
-        willReturn.push(valueToPush);
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+    const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
+    for (const i of loopIndexes) {
+      valueToPush += distance;
+      willReturn.push(valueToPush);
     }
   } else {
-    var decimalLength = R.compose(R.length, R.last, R.split('.'))(distance.toString());
-    var _loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-      for (var _iterator2 = _loopIndexes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        valueToPush += distance;
-        willReturn.push(Number(valueToPush.toFixed(decimalLength)));
-      }
-    } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
+    const decimalLength = R.compose(R.length, R.last, R.split('.'))(distance.toString());
+    const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
+    for (const i of loopIndexes) {
+      valueToPush += distance;
+      willReturn.push(Number(valueToPush.toFixed(decimalLength)));
     }
   }
 
@@ -981,12 +511,10 @@ function rangeBy(startNum, endNum, distance) {
 
 function renameProps(conditions, inputObject) {
   if (inputObject === undefined) {
-    return function (inputObjectHolder) {
-      return renameProps(conditions, inputObjectHolder);
-    };
+    return inputObjectHolder => renameProps(conditions, inputObjectHolder);
   }
-  var renamed = {};
-  Object.keys(conditions).map(function (renameConditionProp) {
+  const renamed = {};
+  Object.keys(conditions).map(renameConditionProp => {
     if (Object.keys(inputObject).includes(renameConditionProp)) {
       renamed[conditions[renameConditionProp]] = inputObject[renameConditionProp];
     }
@@ -996,19 +524,19 @@ function renameProps(conditions, inputObject) {
 }
 
 function resolveMethod(promises) {
-  return new Promise(function (res, rej) {
-    var counter = 0;
-    var props = {};
-    var promisedArr = [];
-    for (var prop$$1 in promises) {
+  return new Promise((res, rej) => {
+    let counter = 0;
+    const props = {};
+    const promisedArr = [];
+    for (const prop$$1 in promises) {
       props[counter] = prop$$1;
       promisedArr.push(promises[prop$$1]);
       counter++;
     }
-    Promise.all(promisedArr).then(function (result) {
-      var willReturn = {};
-      result.map(function (val, key) {
-        var prop$$1 = props[key];
+    Promise.all(promisedArr).then(result => {
+      const willReturn = {};
+      result.map((val, key) => {
+        const prop$$1 = props[key];
         willReturn[prop$$1] = val;
       });
 
@@ -1017,65 +545,37 @@ function resolveMethod(promises) {
   });
 }
 
-var resolveSecure = function () {
-  var _ref = asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(input) {
-    var promised;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.prev = 0;
-            promised = R.map(function (a) {
-              return resolveSecureWrapper(a);
-            }, input);
-            _context.next = 4;
-            return Promise.all(promised);
-
-          case 4:
-            return _context.abrupt('return', _context.sent);
-
-          case 7:
-            _context.prev = 7;
-            _context.t0 = _context['catch'](0);
-
-            console.log(_context.t0);
-
-          case 10:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[0, 7]]);
-  }));
-
-  return function resolveSecure(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-var resolveSecureWrapper = function resolveSecureWrapper(promise) {
-  return new Promise(function (res) {
-    promise.then(function (result) {
-      res({
-        payload: result,
-        type: 'RESULT'
-      });
-    }).catch(function (err) {
-      res({
-        payload: err,
-        type: 'ERROR'
-      });
+const resolveSecureWrapper = promise => new Promise(res => {
+  promise.then(result => {
+    res({
+      payload: result,
+      type: 'RESULT'
+    });
+  }).catch(err => {
+    res({
+      payload: err,
+      type: 'ERROR'
     });
   });
-};
+});
+
+async function resolveSecure(input) {
+  try {
+    const promised = R.map(a => resolveSecureWrapper(a), input);
+
+    return await Promise.all(promised);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 function shuffle(arrayRaw) {
-  var array = arrayRaw.concat();
-  var counter = array.length;
+  const array = arrayRaw.concat();
+  let counter = array.length;
   while (counter > 0) {
-    var index = Math.floor(Math.random() * counter);
+    const index = Math.floor(Math.random() * counter);
     counter--;
-    var temp = array[counter];
+    const temp = array[counter];
     array[counter] = array[index];
     array[index] = temp;
   }
@@ -1085,13 +585,11 @@ function shuffle(arrayRaw) {
 
 function tapAsync(fn, input) {
   if (arguments.length === 1) {
-    return function (inputHolder) {
-      return tapAsync(fn, inputHolder);
-    };
+    return inputHolder => tapAsync(fn, inputHolder);
   }
   if (isPromiseLike(fn) === true) {
-    return new Promise(function (resolve, reject$$1) {
-      fn(input).then(function () {
+    return new Promise((resolve, reject$$1) => {
+      fn(input).then(() => {
         resolve(input);
       }).catch(reject$$1);
     });
@@ -1102,17 +600,13 @@ function tapAsync(fn, input) {
 }
 
 function throttle(fn, ms) {
-  var wait = false;
+  let wait = false;
 
-  return function () {
+  return function (...input) {
     if (!wait) {
-      for (var _len = arguments.length, input = Array(_len), _key = 0; _key < _len; _key++) {
-        input[_key] = arguments[_key];
-      }
-
       fn.apply(null, input);
       wait = true;
-      setTimeout(function () {
+      setTimeout(() => {
         wait = false;
       }, ms);
     }
@@ -1120,9 +614,9 @@ function throttle(fn, ms) {
 }
 
 function tryCatch(fn, input) {
-  var fnType = R.type(fn);
+  const fnType = R.type(fn);
   if (fnType === 'Async' || fnType === 'Promise') {
-    return new Promise(function (resolve) {
+    return new Promise(resolve => {
       fn(input).then(resolve).catch(resolve);
     });
   }
@@ -1136,12 +630,10 @@ function tryCatch(fn, input) {
 
 function when(condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
-    return function (whenTrueFnHolder) {
-      return when(condition, whenTrueFnHolder);
-    };
+    return whenTrueFnHolder => when(condition, whenTrueFnHolder);
   }
 
-  return function (input) {
+  return input => {
     if (condition(input) === true) {
       return whenTrueFn(input);
     }
@@ -1151,13 +643,11 @@ function when(condition, whenTrueFn) {
 
 function where(conditions, obj) {
   if (obj === undefined) {
-    return function (objHolder) {
-      return where(conditions, objHolder);
-    };
+    return objHolder => where(conditions, objHolder);
   }
-  var flag = true;
-  for (var prop$$1 in conditions) {
-    var result = conditions[prop$$1](obj[prop$$1]);
+  let flag = true;
+  for (const prop$$1 in conditions) {
+    const result = conditions[prop$$1](obj[prop$$1]);
     if (flag && result === false) {
       flag = false;
     }
@@ -1166,98 +656,98 @@ function where(conditions, obj) {
   return flag;
 }
 
-var DELAY = 'RAMBDAX_DELAY';
+const DELAY = 'RAMBDAX_DELAY';
 // Follows code generated by `run rambda`
-var always$1 = R.always;
-var complement$1 = R.complement;
-var F$1 = R.F;
-var identity$1 = R.identity;
-var not$1 = R.not;
-var T$1 = R.T;
-var trim$1 = R.trim;
-var add$1 = R.add;
-var addIndex$1 = R.addIndex;
-var adjust$1 = R.adjust;
-var all$1 = R.all;
-var allPass$1 = R.allPass;
-var anyPass$1 = R.anyPass;
-var any$1 = R.any;
-var append$1 = R.append;
-var both$1 = R.both;
-var compose$1 = R.compose;
-var concat$1 = R.concat;
-var contains$1 = R.contains;
-var curry$1 = R.curry;
-var dec$1 = R.dec;
-var defaultTo$1 = R.defaultTo;
-var divide$1 = R.divide;
-var drop$1 = R.drop;
-var dropLast$1 = R.dropLast;
-var either$1 = R.either;
-var endsWith$1 = R.endsWith;
-var inc$1 = R.inc;
-var equals$1 = R.equals;
-var filter$1 = R.filter;
-var find$1 = R.find;
-var findIndex$1 = R.findIndex;
-var flatten$1 = R.flatten;
-var flip$1 = R.flip;
-var forEach$1 = R.forEach;
-var has$1 = R.has;
-var head$1 = R.head;
-var ifElse$1 = R.ifElse;
-var is$1 = R.is;
-var isNil$1 = R.isNil;
-var includes$1 = R.includes;
-var indexOf$1 = R.indexOf;
-var init$1 = R.init;
-var join$1 = R.join;
-var lastIndexOf$1 = R.lastIndexOf;
-var last$1 = R.last;
-var length$1 = R.length;
-var map$1 = R.map;
-var match$1 = R.match;
-var merge$1 = R.merge;
-var modulo$1 = R.modulo;
-var multiply$1 = R.multiply;
-var none$1 = R.none;
-var omit$1 = R.omit;
-var partialCurry$1 = R.partialCurry;
-var path$1 = R.path;
-var pathOr$1 = R.pathOr;
-var pick$1 = R.pick;
-var pickAll$1 = R.pickAll;
-var pipe$1 = R.pipe;
-var pluck$1 = R.pluck;
-var prepend$1 = R.prepend;
-var prop$1 = R.prop;
-var propEq$1 = R.propEq;
-var range$1 = R.range;
-var reduce$1 = R.reduce;
-var reject$1 = R.reject;
-var repeat$1 = R.repeat;
-var replace$1 = R.replace;
-var reverse$1 = R.reverse;
-var sort$1 = R.sort;
-var sortBy$1 = R.sortBy;
-var split$1 = R.split;
-var splitEvery$1 = R.splitEvery;
-var startsWith$1 = R.startsWith;
-var subtract$1 = R.subtract;
-var tap$1 = R.tap;
-var tail$1 = R.tail;
-var take$1 = R.take;
-var takeLast$1 = R.takeLast;
-var test$1 = R.test;
-var times$1 = R.times;
-var toLower$1 = R.toLower;
-var toUpper$1 = R.toUpper;
-var toString$1 = R.toString;
-var type$1 = R.type;
-var uniq$1 = R.uniq;
-var update$1 = R.update;
-var values$1 = R.values;
-var without$1 = R.without;
+const always$1 = R.always;
+const complement$1 = R.complement;
+const F$1 = R.F;
+const identity$1 = R.identity;
+const not$1 = R.not;
+const T$1 = R.T;
+const trim$1 = R.trim;
+const add$1 = R.add;
+const addIndex$1 = R.addIndex;
+const adjust$1 = R.adjust;
+const all$1 = R.all;
+const allPass$1 = R.allPass;
+const anyPass$1 = R.anyPass;
+const any$1 = R.any;
+const append$1 = R.append;
+const both$1 = R.both;
+const compose$1 = R.compose;
+const concat$1 = R.concat;
+const contains$1 = R.contains;
+const curry$1 = R.curry;
+const dec$1 = R.dec;
+const defaultTo$1 = R.defaultTo;
+const divide$1 = R.divide;
+const drop$1 = R.drop;
+const dropLast$1 = R.dropLast;
+const either$1 = R.either;
+const endsWith$1 = R.endsWith;
+const inc$1 = R.inc;
+const equals$1 = R.equals;
+const filter$1 = R.filter;
+const find$1 = R.find;
+const findIndex$1 = R.findIndex;
+const flatten$1 = R.flatten;
+const flip$1 = R.flip;
+const forEach$1 = R.forEach;
+const has$1 = R.has;
+const head$1 = R.head;
+const ifElse$1 = R.ifElse;
+const is$1 = R.is;
+const isNil$1 = R.isNil;
+const includes$1 = R.includes;
+const indexOf$1 = R.indexOf;
+const init$1 = R.init;
+const join$1 = R.join;
+const lastIndexOf$1 = R.lastIndexOf;
+const last$1 = R.last;
+const length$1 = R.length;
+const map$1 = R.map;
+const match$1 = R.match;
+const merge$1 = R.merge;
+const modulo$1 = R.modulo;
+const multiply$1 = R.multiply;
+const none$1 = R.none;
+const omit$1 = R.omit;
+const partialCurry$1 = R.partialCurry;
+const path$1 = R.path;
+const pathOr$1 = R.pathOr;
+const pick$1 = R.pick;
+const pickAll$1 = R.pickAll;
+const pipe$1 = R.pipe;
+const pluck$1 = R.pluck;
+const prepend$1 = R.prepend;
+const prop$1 = R.prop;
+const propEq$1 = R.propEq;
+const range$1 = R.range;
+const reduce$1 = R.reduce;
+const reject$1 = R.reject;
+const repeat$1 = R.repeat;
+const replace$1 = R.replace;
+const reverse$1 = R.reverse;
+const sort$1 = R.sort;
+const sortBy$1 = R.sortBy;
+const split$1 = R.split;
+const splitEvery$1 = R.splitEvery;
+const startsWith$1 = R.startsWith;
+const subtract$1 = R.subtract;
+const tap$1 = R.tap;
+const tail$1 = R.tail;
+const take$1 = R.take;
+const takeLast$1 = R.takeLast;
+const test$1 = R.test;
+const times$1 = R.times;
+const toLower$1 = R.toLower;
+const toUpper$1 = R.toUpper;
+const toString$1 = R.toString;
+const type$1 = R.type;
+const uniq$1 = R.uniq;
+const update$1 = R.update;
+const values$1 = R.values;
+const without$1 = R.without;
 
 exports.DELAY = DELAY;
 exports.always = always$1;
