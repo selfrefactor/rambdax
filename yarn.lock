@@ -2425,9 +2425,9 @@ qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
-"rambda@https://github.com/selfrefactor/rambda#1.0.4":
-  version "1.0.3"
-  resolved "https://github.com/selfrefactor/rambda#5fb9f1a2c91b708e4c760ec319cbb6cf6f1cf3d6"
+rambda@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.0.7.tgz#64909c6627cbc2345236c99d074a587adb40fd8b"
 
 randomatic@^1.1.3:
   version "1.1.7"

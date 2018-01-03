@@ -122,6 +122,7 @@ export const toUpper = R.toUpper
 export const toString = R.toString
 export const type = R.type
 export const uniq = R.uniq
+export const uniqWith = R.uniqWith
 export const update = R.update
 export const values = R.values
 export const without = R.without
