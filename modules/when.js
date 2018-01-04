@@ -1,5 +1,5 @@
-export default function when(condition, whenTrueFn){
-  if(whenTrueFn === undefined){
+export default function when (condition, whenTrueFn) {
+  if (whenTrueFn === undefined) {
     return whenTrueFnHolder => when(condition, whenTrueFnHolder)
   }
 
@@ -8,11 +8,10 @@ export default function when(condition, whenTrueFn){
       condition :
       condition(input)
 
-    if(flag){
-
+    if (flag) {
       return whenTrueFn(input)
     }
-    
+
     return input
   }
 }

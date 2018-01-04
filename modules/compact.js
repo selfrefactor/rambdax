@@ -1,4 +1,4 @@
-import {filter, type, equals} from 'rambda'
+import { filter, type, equals } from 'rambda'
 
 const types = [
   'Null',
@@ -7,7 +7,6 @@ const types = [
 ]
 
 export default function compact (arr) {
-
   return filter(
     a => {
       const currentType = type(a)

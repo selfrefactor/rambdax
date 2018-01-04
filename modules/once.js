@@ -1,4 +1,4 @@
-import {curry} from 'rambda'
+import { curry } from 'rambda'
 
 function onceFn (fn, context) {
   let result

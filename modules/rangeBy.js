@@ -1,4 +1,4 @@
-import {range, length, last, split, compose} from 'rambda'
+import { range, length, last, split, compose } from 'rambda'
 
 export default function rangeBy (startNum, endNum, distance) {
   if (endNum === undefined) {

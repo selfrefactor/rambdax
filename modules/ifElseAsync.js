@@ -1,5 +1,5 @@
-function createThenable(x){
-  return async function(input){
+function createThenable (x) {
+  return async function (input) {
     return x(input)
   }
 }
@@ -10,7 +10,7 @@ function ifElseAsync (condition, ifFn, elseFn) {
   } else if (elseFn === undefined) {
     return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder)
   }
-  
+
   return input => new Promise((resolve, reject) => {
     const conditionPromise = createThenable(condition)
     const ifFnPromise = createThenable(ifFn)

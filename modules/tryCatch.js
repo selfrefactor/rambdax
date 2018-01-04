@@ -1,8 +1,8 @@
-import {type} from 'rambda'
+import { type } from 'rambda'
 
-export default function tryCatch(fn, input){
+export default function tryCatch (fn, input) {
   const fnType = type(fn)
-  if(fnType === 'Async' || fnType === 'Promise'){
+  if (fnType === 'Async' || fnType === 'Promise') {
     return new Promise(resolve => {
       fn(input)
         .then(resolve)
@@ -10,9 +10,9 @@ export default function tryCatch(fn, input){
     })
   }
 
-  try{
+  try {
     return fn(input)
-  }catch(err){
+  } catch (err) {
     return err
   }
 }

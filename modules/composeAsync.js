@@ -1,6 +1,6 @@
-import {type} from 'rambda'
+import { type } from 'rambda'
 
-export default function composeAsync(...inputArguments){
+export default function composeAsync (...inputArguments) {
   try {
     return async function (startArgument) {
       let argumentsToPass = startArgument

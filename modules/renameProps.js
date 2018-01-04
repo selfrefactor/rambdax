@@ -1,4 +1,4 @@
-import {merge, omit} from 'rambda'
+import { merge, omit } from 'rambda'
 
 export default function renameProps (conditions, inputObject) {
   if (inputObject === undefined) {

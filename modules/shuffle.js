@@ -1,4 +1,4 @@
-export default function shuffle(arrayRaw){
+export default function shuffle (arrayRaw) {
   const array = arrayRaw.concat()
   let counter = array.length
   while (counter > 0) {

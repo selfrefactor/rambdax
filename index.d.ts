@@ -8,6 +8,12 @@ declare namespace R {
     0: K
     1: V
   }
+  type isfn<T> = (x:any, y: any) => T
+
+  interface Switchem<T>{
+    is: isfn<Switchem<T>>
+    default: IdentityFunction<T>
+  }
 
   type Arity1Fn = (a: any) => any
 
@@ -211,8 +217,8 @@ declare namespace R {
     resolveSecure(input: Array<Promise<any>>): Array<ResolveSecureResult>
 
     shuffle(arr: any[]): any[]
-    
-    switcher(valueToMatch: any): any
+
+    switcher<T>(valueToMatch: any): Switchem<T>
 
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T

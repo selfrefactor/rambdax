@@ -1,6 +1,6 @@
-import {type, toLower, contains, test, any} from 'rambda'
+import { type, toLower, contains, test, any } from 'rambda'
 
-export default function isValid({input, schema}){
+export default function isValid ({ input, schema }) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
     let flag = true
     for (const requirement in schema) {

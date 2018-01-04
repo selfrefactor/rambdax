@@ -17,6 +17,7 @@ export default function mapAsync (fn, arr) {
   }
 
   return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject)
+    mapAsyncFn(fn, arr).then(resolve)
+      .catch(reject)
   })
 }

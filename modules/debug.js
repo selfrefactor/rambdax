@@ -1,4 +1,4 @@
-export default function debug(...input){
+export default function debug (...input) {
   console.log(...input)
   process.exit()
 }
