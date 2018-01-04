@@ -1,8 +1,9 @@
 const R = require('../rambdax')
 
 test('Async', async () => {
-  const fn = async() => {
+  const fn = async () => {
     await R.delay(100)
+
     return JSON.parse('{a;')
   }
 
@@ -13,11 +14,12 @@ test('Async', async () => {
 })
 
 test('Async with no error', async () => {
-  const fn = async() => {
+  const fn = async () => {
     await R.delay(100)
+
     return 1
   }
-  
+
   const result = await R.tryCatch(fn)
   expect(
     R.is(Error, result)
@@ -27,9 +29,7 @@ test('Async with no error', async () => {
 })
 
 test('Sync', () => {
-  const fn = () => {
-    return JSON.parse('{a;')
-  }
+  const fn = () => JSON.parse('{a;')
 
   const result = R.tryCatch(fn)
   expect(
@@ -38,9 +38,7 @@ test('Sync', () => {
 })
 
 test('Sync with no error', () => {
-  const fn = () => {
-    return 1
-  }
+  const fn = () => 1
 
   const result = R.tryCatch(fn)
   expect(
@@ -49,5 +47,4 @@ test('Sync with no error', () => {
 
   expect(result).toBe(1)
 })
-
 

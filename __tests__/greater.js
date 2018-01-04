@@ -8,6 +8,6 @@ test('', () => {
 
 test('', () => {
   expect(
-    R.greater(3,2)
+    R.greater(3, 2)
   ).toBeFalsy()
 })
