@@ -567,7 +567,7 @@ condition({
 
 #### when
 
-> when(rule: Function, fn: Function): Function
+> when(rule: Function|boolean, fn: Function): Function
 
 ```
 var truncate = R.when(

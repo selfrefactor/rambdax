@@ -1,4 +1,5 @@
 declare namespace R {
+  type IdentityFunction<T> = (input: T) => T 
   type Ord = number | string | boolean
 
   type Path = Array<number | string>
@@ -220,7 +221,8 @@ declare namespace R {
     
     where(conditions: object, input: object): boolean
 
-    when(rule: Function, fn: Function): Function
+    when<T>(rule: Function|boolean, fn: Function): IdentityFunction<T>
+    when<T>(rule: Function|boolean): (fn: Function) => IdentityFunction<T>
 
     // Rambda types
     add(a: number, b: number): number
