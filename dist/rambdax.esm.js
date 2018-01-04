@@ -579,6 +579,79 @@ function shuffle(arrayRaw) {
   return array;
 }
 
+const NO_MATCH_FOUND = Symbol('NO_MATCH_FOUND');
+
+const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
+  let iterationValue;
+
+  for (let index = 0; index < cases.length; index++) {
+    iterationValue = cases[index].test(testValue);
+
+    if (iterationValue !== NO_MATCH_FOUND) {
+      return {
+        key: cases[index].key,
+        value: iterationValue
+      };
+    }
+  }
+
+  return {
+    key: 'default',
+    value: defaultValue
+  };
+};
+
+const isEqual = (testValue, matchValue) => {
+  const willReturn = typeof testValue === 'function' ? testValue(matchValue) : equals(testValue, matchValue);
+
+  return willReturn;
+};
+
+const is$2 = (testValue, matchResult = true) => {
+  return {
+    key: testValue,
+    test: matchValue => {
+      return isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND;
+    }
+  };
+};
+
+class Switchem {
+  constructor(defaultValue, cases, willMatch) {
+    if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
+      this.cases = [];
+      this.defaultValue = undefined;
+      this.willMatch = defaultValue;
+    } else {
+      this.cases = cases;
+      this.defaultValue = defaultValue;
+      this.willMatch = willMatch;
+    }
+
+    return this;
+  }
+
+  default(defaultValue) {
+    const holder = new Switchem(defaultValue, this.cases, this.willMatch);
+    return holder.match(this.willMatch);
+  }
+
+  is(testValue, matchResult) {
+
+    return new Switchem(this.defaultValue, [...this.cases, is$2(testValue, matchResult)], this.willMatch);
+  }
+
+  match(matchValue) {
+    const { key, value } = getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
+
+    return typeof value === 'function' ? value(key, matchValue) : value;
+  }
+}
+
+function switcher(input) {
+  return new Switchem(input);
+}
+
 function tapAsync(fn, input) {
   if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder);
@@ -750,5 +823,5 @@ const update$1 = update;
 const values$1 = values;
 const without$1 = without;
 
-export { DELAY, always$1 as always, complement$1 as complement, F$1 as F, identity$1 as identity, not$1 as not, T$1 as T, trim$1 as trim, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, any$1 as any, append$1 as append, both$1 as both, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, inc$1 as inc, equals$1 as equals, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, ifElse$1 as ifElse, is$1 as is, isNil$1 as isNil, includes$1 as includes, indexOf$1 as indexOf, init$1 as init, join$1 as join, lastIndexOf$1 as lastIndexOf, last$1 as last, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$1 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, toLower$1 as toLower, toUpper$1 as toUpper, toString$1 as toString, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, assocPath$1 as assocPath, compact, composeAsync, debounce, delay, debug, evolve$1 as evolve, greater, ifElseAsync, intersection, isPromiseLike, isValid, less, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, tapAsync, throttle, tryCatch, when, where };
+export { DELAY, always$1 as always, complement$1 as complement, F$1 as F, identity$1 as identity, not$1 as not, T$1 as T, trim$1 as trim, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, any$1 as any, append$1 as append, both$1 as both, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, inc$1 as inc, equals$1 as equals, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, ifElse$1 as ifElse, is$1 as is, isNil$1 as isNil, includes$1 as includes, indexOf$1 as indexOf, init$1 as init, join$1 as join, lastIndexOf$1 as lastIndexOf, last$1 as last, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$1 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, toLower$1 as toLower, toUpper$1 as toUpper, toString$1 as toString, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, assocPath$1 as assocPath, compact, composeAsync, debounce, delay, debug, evolve$1 as evolve, greater, ifElseAsync, intersection, isPromiseLike, isValid, less, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, switcher, tapAsync, throttle, tryCatch, when, where };
 //# sourceMappingURL=rambdax.esm.js.map
