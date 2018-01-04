@@ -1,4 +1,4 @@
-const R = require('rambda')
+import {equals} from 'rambda'
 
 const NO_MATCH_FOUND = Symbol('NO_MATCH_FOUND')
 
@@ -25,29 +25,19 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
 const isEqual = (testValue, matchValue) => {
   const willReturn = typeof testValue === 'function' ? 
     testValue(matchValue): 
-    R.equals(testValue, matchValue)
+    equals(testValue, matchValue)
   
   return willReturn      
 }
 
-const createCaseCreator = (isNot) => {
-
-  return (testValue, matchResult = true) => {
-    return {
-      key: testValue,
-      test: isNot
-        ? (matchValue) => {
-          return !isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
-        }
-        : (matchValue) => {
-          return isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
-        }
+const is = () => (testValue, matchResult = true) => {
+  return {
+    key: testValue,
+    test: (matchValue) => {
+      return isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
     }
   }
 }
-
-const is = createCaseCreator(false)
-const not = createCaseCreator(true)
 
 class Switchem {
   constructor(defaultValue, cases, willMatch) {
@@ -85,31 +75,8 @@ class Switchem {
       value(key, matchValue) : 
       value
   }
-
-  not(testValue, matchResult) {
-
-    return new Switchem(
-      this.defaultValue, 
-      [...this.cases, not(testValue, matchResult)], 
-      this.willMatch
-    )
-  }
 }
 
-function switcher(input){
+export default function switcher(input){
   return new Switchem(input)
 }
-
-const x = switcher({a:1})
-  .is({a: 1}, 'it is bar')
-  .is('baz', 'it is baz')
-  .default('it is az')
-
-  const y = switcher('bar')
-  .is('ba', 'ba')
-  .is(value => {
-    return value.length === 3;
-  }, '3 length')
-  .default('it is az')
-
-  let a  

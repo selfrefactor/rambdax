@@ -503,6 +503,31 @@ const expectedResult = [
 
 It returns randomized copy of array.
 
+#### switcher
+
+Edited fork of [Switchem](https://github.com/planttheidea/switchem) library.
+
+It is best explained with the following example:
+
+```
+const valueToMatch = {foo: 1}
+
+const result = switcher(valueToMatch)
+  .is('baz', 'is baz')
+  .is( x => typeof x === 'boolean', 'is boolean')
+  .is({foo: 1}, 'Property foo is 1')
+  .default('is bar')
+
+console.log(result) // => 'Property foo is 1'    
+```
+
+As you can see `valueToMatch` is matched sequentially against various `is` conditions.
+If none of them is appliable, then `default` value is returned as result.
+
+Note that `default` must be the last condition and it is mandatory.
+
+Rambda's `equals` is used as part of the comparison process.
+
 #### tapAsync
 
 > tapAsync(fn: Function|Async|Promise, inputArgument: T): T

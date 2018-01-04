@@ -211,6 +211,8 @@ declare namespace R {
     resolveSecure(input: Array<Promise<any>>): Array<ResolveSecureResult>
 
     shuffle(arr: any[]): any[]
+    
+    switcher(valueToMatch: any): any
 
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
