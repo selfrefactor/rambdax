@@ -30,7 +30,7 @@ const isEqual = (testValue, matchValue) => {
   return willReturn      
 }
 
-const is = () => (testValue, matchResult = true) => {
+const is = (testValue, matchResult = true) => {
   return {
     key: testValue,
     test: (matchValue) => {
