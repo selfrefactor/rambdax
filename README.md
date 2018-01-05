@@ -1,7 +1,5 @@
 # Rambdax
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/selfrefactor/rambdax.svg)](https://greenkeeper.io/)
-
 Extended version of Rambda(utility library) - [Documentation](https://selfrefactor.github.io/rambdax/#/)
 
 ## Simple example
