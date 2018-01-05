@@ -1,3 +1,6 @@
+[![CircleCI](https://img.shields.io/circleci/project/github/selfrefactor/rambdax.svg)](https://circleci.com/gh/selfrefactor/rambdax)
+[![codecov](https://codecov.io/gh/selfrefactor/rambdax/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambdax)
+
 # Rambdax
 
 Extended version of Rambda(utility library) - [Documentation](https://selfrefactor.github.io/rambdax/#/)
