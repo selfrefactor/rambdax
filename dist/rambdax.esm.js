@@ -5,17 +5,13 @@ function assocPath(path$$1, x, obj) {
 
   const lastProp = pathValue[pathValue.length - 1];
 
-  let newProps = {
-    [lastProp]: x
-  };
+  let newProps = { [lastProp]: x };
 
   let counter = pathValue.length - 2;
 
   while (counter > -1) {
     const prop$$1 = pathValue[counter];
-    newProps = {
-      [prop$$1]: newProps
-    };
+    newProps = { [prop$$1]: newProps };
 
     counter--;
   }
@@ -28,7 +24,6 @@ var assocPath$1 = curry(assocPath);
 const types = ['Null', 'Undefined', 'RegExp'];
 
 function compact(arr) {
-
   return filter(a => {
     const currentType = type(a);
     if (types.includes(currentType)) {
@@ -83,7 +78,6 @@ function debounce(func, ms, immediate = false) {
 }
 
 function delay(ms) {
-
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('RAMBDAX_DELAY');
@@ -607,16 +601,13 @@ const isEqual = (testValue, matchValue) => {
   return willReturn;
 };
 
-const is$2 = (testValue, matchResult = true) => {
-  return {
-    key: testValue,
-    test: matchValue => {
-      return isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND;
-    }
-  };
-};
+const is$2 = (testValue, matchResult = true) => ({
+  key: testValue,
+  test: matchValue => isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
+});
 
 class Switchem {
+
   constructor(defaultValue, cases, willMatch) {
     if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
       this.cases = [];
@@ -633,11 +624,11 @@ class Switchem {
 
   default(defaultValue) {
     const holder = new Switchem(defaultValue, this.cases, this.willMatch);
+
     return holder.match(this.willMatch);
   }
 
   is(testValue, matchResult) {
-
     return new Switchem(this.defaultValue, [...this.cases, is$2(testValue, matchResult)], this.willMatch);
   }
 
@@ -646,6 +637,7 @@ class Switchem {
 
     return typeof value === 'function' ? value(key, matchValue) : value;
   }
+
 }
 
 function switcher(input) {
@@ -706,7 +698,6 @@ function when(condition, whenTrueFn) {
     const flag = typeof condition === 'boolean' ? condition : condition(input);
 
     if (flag) {
-
       return whenTrueFn(input);
     }
 
