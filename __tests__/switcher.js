@@ -34,3 +34,14 @@ test('works with string as condition', () => {
     switchFn('baz')
   ).toEqual('it is baz')
 })
+
+test('works with functions as condition result', () => {
+  const input = 'foo'
+  const result = R.switcher(input)
+    .is('foo', R.delay)
+    .default(R.identity)
+
+  expect(
+    R.type(result)
+  ).toEqual('Promise')
+})

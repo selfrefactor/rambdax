@@ -6,12 +6,12 @@
   "module": "./dist/rambdax.esm.js",
   "typings": "./index.d.ts",
   "scripts": {
+    "dev": "jest --watch __tests__/switcher.js",
     "build": "run-p rambda rollup",
     "rollup": "rollup -c files/rollup.config.js",
     "test": "jest",
     "rambda": "node files/generateRambdaExports",
     "docs": "docsify init ./docs",
-    "dev": "jest --watch __tests__/when.js",
     "cover": "jest __tests__ --coverage",
     "lint": "run-p lint-test lint-modules lint-rambdax",
     "lint-test": "cd __tests__&&run lintFolder",
