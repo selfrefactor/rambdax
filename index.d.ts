@@ -179,7 +179,9 @@ declare namespace R {
     debounce(fn: Function, ms: number): any
 
     delay(ms: Number): Promise<string>
+
     DELAY: string
+
     debug(...input: Array<any>): never
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
@@ -528,6 +530,9 @@ declare namespace R {
 
     ifElse(fn: Pred | boolean, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
 
+    includes(input: any, arrOrStr: any[]|string): boolean
+    includes(input: any) : (arrOrStr: any[]|string) => boolean
+    
     init<T>(list: T[]): T[]
     init(list: string): string
 
