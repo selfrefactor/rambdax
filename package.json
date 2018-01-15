@@ -7,6 +7,7 @@
   "typings": "./index.d.ts",
   "scripts": {
     "dev": "jest --watch __tests__/switcher.js",
+    "buildweb": "rollup -c files/rollup.web.config.js",
     "build": "run-p rambda rollup",
     "rollup": "rollup -c files/rollup.config.js",
     "test": "jest",
@@ -43,6 +44,7 @@
     "jest": "^21.1.0",
     "npm-run-all": "4.1.1",
     "rollup": "0.50.0",
-    "rollup-plugin-babel": "3.0.2"
+    "rollup-plugin-babel": "3.0.2",
+    "rollup-plugin-node-resolve": "^3.0.2"
   }
 }
