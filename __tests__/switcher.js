@@ -1,5 +1,33 @@
 const R = require('../rambdax')
 
+test('with boolean tuple', () => {
+  const a = true
+  const b = false
+  const result = R.switcher([a,b])
+    .is([false, false], '0')
+    .is([false, true], '1')
+    .is([true, true], '2')
+    .default('3')
+
+  expect(
+    result
+  ).toEqual('3')
+})
+
+test('with boolean tuple - second test', () => {
+  const a = true
+  const b = true
+  const result = R.switcher([a,b])
+    .is([false, false], '0')
+    .is([false, true], '1')
+    .is([true, true], '2')
+    .default('3')
+
+  expect(
+    result
+  ).toEqual('2')
+})
+
 test('works with objects as arguments', () => {
   const result = R.switcher({ a : 1 })
     .is({ a : 1 }, 'it is bar')

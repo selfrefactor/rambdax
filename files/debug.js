@@ -81,16 +81,12 @@ function switcher(input){
   return new Switchem(input)
 }
 
-const x = switcher({a:1})
-  .is({a: 1}, 'it is bar')
-  .is('baz', 'it is baz')
-  .default('it is az')
+const a = true
+const b = false
+const result = switcher([a,b])
+  .is([false, false], '0')
+  .is([false, true], '1')
+  .is([true, true], '2')
+  .default('3')
 
-  // const y = switcher('bar')
-  // .is('ba', 'ba')
-  // .is(value => {
-  //   return value.length === 3;
-  // }, '3 length')
-  // .default('it is az')
-
-  let a  
+  let aa  
