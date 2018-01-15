@@ -1,4 +1,4 @@
-const { type, curry, filter } = require('rambda')
+import { type, curry, filter } from 'rambda'
 
 function evolve (rules, input) {
   const clone = Object.assign({}, input)

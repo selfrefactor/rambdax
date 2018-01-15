@@ -94,11 +94,9 @@ function debug(...input) {
   process.exit();
 }
 
-const { type: type$2, curry: curry$2, filter: filter$2 } = require('rambda');
-
 function evolve(rules, input) {
   const clone = Object.assign({}, input);
-  const propRules = filter$2(x => clone[x] !== undefined)(Object.keys(rules));
+  const propRules = R.filter(x => clone[x] !== undefined)(Object.keys(rules));
 
   if (propRules.length === 0) {
     return input;
@@ -106,9 +104,9 @@ function evolve(rules, input) {
 
   propRules.map(prop$$1 => {
     const fn = rules[prop$$1];
-    if (type$2(fn) === 'Function') {
+    if (R.type(fn) === 'Function') {
       clone[prop$$1] = fn(clone[prop$$1]);
-    } else if (type$2(fn) === 'Object') {
+    } else if (R.type(fn) === 'Object') {
       clone[prop$$1] = evolve(fn, clone[prop$$1]);
     }
   });
@@ -116,7 +114,7 @@ function evolve(rules, input) {
   return clone;
 }
 
-var evolve$1 = curry$2(evolve);
+var evolve$1 = R.curry(evolve);
 
 function greater(x, y) {
   if (y === undefined) {
@@ -160,10 +158,8 @@ function intersection(a, b) {
   return R.filter(val => b.includes(val))(a);
 }
 
-const { type: type$3 } = require('rambda');
-
 function isPromiseLike(x) {
-  return ['Async', 'Promise'].includes(type$3(x));
+  return ['Async', 'Promise'].includes(R.type(x));
 }
 
 function isValid({ input, schema }) {

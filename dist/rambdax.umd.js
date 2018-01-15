@@ -274,7 +274,7 @@ function curry$1(f, a = []) {
   return (...p) => (o => o.length >= f.length ? f(...o) : curry$1(f, o))([...a, ...p]);
 }
 
-var dec$1 = (x => x - 1);
+var dec$1 = x => x - 1;
 
 function defaultTo$1(defaultArgument, inputArgument) {
   if (arguments.length === 1) {
@@ -324,7 +324,7 @@ function endsWith$1(x, y) {
   return y.endsWith(x);
 }
 
-var inc$1 = (x => x + 1);
+var inc$1 = x => x + 1;
 
 function find$1(fn, arr) {
   if (arr === undefined) {
@@ -1096,11 +1096,9 @@ function debug(...input) {
   process.exit();
 }
 
-const { type: type$2, curry: curry$2, filter: filter$2 } = require('rambda');
-
 function evolve(rules, input) {
   const clone = Object.assign({}, input);
-  const propRules = filter$2(x => clone[x] !== undefined)(Object.keys(rules));
+  const propRules = filter$1(x => clone[x] !== undefined)(Object.keys(rules));
 
   if (propRules.length === 0) {
     return input;
@@ -1108,9 +1106,9 @@ function evolve(rules, input) {
 
   propRules.map(prop => {
     const fn = rules[prop];
-    if (type$2(fn) === 'Function') {
+    if (type$1(fn) === 'Function') {
       clone[prop] = fn(clone[prop]);
-    } else if (type$2(fn) === 'Object') {
+    } else if (type$1(fn) === 'Object') {
       clone[prop] = evolve(fn, clone[prop]);
     }
   });
@@ -1118,7 +1116,7 @@ function evolve(rules, input) {
   return clone;
 }
 
-var evolve$1 = curry$2(evolve);
+var evolve$1 = curry$1(evolve);
 
 function greater(x, y) {
   if (y === undefined) {
@@ -1162,10 +1160,8 @@ function intersection(a, b) {
   return filter$1(val => b.includes(val))(a);
 }
 
-const { type: type$3 } = require('rambda');
-
 function isPromiseLike(x) {
-  return ['Async', 'Promise'].includes(type$3(x));
+  return ['Async', 'Promise'].includes(type$1(x));
 }
 
 function isValid({ input, schema }) {
@@ -1946,7 +1942,4 @@ exports.tryCatch = tryCatch;
 exports.when = when;
 exports.where = where;
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 })));
-//# sourceMappingURL=rambdax.umd.js.map

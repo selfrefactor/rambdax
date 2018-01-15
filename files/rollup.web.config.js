@@ -4,14 +4,12 @@ import resolve from 'rollup-plugin-node-resolve'
 export default {
   externalHelpers: false,
   input     : './rambdax.js',
-  legacy: false,
-  sourcemap : true,
-  treeshake: true,
+  legacy: true,
+  sourcemap : false,
+  treeshake: false,
   plugins: [
     resolve(),
-    babel({
-      exclude: 'node_modules/**'
-    })
+    babel()
   ],
   output    : [
     {
