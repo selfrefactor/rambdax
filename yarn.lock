@@ -2445,9 +2445,21 @@ qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
+"rambda-repl@https://github.com/selfrefactor/rambda-repl#0.1.0":
+  version "0.1.0"
+  resolved "https://github.com/selfrefactor/rambda-repl#2cc393bee33b5802223cfbd95d84778cc95a68cc"
+  dependencies:
+    rambdax "^0.8.8"
+
 rambda@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.0.9.tgz#df4fc58aa87547f91dbc2a52bd873bc2ee89af68"
+
+rambdax@^0.8.8:
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/rambdax/-/rambdax-0.8.8.tgz#ea2ea26d68e459d3bd4b25bf1850320bf4951086"
+  dependencies:
+    rambda "^1.0.9"
 
 randomatic@^1.1.3:
   version "1.1.7"
