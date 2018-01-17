@@ -259,24 +259,23 @@ R.less(2,1) // => true
 
 #### mapAsync
 
-> mapAsync(fn: Async|Promise, arr: Array): Promise
+> mapAsync(fn: Async|Promise, arr: Array): Promise<Array>
 
 Sequential asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const mapFn = R.map(x => x*2)
+const fn = a => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(a + 1)
+  }, 100)
+})
 
-async function fn(x){
-  await R.delay(1000)
+const result = await R.composeAsync(
+  R.mapAsync(fn),
+  R.map(a => a * 10)
+)([1, 2, 3])
 
-  return x+1
-}
-
-const asyncMapFn = R.mapAsync(fn)
-
-const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
-
-// `result` resolves after 3 seconds to `[3, 5, 7]`
+// `result` resolves to `[11, 21, 31]`
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mapAsync.js)
@@ -288,19 +287,18 @@ const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
 Parrallel asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const mapFn = R.map(x => x*2)
+const fn = a => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(a + 1)
+  }, 100)
+})
 
-async function fn(x){
-  await R.delay(1000)
+const result = R.composeAsync(
+  R.mapFastAsync(fn),
+  R.map(a => a * 10)
+)([1, 2, 3])
 
-  return x+1
-}
-
-const asyncMapFn = R.mapFastAsync(fn)
-
-const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
-
-// `result` resolves after 1 second to `[3, 5, 7]`
+// `result` resolves to `[11, 21, 31]`
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mapFastAsync.js)

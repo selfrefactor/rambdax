@@ -43,7 +43,7 @@
     "fs-extra": "4.0.2",
     "jest": "^21.1.0",
     "npm-run-all": "4.1.1",
-    "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.1.0",
+    "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "rollup": "0.50.0",
     "rollup-plugin-babel": "3.0.2",
     "rollup-plugin-node-resolve": "^3.0.2"
