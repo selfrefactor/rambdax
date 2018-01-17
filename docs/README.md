@@ -31,7 +31,7 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 ## API
 
-### API part I - Rambdax own methods
+Methods between `assocPath` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 ---
 #### assocPath
@@ -118,13 +118,15 @@ let counter = 0
 const inc = () => {
   counter++
 }
-const debouncedInc = debounce(inc, 1000)
+const debouncedInc = R.debounce(inc, 900)
 
 const result = async function(){
+  debouncedInc()
   await R.delay(500)
+  debouncedInc()
+  await R.delay(800)
   console.log(counter) //=> 0
-  await R.delay(500)
-  console.log(counter) //=> 0
+
   await R.delay(1000)
   console.log(counter) //=> 1
 
@@ -135,7 +137,7 @@ const result = async function(){
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/debounce.js)
 
-<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20debounce(inc%2C%201000)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20await%20R.delay(500)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%20%20await%20R.delay(500)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20R.debounce(inc%2C%20900)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20debouncedInc()%0A%20%20await%20R.delay(500)%0A%20%20debouncedInc()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
 
 ---
 #### delay
@@ -269,7 +271,7 @@ const schema = {
   title: "string",
 }
 
-const song = {
+const input = {
   published: 1975,
   style: "rock",
   title: "In my time of dying",
@@ -281,7 +283,7 @@ const result = R.isValid({input,schema})
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isValid.js)
 
-<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20song%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.isValid(%7Binput%2Cschema%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20input%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.isValid(%7Binput%2Cschema%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### less
@@ -363,6 +365,7 @@ When `fn` is called for a second time with the same input, then the cache result
 let counter = 0
 const fn = (a,b) =>{
   counter++
+  
   return a+b
 }
 const memoized = R.memoize(fn)
@@ -370,10 +373,6 @@ memoized(1,2)
 memoized(1,2)
 console.log(counter) //=> 1
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/memoize.js)
-
-<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20fn%20%3D%20(a%2Cb)%20%3D%3E%7B%0A%20%20counter%2B%2B%0A%20%20return%20a%2Bb%0A%7D%0Aconst%20memoized%20%3D%20R.memoize(fn)%0Amemoized(1%2C2)%0Amemoized(1%2C2)%0Aconsole.log(counter)%20%2F%2F%3D%3E%201">Try in REPL</a>
 
 ---
 #### mergeAll
@@ -441,10 +440,6 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/once.js)
-
-<a href="https://rambda.now.sh?const%20addOneOnce%20%3D%20R.once((a%2C%20b%2C%20c)%20%3D%3E%20a%20%2B%20b%20%2B%20c)%0A%0Aconsole.log(addOneOnce(10%2C%2020%2C%2030))%20%2F%2F%3D%3E%2060%0Aconsole.log(addOneOnce(1%2C%202%2C%203))%20%2F%2F%3D%3E%2060">Try in REPL</a>
 
 ---
 #### pickBy
@@ -519,17 +514,16 @@ It returns a random number between `min` inclusive and `max` inclusive.
 It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
 
 ```
-expect(
-  R.rangeBy(0, 10, 2)
-).toEqual([0, 2, 4, 6, 8, 10])
-expect(
-  R.rangeBy(0, 2, 0.3)
-).toEqual([0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8])
+const result = R.rangeBy(0, 10, 2)
+// => [0, 2, 4, 6, 8, 10])
+
+console.log(R.rangeBy(0, 2, 0.3))
+// =>[0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/rangeBy.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20expect(%0A%20%20R.rangeBy(0%2C%2010%2C%202)%0A).toEqual(%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0Aexpect(%0A%20%20R.rangeBy(0%2C%202%2C%200.3)%0A).toEqual(%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D)">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.rangeBy(0%2C%2010%2C%202)%0A%2F%2F%20%3D%3E%20%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0A%0Aconsole.log(R.rangeBy(0%2C%202%2C%200.3))%0A%2F%2F%20%3D%3E%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D">Try in REPL</a>
 
 ---
 #### renameProps
@@ -646,7 +640,7 @@ It is best explained with the following example:
 ```
 const valueToMatch = {foo: 1}
 
-const result = switcher(valueToMatch)
+const result = R.switcher(valueToMatch)
   .is('baz', 'is baz')
   .is( x => typeof x === 'boolean', 'is boolean')
   .is({foo: 1}, 'Property foo is 1')
@@ -664,7 +658,7 @@ Rambda's `equals` is used as part of the comparison process.
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/switcher.js)
 
-<a href="https://rambda.now.sh?const%20valueToMatch%20%3D%20%7Bfoo%3A%201%7D%0A%0Aconst%20result%20%3D%20switcher(valueToMatch)%0A%20%20.is('baz'%2C%20'is%20baz')%0A%20%20.is(%20x%20%3D%3E%20typeof%20x%20%3D%3D%3D%20'boolean'%2C%20'is%20boolean')%0A%20%20.is(%7Bfoo%3A%201%7D%2C%20'Property%20foo%20is%201')%0A%20%20.default('is%20bar')%0A%0Aconsole.log(result)%20%2F%2F%20%3D%3E%20'Property%20foo%20is%201'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20valueToMatch%20%3D%20%7Bfoo%3A%201%7D%0A%0Aconst%20result%20%3D%20R.switcher(valueToMatch)%0A%20%20.is('baz'%2C%20'is%20baz')%0A%20%20.is(%20x%20%3D%3E%20typeof%20x%20%3D%3D%3D%20'boolean'%2C%20'is%20boolean')%0A%20%20.is(%7Bfoo%3A%201%7D%2C%20'Property%20foo%20is%201')%0A%20%20.default('is%20bar')%0A%0Aconsole.log(result)%20%2F%2F%20%3D%3E%20'Property%20foo%20is%201'">Try in REPL</a>
 
 ---
 #### tapAsync
@@ -701,7 +695,7 @@ const inc = () => {
   counter++
 }
 
-const throttledInc = throttle(inc, 800)
+const throttledInc = R.throttle(inc, 800)
 
 const result = async () => {
   throttledInc()
@@ -715,7 +709,7 @@ const result = async () => {
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/throttle.js)
 
-<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20throttle(inc%2C%20800)%0A%0Aconst%20result%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20R.throttle(inc%2C%20800)%0A%0Aconst%20result%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
 
 ---
 #### where
@@ -732,22 +726,16 @@ const condition = R.where({
   b : bProp => bProp === 4
 })
 
-condition({
+const result = condition({
   a : "foo",
   b : 4,
   c : 11,
 }) //=> true
-
-condition({
-  a : 1,
-  b : 4,
-  c : 11,
-}) //=> false
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/where.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20const%20condition%20%3D%20R.where(%7B%0A%20%20a%20%3A%20aProp%20%3D%3E%20typeof%20aProp%20%3D%3D%3D%20%22string%22%2C%0A%20%20b%20%3A%20bProp%20%3D%3E%20bProp%20%3D%3D%3D%204%0A%7D)%0A%0Acondition(%7B%0A%20%20a%20%3A%20%22foo%22%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20true%0A%0Acondition(%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20false">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20condition%20%3D%20R.where(%7B%0A%20%20a%20%3A%20aProp%20%3D%3E%20typeof%20aProp%20%3D%3D%3D%20%22string%22%2C%0A%20%20b%20%3A%20bProp%20%3D%3E%20bProp%20%3D%3D%3D%204%0A%7D)%0A%0Aconst%20result%20%3D%20condition(%7B%0A%20%20a%20%3A%20%22foo%22%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
 #### when
@@ -760,13 +748,13 @@ const truncate = R.when(
   R.compose(x => `${x}...`, R.take(5))
 )
 
-console.log(truncate('1234')) => '1234'
-console.log(truncate('12345678')) => '12345...'
+const result = truncate('12345678')
+// => '12345...'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
 
-<a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconsole.log(truncate('1234'))%20%3D%3E%20'1234'%0Aconsole.log(truncate('12345678'))%20%3D%3E%20'12345...'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
 
 ---
 #### add
@@ -862,15 +850,11 @@ const result = R.allPass(rules, input) // => true
 
 It returns function that always returns `x`.
 ```
-const returnSeven = R.always(7)
+const fn = R.always(7)
 
-console.log(returnSeven)// => 7
-console.log(returnSeven)// => 7
+console.log(fn())// => 7
+console.log(fn())// => 7
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/always.js)
-
-<a href="https://rambda.now.sh?const%20returnSeven%20%3D%20R.always(7)%0A%0Aconsole.log(returnSeven)%2F%2F%20%3D%3E%207%0Aconsole.log(returnSeven)%2F%2F%20%3D%3E%207">Try in REPL</a>
 
 ---
 #### any
@@ -919,10 +903,6 @@ console.log(fn(15)) //=> true
 console.log(fn(30)) //=> false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/both.js)
-
-<a href="https://rambda.now.sh?const%20fn%20%3D%20R.both(%0A%20%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20a%20%3D%3E%20a%20%3C%2020%0A)%0Aconsole.log(fn(15))%20%2F%2F%3D%3E%20true%0Aconsole.log(fn(30))%20%2F%2F%3D%3E%20false">Try in REPL</a>
-
 ---
 #### compose
 
@@ -932,10 +912,16 @@ It performs right-to-left function composition.
 
 ```
 const result = R.compose(
-  R.map(x => x * 2)
-  R.filter(x => x > 2),
-)([1, 2, 3, 4])  // => [6, 8]
+  R.map(x => x * 2),
+  R.filter(x => x > 2)
+)([1, 2, 3, 4])
+
+// => [6, 8]
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.compose(%0A%20%20R.map(x%20%3D%3E%20x%20*%202)%2C%0A%20%20R.filter(x%20%3D%3E%20x%20%3E%202)%0A)(%5B1%2C%202%2C%203%2C%204%5D)%0A%0A%2F%2F%20%3D%3E%20%5B6%2C%208%5D">Try in REPL</a>
 
 ---
 #### complement
@@ -947,9 +933,14 @@ It returns `complemented` function that accept `input` as argument.
 The return value of `complemented` is the negative boolean value of `fn(input)`.
 
 ```
-R.complement(R.always(true)) // => false
-R.complement(R.always(false)) // => true
+const fn = R.complement(x => !x)
+
+const result = fn(false) // => false
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/complement.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20R.complement(x%20%3D%3E%20!x)%0A%0Aconst%20result%20%3D%20fn(false)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
 ---
 #### concat
@@ -1137,7 +1128,8 @@ It filters `x` iterable over boolean returning `filterFn`.
 ```
 const filterFn = a => a % 2 === 0
 
-R.filter(filterFn, [1, 2, 3, 4]) // => [2, 4]
+const result = R.filter(filterFn, [1, 2, 3, 4])
+// => [2, 4]
 ```
 
 The method works with objects as well.
@@ -1154,7 +1146,7 @@ const result = R.filter((val, prop)=>{
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/filter.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0AR.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%20%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0Aconst%20result%20%3D%20R.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
 
 ---
 #### find
@@ -1186,13 +1178,13 @@ It returns `-1` or the index of the first element of `arr` satisfying `findFn`.
 const findFn = a => R.type(a.foo) === 'Number'
 const arr = [{foo: 'bar'}, {foo: 1}]
 
-const result = R.find(findFn, arr) 
+const result = R.findIndex(findFn, arr)
 // => 1
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/findIndex.js)
 
-<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%20%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.findIndex(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
 
 ---
 #### flatten
@@ -1218,13 +1210,13 @@ It returns function which calls `fn` with exchanged first and second argument.
 ```
 const subtractFlip = R.flip(R.subtract)
 
-const result = R.subtractFlip(1,7)
+const result = subtractFlip(1,7)
 // => 6
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/flip.js)
 
-<a href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20R.subtractFlip(1%2C7)%0A%2F%2F%20%3D%3E%206">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20subtractFlip(1%2C7)%0A%2F%2F%20%3D%3E%206">Try in REPL</a>
 
 ---
 #### forEach
@@ -1490,6 +1482,10 @@ const result = R.map((val, prop)=>{
 // => {a: 'a-1', b: 'b-2'}
 ```
 
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/map.js)
+
+<a href="https://rambda.now.sh?const%20mapFn%20%3D%20x%20%3D%3E%20x%20*%202%0Aconst%20resultWithArray%20%3D%20R.map(mapFn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%2C%206%5D%0A%0Aconst%20result%20%3D%20R.map((val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bval%7D-%24%7Bprop%7D%60%0A%7D%2C%20%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D">Try in REPL</a>
+
 ---
 #### match
 
@@ -1498,6 +1494,10 @@ const result = R.map((val, prop)=>{
 ```
 R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/match.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.match(%2F(%5Ba-z%5Da)%2Fg%2C%20'bananas')%20%2F%2F%20%3D%3E%20%5B'ba'%2C%20'na'%2C%20'na'%5D">Try in REPL</a>
 
 ---
 #### merge
@@ -1664,6 +1664,10 @@ const result = R.pipe(
 
 // => [6, 8]
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pipe.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.pipe(%0A%20%20R.filter(val%20%3D%3E%20val%20%3E%202)%2C%0A%20%20R.map(a%20%3D%3E%20a%20*%202)%0A)(%5B1%2C%202%2C%203%2C%204%5D)%0A%0A%2F%2F%20%3D%3E%20%5B6%2C%208%5D">Try in REPL</a>
 
 ---
 #### pluck
@@ -2075,6 +2079,10 @@ const delay = ms => new Promise(resolve => {
 })
 R.type(delay) // => 'Promise'
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/type.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.type(()%20%3D%3E%20%7B%7D)%20%2F%2F%20%3D%3E%20'Function'%0AR.type(async%20()%20%3D%3E%20%7B%7D)%20%2F%2F%20%3D%3E%20'Async'%0AR.type(%5B%5D)%20%2F%2F%20%3D%3E%20'Array'%0AR.type(%7B%7D)%20%2F%2F%20%3D%3E%20'Object'%0AR.type('foo')%20%2F%2F%20%3D%3E%20'String'%0AR.type(1)%20%2F%2F%20%3D%3E%20'Number'%0AR.type(true)%20%2F%2F%20%3D%3E%20'Boolean'%0AR.type(null)%20%2F%2F%20%3D%3E%20'Null'%0AR.type(%2F%5BA-z%5D%2F)%20%2F%2F%20%3D%3E%20'RegExp'%0A%0Aconst%20delay%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(function%20()%20%7B%0A%20%20%20%20resolve()%0A%20%20%7D%2C%20ms)%0A%7D)%0AR.type(delay)%20%2F%2F%20%3D%3E%20'Promise'">Try in REPL</a>
 
 ---
 #### uniq
