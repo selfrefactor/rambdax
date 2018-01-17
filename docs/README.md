@@ -9,6 +9,7 @@ Extended version of Rambda(utility library) - [Documentation](https://selfrefact
 
 ```
 const R = require("rambdax")
+
 const result = R.compose(
   R.filter(val => val>2),
   R.flatten,
@@ -16,7 +17,7 @@ const result = R.compose(
 console.log(result) // => [3, 4]
 ```
 
-## How to use it?
+## How to use it
 
 Simple `yarn add rambdax` is sufficient
 
@@ -32,6 +33,7 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 ### API part I - Rambdax own methods
 
+---
 #### assocPath
 
 > assocPath(path: string[]|string, x: any, obj: object): object
@@ -44,9 +46,14 @@ R.assocPath('a.b.c', 42, {a: {b: {c: 0}}})
 //=> {a: {b: {c: 42} } }
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.assocPath('a.b.c'%2C%2042%2C%20%7Ba%3A%20%7Bb%3A%20%7Bc%3A%200%7D%7D%7D)%0A%2F%2F%3D%3E%20%7Ba%3A%20%7Bb%3A%20%7Bc%3A%2042%7D%20%7D%20%7D">Try in REPL</a>
+
+---
 #### compact
 
-> compact(arr: Array<any>)
+> compact(arr: any[]): any[]
 
 It removes the empty values from an array.
 
@@ -64,11 +71,17 @@ const arr = [
   [1],
   /\s/g
 ]
+
 const result = R.compact(arr)
 const expectedResult = [1, false, " ", "foo", [1]]
 // result === expectedResult
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/compact.js)
+
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%201%2C%0A%20%20null%2C%0A%20%20undefined%2C%0A%20%20false%2C%0A%20%20%22%22%2C%0A%20%20%22%20%22%2C%0A%20%20%22foo%22%2C%0A%20%20%7B%7D%2C%0A%20%20%5B%5D%2C%0A%20%20%5B1%5D%2C%0A%20%20%2F%5Cs%2Fg%0A%5D%0A%0Aconst%20result%20%3D%20R.compact(arr)%0Aconst%20expectedResult%20%3D%20%5B1%2C%20false%2C%20%22%20%22%2C%20%22foo%22%2C%20%5B1%5D%5D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### composeAsync
 
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
@@ -77,54 +90,72 @@ Asyncronous version of `R.compose`.
 
 ```
 const fn = async x => {
-  await R.delay(x)
+  await R.delay(500)
   return x+1
 }
+const fnSecond = async x => fn(x)
 
-const result = await composeAsync(
+const result = R.composeAsync(
   fn,
-  async x => fn(x),
-)(await fn(0))
-
-console.log(result) //=> 3
+  fnSecond
+)(0)
+// `result` resolves to `2`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/composeAsync.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%2B1%0A%7D%0Aconst%20fnSecond%20%3D%20async%20x%20%3D%3E%20fn(x)%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20fn%2C%0A%20%20fnSecond%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%602%60">Try in REPL</a>
+
+---
 #### debounce
 
-> debounce(fn: Function, ms: Number): any
+> debounce(fn: Function, ms: number): any
 
-Creates a debounced function that delays invoking `fn` until after wait milliseconds `ms` have elapsed since the last time the debounced function was invoked.
-
-Description is taken from `Lodash` docs.
+Creates a debounced function that delays invoking `fn` until after wait milliseconds `ms` have elapsed since the last time the debounced function was invoked. (description is taken from `Lodash` docs)
 
 ```
 let counter = 0
 const inc = () => {
   counter++
 }
-const fn = debounce(inc, 1000)
-fn()
-await R.delay(500)
-console.log(counter) //=> 0
-await R.delay(1000)
-console.log(counter) //=> 1
+const debouncedInc = debounce(inc, 1000)
+
+const result = async function(){
+  await R.delay(500)
+  console.log(counter) //=> 0
+  await R.delay(500)
+  console.log(counter) //=> 0
+  await R.delay(1000)
+  console.log(counter) //=> 1
+
+  return counter
+}
+// `result` resolves to `1`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/debounce.js)
+
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20debounce(inc%2C%201000)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20await%20R.delay(500)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%20%20await%20R.delay(500)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
+
+---
 #### delay
 
-> delay(ms: Number): Promise<R.DELAY>
+> delay(ms: number): Promise
 
-`setTimeout` as a promise that resolves to`R.DELAY` variable.
+`setTimeout` as a promise that resolves to `R.DELAY` variable.
 
-```
-R.delay(1000).then( result => {
-  console.assert( result === R.DELAY )
-})
+The value of `R.DELAY` is `'RAMBDAX_DELAY'`.
 
 ```
+const result = R.delay(1000)
+// `result` resolves to `'RAMBDAX_DELAY'`
+```
 
-The value of `R.DELAY` is `'RAMBDAX_DELAY'`
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/delay.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.delay(1000)%0A%2F%2F%20%60result%60%20resolves%20to%20%60'RAMBDAX_DELAY'%60">Try in REPL</a>
+
+---
 #### evolve
 
 > evolve (rules: Object, input: Object): Object
@@ -133,68 +164,96 @@ Properties of `input` object are transformed according to `rules` object that co
 
 If property `prop` of `rules` is a function and also a property of `input`, then `input[prop]` will be equal to the result of `rules[prop](input[prop])`.
 
-
 `rules[prop]` can be also a object that contains functions, as you can see in the example below:
 
 ```
 const input = {
-    firstName : "  Tomato ",
-    data      : {
-      elapsed   : 100,
-      remaining : 1400,
-    },
-    id : 123,
-  }
+  firstName : '  Tomato ',
+  data      : {
+    elapsed   : 100,
+    remaining : 1400,
+  },
+  id : 123,
+}
 const rules = {
-    firstName : R.trim,
-    lastName  : R.trim, //Will not get invoked.
-    data      : {
-      elapsed   : R.add(1),
-      remaining : R.add(-1),
-    },
-  }
+  firstName : R.trim,
+  lastName  : R.trim, //Will not get invoked.
+  data      : {
+    elapsed   : R.add(1),
+    remaining : R.add(-1),
+  },
+}
 
-const result = R.evolve(transformations, tomato)
+const result = R.evolve(rules, input)
+
 const expectedResult = {
-  firstName: "Tomato",
+  firstName: 'Tomato',
   data: {
     elapsed: 101,
     remaining: 1399,
   },
   id: 123,
-})
-// result === expectedResult
+}
+console.log(result === expectedResult)
+// true
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/evolve.js)
+
+<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20firstName%20%3A%20'%20%20Tomato%20'%2C%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20100%2C%0A%20%20%20%20remaining%20%3A%201400%2C%0A%20%20%7D%2C%0A%20%20id%20%3A%20123%2C%0A%7D%0Aconst%20rules%20%3D%20%7B%0A%20%20firstName%20%3A%20R.trim%2C%0A%20%20lastName%20%20%3A%20R.trim%2C%20%2F%2FWill%20not%20get%20invoked.%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20R.add(1)%2C%0A%20%20%20%20remaining%20%3A%20R.add(-1)%2C%0A%20%20%7D%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.evolve(rules%2C%20input)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20firstName%3A%20'Tomato'%2C%0A%20%20data%3A%20%7B%0A%20%20%20%20elapsed%3A%20101%2C%0A%20%20%20%20remaining%3A%201399%2C%0A%20%20%7D%2C%0A%20%20id%3A%20123%2C%0A%7D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%0A%2F%2F%20true">Try in REPL</a>
+
+---
 #### greater
 
-> greater(x: number, y: number)
+> greater(x: number, y: number): boolean
 
 It return true if the second argument is greater than the first argument.
+
 Note that this is opposite direction compared to Rambda's `gt` method, because it makes more sense in `R.compose` context.
 
 ```
 R.greater(1,2) // => true
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/greater.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### intersection
 
-> intersection(a: Array, b: Array): Array
+> intersection(x: T[], y: T[]): T[]
 
-It returns array with the overlapped members of `a` and `b`.
+It returns array with the overlapped members of `x` and `y`.
 
 ```
-R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ]) //=> [3, 5]
+R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ])
+//=> [3, 5]
 ```
 
 It returns `true` if `R.type` of `x` is equal to `xType`.
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/intersection.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.intersection(%5B%201%2C%203%2C%205%20%5D%2C%20%5B%202%2C%203%2C%205%20%5D)%0A%2F%2F%3D%3E%20%5B3%2C%205%5D">Try in REPL</a>
+
+---
 #### isPromiseLike
 
-> isPromiseLike(x: any): Boolean
+> isPromiseLike(x: any): boolean
 
 It returns true if `x` is either async function or unresolved promise.
 
+```
+R.isPromiseLike(R.delay)
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromiseLike.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isPromiseLike(R.delay)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### isValid
 
 > isValid({input: Object, schema: Object}): Boolean
@@ -202,6 +261,7 @@ It returns true if `x` is either async function or unresolved promise.
 It checks if `input` is following `schema` specifications.
 
 This is modified version of [json-validity](https://github.com/selfrefactor/json-validity) library.
+
 ```
 const schema = {
   published: "number",
@@ -215,63 +275,87 @@ const song = {
   title: "In my time of dying",
 }
 
-R.isValid({input,schema}) // => true
+const result = R.isValid({input,schema})
+// => true
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isValid.js)
+
+<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20song%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.isValid(%7Binput%2Cschema%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### less
 
-> less(x: number, y: number)
+> less(x: number, y: number): boolean
 
 It return true if the second argument is less than the first argument.
+
 Note that this is opposite direction compared to Rambda's `lt` method, because it makes more sense in `R.compose` context.
 
 ```
 R.less(2,1) // => true
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/less.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.less(2%2C1)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### mapAsync
 
-> mapAsync(fn: Async|Promise, arr: Array): Promise<Array>
+> mapAsync(fn: Async|Promise, arr: Array): Promise
 
 Sequential asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const fn = a => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(a + 1)
-  }, 100)
-})
+async function fn(x){
+  await R.delay(1000)
 
-const result = await R.composeAsync(
+  return x+1
+}
+
+const result = R.composeAsync(
   R.mapAsync(fn),
-  R.map(a => a * 10)
-)([1, 2, 3])
-console.log(result) //=> [11, 21, 31]
+  R.map(x => x*2)
+)( [1, 2, 3] )
+
+// `result` resolves after 3 seconds to `[3, 5, 7]`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mapAsync.js)
+
+<a href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20R.mapAsync(fn)%2C%0A%20%20R.map(x%20%3D%3E%20x*2)%0A)(%20%5B1%2C%202%2C%203%5D%20)%0A%0A%2F%2F%20%60result%60%20resolves%20after%203%20seconds%20to%20%60%5B3%2C%205%2C%207%5D%60">Try in REPL</a>
+
+---
 #### mapFastAsync
 
-> mapFastAsync(fn: Async|Promise, arr: Array): Promise<Array>
+> mapFastAsync(fn: Async|Promise, arr: Array): Promise
 
 Parrallel asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const fn = a => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(a + 1)
-  }, 100)
-})
+async function fn(x){
+  await R.delay(1000)
 
-const result = await R.composeAsync(
-  R.mapFastAsync(fn),
-  R.map(a => a * 10)
-)([1, 2, 3])
-console.log(result) //=> [11, 21, 31]
+  return x+1
+}
+
+const result = R.composeAsync(
+  R.mapAsync(fn),
+  R.map(x => x*2)
+)( [1, 2, 3] )
+
+// `result` resolves after 1 second to `[3, 5, 7]`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mapFastAsync.js)
+
+<a href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20R.mapAsync(fn)%2C%0A%20%20R.map(x%20%3D%3E%20x*2)%0A)(%20%5B1%2C%202%2C%203%5D%20)%0A%0A%2F%2F%20%60result%60%20resolves%20after%201%20second%20to%20%60%5B3%2C%205%2C%207%5D%60">Try in REPL</a>
+
+---
 #### memoize
 
-> memoize(fn: Function|Promise<any>): any
+> memoize(fn: Function|Promise): any
 
 When `fn` is called for a second time with the same input, then the cache result is returned instead of calling `fn`.
 
@@ -287,9 +371,14 @@ memoized(1,2)
 console.log(counter) //=> 1
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/memoize.js)
+
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20fn%20%3D%20(a%2Cb)%20%3D%3E%7B%0A%20%20counter%2B%2B%0A%20%20return%20a%2Bb%0A%7D%0Aconst%20memoized%20%3D%20R.memoize(fn)%0Amemoized(1%2C2)%0Amemoized(1%2C2)%0Aconsole.log(counter)%20%2F%2F%3D%3E%201">Try in REPL</a>
+
+---
 #### mergeAll
 
-> mergeAll(input: object[]): object
+> mergeAll(input: Object[]): Object
 
 It merges all objects of `input` array sequentially and returns the result.
 
@@ -308,6 +397,11 @@ const result = R.mergeAll(arr)
 // result === expectedResult
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mergeAll.js)
+
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### omitBy
 
 > omitBy(fn: function, input: Object): Object
@@ -330,6 +424,11 @@ const result = R.omitBy(fn, input)
 // result === expectedResult
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/omitBy.js)
+
+<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2C%20val)%20%3D%3E%20val%20%3C%203%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.omitBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### once
 
 > once(fn: Function): Function
@@ -339,10 +438,15 @@ It returns a function, which invokes only once`fn`.
 ```
 const addOneOnce = R.once((a, b, c) => a + b + c)
 
-console.log(addOneOnce(10,20,30)) //=> 60
-console.log(addOneOnce(1,2,3)) //=> 60
+console.log(addOneOnce(10, 20, 30)) //=> 60
+console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/once.js)
+
+<a href="https://rambda.now.sh?const%20addOneOnce%20%3D%20R.once((a%2C%20b%2C%20c)%20%3D%3E%20a%20%2B%20b%20%2B%20c)%0A%0Aconsole.log(addOneOnce(10%2C%2020%2C%2030))%20%2F%2F%3D%3E%2060%0Aconsole.log(addOneOnce(1%2C%202%2C%203))%20%2F%2F%3D%3E%2060">Try in REPL</a>
+
+---
 #### pickBy
 
 > pickBy(fn: Function, input: Object): Object
@@ -365,6 +469,11 @@ const result = R.pickBy(fn, input)
 // result === expectedResult
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/pickBy.js)
+
+<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2Cval)%20%3D%3E%20val%20%3E%203%20%7C%7C%20prop%20%3D%3D%3D%20'a'%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.pickBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### produce
 
 > produce(conditions: Object, input: any): Promise|Object
@@ -391,18 +500,18 @@ The properties of the returned object are equal to `input`.
 
 If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/produce.js)
+
+<a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### random
 
 > random(min: number, max: number): number
 
 It returns a random number between `min` inclusive and `max` inclusive.
 
-```
-const randomResult = R.random(1, 10)
-expect(randomResult).toBeLessThanOrEqual(10)
-expect(randomResult).toBeGreaterThanOrEqual(1)
-```
-
+---
 #### rangeBy
 
 > rangeBy(start: number, end: number, step: number): number[]
@@ -418,9 +527,14 @@ expect(
 ).toEqual([0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8])
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/rangeBy.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20expect(%0A%20%20R.rangeBy(0%2C%2010%2C%202)%0A).toEqual(%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0Aexpect(%0A%20%20R.rangeBy(0%2C%202%2C%200.3)%0A).toEqual(%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D)">Try in REPL</a>
+
+---
 #### renameProps
 
-> renameProps(rules: object, input: object): object
+> renameProps(rules: Object, input: Object): Object
 
 If property `prop` of `rules` is also a property in `input`, then rename `input` property to `rules[prop]`.
 
@@ -441,9 +555,14 @@ const expectedResult = {
 // result === expectedResult
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/renameProps.js)
+
+<a href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20f%3A%20%22foo%22%2C%0A%20%20b%3A%20%22bar%22%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20f%3A1%2C%0A%20%20b%3A2%0A%7D%0Aconst%20result%20%3D%20R.renameProps(rules%2C%20input)%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A1%2C%0A%20%20bar%3A2%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### resolve
 
-> resolve(promises: object): Promise
+> resolve(promises: Object): Promise
 
 It acts as `Promise.all` for object with Promises.
 It returns a promise that resolve to object.
@@ -458,11 +577,17 @@ const promises = {
   a : fn(1),
   b : fn(2),
 }
-const result = await R.resolve(promises)
+
+const result = R.resolve(promises)
 const expectedResult = { a:1, b:2 }
-// result === expectedResult
+// `result` resolves to `expectedResult`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolve.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.resolve(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+
+---
 #### resolveSecure
 
 > resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
@@ -482,7 +607,7 @@ const fn = async () => {
   }
 }
 
-const result = await R.resolveSecure([
+const result = R.resolveSecure([
   R.delay(2000),
   fn(1000)
 ])
@@ -497,15 +622,21 @@ const expectedResult = [
     type: "ERROR"
   }
 ]
-// => result === expectedResult
+// `result` resolves to `expectedResult`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20try%20%7B%0A%20%20%20%20JSON.parse(%22%7B%3Aa%22)%0A%20%20%7D%0A%20%20catch%20(err)%20%7B%0A%20%20%20%20throw%20new%20Error(err)%0A%20%20%7D%0A%7D%0A%0Aconst%20result%20%3D%20R.resolveSecure(%5B%0A%20%20R.delay(2000)%2C%0A%20%20fn(1000)%0A%5D)%0A%0Aconst%20expectedResult%20%3D%20%5B%0A%20%20%7B%0A%20%20%20%20%22payload%22%3A%20'RAMBDAX_DELAY'%2C%0A%20%20%20%20%22type%22%3A%20%22RESULT%22%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20payload%3A%22Unexpected%20token%20%3A%20in%20JSON%20at%20position%201%22%2C%0A%20%20%20%20type%3A%20%22ERROR%22%0A%20%20%7D%0A%5D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+
+---
 #### shuffle
 
-> shuffle(arr: any[]): any[]
+> shuffle(arr: T[]): T[]
 
 It returns randomized copy of array.
 
+---
 #### switcher
 
 Edited fork of [Switchem](https://github.com/planttheidea/switchem) library.
@@ -521,7 +652,7 @@ const result = switcher(valueToMatch)
   .is({foo: 1}, 'Property foo is 1')
   .default('is bar')
 
-console.log(result) // => 'Property foo is 1'    
+console.log(result) // => 'Property foo is 1'
 ```
 
 As you can see `valueToMatch` is matched sequentially against various `is` conditions.
@@ -531,6 +662,11 @@ Note that `default` must be the last condition and it is mandatory.
 
 Rambda's `equals` is used as part of the comparison process.
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/switcher.js)
+
+<a href="https://rambda.now.sh?const%20valueToMatch%20%3D%20%7Bfoo%3A%201%7D%0A%0Aconst%20result%20%3D%20switcher(valueToMatch)%0A%20%20.is('baz'%2C%20'is%20baz')%0A%20%20.is(%20x%20%3D%3E%20typeof%20x%20%3D%3D%3D%20'boolean'%2C%20'is%20boolean')%0A%20%20.is(%7Bfoo%3A%201%7D%2C%20'Property%20foo%20is%201')%0A%20%20.default('is%20bar')%0A%0Aconsole.log(result)%20%2F%2F%20%3D%3E%20'Property%20foo%20is%201'">Try in REPL</a>
+
+---
 #### tapAsync
 
 > tapAsync(fn: Function|Async|Promise, inputArgument: T): T
@@ -538,15 +674,21 @@ Rambda's `equals` is used as part of the comparison process.
 It is `R.tap` that accept promise-like `fn` argument.
 
 ```
-const log = async a => {
+const fn = async x => {
   await R.delay(1000)
-  console.log(a)
+  console.log(x)
 }
-const result = R.tapAsync(log, "foo")
+
+const result = R.tapAsync(fn, "foo")
 // the console logs `foo`
-// `result` is equal to "foo"
+// `result` is equal to 'foo'
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/tapAsync.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(1000)%0A%20%20console.log(x)%0A%7D%0A%0Aconst%20result%20%3D%20R.tapAsync(fn%2C%20%22foo%22)%0A%2F%2F%20the%20console%20logs%20%60foo%60%0A%2F%2F%20%60result%60%20is%20equal%20to%20'foo'">Try in REPL</a>
+
+---
 #### throttle
 
 > throttle(fn: Function, period: number): Function
@@ -559,13 +701,23 @@ const inc = () => {
   counter++
 }
 
-const fn = throttle(inc, 1000)
-fn()
-await R.delay(500)
-fn()
-console.log(counter) // => 1
+const throttledInc = throttle(inc, 800)
+
+const result = async () => {
+  throttledInc()
+  await R.delay(500)
+  throttledInc()
+
+  return counter
+}
+// `result` resolves to `1`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/throttle.js)
+
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20throttle(inc%2C%20800)%0A%0Aconst%20result%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
+
+---
 #### where
 
 > where(conditions: object, input: object): boolean
@@ -593,12 +745,17 @@ condition({
 }) //=> false
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/where.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20const%20condition%20%3D%20R.where(%7B%0A%20%20a%20%3A%20aProp%20%3D%3E%20typeof%20aProp%20%3D%3D%3D%20%22string%22%2C%0A%20%20b%20%3A%20bProp%20%3D%3E%20bProp%20%3D%3D%3D%204%0A%7D)%0A%0Acondition(%7B%0A%20%20a%20%3A%20%22foo%22%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20true%0A%0Acondition(%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20false">Try in REPL</a>
+
+---
 #### when
 
 > when(rule: Function|boolean, fn: Function): Function
 
 ```
-var truncate = R.when(
+const truncate = R.when(
   x => x.length > 5,
   R.compose(x => `${x}...`, R.take(5))
 )
@@ -607,66 +764,80 @@ console.log(truncate('1234')) => '1234'
 console.log(truncate('12345678')) => '12345...'
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
+
+<a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconsole.log(truncate('1234'))%20%3D%3E%20'1234'%0Aconsole.log(truncate('12345678'))%20%3D%3E%20'12345...'">Try in REPL</a>
+
 ---
-
-### Methods inherited from Rambda
-
-
 #### add
 
-> add(a: Number, b: Number): Number
+> add(a: number, b: number): number
 
-```javascript
+```
 R.add(2, 3) // =>  5
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/add.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.add(2%2C%203)%20%2F%2F%20%3D%3E%20%205">Try in REPL</a>
+
+---
 #### addIndex
 
 > addIndex(fn: Function): Function
 
-```javascript
+```
 const mapWithIndex = R.addIndex(R.map)
-mapWithIndex(
+const result = mapWithIndex(
   (val, index) => `${val} - ${index}`,
   ['A', 'B', 'C']
 ) // => ['A - 0', 'B - 1', 'C - 2']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/addIndex.js)
-
+---
 #### adjust
 
-> adjust(replaceFn: Function, i:Number, arr:Array): Array
+> adjust(replaceFn: Function, i: number, arr: T[]): T[]
 
 It replaces `i` index in `arr` with the result of `replaceFn(arr[i])`.
 
-```javascript
-R.adjust(a => a + 1, 0, [0, 100]) // => [1, 100]
+```
+R.adjust(
+  a => a + 1,
+  0,
+  [0, 100]
+) // => [1, 100]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/adjust.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.adjust(%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%200%2C%0A%20%20%5B0%2C%20100%5D%0A)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try in REPL</a>
+
+---
 #### all
 
-> all(fn: Function, arr: Array): Boolean
+> all(fn: Function, arr: T[]): boolean
 
-It returns `true` if all members of array `arr` returns `true`, when applied as argument to function `fn`.
+It returns `true`, if all members of array `arr` returns `true`, when applied as argument to function `fn`.
 
 ```
 const arr = [ 0, 1, 2, 3, 4 ]
 const fn = x => x > -1
-R.all(fn, arr) // => true
+
+const result = R.all(fn, arr)
+// => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/all.js)
 
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%200%2C%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20fn%20%3D%20x%20%3D%3E%20x%20%3E%20-1%0A%0Aconst%20result%20%3D%20R.all(fn%2C%20arr)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### allPass
 
-> allPass(rules: Array<Function>, input: any): Boolean
+> allPass(rules: Function[], input: any): boolean
 
-It returns `true` if all functions of `rules` return `true`, when `input` is their argument.
+It returns `true`, if all functions of `rules` return `true`, when `input` is their argument.
 
 ```
 const input = {
@@ -677,81 +848,96 @@ const rules = [
   x => x.a === 1,
   x => x.b === 2,
 ]
-R.allPass(rules, obj) // => true
+const result = R.allPass(rules, input) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/allPass.js)
 
+<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%202%2C%0A%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20x%20%3D%3E%20x.a%20%3D%3D%3D%201%2C%0A%20%20x%20%3D%3E%20x.b%20%3D%3D%3D%202%2C%0A%5D%0Aconst%20result%20%3D%20R.allPass(rules%2C%20input)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### always
 
 > always(x: any): Function
 
 It returns function that always returns `x`.
 ```
-const fn = R.always(7)
+const returnSeven = R.always(7)
 
-fn()// => 7
-fn()// => 7
+console.log(returnSeven)// => 7
+console.log(returnSeven)// => 7
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/always.js)
 
+<a href="https://rambda.now.sh?const%20returnSeven%20%3D%20R.always(7)%0A%0Aconsole.log(returnSeven)%2F%2F%20%3D%3E%207%0Aconsole.log(returnSeven)%2F%2F%20%3D%3E%207">Try in REPL</a>
+
+---
 #### any
 
-> any(condition: Function, arr: Array): Boolean
+> any(condition: Function, arr: T[]): Boolean
 
-It returns true if at least one member of `arr` returns true,
-when passed to the `condition` function.
+It returns `true`, if at least one member of `arr` returns true, when passed to the `condition` function.
 
-```javascript
+```
 R.any(a => a * a > 8)([1, 2, 3]) // => true
-R.any(a => a * a > 10)([1, 2, 3]) // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/any.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.any(a%20%3D%3E%20a%20*%20a%20%3E%208)(%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### append
 
-> append(valueToAppend: any, arr: Array): Array
+> append(valueToAppend: T, arr: T[]): T[]
 
-```javascript
-R.append('foo', ['bar', 'baz']) // => ['bar', 'baz', 'foo']
+```
+R.append(
+  'foo',
+  ['bar', 'baz']
+) // => ['bar', 'baz', 'foo']
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/append.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.append(%0A%20%20'foo'%2C%0A%20%20%5B'bar'%2C%20'baz'%5D%0A)%20%2F%2F%20%3D%3E%20%5B'bar'%2C%20'baz'%2C%20'foo'%5D">Try in REPL</a>
+
+---
 #### both
 
-> both(x: Function, y: Function, input: any): Boolean
+> both(firstCondition: Function, secondCondition: Function, input: any): boolean
 
-It returns `true` if both function `x` and function `y` return `true`, when `input` is their argument.
+It returns `true`, if both function `firstCondition` and function `secondCondition` return `true`, when `input` is their argument.
 
 ```
 const fn = R.both(
   a => a > 10,
   a => a < 20
 )
-fn(15) //=> true
-fn(30) //=> false
+console.log(fn(15)) //=> true
+console.log(fn(30)) //=> false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/both.js)
 
+<a href="https://rambda.now.sh?const%20fn%20%3D%20R.both(%0A%20%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20a%20%3D%3E%20a%20%3C%2020%0A)%0Aconsole.log(fn(15))%20%2F%2F%3D%3E%20true%0Aconsole.log(fn(30))%20%2F%2F%3D%3E%20false">Try in REPL</a>
+
+---
 #### compose
 
 > compose(fn1: Function, ... , fnN: Function): any
 
 It performs right-to-left function composition.
+
 ```
 const result = R.compose(
   R.map(x => x * 2)
   R.filter(x => x > 2),
-)([1, 2, 3, 4])
-console.log(result) // => [6, 8]
+)([1, 2, 3, 4])  // => [6, 8]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
-
+---
 #### complement
 
 > complement(fn: Function): Function
@@ -761,61 +947,68 @@ It returns `complemented` function that accept `input` as argument.
 The return value of `complemented` is the negative boolean value of `fn(input)`.
 
 ```
-R.complement(R.always(0)) // => true
 R.complement(R.always(true)) // => false
+R.complement(R.always(false)) // => true
 ```
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/complement.js)
 
+---
 #### concat
 
-> concat(x: array|string, y: array|string): array|string
+> concat(x: T[]|string, y: T[]|string): T[]|string
 
 It returns a new string or array, which is the result of merging `x` and `y`.
 
 ```
 R.concat([1, 2])([3, 4]) // => [1, 2, 3, 4]
-R.concat('foo', 'bar') // => 'foobar'
+R.concat('foo')('bar') // => 'foobar'
 ```
 
+---
 #### contains
 
-> contains(valueToFind: any, arr: Array): Boolean
+> contains(valueToFind: T, arr: T[]): boolean
 
-It returns true if `valueToFind` is part of `arr`.
+It returns `true`, if `valueToFind` is part of `arr`.
 
-```javascript
+```
 R.contains(2, [1, 2]) // => true
 R.contains(3, [1, 2]) // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/contains.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.contains(2%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20true%0AR.contains(3%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### curry
 
 > curry(fn: Function): Function
 
 It returns curried version of `fn`.
 
-```javascript
+```
 const addFourNumbers = (a, b, c, d) => a + b + c + d
 const curriedAddFourNumbers = R.curry(addFourNumbers)
 const f = curriedAddFourNumbers(1, 2)
 const g = f(3)
-g(4) // => 10
+const result = g(4) // => 10
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/curry.js)
 
+<a href="https://rambda.now.sh?const%20addFourNumbers%20%3D%20(a%2C%20b%2C%20c%2C%20d)%20%3D%3E%20a%20%2B%20b%20%2B%20c%20%2B%20d%0Aconst%20curriedAddFourNumbers%20%3D%20R.curry(addFourNumbers)%0Aconst%20f%20%3D%20curriedAddFourNumbers(1%2C%202)%0Aconst%20g%20%3D%20f(3)%0Aconst%20result%20%3D%20g(4)%20%2F%2F%20%3D%3E%2010">Try in REPL</a>
+
+---
 #### dec
 
 > dec(x: number): number
-
 
 It decrements a number.
 ```
 R.dec(2) // => 1
 ```
 
+---
 #### defaultTo
 
 > defaultTo(defaultValue: T, inputArgument: any): T
@@ -824,49 +1017,58 @@ It returns `defaultValue`, if `inputArgument` is `undefined`, `null` or `NaN`.
 
 It returns `inputArgument` in any other case.
 
-```javascript
+```
 R.defaultTo('foo', undefined) // => 'foo'
 R.defaultTo('foo', 'bar') // => 'bar'
-R.defaultTo('foo', 1) // => 1
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/defaultTo.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.defaultTo('foo'%2C%20undefined)%20%2F%2F%20%3D%3E%20'foo'%0AR.defaultTo('foo'%2C%20'bar')%20%2F%2F%20%3D%3E%20'bar'">Try in REPL</a>
+
+---
 #### divide
 
-```javascript
+```
 R.divide(71, 100) // => 0.71
 ```
 
+---
 #### drop
 
-> drop(howManyToDrop: Number, arrOrStr: Array|String): Array|String
+> drop(howManyToDrop: number, arrOrStr: T[]|string): T[]|String
 
 It returns `arrOrStr` with `howManyToDrop` items dropped from the left.
 
-```javascript
+```
 R.drop(1, ['foo', 'bar', 'baz']) // => ['bar', 'baz']
 R.drop(1, 'foo')  // => 'oo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/drop.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.drop(1%2C%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%2C%20'baz'%5D%0AR.drop(1%2C%20'foo')%20%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
+
+---
 #### dropLast
 
-> dropLast(howManyToDrop: Number, arrOrStr: Array|String): Array|String
+> dropLast(howManyToDrop: number, arrOrStr: T[]|String): T[]|String
 
 It returns `arrOrStr` with `howManyToDrop` items dropped from the right.
 
-```javascript
+```
 R.dropLast(1, ['foo', 'bar', 'baz']) // => ['foo', 'bar']
 R.dropLast(1, 'foo')  // => 'fo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/dropLast.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.dropLast(1%2C%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%5D%0AR.dropLast(1%2C%20'foo')%20%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
+
+---
 #### endsWith
 
-> endsWith(x: String, str: String): Boolean
+> endsWith(x: string, str: string): boolean
 
 ```
 R.endsWith(
@@ -876,131 +1078,162 @@ R.endsWith(
 
 R.endsWith(
   'foo',
-  "foo-bar"
+  'foo-bar'
 ) // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/endsWith.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.endsWith(%0A%20%20'bar'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20true%0A%0AR.endsWith(%0A%20%20'foo'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### either
 
+> endsWith(firstCondition: Function, secondCondition: Function): Function
+
 ```
-const fn = R.either(
+R.either(
   a => a > 10,
   a => a % 2 === 0
-)
-fn(15) //=> true
-fn(6) //=> true
-fn(7) //=> false
+)(15) //=> true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/either.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.either(%0A%20%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A)(15)%20%2F%2F%3D%3E%20true">Try in REPL</a>
+
+---
 #### equals
 
-> equals(a: any, b: any): Boolean
+> equals(a: any, b: any): boolean
 
 It returns equality match between `a` and `b`.
 
 It doesn't handle cyclical data structures.
 
-```javascript
-R.equals(1, 1) // => true
-R.equals({}, {}) // => false
-R.equals([1, 2, 3], [1, 2, 3]) // => true
+```
+R.equals(
+  [1, {a:2}, [{b:3}]],
+  [1, {a:2}, [{b:3}]]
+) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/equals.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.equals(%0A%20%20%5B1%2C%20%7Ba%3A2%7D%2C%20%5B%7Bb%3A3%7D%5D%5D%2C%0A%20%20%5B1%2C%20%7Ba%3A2%7D%2C%20%5B%7Bb%3A3%7D%5D%5D%0A)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### F
 
 `R.F() // => false`
 
+---
 #### filter
 
 > filter(filterFn: Function, x: Array|Object): Array|Object
 
 It filters `x` iterable over boolean returning `filterFn`.
 
-```javascript
+```
 const filterFn = a => a % 2 === 0
 
 R.filter(filterFn, [1, 2, 3, 4]) // => [2, 4]
 ```
 
-The method works with objects as well. 
+The method works with objects as well.
 
 Note that unlike Ramda's `filter`, here object keys are passed as second argument to `filterFn`.
 
-```javascript
+```
 const result = R.filter((val, prop)=>{
-  return prop === 'a' || val === 2  
-}, {a: 1, b: 2, c: 3}) 
-console.log(result) // => {a: 1, b: 2}
+  return prop === 'a' || val === 2
+}, {a: 1, b: 2, c: 3})
+
+// => {a: 1, b: 2}
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/filter.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0AR.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%20%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+
+---
 #### find
 
-> find(findFn: Function, arr: Array<T>): T|undefined
+> find(findFn: Function, arr: T[]): T|undefined
 
 It returns `undefined` or the first element of `arr` satisfying `findFn`.
 
-```javascript
-const findFn = a => R.type(a.foo) === "Number"
-const arr = [{foo: "bar"}, {foo: 1}]
-R.find(findFn, arr) // => {foo: 1}
+```
+const findFn = a => R.type(a.foo) === 'Number'
+const arr = [{foo: 'bar'}, {foo: 1}]
+
+const result = R.find(findFn, arr) 
+// => {foo: 1}
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/find.js)
 
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%20%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%201%7D">Try in REPL</a>
+
+---
 #### findIndex
 
-> findIndex(findFn: Function, arr: Array): Number
+> findIndex(findFn: Function, arr: T[]): number
 
 It returns `-1` or the index of the first element of `arr` satisfying `findFn`.
 
-```javascript
-const findFn = a => R.type(a.foo) === "Number"
-const arr = [{foo: "bar"}, {foo: 1}]
-R.find(findFn, arr) // => 1
+```
+const findFn = a => R.type(a.foo) === 'Number'
+const arr = [{foo: 'bar'}, {foo: 1}]
+
+const result = R.find(findFn, arr) 
+// => 1
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/findIndex.js)
 
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%20%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
+
+---
 #### flatten
 
-> flatten(arr: Array): Array
+> flatten(arr: any[]): any[]
 
-```javascript
+```
 R.flatten([ 1, [ 2, [ 3 ] ] ])
 // => [ 1, 2, 3 ]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/flatten.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.flatten(%5B%201%2C%20%5B%202%2C%20%5B%203%20%5D%20%5D%20%5D)%0A%2F%2F%20%3D%3E%20%5B%201%2C%202%2C%203%20%5D">Try in REPL</a>
+
+---
 #### flip
 
 > flip(fn: Function): Function
 
 It returns function which calls `fn` with exchanged first and second argument.
 
-```javascript
+```
 const subtractFlip = R.flip(R.subtract)
-R.subtractFlip(1,7)
+
+const result = R.subtractFlip(1,7)
 // => 6
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/flip.js)
 
+<a href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20R.subtractFlip(1%2C7)%0A%2F%2F%20%3D%3E%206">Try in REPL</a>
+
+---
 #### forEach
 
 > forEach(fn: Function, arr: Array): Array
 
 It applies function `fn` over all members of array `arr` and returns `arr`.
 
-```javascript
+```
 const sideEffect = {}
 const result = R.forEach(
   x => sideEffect[`foo${x}`] = x
@@ -1014,41 +1247,52 @@ Note, that unlike `Ramda`'s **forEach**, Rambda's one doesn't dispatch to `forEa
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/forEach.js)
 
+<a href="https://rambda.now.sh?const%20sideEffect%20%3D%20%7B%7D%0Aconst%20result%20%3D%20R.forEach(%0A%20%20x%20%3D%3E%20sideEffect%5B%60foo%24%7Bx%7D%60%5D%20%3D%20x%0A)(%5B1%2C%202%5D)%0A%0Aconsole.log(sideEffect)%20%2F%2F%3D%3E%20%7Bfoo1%20%3A%201%2C%20foo2%20%3A%202%7D%0Aconsole.log(result)%20%2F%2F%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
+
+---
 #### has
 
-> has(prop: String, obj: Object): Boolean
+> has(prop: string, obj: Object): boolean
 
 - It returns `true` if `obj` has property `prop`.
 
-```javascript
-R.has("a", {a: 1}) // => true
-R.has("b", {a: 1}) // => false
+```
+R.has('a', {a: 1}) // => true
+R.has('b', {a: 1}) // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/has.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.has('a'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20true%0AR.has('b'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### head
 
-> head(arrOrStr: Array|String): any
+> head(arrOrStr: T[]|string): T|string
 
 It returns the first element of `arrOrStr`.
 
-```javascript
+```
 R.head([1, 2, 3]) // => 1
 R.head('foo') // => 'f'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/head.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.head(%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%201%0AR.head('foo')%20%2F%2F%20%3D%3E%20'f'">Try in REPL</a>
+
+---
 #### identity
 
 > identity(x: T): T
 
 It just passes back the supplied arguments.
+
 ```
 R.identity(7) // => 7
 ```
 
+---
 #### ifElse
 
 > ifElse(condition: Function|boolean, ifFn: Function, elseFn: Function): Function
@@ -1066,25 +1310,29 @@ const fn = R.ifElse(
  x => x*2,
  x => x*10
 )
-fn(8) // => 80
-fn(11) // => 22
+
+const result = fn(8)
+// => 80
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/ifElse.js)
 
+<a href="https://rambda.now.sh?const%20fn%20%3D%20R.ifElse(%0A%20x%20%3D%3E%20x%20%3E%2010%2C%0A%20x%20%3D%3E%20x*2%2C%0A%20x%20%3D%3E%20x*10%0A)%0A%0Aconst%20result%20%3D%20fn(8)%0A%2F%2F%20%3D%3E%2080">Try in REPL</a>
+
+---
 #### inc
 
 > inc(x: number): number
-
 
 It increments a number.
 ```
 R.inc(1) // => 2
 ```
 
+---
 #### includes
 
-> includes(x: any, arrOrStr: Array|String): Boolean
+> includes(x: any, arrOrStr: T[]|string): boolean
 
 ```
 R.includes(1, [1, 2]) // => true
@@ -1094,83 +1342,107 @@ R.includes('z', 'foo') // => false
 
 !! Note that this method is not part of `Ramda` API.
 
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/includes.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.includes(1%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20true%0AR.includes('oo'%2C%20'foo')%20%2F%2F%20%3D%3E%20true%0AR.includes('z'%2C%20'foo')%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### indexOf
 
-> indexOf(valueToFind: any, arr: Array): Number
+> indexOf(valueToFind: any, arr: T[]): number
 
 It returns `-1` or the index of the first element of `arr` equal of `valueToFind`.
 
-```javascript
+```
 R.indexOf(1, [1, 2]) // => 0
+R.indexOf(0, [1, 2]) // => -1
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/indexOf.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.indexOf(1%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%200%0AR.indexOf(0%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20-1">Try in REPL</a>
+
+---
 #### init
 
-> init(arrOrStr: Array|String): Array|String
+> init(arrOrStr: T[]|string): T[]|string
 
 - It returns all but the last element of `arrOrStr`.
 
-```javascript
+```
 R.init([1, 2, 3])  // => [1, 2]
 R.init('foo')  // => 'fo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/init.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.init(%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20%5B1%2C%202%5D%0AR.init('foo')%20%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
+
+---
 #### join
 
-> join(separator: String, arr: Array): String
+> join(separator: string, arr: T[]): string
 
-```javascript
+```
 R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/join.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.join('-'%2C%20%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20'1-2-3'">Try in REPL</a>
+
+---
 #### is
 
 > is(xPrototype: any, x: any): boolean
 
 It returns `true` is `x` is instance of `xPrototype`.
 
-```javascript
+```
 R.is(String, 'foo')  // => true
 R.is(Array, 1)  // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/is.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.is(String%2C%20'foo')%20%20%2F%2F%20%3D%3E%20true%0AR.is(Array%2C%201)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### isNil
 
-> isNil(x: any): Boolean
+> isNil(x: any): boolean
 
 It returns `true` is `x` is either `null` or `undefined`.
 
-```javascript
+```
 R.isNil(null)  // => true
 R.isNil(1)  // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/isNil.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### last
 
-> last(arrOrStr: Array|String): any
+> last(arrOrStr: T[]|string): T|string
 
 - It returns the last element of `arrOrStr`.
 
-```javascript
+```
 R.last(['foo', 'bar', 'baz']) // => 'baz'
 R.last('foo') // => 'o'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/last.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.last(%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20'baz'%0AR.last('foo')%20%2F%2F%20%3D%3E%20'o'">Try in REPL</a>
+
+---
 #### lastIndexOf
 
-> lastIndexOf(x: any, arr: Array): Number
+> lastIndexOf(x: any, arr: T[]): number
 
 It returns the last index of `x` in array `arr`.
 
@@ -1185,125 +1457,136 @@ R.lastIndexOf(10, [1, 2, 3, 1, 2]) // => -1
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/lastIndexOf.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.lastIndexOf(1%2C%20%5B1%2C%202%2C%203%2C%201%2C%202%5D)%20%2F%2F%20%3D%3E%203%0AR.lastIndexOf(10%2C%20%5B1%2C%202%2C%203%2C%201%2C%202%5D)%20%2F%2F%20%3D%3E%20-1">Try in REPL</a>
+
+---
 #### length
 
 > length(arrOrStr: Array|String): Number
 
-```javascript
+```
 R.length([1, 2, 3]) // => 3
 ```
 
+---
 #### map
 
 > map(mapFn: Function, x: Array|Object): Array|Object
 
 It returns the result of looping through iterable `x` with `mapFn`.
 
-```javascript
-const mapFn = x => x * 2;
-R.map(mapFn, [1, 2, 3]) // => [2, 4, 6]
-```
-
-The method works with objects as well. 
+The method works with objects as well.
 
 Note that unlike Ramda's `map`, here object keys are passed as second argument to `mapFn`.
 
-```javascript
+```
+const mapFn = x => x * 2
+const resultWithArray = R.map(mapFn, [1, 2, 3])
+// => [2, 4, 6]
+
 const result = R.map((val, prop)=>{
-  return `${val}-${prop}`  
-}, {a: 1, b: 2}) 
-console.log(result) // => {a: 'a-1', b: 'b-2'}
+  return `${val}-${prop}`
+}, {a: 1, b: 2})
+// => {a: 'a-1', b: 'b-2'}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/map.js)
-
+---
 #### match
 
-> match(regExpression: Regex, str: String): Array
+> match(regExpression: Regex, str: string): string[]
 
-```javascript
+```
 R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/match.js)
-
+---
 #### merge
 
 > merge(a: Object, b: Object)
 
 It returns result of `Object.assign({}, a, b)`.
 
-```javascript
+```
 R.merge({ 'foo': 0, 'bar': 1 }, { 'foo': 7 })
 // => { 'foo': 7, 'bar': 1 }
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/merge.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.merge(%7B%20'foo'%3A%200%2C%20'bar'%3A%201%20%7D%2C%20%7B%20'foo'%3A%207%20%7D)%0A%2F%2F%20%3D%3E%20%7B%20'foo'%3A%207%2C%20'bar'%3A%201%20%7D">Try in REPL</a>
+
+---
 #### modulo
 
-> modulo(a: Number, b: Number): Number
+> modulo(a: number, b: number):numberNumber
 
 It returns the remainder of operation `a/b`.
 
-```javascript
-R.module(14,3) // => 2
+```
+R.module(14, 3) // => 2
 ```
 
+---
 #### multiply
 
-> multiply(a: Number, b: Number): Number
+> multiply(a: number, b: number): number
 
 It returns the result of operation `a*b`.
 
-```javascript
-R.module(14,3) // => 2
+```
+R.multiply(4, 3) // => 12
 ```
 
+---
 #### not
 
-> not(x: any): Boolean
+> not(x: any): boolean
 
 It returns inverted boolean version of input `x`.
 
 ```
-R.not(true); //=> false
-R.not(false); //=> true
-R.not(0); //=> true
-R.not(1); //=> false
+R.not(true) //=> false
+R.not(false) //=> true
+R.not(0) //=> true
+R.not(1) //=> false
 ```
 
+---
 #### omit
 
-> omit(propsToOmit: Array<String>, obj: Object): Object
+> omit(propsToOmit: string[]|string, obj: Object): Object
 
 It returns a partial copy of an `obj` with omitting `propsToOmit`
 
-```javascript
-R.omit(['a', 'd'], {a: 1, b: 2, c: 3}) // => {b: 2, c: 3}
+```
+R.omit('a,c,d', {a: 1, b: 2, c: 3}) // => {b: 2}
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/omit.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.omit('a%2Cc%2Cd'%2C%20%7Ba%3A%201%2C%20b%3A%202%2C%20c%3A%203%7D)%20%2F%2F%20%3D%3E%20%7Bb%3A%202%7D">Try in REPL</a>
+
+---
 #### path
 
-> path(pathToSearch: Array<String>|String, obj: Object): any
+> path(pathToSearch: string[]|string, obj: Object): any
 
 If `pathToSearch` is `'a.b'` then it will return `1` if `obj` is `{a:{b:1}}`.
 
 It will return `undefined`, if such path is not found.
 
-```javascript
+```
 R.path('a.b', {a: {b: 1}}) // => 1
-R.path(['a', 'b'], {a: {b: 2}}) // => 2
-R.path(['a', 'c'], {a: {b: 2}}) // => undefined
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/path.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.path('a.b'%2C%20%7Ba%3A%20%7Bb%3A%201%7D%7D)%20%2F%2F%20%3D%3E%201">Try in REPL</a>
+
+---
 #### pathOr
 
-> pathOr(defaultValue: any, pathToSearch: Array<String>|String, obj: Object): any
+> pathOr(defaultValue: any, pathToSearch: string[]|string, obj: Object): any
 
 `pathFound` is the result of calling `R.path(pathToSearch, obj)`.
 
@@ -1311,7 +1594,7 @@ If `pathFound` is `undefined`, `null` or `NaN`, then `defaultValue` will be retu
 
 `pathFound` is returned in any other case.
 
-```javascript
+```
 R.pathOr(1, 'a.b', {a: {b: 2}}) // => 2
 R.pathOr(1, ['a', 'b'], {a: {b: 2}}) // => 2
 R.pathOr(1, ['a', 'c'], {a: {b: 2}}) // => 1
@@ -1319,6 +1602,9 @@ R.pathOr(1, ['a', 'c'], {a: {b: 2}}) // => 1
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/pathOr.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.pathOr(1%2C%20'a.b'%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%202%0AR.pathOr(1%2C%20%5B'a'%2C%20'b'%5D%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%202%0AR.pathOr(1%2C%20%5B'a'%2C%20'c'%5D%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%201">Try in REPL</a>
+
+---
 #### partialCurry
 
 > partialCurry(fn: Function|Async, a: Object, b: Object): Function|Promise
@@ -1331,12 +1617,13 @@ This function will wait to be called with second set of input `b` and it will in
 
 See the example below:
 
-```javascript
+```
 const fn = ({a, b, c}) => {
   return (a * b) + c
 }
 const curried = R.partialCurry(fn, {a: 2})
-curried({b: 3, c: 10}) // => 16
+const result = curried({b: 3, c: 10})
+// => 16
 ```
 
 - Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
@@ -1345,9 +1632,12 @@ curried({b: 3, c: 10}) // => 16
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/partialCurry.js)
 
+<a href="https://rambda.now.sh?const%20fn%20%3D%20(%7Ba%2C%20b%2C%20c%7D)%20%3D%3E%20%7B%0A%20%20return%20(a%20*%20b)%20%2B%20c%0A%7D%0Aconst%20curried%20%3D%20R.partialCurry(fn%2C%20%7Ba%3A%202%7D)%0Aconst%20result%20%3D%20curried(%7Bb%3A%203%2C%20c%3A%2010%7D)%0A%2F%2F%20%3D%3E%2016">Try in REPL</a>
+
+---
 #### pick
 
-> pick(propsToPick: Array<String>, obj: Object): Object
+> pick(propsToPick: string[], obj: Object): Object
 
 It returns a partial copy of an `obj` containing only `propsToPick` properties.
 
@@ -1357,24 +1647,28 @@ R.pick(['a', 'c'], {a: 1, b: 2}) // => {a: 1}
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/pick.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.pick(%5B'a'%2C%20'c'%5D%2C%20%7Ba%3A%201%2C%20b%3A%202%7D)%20%2F%2F%20%3D%3E%20%7Ba%3A%201%7D">Try in REPL</a>
+
+---
 #### pipe
 
 > pipe(fn1: Function, ... , fnN: Function): any
 
 It performs left-to-right function composition.
+
 ```
 const result = R.pipe(
   R.filter(val => val > 2),
   R.map(a => a * 2)
 )([1, 2, 3, 4])
-console.log(result) // => [6, 8]
+
+// => [6, 8]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pipe.js)
-
+---
 #### pluck
 
-> pluck(property: String, arr: Array): Array
+> pluck(property: string, arr: Object[]): any[]
 
 It returns list of the values of `property` taken from the objects in array of objects `arr`.
 
@@ -1384,72 +1678,92 @@ R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) // => [1, 2]
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/pluck.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.pluck('a')(%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D)%20%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
+
+---
 #### prepend
 
-> prepend(x: any, arr: Array): Array
+> prepend(x: T, arr: T[]): T[]
 
 It adds `x` to the start of the array `arr`.
 
-```javascript
+```
 R.prepend('foo', ['bar', 'baz']) // => ['foo', 'bar', 'baz']
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/prepend.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.prepend('foo'%2C%20%5B'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D">Try in REPL</a>
+
+---
 #### prop
 
-> prop(propToFind: String, obj: Object): any
+> prop(propToFind: string, obj: Object): any
 
 It returns `undefined` or the value of property `propToFind` in `obj`
 
-```javascript
+```
 R.prop('x', {x: 100}) // => 100
 R.prop('x', {a: 1}) // => undefined
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/prop.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.prop('x'%2C%20%7Bx%3A%20100%7D)%20%2F%2F%20%3D%3E%20100%0AR.prop('x'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20undefined">Try in REPL</a>
+
+---
 #### propEq
 
-> propEq(propToFind: String, valueToMatch: any, obj: Object): Boolean
+> propEq(propToFind: string, valueToMatch: any, obj: Object): boolean
 
-It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`
+It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`.
 
-```javascript
-const propToFind = "foo"
+```
+const propToFind = 'foo'
 const valueToMatch = 0
-R.propEq(propToFind, valueToMatch)({foo: 0}) // => true
-R.propEq(propToFind, valueToMatch)({foo: 1}) // => false
+
+const result = R.propEq(propToFind, valueToMatch)({foo: 0})
+// => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/propEq.js)
 
+<a href="https://rambda.now.sh?const%20propToFind%20%3D%20'foo'%0Aconst%20valueToMatch%20%3D%200%0A%0Aconst%20result%20%3D%20R.propEq(propToFind%2C%20valueToMatch)(%7Bfoo%3A%200%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### range
 
-> range(start: Number, end: Number): Array<Number>
+> range(start: number, end: number): number[]
 
 It returns a array of numbers from `start`(inclusive) to `end`(exclusive).
 
-```javascript
-R.range(0, 2)   // => [0, 1]
+```
+R.range(0, 3)   // => [0, 1, 2]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/range.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.range(0%2C%203)%20%20%20%2F%2F%20%3D%3E%20%5B0%2C%201%2C%202%5D">Try in REPL</a>
+
+---
 #### reduce
 
-> reduce(iteratorFn: Function, accumulator: any, array: Array): any
+> reduce(iteratorFn: Function, accumulator: any, array: T[]): any
 
-```javascript
+```
 const iteratorFn = (acc, val) => acc + val
-R.reduce(iteratorFn, 1, [1, 2, 3])   // => 7
+const result = R.reduce(iteratorFn, 1, [1, 2, 3])
+// => 7
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/reduce.js)
 
+<a href="https://rambda.now.sh?const%20iteratorFn%20%3D%20(acc%2C%20val)%20%3D%3E%20acc%20%2B%20val%0Aconst%20result%20%3D%20R.reduce(iteratorFn%2C%201%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%207">Try in REPL</a>
+
+---
 #### reject
 
-> reject(fn: Function, arr: Array): Array
+> reject(fn: Function, arr: T[]): T[]
 
 It has the opposite effect of `R.filter`.
 
@@ -1457,28 +1771,36 @@ It will return those members of `arr` that return `false` when applied to functi
 
 ```
 const fn = x => x % 2 === 1
-R.reject(fn, [1, 2, 3, 4]) // => [2, 4]
+
+const result = R.reject(fn, [1, 2, 3, 4]) 
+// => [2, 4]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/reject.js)
 
+<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(fn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%20%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+
+---
 #### repeat
 
-> repeat(valueToRepeat: T, num: Number): Array<T>
+> repeat(valueToRepeat: T, num: number): T[]
 
-```javascript
+```
 R.repeat('foo', 2) // => ['foo', 'foo']
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/repeat.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.repeat('foo'%2C%202)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'foo'%5D">Try in REPL</a>
+
+---
 #### replace
 
-> replace(strOrRegex: String|Regex, replacer: String, str: String): String
+> replace(strOrRegex: string|Regex, replacer: string, str: string): string
 
-Replace `strOrRegex` found in `str` with `replacer`
+It replaces `strOrRegex` found in `str` with `replacer`.
 
-```javascript
+```
 R.replace('foo', 'bar', 'foo foo') // => 'bar foo'
 R.replace(/foo/, 'bar', 'foo foo') // => 'bar foo'
 R.replace(/foo/g, 'bar', 'foo foo') // => 'bar bar'
@@ -1486,40 +1808,54 @@ R.replace(/foo/g, 'bar', 'foo foo') // => 'bar bar'
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/replace.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.replace('foo'%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20foo'%0AR.replace(%2Ffoo%2F%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20foo'%0AR.replace(%2Ffoo%2Fg%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20bar'">Try in REPL</a>
+
+---
 #### reverse
+
+reverse(str: T[]): T[]
 
 ```
 const arr = [1, 2]
-R.reverse(arr)
-console.log(arr) // => [2, 1]
+
+const result = R.reverse(arr)
+// => [2, 1]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/reverse.js)
 
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B1%2C%202%5D%0A%0Aconst%20result%20%3D%20R.reverse(arr)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%5D">Try in REPL</a>
+
+---
 #### sort
 
-> sort(sortFn: Function, arr: Array): Array
+takeLast(num: number, arrOrStr: T[]|string): T[]|String
 
 It returns copy of `arr` sorted by `sortFn`.
 
-`sortFn` must return `Number`
+Note that `sortFn` must return a number type.
 
-```javascript
+```
 const sortFn = (a, b) => a - b
-R.sort(sortFn, [3, 1, 2]) // => [1, 2, 3]
+
+const result = R.sort(sortFn, [3, 1, 2]) 
+// => [1, 2, 3]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/sort.js)
 
+<a href="https://rambda.now.sh?const%20sortFn%20%3D%20(a%2C%20b)%20%3D%3E%20a%20-%20b%0A%0Aconst%20result%20%3D%20R.sort(sortFn%2C%20%5B3%2C%201%2C%202%5D)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try in REPL</a>
+
+---
 #### sortBy
 
-> sortBy(sortFn: Function, arr: Array): Array
+> sortBy(sortFn: Function, arr: T[]): T[]
 
 It returns copy of `arr` sorted by `sortFn`.
 
 `sortFn` must return value for comparison
 
-```javascript
+```
 const sortFn = obj => obj.foo
 
 const result = R.sortBy(sortFn, [
@@ -1528,37 +1864,46 @@ const result = R.sortBy(sortFn, [
 ])
 
 const expectedResult = [ {foo: 0}, {foo: 1} ]
-console.log(result === expectedResult) // => true 
+console.log(result === expectedResult) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/sortBy.js)
 
+<a href="https://rambda.now.sh?const%20sortFn%20%3D%20obj%20%3D%3E%20obj.foo%0A%0Aconst%20result%20%3D%20R.sortBy(sortFn%2C%20%5B%0A%20%20%7Bfoo%3A%201%7D%2C%0A%20%20%7Bfoo%3A%200%7D%0A%5D)%0A%0Aconst%20expectedResult%20%3D%20%5B%20%7Bfoo%3A%200%7D%2C%20%7Bfoo%3A%201%7D%20%5D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### split
 
-> split(separator: String, str: String): Array
+> split(separator: string, str: string): string[]
 
-```javascript
+```
 R.split('-', 'a-b-c') // => ['a', 'b', 'c']
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/split.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.split('-'%2C%20'a-b-c')%20%2F%2F%20%3D%3E%20%5B'a'%2C%20'b'%2C%20'c'%5D">Try in REPL</a>
+
+---
 #### splitEvery
 
-> splitEvery(sliceLength: Number, arrOrString: Array|String): Array
+> splitEvery(sliceLength: number, arrOrString: T[]|string): T[T[]]|string[]
 
-- Splits `arrOrStr` into slices of `sliceLength`
+- It splits `arrOrStr` into slices of `sliceLength`.
 
-```javascript
+```
 R.splitEvery(2, [1, 2, 3]) // => [[1, 2], [3]]
 R.splitEvery(3, 'foobar') // => ['foo', 'bar']
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/splitEvery.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.splitEvery(2%2C%20%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%20%5B%5B1%2C%202%5D%2C%20%5B3%5D%5D%0AR.splitEvery(3%2C%20'foobar')%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%5D">Try in REPL</a>
+
+---
 #### startsWith
 
-> startsWith(x: string, str: String): Boolean
+> startsWith(x: string, str: string): boolean
 
 ```
 R.startsWith(
@@ -1574,156 +1919,187 @@ R.startsWith(
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/startsWith.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.startsWith(%0A%20%20'foo'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20true%0A%0AR.startsWith(%0A%20%20'bar'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### subtract
 
-> subtract(a: Number, b: Number): Number
+> subtract(a: number, b: number): number
 
-```javascript
+```
 R.subtract(3, 1) // => 2
 ```
 
+---
 #### T
 
 `R.T() // => true`
 
+---
 #### tail
 
-> tail(arrOrStr: Array|String): Array|String
+> tail(arrOrStr: T[]|string): T[]|string
 
 - It returns all but the first element of `arrOrStr`
 
-```javascript
+```
 R.tail([1, 2, 3])  // => [2, 3]
 R.tail('foo')  // => 'oo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/tail.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.tail(%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20%5B2%2C%203%5D%0AR.tail('foo')%20%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
+
+---
 #### take
 
-> take(num: Number, arrOrStr: Array|String): Array|String
+> take(num: number, arrOrStr: T[]|string): T[]|string
 
 - It returns the first `num` elements of `arrOrStr`.
 
-```javascript
+```
 R.take(1, ['foo', 'bar']) // => ['foo']
 R.take(2, ['foo']) // => 'fo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/take.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.take(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%5D%0AR.take(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
+
+---
 #### takeLast
 
-> takeLast(num: Number, arrOrStr: Array|String): Array|String
+> takeLast(num: number, arrOrStr: T[]|string): T[]|string
 
 - It returns the last `num` elements of `arrOrStr`.
 
-```javascript
+```
 R.takeLast(1, ['foo', 'bar']) // => ['bar']
 R.takeLast(2, ['foo']) // => 'oo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/takeLast.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.takeLast(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%5D%0AR.takeLast(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
+
+---
 #### test
 
-> test(regExpression: Regex, str: String): Boolean
+> test(regExpression: Regex, str: string): boolean
 
 - Determines whether `str` matches `regExpression`
 
-```javascript
-R.test(/^f/, 'foo') // => true
-R.test(/^f/, 'bar') // => false
+```
+R.test(/^f/, 'foo') 
+// => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/test.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.test(%2F%5Ef%2F%2C%20'foo')%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### times
 
-> times(fn: Function, n: Number): Array
+> times(fn: Function, n: number): T[]
 
 It returns the result of applying function `fn` over members of range array.
 The range array includes numbers between `0` and `n`(exclusive).
 
-```javascript
-R.times(R.identity, 5); //=> [0, 1, 2, 3, 4]
+```
+R.times(R.identity, 5)
+//=> [0, 1, 2, 3, 4]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/times.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.times(R.identity%2C%205)%0A%2F%2F%3D%3E%20%5B0%2C%201%2C%202%2C%203%2C%204%5D">Try in REPL</a>
+
+---
 #### toLower
 
-> toLower(str: String): String
+> toLower(str: string): string
 
-```javascript
+```
 R.toLower('FOO') // => 'foo'
 ```
 
+---
 #### toString
-> toString(x: any): String
 
-`R.toString([1, 2]) // => '1,2'`
+> toString(x: any): string
 
+```
+R.toString([1, 2]) // => '1,2'
+```
+
+---
 #### toUpper
 
-> toUpper(str: String): String
+> toUpper(str: string): string
 
-```javascript
+```
 R.toUpper('foo') // => 'FOO'
 ```
 
+---
 #### trim
 
-> trim(str: String): String
-```javascript
+> trim(str: string): string
+
+```
 R.trim('  foo  ') // => 'foo'
 ```
 
+---
 #### type
 
-> type(a: any): String
+> type(a: any): string
 
-```javascript
-R.type(() => {}) // => "Function"
-R.type(async () => {}) // => "Async"
-R.type([]) // => "Array"
-R.type({}) // => "Object"
-R.type('foo') // => "String"
-R.type(1) // => "Number"
-R.type(true) // => "Boolean"
-R.type(null) // => "Null"
-R.type(/[A-z]/) // => "RegExp"
+```
+R.type(() => {}) // => 'Function'
+R.type(async () => {}) // => 'Async'
+R.type([]) // => 'Array'
+R.type({}) // => 'Object'
+R.type('foo') // => 'String'
+R.type(1) // => 'Number'
+R.type(true) // => 'Boolean'
+R.type(null) // => 'Null'
+R.type(/[A-z]/) // => 'RegExp'
 
 const delay = ms => new Promise(resolve => {
   setTimeout(function () {
     resolve()
   }, ms)
 })
-R.type(delay) // => "Promise"
+R.type(delay) // => 'Promise'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/type.js)
-
+---
 #### uniq
 
-> uniq(arr: Array): Array
+> uniq(arr: T[]): T[]
 
 It returns a new array containing only one copy of each element in `arr`.
 
-```javascript
-R.uniq([1, 1, 2, 1]) // => [1, 2]
-R.uniq([1, '1'])     // => [1, '1']
+```
+R.uniq([1, 1, 2, 1])
+// => [1, 2]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/uniq.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.uniq(%5B1%2C%201%2C%202%2C%201%5D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
+
+---
 #### uniqWith
 
-> uniqWith(fn: Function, arr: Array): Array
+> uniqWith(fn: Function, arr: T[]): T[]
 
 It returns a new array containing only one copy of each element in `arr` according to boolean returning function `fn`.
 
-```javascript
+```
 const arr = [
   {id: 0, title:'foo'},
   {id: 1, title:'bar'},
@@ -1747,34 +2123,45 @@ console.log(result === expectedResult) // => true
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/uniqWith.js)
 
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Bid%3A%200%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%201%2C%20title%3A'bar'%7D%2C%0A%20%20%7Bid%3A%202%2C%20title%3A'baz'%7D%2C%0A%20%20%7Bid%3A%203%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%204%2C%20title%3A'bar'%7D%2C%0A%5D%0A%0Aconst%20expectedResult%20%3D%20%5B%0A%20%20%7Bid%3A%200%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%201%2C%20title%3A'bar'%7D%2C%0A%20%20%7Bid%3A%202%2C%20title%3A'baz'%7D%2C%0A%5D%0A%0Aconst%20fn%20%3D%20(x%2Cy)%20%3D%3E%20x.title%20%3D%3D%3D%20y.title%0A%0Aconst%20result%20%3D%20R.uniqWith(fn%2C%20arr)%0A%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### update
 
-> update(i: Number, replaceValue: any, arr: Array): Array
+> update(i: number, replaceValue: T, arr: T[]): T[]
 
 It returns a new copy of the `arr` with the element at `i` index
 replaced with `replaceValue`.
 
-```javascript
-R.update(0, "foo", ['bar', 'baz']) // => ['foo', baz]
+```
+R.update(0, 'foo', ['bar', 'baz'])
+// => ['foo', baz]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/update.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.update(0%2C%20'foo'%2C%20%5B'bar'%2C%20'baz'%5D)%0A%2F%2F%20%3D%3E%20%5B'foo'%2C%20baz%5D">Try in REPL</a>
+
+---
 #### values
 
 > values(obj: Object): Array
 
 It returns array with of all values in `obj`.
 
-```javascript
-R.values({a: 1, b: 2}) // => [1, 2]
+```
+R.values({a: 1, b: 2})
+// => [1, 2]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/values.js)
 
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.values(%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
+
+---
 #### without
 
-> without(a: Array, b: Array): Array
+> without(a: T[], b: T[]): T[]
 
 It will return a new array based on `b` array.
 
@@ -1783,7 +2170,11 @@ This array contains all members of `b` array, that doesn't exist in `a` array.
 Method `R.equals` is used to determine the existance of `b` members in `a` array.
 
 ```
-R.without([1, 2], [1, 2, 3, 4]) // => [3, 4]
+R.without([1, 2], [1, 2, 3, 4])
+// => [3, 4]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/without.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.without(%5B1%2C%202%5D%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Try in REPL</a>
+
