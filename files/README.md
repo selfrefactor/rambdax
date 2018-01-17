@@ -17,7 +17,7 @@ const result = R.compose(
 console.log(result) // => [3, 4]
 ```
 
-## How to use it?
+## How to use it
 
 Simple `yarn add rambdax` is sufficient
 
@@ -138,7 +138,7 @@ const result = R.delay(1000)
 // `result` resolves to `'RAMBDAX_DELAY'`
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/delay.js)
 
 #### evolve
 
@@ -196,7 +196,7 @@ Note that this is opposite direction compared to Rambda's `gt` method, because i
 R.greater(1,2) // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/greater.js)
 
 #### intersection
 
@@ -205,18 +205,26 @@ R.greater(1,2) // => true
 It returns array with the overlapped members of `x` and `y`.
 
 ```
-R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ]) //=> [3, 5]
+R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ])
+//=> [3, 5]
 ```
 
 It returns `true` if `R.type` of `x` is equal to `xType`.
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/intersection.js)
 
 #### isPromiseLike
 
 > isPromiseLike(x: any): boolean
 
 It returns true if `x` is either async function or unresolved promise.
+
+```
+R.isPromiseLike(R.delay)
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromiseLike.js)
 
 #### isValid
 
@@ -266,17 +274,16 @@ R.less(2,1) // => true
 Sequential asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const mapFn = R.map(x => x*2)
-
 async function fn(x){
   await R.delay(1000)
 
   return x+1
 }
 
-const asyncMapFn = R.mapAsync(fn)
-
-const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
+const result = R.composeAsync(
+  R.mapAsync(fn),
+  R.map(x => x*2)
+)( [1, 2, 3] )
 
 // `result` resolves after 3 seconds to `[3, 5, 7]`
 ```
@@ -290,17 +297,16 @@ const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
 Parrallel asynchronous mapping with `fn` over members of `arr`.
 
 ```
-const mapFn = R.map(x => x*2)
-
 async function fn(x){
   await R.delay(1000)
 
   return x+1
 }
 
-const asyncMapFn = R.mapFastAsync(fn)
-
-const result = R.composeAsync( asyncMapFn, mapFn )( [1, 2, 3] )
+const result = R.composeAsync(
+  R.mapAsync(fn),
+  R.map(x => x*2)
+)( [1, 2, 3] )
 
 // `result` resolves after 1 second to `[3, 5, 7]`
 ```
@@ -386,6 +392,8 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/once.js)
 
 #### pickBy
 
@@ -510,6 +518,8 @@ const expectedResult = { a:1, b:2 }
 // `result` resolves to `expectedResult`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolve.js)
+
 #### resolveSecure
 
 > resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
@@ -547,6 +557,8 @@ const expectedResult = [
 // `result` resolves to `expectedResult`
 ```
 
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
+
 #### shuffle
 
 > shuffle(arr: T[]): T[]
@@ -568,7 +580,7 @@ const result = switcher(valueToMatch)
   .is({foo: 1}, 'Property foo is 1')
   .default('is bar')
 
-console.log(result) // => 'Property foo is 1'    
+console.log(result) // => 'Property foo is 1'
 ```
 
 As you can see `valueToMatch` is matched sequentially against various `is` conditions.
@@ -587,12 +599,12 @@ Rambda's `equals` is used as part of the comparison process.
 It is `R.tap` that accept promise-like `fn` argument.
 
 ```
-const log = async a => {
+const fn = async x => {
   await R.delay(1000)
-  console.log(a)
+  console.log(x)
 }
 
-const result = R.tapAsync(log, "foo")
+const result = R.tapAsync(fn, "foo")
 // the console logs `foo`
 // `result` is equal to 'foo'
 ```
@@ -668,9 +680,7 @@ console.log(truncate('1234')) => '1234'
 console.log(truncate('12345678')) => '12345...'
 ```
 
----
-
-### Methods inherited from Rambda
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
 
 #### add
 
