@@ -109,6 +109,7 @@ const inc = () => {
   counter++
 }
 const debouncedInc = debounce(inc, 1000)
+
 const result = async function(){
   await R.delay(500)
   console.log(counter) //=> 0
@@ -238,7 +239,8 @@ const song = {
   title: "In my time of dying",
 }
 
-R.isValid({input,schema}) // => true
+const result = R.isValid({input,schema})
+// => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isValid.js)
@@ -381,11 +383,9 @@ It returns a function, which invokes only once`fn`.
 ```
 const addOneOnce = R.once((a, b, c) => a + b + c)
 
-console.log(addOneOnce(10,20,30)) //=> 60
-console.log(addOneOnce(1,2,3)) //=> 60
+console.log(addOneOnce(10, 20, 30)) //=> 60
+console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/once.js)
 
 #### pickBy
 
@@ -510,8 +510,6 @@ const expectedResult = { a:1, b:2 }
 // `result` resolves to `expectedResult`
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolve.js)
-
 #### resolveSecure
 
 > resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
@@ -548,8 +546,6 @@ const expectedResult = [
 ]
 // `result` resolves to `expectedResult`
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
 
 #### shuffle
 
@@ -663,7 +659,7 @@ condition({
 > when(rule: Function|boolean, fn: Function): Function
 
 ```
-var truncate = R.when(
+const truncate = R.when(
   x => x.length > 5,
   R.compose(x => `${x}...`, R.take(5))
 )
@@ -672,11 +668,10 @@ console.log(truncate('1234')) => '1234'
 console.log(truncate('12345678')) => '12345...'
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
-
 ---
 
 ### Methods inherited from Rambda
+
 #### add
 
 > add(a: number, b: number): number
@@ -698,8 +693,6 @@ const result = mapWithIndex(
   ['A', 'B', 'C']
 ) // => ['A - 0', 'B - 1', 'C - 2']
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/addIndex.js)
 
 #### adjust
 
@@ -814,14 +807,13 @@ console.log(fn(30)) //=> false
 > compose(fn1: Function, ... , fnN: Function): any
 
 It performs right-to-left function composition.
+
 ```
 const result = R.compose(
   R.map(x => x * 2)
   R.filter(x => x > 2),
 )([1, 2, 3, 4])  // => [6, 8]
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
 
 #### complement
 
@@ -835,7 +827,6 @@ The return value of `complemented` is the negative boolean value of `fn(input)`.
 R.complement(R.always(true)) // => false
 R.complement(R.always(false)) // => true
 ```
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/complement.js)
 
 #### concat
 
@@ -1293,8 +1284,6 @@ const result = R.map((val, prop)=>{
 // => {a: 'a-1', b: 'b-2'}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/map.js)
-
 #### match
 
 > match(regExpression: Regex, str: string): string[]
@@ -1302,8 +1291,6 @@ const result = R.map((val, prop)=>{
 ```
 R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/match.js)
 
 #### merge
 
@@ -1448,8 +1435,6 @@ const result = R.pipe(
 
 // => [6, 8]
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pipe.js)
 
 #### pluck
 
@@ -1794,8 +1779,6 @@ const delay = ms => new Promise(resolve => {
 })
 R.type(delay) // => 'Promise'
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/type.js)
 
 #### uniq
 
