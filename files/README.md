@@ -31,7 +31,7 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 ## API
 
-### API part I - Rambdax own methods
+Methods between `assocPath` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 #### assocPath
 
@@ -108,13 +108,15 @@ let counter = 0
 const inc = () => {
   counter++
 }
-const debouncedInc = debounce(inc, 1000)
+const debouncedInc = R.debounce(inc, 900)
 
 const result = async function(){
+  debouncedInc()
   await R.delay(500)
+  debouncedInc()
+  await R.delay(800)
   console.log(counter) //=> 0
-  await R.delay(500)
-  console.log(counter) //=> 0
+
   await R.delay(1000)
   console.log(counter) //=> 1
 
@@ -241,7 +243,7 @@ const schema = {
   title: "string",
 }
 
-const song = {
+const input = {
   published: 1975,
   style: "rock",
   title: "In my time of dying",
@@ -323,6 +325,7 @@ When `fn` is called for a second time with the same input, then the cache result
 let counter = 0
 const fn = (a,b) =>{
   counter++
+  
   return a+b
 }
 const memoized = R.memoize(fn)
@@ -330,8 +333,6 @@ memoized(1,2)
 memoized(1,2)
 console.log(counter) //=> 1
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/memoize.js)
 
 #### mergeAll
 
@@ -392,8 +393,6 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/once.js)
 
 #### pickBy
 
@@ -460,12 +459,11 @@ It returns a random number between `min` inclusive and `max` inclusive.
 It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
 
 ```
-expect(
-  R.rangeBy(0, 10, 2)
-).toEqual([0, 2, 4, 6, 8, 10])
-expect(
-  R.rangeBy(0, 2, 0.3)
-).toEqual([0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8])
+const result = R.rangeBy(0, 10, 2)
+// => [0, 2, 4, 6, 8, 10])
+
+console.log(R.rangeBy(0, 2, 0.3))
+// =>[0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/rangeBy.js)
@@ -574,7 +572,7 @@ It is best explained with the following example:
 ```
 const valueToMatch = {foo: 1}
 
-const result = switcher(valueToMatch)
+const result = R.switcher(valueToMatch)
   .is('baz', 'is baz')
   .is( x => typeof x === 'boolean', 'is boolean')
   .is({foo: 1}, 'Property foo is 1')
@@ -623,7 +621,7 @@ const inc = () => {
   counter++
 }
 
-const throttledInc = throttle(inc, 800)
+const throttledInc = R.throttle(inc, 800)
 
 const result = async () => {
   throttledInc()
@@ -651,17 +649,11 @@ const condition = R.where({
   b : bProp => bProp === 4
 })
 
-condition({
+const result = condition({
   a : "foo",
   b : 4,
   c : 11,
 }) //=> true
-
-condition({
-  a : 1,
-  b : 4,
-  c : 11,
-}) //=> false
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/where.js)
@@ -676,8 +668,8 @@ const truncate = R.when(
   R.compose(x => `${x}...`, R.take(5))
 )
 
-console.log(truncate('1234')) => '1234'
-console.log(truncate('12345678')) => '12345...'
+const result = truncate('12345678')
+// => '12345...'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
@@ -762,13 +754,11 @@ const result = R.allPass(rules, input) // => true
 
 It returns function that always returns `x`.
 ```
-const returnSeven = R.always(7)
+const fn = R.always(7)
 
-console.log(returnSeven)// => 7
-console.log(returnSeven)// => 7
+console.log(fn())// => 7
+console.log(fn())// => 7
 ```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/always.js)
 
 #### any
 
@@ -810,8 +800,6 @@ console.log(fn(15)) //=> true
 console.log(fn(30)) //=> false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/both.js)
-
 #### compose
 
 > compose(fn1: Function, ... , fnN: Function): any
@@ -820,9 +808,11 @@ It performs right-to-left function composition.
 
 ```
 const result = R.compose(
-  R.map(x => x * 2)
-  R.filter(x => x > 2),
-)([1, 2, 3, 4])  // => [6, 8]
+  R.map(x => x * 2),
+  R.filter(x => x > 2)
+)([1, 2, 3, 4])
+
+// => [6, 8]
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
@@ -836,9 +826,12 @@ It returns `complemented` function that accept `input` as argument.
 The return value of `complemented` is the negative boolean value of `fn(input)`.
 
 ```
-R.complement(R.always(true)) // => false
-R.complement(R.always(false)) // => true
+const fn = R.complement(x => !x)
+
+const result = fn(false) // => false
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/complement.js)
 
 #### concat
 
@@ -997,7 +990,8 @@ It filters `x` iterable over boolean returning `filterFn`.
 ```
 const filterFn = a => a % 2 === 0
 
-R.filter(filterFn, [1, 2, 3, 4]) // => [2, 4]
+const result = R.filter(filterFn, [1, 2, 3, 4])
+// => [2, 4]
 ```
 
 The method works with objects as well.
@@ -1040,7 +1034,7 @@ It returns `-1` or the index of the first element of `arr` satisfying `findFn`.
 const findFn = a => R.type(a.foo) === 'Number'
 const arr = [{foo: 'bar'}, {foo: 1}]
 
-const result = R.find(findFn, arr) 
+const result = R.findIndex(findFn, arr)
 // => 1
 ```
 
@@ -1066,7 +1060,7 @@ It returns function which calls `fn` with exchanged first and second argument.
 ```
 const subtractFlip = R.flip(R.subtract)
 
-const result = R.subtractFlip(1,7)
+const result = subtractFlip(1,7)
 // => 6
 ```
 
