@@ -6,7 +6,7 @@
   "module": "./dist/rambdax.esm.js",
   "typings": "./index.d.ts",
   "scripts": {
-    "dev": "jest --watch __tests__/switcher.js",
+    "dev": "jest --watch __tests__/general.js",
     "buildweb": "rollup -c files/rollup.web.config.js",
     "build": "run-p rambda rollup",
     "rollup": "rollup -c files/rollup.config.js",

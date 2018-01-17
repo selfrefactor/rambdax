@@ -825,6 +825,8 @@ const result = R.compose(
 )([1, 2, 3, 4])  // => [6, 8]
 ```
 
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
+
 #### complement
 
 > complement(fn: Function): Function
@@ -1294,6 +1296,8 @@ const result = R.map((val, prop)=>{
 // => {a: 'a-1', b: 'b-2'}
 ```
 
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/map.js)
+
 #### match
 
 > match(regExpression: Regex, str: string): string[]
@@ -1301,6 +1305,8 @@ const result = R.map((val, prop)=>{
 ```
 R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/match.js)
 
 #### merge
 
@@ -1445,6 +1451,8 @@ const result = R.pipe(
 
 // => [6, 8]
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pipe.js)
 
 #### pluck
 
@@ -1789,6 +1797,8 @@ const delay = ms => new Promise(resolve => {
 })
 R.type(delay) // => 'Promise'
 ```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/type.js)
 
 #### uniq
 
