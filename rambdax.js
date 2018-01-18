@@ -1,4 +1,4 @@
-import * as R from 'rambda';
+import * as R from 'rambda'
 
 export {default as assocPath} from './modules/assocPath'
 export {default as compact} from './modules/compact'
