@@ -226,14 +226,23 @@ declare namespace R {
     pickBy(fn: Function, input: object): object
     pickBy(fn: Function): (input: object) => object
 
-    produce<T extends ProduceConditions, U extends { [key in keyof T]: any }>(
-      conditions: T,
+    produce<Conditions extends ProduceConditions, Out>(
+      conditions: Conditions,
       input: any
-    ): Promise<U> | U
+    ): Out
+    
+    produce<Conditions extends ProduceConditions, Out>(
+      conditions: Conditions,
+      input: any
+    ): Promise<Out>
 
-    produce<T extends ProduceConditions, U extends { [key in keyof T]: any }>(
-      conditions: T
-    ): (input: any) => Promise<U> | U
+    produce<Conditions extends ProduceConditions, Out>(
+      conditions: Conditions,
+    ): (input: any) => Out
+
+    produce<Conditions extends ProduceConditions, Out>(
+      conditions: Conditions,
+    ): (input: any) => Promise<Out>
 
     random(min: number, max: number): number
 
