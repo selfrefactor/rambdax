@@ -15,14 +15,14 @@ declare namespace R {
   type MapFunction<In, Out> = (x: In, prop?: string) => Out
 
   interface MapInterface<T> {
-    (list: ReadonlyArray<T>): T[]
+    (list: T[]): T[]
     (obj: Dictionary<T>): Dictionary<T>
   }
 
   type IdentityFunction<T> = (x: T) => T
 
   interface Filter<T> {
-    (list: ReadonlyArray<T>): T[]
+    (list: T[]): T[]
     (obj: Dictionary<T>): Dictionary<T>
   }
 
@@ -37,7 +37,7 @@ declare namespace R {
     is: isfn<Switchem<T>>
     default: IdentityFunction<T>
   }
-  // RAMBDA_END
+  // RAMBDAX_END
   type Ord = number | string | boolean
 
   type Path = Array<number | string>
@@ -268,28 +268,10 @@ declare namespace R {
     add(a: number): (b: number) => number
     add(a: string): (b: string) => string
 
-    addIndex<T, U>(
-      fn: (f: (item: T) => U, list: T[]) => U[]
-    ): CurriedFunction2<
-      (item: T, idx: number, list?: T[]) => U,
-      ReadonlyArray<T>,
-      U[]
-    >
-    addIndex<T>(
-      fn: (f: (item: T) => void, list: T[]) => T[]
-    ): CurriedFunction2<
-      (item: T, idx: number, list?: T[]) => void,
-      ReadonlyArray<T>,
-      T[]
-    >
-    addIndex<T, U>(
-      fn: (f: (acc: U, item: T) => U, aci: U, list: T[]) => U
-    ): CurriedFunction3<
-      (acc: U, item: T, idx: number, list?: T[]) => U,
-      U,
-      ReadonlyArray<T>,
-      U
-    >
+    addIndex<T, U>(fn: (f: (item: T) => U, list: T[]) => U[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => U, T[], U[]>
+    addIndex<T>(fn: (f: (item: T) => void, list: T[]) => T[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => void, T[], T[]>
+    addIndex<T, U>(fn: (f: (acc: U, item: T) => U, aci: U, list: T[]) => U): CurriedFunction3<(acc: U, item: T, idx: number, list?: T[]) => U, U, T[], U>
+
 
     adjust<T>(fn: (a: T) => T, index: number, list: T[]): T[]
     adjust<T>(fn: (a: T) => T, index: number): (list: T[]) => T[]
@@ -306,8 +288,8 @@ declare namespace R {
 
     anyPass(preds: Pred[]): Pred
 
-    append<T>(el: T, list: ReadonlyArray<T>): T[]
-    append<T>(el: T): <T>(list: ReadonlyArray<T>) => T[]
+    append<T>(el: T, list: T[]): T[]
+    append<T>(el: T): <T>(list: T[]) => T[]
 
     both(pred1: Pred, pred2: Pred): Pred
     both(pred1: Pred): (pred2: Pred) => Pred
@@ -316,104 +298,39 @@ declare namespace R {
 
     compose<V0, T1>(fn0: (x0: V0) => T1): (x0: V0) => T1
     compose<V0, V1, T1>(fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T1
-    compose<V0, V1, V2, T1>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T1
+    compose<V0, V1, V2, T1>(fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T1
 
-    compose<V0, T1, T2>(
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0) => T1
-    ): (x0: V0) => T2
-    compose<V0, V1, T1, T2>(
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1) => T1
-    ): (x0: V0, x1: V1) => T2
-    compose<V0, V1, V2, T1, T2>(
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T2
+    compose<V0, T1, T2>(fn1: (x: T1) => T2, fn0: (x0: V0) => T1): (x0: V0) => T2
+    compose<V0, V1, T1, T2>(fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T2
+    compose<V0, V1, V2, T1, T2>(fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T2
 
-    compose<V0, T1, T2, T3>(
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x: V0) => T1
-    ): (x: V0) => T3
-    compose<V0, V1, T1, T2, T3>(
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1) => T1
-    ): (x0: V0, x1: V1) => T3
-    compose<V0, V1, V2, T1, T2, T3>(
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T3
+    compose<V0, T1, T2, T3>(fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x: V0) => T1): (x: V0) => T3
+    compose<V0, V1, T1, T2, T3>(fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T3
+    compose<V0, V1, V2, T1, T2, T3>(fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T3
 
-    compose<V0, T1, T2, T3, T4>(
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x: V0) => T1
-    ): (x: V0) => T4
-    compose<V0, V1, T1, T2, T3, T4>(
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1) => T1
-    ): (x0: V0, x1: V1) => T4
-    compose<V0, V1, V2, T1, T2, T3, T4>(
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T4
+    compose<V0, T1, T2, T3, T4>(fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x: V0) => T1): (x: V0) => T4
+    compose<V0, V1, T1, T2, T3, T4>(fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T4
+    compose<V0, V1, V2, T1, T2, T3, T4>(fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T4
 
-    compose<V0, T1, T2, T3, T4, T5>(
-      fn4: (x: T4) => T5,
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x: V0) => T1
-    ): (x: V0) => T5
-    compose<V0, V1, T1, T2, T3, T4, T5>(
-      fn4: (x: T4) => T5,
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1) => T1
-    ): (x0: V0, x1: V1) => T5
-    compose<V0, V1, V2, T1, T2, T3, T4, T5>(
-      fn4: (x: T4) => T5,
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T5
+    compose<V0, T1, T2, T3, T4, T5>(fn4: (x: T4) => T5, fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x: V0) => T1): (x: V0) => T5
+    compose<V0, V1, T1, T2, T3, T4, T5>(fn4: (x: T4) => T5, fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T5
+    compose<V0, V1, V2, T1, T2, T3, T4, T5>(fn4: (x: T4) => T5, fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T5
 
-    compose<V0, T1, T2, T3, T4, T5, T6>(
-      fn5: (x: T5) => T6,
-      fn4: (x: T4) => T5,
-      fn3: (x: T3) => T4,
-      fn2: (x: T2) => T3,
-      fn1: (x: T1) => T2,
-      fn0: (x: V0) => T1
-    ): (x: V0) => T6
+    compose<V0, T1, T2, T3, T4, T5, T6>(fn5: (x: T5) => T6, fn4: (x: T4) => T5, fn3: (x: T3) => T4, fn2: (x: T2) => T3, fn1: (x: T1) => T2, fn0: (x: V0) => T1): (x: V0) => T6
     compose<V0, V1, T1, T2, T3, T4, T5, T6>(
       fn5: (x: T5) => T6,
       fn4: (x: T4) => T5,
       fn3: (x: T3) => T4,
       fn2: (x: T2) => T3,
       fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1) => T1
-    ): (x0: V0, x1: V1) => T6
+      fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T6
     compose<V0, V1, V2, T1, T2, T3, T4, T5, T6>(
       fn5: (x: T5) => T6,
       fn4: (x: T4) => T5,
       fn3: (x: T3) => T4,
       fn2: (x: T2) => T3,
       fn1: (x: T1) => T2,
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T6
+      fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T6
 
     concat<T>(list1: T[], list2: T[]): T[]
     concat<T>(list1: T[]): (list2: T[]) => T[]
@@ -425,36 +342,16 @@ declare namespace R {
     contains(a: string): (list: string) => boolean
     contains<T>(a: T): (list: T[]) => boolean
 
-    curry<T1, T2, TResult extends T2>(
-      fn: (a: T1, b: T2) => b is TResult
-    ): CurriedTypeGuard2<T1, T2, TResult>
-    curry<T1, T2, T3, TResult extends T3>(
-      fn: (a: T1, b: T2, c: T3) => c is TResult
-    ): CurriedTypeGuard3<T1, T2, T3, TResult>
-    curry<T1, T2, T3, T4, TResult extends T4>(
-      fn: (a: T1, b: T2, c: T3, d: T4) => d is TResult
-    ): CurriedTypeGuard4<T1, T2, T3, T4, TResult>
-    curry<T1, T2, T3, T4, T5, TResult extends T5>(
-      fn: (a: T1, b: T2, c: T3, d: T4, e: T5) => e is TResult
-    ): CurriedTypeGuard5<T1, T2, T3, T4, T5, TResult>
-    curry<T1, T2, T3, T4, T5, T6, TResult extends T6>(
-      fn: (a: T1, b: T2, c: T3, d: T4, e: T5, f: T6) => f is TResult
-    ): CurriedTypeGuard6<T1, T2, T3, T4, T5, T6, TResult>
-    curry<T1, T2, TResult>(
-      fn: (a: T1, b: T2) => TResult
-    ): CurriedFunction2<T1, T2, TResult>
-    curry<T1, T2, T3, TResult>(
-      fn: (a: T1, b: T2, c: T3) => TResult
-    ): CurriedFunction3<T1, T2, T3, TResult>
-    curry<T1, T2, T3, T4, TResult>(
-      fn: (a: T1, b: T2, c: T3, d: T4) => TResult
-    ): CurriedFunction4<T1, T2, T3, T4, TResult>
-    curry<T1, T2, T3, T4, T5, TResult>(
-      fn: (a: T1, b: T2, c: T3, d: T4, e: T5) => TResult
-    ): CurriedFunction5<T1, T2, T3, T4, T5, TResult>
-    curry<T1, T2, T3, T4, T5, T6, TResult>(
-      fn: (a: T1, b: T2, c: T3, d: T4, e: T5, f: T6) => TResult
-    ): CurriedFunction6<T1, T2, T3, T4, T5, T6, TResult>
+    curry<T1, T2, TResult extends T2>(fn: (a: T1, b: T2) => b is TResult): CurriedTypeGuard2<T1, T2, TResult>
+    curry<T1, T2, T3, TResult extends T3>(fn: (a: T1, b: T2, c: T3) => c is TResult): CurriedTypeGuard3<T1, T2, T3, TResult>
+    curry<T1, T2, T3, T4, TResult extends T4>(fn: (a: T1, b: T2, c: T3, d: T4) => d is TResult): CurriedTypeGuard4<T1, T2, T3, T4, TResult>
+    curry<T1, T2, T3, T4, T5, TResult extends T5>(fn: (a: T1, b: T2, c: T3, d: T4, e: T5) => e is TResult): CurriedTypeGuard5<T1, T2, T3, T4, T5, TResult>
+    curry<T1, T2, T3, T4, T5, T6, TResult extends T6>(fn: (a: T1, b: T2, c: T3, d: T4, e: T5, f: T6) => f is TResult): CurriedTypeGuard6<T1, T2, T3, T4, T5, T6, TResult>
+    curry<T1, T2, TResult>(fn: (a: T1, b: T2) => TResult): CurriedFunction2<T1, T2, TResult>
+    curry<T1, T2, T3, TResult>(fn: (a: T1, b: T2, c: T3) => TResult): CurriedFunction3<T1, T2, T3, TResult>
+    curry<T1, T2, T3, T4, TResult>(fn: (a: T1, b: T2, c: T3, d: T4) => TResult): CurriedFunction4<T1, T2, T3, T4, TResult>
+    curry<T1, T2, T3, T4, T5, TResult>(fn: (a: T1, b: T2, c: T3, d: T4, e: T5) => TResult): CurriedFunction5<T1, T2, T3, T4, T5, TResult>
+    curry<T1, T2, T3, T4, T5, T6, TResult>(fn: (a: T1, b: T2, c: T3, d: T4, e: T5, f: T6) => TResult): CurriedFunction6<T1, T2, T3, T4, T5, T6, TResult>
     curry(fn: (...a: any[]) => any): (...a: any[]) => any
 
     dec(n: number): number
@@ -465,22 +362,18 @@ declare namespace R {
     divide(a: number, b: number): number
     divide(a: number): (b: number) => number
 
-    drop<T>(n: number, xs: T[]): T[]
-    drop(n: number, xs: string): string
-    drop<T>(
-      n: number
-    ): {
-      (xs: string): string
-      (xs: T[]): T[]
+    drop<T>(n: number, input: T[]): T[]
+    drop(n: number, input: string): string
+    drop<T>(n: number): {
+      (input: string): string
+      (input: T[]): T[]
     }
 
-    dropLast<T>(n: number, xs: T[]): T[]
-    dropLast(n: number, xs: string): string
-    dropLast<T>(
-      n: number
-    ): {
-      (xs: T[]): T[]
-      (xs: string): string
+    dropLast<T>(n: number, input: T[]): T[]
+    dropLast(n: number, input: string): string
+    dropLast<T>(n: number): {
+      (input: T[]): T[]
+      (input: string): string
     }
 
     either(pred1: Pred, pred2: Pred): Pred
@@ -495,7 +388,7 @@ declare namespace R {
     F(): boolean
 
     filter<T>(fn: FilterFunction<T>): Filter<T>
-    filter<T>(fn: FilterFunction<T>, list: ReadonlyArray<T>): T[]
+    filter<T>(fn: FilterFunction<T>, list: T[]): T[]
     filter<T>(fn: FilterFunction<T>, obj: Dictionary<T>): Dictionary<T>
 
     find<T>(fn: (a: T) => boolean, list: T[]): T | undefined
@@ -506,33 +399,27 @@ declare namespace R {
 
     flatten<T>(x: T[] | T[][]): T[]
 
-    flip<T, U, TResult>(
-      fn: (arg0: T, arg1: U) => TResult
-    ): (arg1: U, arg0?: T) => TResult
-    flip<T, U, TResult>(
-      fn: (arg0: T, arg1: U, ...args: any[]) => TResult
-    ): (arg1: U, arg0?: T, ...args: any[]) => TResult
+    flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult
+    flip<T, U, TResult>(fn: (arg0: T, arg1: U, ...args: any[]) => TResult): (arg1: U, arg0?: T, ...args: any[]) => TResult
 
     forEach<T>(fn: (x: T) => void, list: T[]): T[]
     forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
-    forEach<T>(fn: (x: T) => void, list: ReadonlyArray<T>): ReadonlyArray<T>
-    forEach<T>(
-      fn: (x: T) => void
-    ): (list: ReadonlyArray<T>) => ReadonlyArray<T>
+    forEach<T>(fn: (x: T) => void, list: T[]): T[]
+    forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
 
     has<T>(s: string, obj: T): boolean
     has(s: string): <T>(obj: T) => boolean
 
-    head<T>(list: ReadonlyArray<T>): T | undefined
+    head<T>(list: T[]): T | undefined
     head(list: string): string
 
     identity<T>(x: T): T
 
     ifElse(fn: Pred | boolean, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
-
+    
     includes(input: any, arrOrStr: any[]|string): boolean
     includes(input: any) : (arrOrStr: any[]|string) => boolean
-    
+
     init<T>(list: T[]): T[]
     init(list: string): string
 
@@ -541,13 +428,13 @@ declare namespace R {
 
     isNil(value: any): value is null | undefined
 
-    join(x: string, xs: any[]): string
-    join(x: string): (xs: any[]) => string
+    join(x: string, input: any[]): string
+    join(x: string): (input: any[]) => string
 
     last<T>(list: T[]): T | undefined
     last(list: string): string
 
-    length<T>(list: ReadonlyArray<T>): number
+    length<T>(list: T[]): number
 
     map<In, Out>(
       fn: MapFunction<In, Out>,
@@ -555,7 +442,7 @@ declare namespace R {
     ): Dictionary<Out>
 
     map<In, Out>(fn: MapFunction<In, Out>): MapInterface<Out>
-    map<In, Out>(fn: MapFunction<In, Out>, list: ReadonlyArray<Out>): Out[]
+    map<In, Out>(fn: MapFunction<In, Out>, list: In[]): Out[]
 
     match(regexp: RegExp, str: string): any[]
     match(regexp: RegExp): (str: string) => any[]
@@ -569,8 +456,8 @@ declare namespace R {
     multiply(a: number, b: number): number
     multiply(a: number): (b: number) => number
 
-    none<T>(fn: (x: T) => boolean, list: ReadonlyArray<T>): boolean
-    none<T>(fn: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean
+    none<T>(fn: (x: T) => boolean, list: T[]): boolean
+    none<T>(fn: (x: T) => boolean): (list: T[]) => boolean
 
     not(value: any): boolean
 
@@ -596,106 +483,38 @@ declare namespace R {
 
     pick(names: string[] | string): <T, U>(obj: T) => U
 
-    pickAll<T, U>(names: ReadonlyArray<string>, obj: T): U
-    pickAll(names: ReadonlyArray<string>): <T, U>(obj: T) => U
+    pickAll<T, U>(names: string[], obj: T): U
+    pickAll(names: string[]): <T, U>(obj: T) => U
 
-    pipe<V0, T1>(fn0: (x0: V0) => T1): (x0: V0) => T1
-    pipe<V0, V1, T1>(fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T1
-    pipe<V0, V1, V2, T1>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1
-    ): (x0: V0, x1: V1, x2: V2) => T1
+    pipe<V0, T1>(fn0: (x0: V0) => T1): (x0: V0) => T1;
+    pipe<V0, V1, T1>(fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T1;
+    pipe<V0, V1, V2, T1>(fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T1;
 
-    pipe<V0, T1, T2>(fn0: (x0: V0) => T1, fn1: (x: T1) => T2): (x0: V0) => T2
-    pipe<V0, V1, T1, T2>(
-      fn0: (x0: V0, x1: V1) => T1,
-      fn1: (x: T1) => T2
-    ): (x0: V0, x1: V1) => T2
-    pipe<V0, V1, V2, T1, T2>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1,
-      fn1: (x: T1) => T2
-    ): (x0: V0, x1: V1, x2: V2) => T2
+    pipe<V0, T1, T2>(fn0: (x0: V0) => T1, fn1: (x: T1) => T2): (x0: V0) => T2;
+    pipe<V0, V1, T1, T2>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2): (x0: V0, x1: V1) => T2;
+    pipe<V0, V1, V2, T1, T2>(fn0: (x0: V0, x1: V1, x2: V2) => T1, fn1: (x: T1) => T2): (x0: V0, x1: V1, x2: V2) => T2;
 
-    pipe<V0, T1, T2, T3>(
-      fn0: (x: V0) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3
-    ): (x: V0) => T3
-    pipe<V0, V1, T1, T2, T3>(
-      fn0: (x0: V0, x1: V1) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3
-    ): (x0: V0, x1: V1) => T3
-    pipe<V0, V1, V2, T1, T2, T3>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3
-    ): (x0: V0, x1: V1, x2: V2) => T3
+    pipe<V0, T1, T2, T3>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3): (x: V0) => T3;
+    pipe<V0, V1, T1, T2, T3>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3): (x0: V0, x1: V1) => T3;
+    pipe<V0, V1, V2, T1, T2, T3>(fn0: (x0: V0, x1: V1, x2: V2) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3): (x0: V0, x1: V1, x2: V2) => T3;
 
-    pipe<V0, T1, T2, T3, T4>(
-      fn0: (x: V0) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4
-    ): (x: V0) => T4
-    pipe<V0, V1, T1, T2, T3, T4>(
-      fn0: (x0: V0, x1: V1) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4
-    ): (x0: V0, x1: V1) => T4
-    pipe<V0, V1, V2, T1, T2, T3, T4>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4
-    ): (x0: V0, x1: V1, x2: V2) => T4
+    pipe<V0, T1, T2, T3, T4>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4): (x: V0) => T4;
+    pipe<V0, V1, T1, T2, T3, T4>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4): (x0: V0, x1: V1) => T4;
+    pipe<V0, V1, V2, T1, T2, T3, T4>(fn0: (x0: V0, x1: V1, x2: V2) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4): (x0: V0, x1: V1, x2: V2) => T4;
 
-    pipe<V0, T1, T2, T3, T4, T5>(
-      fn0: (x: V0) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4,
-      fn4: (x: T4) => T5
-    ): (x: V0) => T5
-    pipe<V0, V1, T1, T2, T3, T4, T5>(
-      fn0: (x0: V0, x1: V1) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4,
-      fn4: (x: T4) => T5
-    ): (x0: V0, x1: V1) => T5
-    pipe<V0, V1, V2, T1, T2, T3, T4, T5>(
-      fn0: (x0: V0, x1: V1, x2: V2) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4,
-      fn4: (x: T4) => T5
-    ): (x0: V0, x1: V1, x2: V2) => T5
+    pipe<V0, T1, T2, T3, T4, T5>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5): (x: V0) => T5;
+    pipe<V0, V1, T1, T2, T3, T4, T5>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5): (x0: V0, x1: V1) => T5;
+    pipe<V0, V1, V2, T1, T2, T3, T4, T5>(fn0: (x0: V0, x1: V1, x2: V2) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5): (x0: V0, x1: V1, x2: V2) => T5;
 
-    pipe<V0, T1, T2, T3, T4, T5, T6>(
-      fn0: (x: V0) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4,
-      fn4: (x: T4) => T5,
-      fn5: (x: T5) => T6
-    ): (x: V0) => T6
-    pipe<V0, V1, T1, T2, T3, T4, T5, T6>(
-      fn0: (x0: V0, x1: V1) => T1,
-      fn1: (x: T1) => T2,
-      fn2: (x: T2) => T3,
-      fn3: (x: T3) => T4,
-      fn4: (x: T4) => T5,
-      fn5: (x: T5) => T6
-    ): (x0: V0, x1: V1) => T6
+    pipe<V0, T1, T2, T3, T4, T5, T6>(fn0: (x: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5, fn5: (x: T5) => T6): (x: V0) => T6;
+    pipe<V0, V1, T1, T2, T3, T4, T5, T6>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5, fn5: (x: T5) => T6): (x0: V0, x1: V1) => T6;
     pipe<V0, V1, V2, T1, T2, T3, T4, T5, T6>(
       fn0: (x0: V0, x1: V1, x2: V2) => T1,
       fn1: (x: T1) => T2,
       fn2: (x: T2) => T3,
       fn3: (x: T3) => T4,
       fn4: (x: T4) => T5,
-      fn5: (x: T5) => T6
-    ): (x0: V0, x1: V1, x2: V2) => T6
+      fn5: (x: T5) => T6): (x0: V0, x1: V1, x2: V2) => T6;
 
     pluck<T>(prop: string, input: any[]): T[]
     pluck<T>(prop: number, input: T[][]): T[]
@@ -715,34 +534,20 @@ declare namespace R {
     range(from: number, to: number): number[]
     range(from: number): (to: number) => number[]
 
-    reduce<T, TResult>(
-      fn: (acc: TResult, elem: T) => TResult | Reduced,
-      acc: TResult,
-      list: T[]
-    ): TResult
-    reduce<T, TResult>(
-      fn: (acc: TResult, elem: T) => TResult | Reduced
-    ): (acc: TResult, list: T[]) => TResult
-    reduce<T, TResult>(
-      fn: (acc: TResult, elem: T) => TResult | Reduced,
-      acc: TResult
-    ): (list: T[]) => TResult
+    reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced, acc: TResult, list: T[]): TResult
+    reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced): (acc: TResult, list: T[]) => TResult
+    reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced, acc: TResult): (list: T[]) => TResult
 
     reject<T>(fn: (value: T) => boolean): Filter<T>
-    reject<T>(fn: (value: T) => boolean, list: ReadonlyArray<T>): T[]
+    reject<T>(fn: (value: T) => boolean, list: T[]): T[]
     reject<T>(fn: (value: T) => boolean, obj: Dictionary<T>): Dictionary<T>
 
     repeat<T>(a: T, n: number): T[]
     repeat<T>(a: T): (n: number) => T[]
 
     replace(pattern: RegExp | string, replacement: string, str: string): string
-    replace(
-      pattern: RegExp | string,
-      replacement: string
-    ): (str: string) => string
-    replace(
-      pattern: RegExp | string
-    ): (replacement: string) => (str: string) => string
+    replace(pattern: RegExp | string, replacement: string): (str: string) => string
+    replace(pattern: RegExp | string): (replacement: string) => (str: string) => string
 
     reverse<T>(list: T[]): T[]
 
@@ -766,25 +571,21 @@ declare namespace R {
 
     T(): boolean
 
-    tail<T>(list: ReadonlyArray<T>): T[]
+    tail<T>(list: T[]): T[]
     tail(list: string): string
 
-    take<T>(n: number, xs: ReadonlyArray<T>): T[]
-    take(n: number, xs: string): string
-    take<T>(
-      n: number
-    ): {
-      (xs: string): string
-      (xs: ReadonlyArray<T>): T[]
+    take<T>(n: number, input: T[]): T[]
+    take(n: number, input: string): string
+    take<T>(n: number): {
+      (input: string): string
+      (input: T[]): T[]
     }
 
-    takeLast<T>(n: number, xs: ReadonlyArray<T>): T[]
-    takeLast(n: number, xs: string): string
-    takeLast(
-      n: number
-    ): {
-      <T>(xs: ReadonlyArray<T>): T[]
-      (xs: string): string
+    takeLast<T>(n: number, input: T[]): T[]
+    takeLast(n: number, input: string): string
+    takeLast(n: number): {
+      <T>(input: T[]): T[]
+      (input: string): string
     }
 
     tap<T>(fn: (a: T) => any, value: T): T
@@ -806,10 +607,10 @@ declare namespace R {
 
     type(val: any): RambdaTypes
 
-    uniq<T>(list: ReadonlyArray<T>): T[]
+    uniq<T>(list: T[]): T[]
 
-    uniqWith<T>(pred: (x: T, y: T) => boolean, list: T[]): T[]
-    uniqWith<T>(pred: (x: T, y: T) => boolean): (list: T[]) => T[]
+    uniqWith<T>(pred: (x: T, y: T) => boolean, list: T[]): T[];
+    uniqWith<T>(pred: (x: T, y: T) => boolean): (list: T[]) => T[];
 
     update<T>(index: number, value: T, list: T[]): T[]
     update<T>(index: number, value: T): (list: T[]) => T[]
