@@ -164,67 +164,66 @@ function isPromiseLike(x) {
 
 function isValid({ input, schema }) {
   if (R.type(input) === 'Object' && R.type(schema) === 'Object') {
+
     let flag = true;
+    const boom = boomFlag => {
+      if (!boomFlag) {
+        flag = false;
+      }
+    };
+
     for (const requirement in schema) {
+
       if (flag) {
         const rule = schema[requirement];
         const ruleType = R.type(rule);
         const inputProp = input[requirement];
         const inputPropType = R.type(input[requirement]);
 
-        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
-          inputProp.map(val => {
-            let localFlag = false;
-            rule.rule.map(singleRule => {
-              if (isValid(val, singleRule)) {
-                localFlag = true;
-              }
-            });
-            if (localFlag === false) {
-              flag = false;
-            }
+        if (ruleType === 'Object') {
+          // This rule is standalone schema - schema = {a: {b: 'string'}}  
+          const isValidResult = isValid({
+            input: inputProp,
+            schema: rule
           });
+          boom(isValidResult);
         } else if (ruleType === 'String') {
-          if (inputProp !== undefined) {
-            if (R.toLower(inputPropType) !== rule) {
-              flag = false;
-            }
-          } else {
-            flag = false;
-          }
+          // rule is concrete rule such as 'number' so two types are compared
+          boom(R.toLower(inputPropType) === rule);
         } else if (typeof rule === 'function') {
-          if (rule(inputProp) === false) {
-            flag = false;
-          }
-        } else if (ruleType === 'Object' && inputPropType === 'Object') {
-          if (!isValid(inputProp, rule)) {
-            flag = false;
-          }
+          // rule is function so we pass to it the input
+          boom(rule(inputProp));
         } else if (ruleType === 'Array' && inputPropType === 'String') {
-          if (!R.contains(inputProp, rule)) {
-            flag = false;
+          // enum case | rule is like a: ['foo', 'bar']
+          boom(R.contains(inputProp, rule));
+        } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
+          // 1. array of type | rule is like a: ['number']
+          // 2. rule is like a: [{from: 'string'}]
+
+          const currentRule = rule[0];
+          const currentRuleType = R.type(rule[0]);
+          // Check if rule is invalid
+          boom(currentRuleType === 'String' || currentRuleType === 'Object');
+
+          if (currentRuleType === 'String') {
+
+            // 1. array of type
+            const isInvalidResult = R.any(inputPropInstance => R.type(inputPropInstance).toLowerCase() !== currentRule, inputProp);
+            boom(!isInvalidResult);
           }
-        } else if (ruleType === 'Array' && inputPropType === 'Array' && rule.length === 1 && inputProp.length > 0) {
-          const arrayRuleType = R.type(rule[0]);
 
-          if (arrayRuleType === 'String') {
-            const result = R.any(val => R.toLower(R.type(val)) !== rule[0], inputProp);
+          if (currentRuleType === 'Object') {
 
-            if (result) {
-              flag = false;
-            }
-          } else if (arrayRuleType === 'Object') {
-            const result = R.any(val => !isValid(val, rule[0]))(inputProp);
-            if (result) {
-              flag = false;
-            }
+            // 2. rule is like a: [{from: 'string'}]
+            const isValidResult = R.all(inputPropInstance => isValid({ input: inputPropInstance, schema: currentRule }), inputProp);
+            boom(isValidResult);
           }
         } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-          if (!R.test(rule, inputProp)) {
-            flag = false;
-          }
+
+          boom(R.test(rule, inputProp));
         } else {
-          flag = false;
+
+          boom(false);
         }
       }
     }
