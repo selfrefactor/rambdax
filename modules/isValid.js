@@ -2,92 +2,74 @@ import { type, toLower, contains, test, any } from 'rambda'
 
 export default function isValid ({ input, schema }) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
+
     let flag = true
+    const boom = (boomFlag) => {
+      if(!boomFlag){
+        flag = false
+      }
+    }
+
     for (const requirement in schema) {
+    
       if (flag) {
         const rule = schema[ requirement ]
         const ruleType = type(rule)
         const inputProp = input[ requirement ]
         const inputPropType = type(input[ requirement ])
 
-        if (ruleType === 'Object' && rule.type === 'ArrayOfSchemas' && inputPropType === 'Array') {
-          inputProp.map(val => {
-            let localFlag = false
-            rule.rule.map(singleRule => {
-              if (isValid(val, singleRule)) {
-                localFlag = true
-              }
-            })
-            if (localFlag === false) {
-              flag = false
-            }
+        if (
+          ruleType === 'Object'
+        ) {
+          // This rule is standalone schema - schema = {a: {b: 'string'}}  
+          const isValidResult = isValid({
+            input: inputProp,
+            schema: rule
           })
+          boom(isValidResult)
+
         } else if (
           ruleType === 'String'
         ) {
-          if (inputProp !== undefined) {
-            if (toLower(inputPropType) !== rule) {
-              flag = false
-            }
-          } else {
-            flag = false
-          }
+          // rule is concrete rule such as 'number' so two types are compared
+          boom(toLower(inputPropType) === rule) 
+
         } else if (
           typeof rule === 'function'
         ) {
-          if (rule(inputProp) === false) {
-            flag = false
-          }
-        } else if (
-          ruleType === 'Object' &&
-          inputPropType === 'Object'
-        ) {
-          if (
-            !isValid(inputProp, rule)
-          ) {
-            flag = false
-          }
+          // rule is function so we pass to it the input
+          boom(rule(inputProp))
+
         } else if (
           ruleType === 'Array' &&
           inputPropType === 'String'
         ) {
-          if (!contains(inputProp, rule)) {
-            flag = false
-          }
+          // enum case | rule is like a: ['foo', 'bar']
+          boom(contains(inputProp, rule))
+
         } else if (
           ruleType === 'Array' &&
-          inputPropType === 'Array' &&
-          rule.length === 1 &&
-          inputProp.length > 0
+          rule.length === 1 &&  
+          inputPropType === 'Array'
         ) {
-          const arrayRuleType = type(rule[ 0 ])
+          // array of type case | rule is like a: ['number']
+          const isInvalidResult = any(
+            inputPropInstance => type(inputPropInstance).toLowerCase() !== rule[0],
+            inputProp
+          )
+          boom(!isInvalidResult)
 
-          if (arrayRuleType === 'String') {
-            const result = any(
-              val => toLower(type(val)) !== rule[ 0 ],
-              inputProp
-            )
-
-            if (result) {
-              flag = false
-            }
-          } else if (arrayRuleType === 'Object') {
-            const result = any(
-              val => !isValid(val, rule[ 0 ])
-            )(inputProp)
-            if (result) {
-              flag = false
-            }
-          }
         } else if (
           ruleType === 'RegExp' &&
           inputPropType === 'String'
         ) {
-          if (!test(rule, inputProp)) {
-            flag = false
-          }
+
+          boom(test(rule, inputProp))
+
         } else {
-          flag = false
+
+          boom(false)
+
         }
       }
     }
