@@ -2,11 +2,19 @@ const R = require('../rambdax')
 
 test('nested schema', () => {
   const input = {
-    a : {b: 'str', c: 3, d: 'str'},
+    a : {
+      b : 'str',
+      c : 3,
+      d : 'str',
+    },
     b : 'foo',
   }
   const schema = {
-    a : {b: 'string', c: 'number', d: 'string'},
+    a : {
+      b : 'string',
+      c : 'number',
+      d : 'string',
+    },
     b : 'string',
   }
 
@@ -16,39 +24,47 @@ test('nested schema', () => {
       schema,
     })
   ).toBeTruthy()
-  
+
   const invalidInputFirst = {
-    a : {b: 'str', c: 3, d: 'str'},
+    a : {
+      b : 'str',
+      c : 3,
+      d : 'str',
+    },
     b : 5,
   }
 
   expect(
     R.isValid({
-      input: invalidInputFirst,
+      input : invalidInputFirst,
       schema,
     })
   ).toBeFalsy()
-  
+
   const invalidInputSecond = {
-    a : {b: 'str', c: 'str', d: 'str'},
+    a : {
+      b : 'str',
+      c : 'str',
+      d : 'str',
+    },
     b : 5,
   }
 
   expect(
     R.isValid({
-      input: invalidInputSecond,
+      input : invalidInputSecond,
       schema,
     })
   ).toBeFalsy()
 
   const invalidInputThird = {
-    a : {b: 'str'},
+    a : { b : 'str' },
     b : 5,
   }
 
   expect(
     R.isValid({
-      input: invalidInputThird,
+      input : invalidInputThird,
       schema,
     })
   ).toBeFalsy()
@@ -60,7 +76,7 @@ test('array of type', () => {
     b : 'foo',
   }
   const schema = {
-    a : ['number'],
+    a : [ 'number' ],
     b : 'string',
   }
 
@@ -78,8 +94,97 @@ test('array of type', () => {
 
   expect(
     R.isValid({
-      input: invalidInput,
+      input : invalidInput,
       schema,
     })
   ).toBeFalsy()
+})
+
+test('function as rule', () => {
+  const input = {
+    a : [ 1, 2, 3, 4 ],
+    b : 'foo',
+  }
+  const invalidInput = {
+    a : [ 4 ],
+    b : 'foo',
+  }
+
+  const schema = {
+    a : x => x.length > 2,
+    b : 'string',
+  }
+
+  expect(
+    R.isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+
+  expect(
+    R.isValid({
+      input : invalidInput,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('input prop is undefined', () => {
+  const input = { b : 3 }
+  const schema = { a : 'number' }
+
+  expect(
+    R.isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('enum', () => {
+  const input = { a : 'foo' }
+  const invalidInput = { a : '' }
+
+  const schema = { a : [ 'foo', 'bar', 'baz' ] }
+
+  expect(
+    R.isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+
+  expect(
+    R.isValid({
+      input : invalidInput,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('readme example', () => {
+  const basicSchema = { a : [ 'string' ] }
+  const schema = {
+    b : [basicSchema],
+    c : {
+      d : { e : 'boolean' },
+      f : 'array',
+    },
+    g : [ 'foo', 'bar', 'baz' ],
+  }
+  const input = {
+    b : [
+        { a : [ 'led', 'zeppelin' ] },
+    ],
+    c : {
+      d : { e : true },
+      f : [ 'any', 1, null, 'value' ],
+    },
+    g : 'foo',
+  }
+
+  expect(
+    R.isValid({input, schema})
+  ).toBeTruthy()
 })

@@ -1,4 +1,4 @@
-import { type, toLower, contains, test, any } from 'rambda'
+import { type, toLower, contains, test, any, all } from 'rambda'
 
 export default function isValid ({ input, schema }) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
@@ -52,12 +52,33 @@ export default function isValid ({ input, schema }) {
           rule.length === 1 &&  
           inputPropType === 'Array'
         ) {
-          // array of type case | rule is like a: ['number']
-          const isInvalidResult = any(
-            inputPropInstance => type(inputPropInstance).toLowerCase() !== rule[0],
-            inputProp
-          )
-          boom(!isInvalidResult)
+          // 1. array of type | rule is like a: ['number']
+          // 2. rule is like a: [{from: 'string'}]
+          
+          const currentRule = rule[0]
+          const currentRuleType = type(rule[0])
+          // Check if rule is invalid
+          boom(currentRuleType === 'String' || currentRuleType === 'Object')
+          
+          if(currentRuleType === 'String'){
+
+            // 1. array of type
+            const isInvalidResult = any(
+              inputPropInstance => type(inputPropInstance).toLowerCase() !== currentRule,
+              inputProp
+            )
+            boom(!isInvalidResult)
+          }
+          
+          if(currentRuleType === 'Object'){
+
+            // 2. rule is like a: [{from: 'string'}]
+            const isValidResult = all(
+              inputPropInstance => isValid({input: inputPropInstance, schema: currentRule}),
+              inputProp
+            )
+            boom(isValidResult)
+          }
 
         } else if (
           ruleType === 'RegExp' &&
