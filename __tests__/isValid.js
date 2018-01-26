@@ -166,7 +166,7 @@ test('enum', () => {
 test('readme example', () => {
   const basicSchema = { a : [ 'string' ] }
   const schema = {
-    b : [basicSchema],
+    b : [ basicSchema ],
     c : {
       d : { e : 'boolean' },
       f : 'array',
@@ -185,6 +185,119 @@ test('readme example', () => {
   }
 
   expect(
-    R.isValid({input, schema})
+    R.isValid({
+      input,
+      schema,
+    })
   ).toBeTruthy()
+})
+
+test('should allow additional properties', () => {
+  const input = {
+    title : 'You shook me',
+    year  : 1969,
+  }
+
+  const schema = { title : 'string' }
+
+  expect(
+    R.isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('compatible schemas with nested object', () => {
+  const input = {
+    foo : 'bar',
+    baz : { a : { b : 'c' } },
+  }
+  const invalidInputFirst = {
+    foo : 'bar',
+    baz : { a : { b : 1 } },
+  }
+  const invalidInputSecond = {
+    foo : 'bar',
+    baz : { a : { b : [] } },
+  }
+  const invalidInputThird = {
+    foo : 'bar',
+    baz : { a : { b : null } },
+  }
+  const schema = {
+    foo : 'string',
+    baz : { a : { b : 'string' } },
+  }
+
+  expect(
+      R.isValid({
+        input,
+        schema,
+      })
+    ).toBeTruthy()
+
+  expect(
+      R.isValid({
+        input : invalidInputFirst,
+        schema,
+      })
+    ).toBeFalsy()
+  expect(
+      R.isValid({
+        input : invalidInputSecond,
+        schema,
+      })
+    ).toBeFalsy()
+  expect(
+      R.isValid({
+        input : invalidInputThird,
+        schema,
+      })
+    ).toBeFalsy()
+})
+
+test('should return true when schema is empty object', () => {
+  expect(
+    R.isValid({
+      input  : { a : 1 },
+      schema : {},
+    })
+  ).toBeTruthy()
+})
+
+test('should return false when schema is undefined', () => {
+  expect(
+    R.isValid({
+      input  : { a : 1 },
+      schema : undefined,
+    })
+  ).toBeFalsy()
+})
+
+test('should return false with invalid schema rule', () => {
+  const input = {
+    foo : 'bar',
+    a   : {},
+  }
+  const inputSecond = { foo : 'bar' }
+
+  const schema = {
+    foo : 'string',
+    baz : { a : {} },
+  }
+
+  expect(
+    R.isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+
+  expect(
+    R.isValid({
+      input : inputSecond,
+      schema,
+    })
+  ).toBeFalsy()
 })
