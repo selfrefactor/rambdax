@@ -5,6 +5,7 @@ declare namespace R {
     | "Promise"
     | "Object"
     | "Boolean"
+    | "Undefined"
     | "String"
     | "Null"
     | "Array"
