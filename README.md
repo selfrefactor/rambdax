@@ -241,24 +241,6 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
 
 ---
-#### intersection
-
-> intersection(x: T[], y: T[]): T[]
-
-It returns array with the overlapped members of `x` and `y`.
-
-```
-R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ])
-//=> [3, 5]
-```
-
-It returns `true` if `R.type` of `x` is equal to `xType`.
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/intersection.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.intersection(%5B%201%2C%203%2C%205%20%5D%2C%20%5B%202%2C%203%2C%205%20%5D)%0A%2F%2F%3D%3E%20%5B3%2C%205%5D">Try in REPL</a>
-
----
 #### isPromiseLike
 
 > isPromiseLike(x: any): boolean

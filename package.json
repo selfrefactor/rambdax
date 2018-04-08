@@ -59,7 +59,8 @@
   },
   "commitMessage": {
     "feature": [
-      "method"
+      "method",
+      "remove"
     ]
   }
 }

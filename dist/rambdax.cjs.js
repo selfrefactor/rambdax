@@ -150,14 +150,6 @@ function ifElseAsync(condition, ifFn, elseFn) {
   });
 }
 
-function intersection(a, b) {
-  if (b === undefined) {
-    return bHolder => intersection(a, bHolder);
-  }
-
-  return R.filter(val => b.includes(val))(a);
-}
-
 function inject(injection, marker, content) {
 
   return R.replace(marker, `${marker}${injection}`, content);
@@ -678,21 +670,6 @@ function throttle(fn, ms) {
   };
 }
 
-function tryCatch(fn, input) {
-  const fnType = R.type(fn);
-  if (fnType === 'Async' || fnType === 'Promise') {
-    return new Promise(resolve => {
-      fn(input).then(resolve).catch(resolve);
-    });
-  }
-
-  try {
-    return fn(input);
-  } catch (err) {
-    return err;
-  }
-}
-
 function when(condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
     return whenTrueFnHolder => when(condition, whenTrueFnHolder);
@@ -924,7 +901,6 @@ exports.debug = debug;
 exports.evolve = evolve$1;
 exports.greater = greater;
 exports.ifElseAsync = ifElseAsync;
-exports.intersection = intersection;
 exports.inject = inject;
 exports.isPromiseLike = isPromiseLike;
 exports.isValid = isValid;
@@ -946,6 +922,5 @@ exports.shuffle = shuffle;
 exports.switcher = switcher;
 exports.tapAsync = tapAsync;
 exports.throttle = throttle;
-exports.tryCatch = tryCatch;
 exports.when = when;
 exports.where = where;

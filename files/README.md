@@ -216,21 +216,6 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/inject.js)
 
-#### intersection
-
-> intersection(x: T[], y: T[]): T[]
-
-It returns array with the overlapped members of `x` and `y`.
-
-```
-R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ])
-//=> [3, 5]
-```
-
-It returns `true` if `R.type` of `x` is equal to `xType`.
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/intersection.js)
-
 #### isPromiseLike
 
 > isPromiseLike(x: any): boolean
