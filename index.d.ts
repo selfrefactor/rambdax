@@ -199,6 +199,8 @@ declare namespace R {
       elseFn: Async | Function
     ): Async
 
+    inject(injection: string, marker: string, str: string): string
+
     intersection<T>(list1: T[], list2: T[]): T[]
     intersection<T>(list1: T[]): (list2: T[]) => T[]
 

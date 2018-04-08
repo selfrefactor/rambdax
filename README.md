@@ -222,6 +222,25 @@ R.greater(1,2) // => true
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
+#### inject
+
+> inject(injection: string, marker: string, str: string): string
+
+```
+const result = R.inject(
+  ' INJECTION',
+  'MARKER',
+  'foo bar MARKER baz'
+)
+
+const expectedResult = 'foo bar MARKER INJECTION baz'
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/inject.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
+
+---
 #### intersection
 
 > intersection(x: T[], y: T[]): T[]

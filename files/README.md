@@ -200,6 +200,22 @@ R.greater(1,2) // => true
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/greater.js)
 
+#### inject
+
+> inject(injection: string, marker: string, str: string): string
+
+```
+const result = R.inject(
+  ' INJECTION',
+  'MARKER',
+  'foo bar MARKER baz'
+)
+
+const expectedResult = 'foo bar MARKER INJECTION baz'
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/inject.js)
+
 #### intersection
 
 > intersection(x: T[], y: T[]): T[]
