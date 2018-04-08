@@ -129,10 +129,6 @@ declare namespace R {
     [index: string]: any
   }
 
-  interface ProduceConditions {
-    [key: string]: Function | Promise<any>
-  }
-
   interface ObjectWithPromises {
     [key: string]: Promise<any>
   }
@@ -229,23 +225,14 @@ declare namespace R {
     pickBy(fn: Function, input: object): object
     pickBy(fn: Function): (input: object) => object
 
-    produce<Conditions extends ProduceConditions, Out>(
-      conditions: Conditions,
+    produce<Out>(
+      conditions: any,
       input: any
     ): Out
-    
-    produce<Conditions extends ProduceConditions, Out>(
-      conditions: Conditions,
-      input: any
-    ): Promise<Out>
 
-    produce<Conditions extends ProduceConditions, Out>(
-      conditions: Conditions,
+    produce<Out>(
+      conditions: any,
     ): (input: any) => Out
-
-    produce<Conditions extends ProduceConditions, Out>(
-      conditions: Conditions,
-    ): (input: any) => Promise<Out>
 
     random(min: number, max: number): number
 
