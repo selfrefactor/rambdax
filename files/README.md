@@ -675,6 +675,27 @@ const result = truncate('12345678')
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
 
+#### whenAsync
+
+> whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
+
+```
+const fn = await R.whenAsync(
+  async x => {
+    await R.delay(x*100)
+    return x > 2
+  },
+  async x => {
+    await R.delay(x*100)
+    return x * 2
+  }
+)
+
+const result = fn(5) // => 10
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/whenAsync.js)
+
 #### add
 
 > add(a: number, b: number): number

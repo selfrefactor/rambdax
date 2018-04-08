@@ -758,6 +758,30 @@ const result = truncate('12345678')
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
 
 ---
+#### whenAsync
+
+> whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
+
+```
+const fn = await R.whenAsync(
+  async x => {
+    await R.delay(x*100)
+    return x > 2
+  },
+  async x => {
+    await R.delay(x*100)
+    return x * 2
+  }
+)
+
+const result = fn(5) // => 10
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/whenAsync.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20await%20R.whenAsync(%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20%3E%202%0A%20%20%7D%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20*%202%0A%20%20%7D%0A)%0A%0Aconst%20result%20%3D%20fn(5)%20%2F%2F%20%3D%3E%2010">Try in REPL</a>
+
+---
 #### add
 
 > add(a: number, b: number): number

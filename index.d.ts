@@ -155,7 +155,7 @@ declare namespace R {
     schema: Schema
   }
 
-  type Async = (x: any) => Promise<any>
+  type Async<T> = (x: any) => Promise<T>
 
   interface TypedObject<T> {
     [key: string]: T
@@ -189,11 +189,16 @@ declare namespace R {
     less(x: number, y: number): boolean
     less(x: number): (y: number) => boolean
 
-    ifElseAsync(
+    ifElseAsync<T>(
       condition: Async | Function,
       ifFn: Async | Function,
       elseFn: Async | Function
-    ): Async
+    ): Async<T>
+
+    whenAsync<T>(
+      condition: Async | Function | boolean,
+      whenFn: Async | Function
+    ): Async<T>
 
     inject(injection: string, marker: string, str: string): string
 
@@ -208,11 +213,11 @@ declare namespace R {
 
     isValid(input: IsValid): boolean
 
-    mapAsync(fn: Async, x: any[]): Promise<Array<any>>
-    mapAsync(fn: Async): (x: any[]) => Promise<Array<any>>
+    mapAsync<T>(fn: Async, x: any[]): Promise<Array<T>>
+    mapAsync<T>(fn: Async): (x: any[]) => Promise<Array<T>>
 
-    mapFastAsync(fn: Async, x: any[]): Promise<Array<any>>
-    mapFastAsync(fn: Async): (x: any[]) => Promise<Array<any>>
+    mapFastAsync<T>(fn: Async, x: any[]): Promise<Array<T>>
+    mapFastAsync<T>(fn: Async): (x: any[]) => Promise<Array<T>>
 
     memoize(fn: Function | Promise<any>): any
 
@@ -253,8 +258,6 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle(fn: Function, ms: number): Function
-
-    tryCatch<T>(fn: Function | Async, input?: any): T | Promise<T>
 
     where(conditions: object, input: object): boolean
 
