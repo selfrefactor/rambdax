@@ -9,17 +9,11 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
     iterationValue = cases[ index ].test(testValue)
 
     if (iterationValue !== NO_MATCH_FOUND) {
-      return {
-        key   : cases[ index ].key,
-        value : iterationValue,
-      }
+      return iterationValue
     }
   }
 
-  return {
-    key   : 'default',
-    value : defaultValue,
-  }
+  return defaultValue
 }
 
 const isEqual = (testValue, matchValue) => {
@@ -66,11 +60,8 @@ class Switchem {
   }
 
   match (matchValue) {
-    const { key, value } = getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
 
-    return typeof value === 'function' ?
-      value(key, matchValue) :
-      value
+    return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
   }
 
 }

@@ -1,5 +1,16 @@
 const R = require('../rambdax')
 
+test('', () => {
+  const result = R.switcher('foo')
+    .is('bar', R.tap)
+    .is('foo', R.add(1))
+    .default(R.trim)
+
+  expect(
+    result(2)
+  ).toEqual(3)
+})
+
 test('with boolean tuple', () => {
   const a = true
   const b = false
@@ -70,6 +81,6 @@ test('works with functions as condition result', () => {
     .default(R.identity)
 
   expect(
-    R.type(result)
+    R.type(result())
   ).toEqual('Promise')
 })

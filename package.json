@@ -7,7 +7,7 @@
   "typings": "./index.d.ts",
   "scripts": {
     "dev": "jest --watch",
-    "devx": "jest --watch __tests__/whenAsync",
+    "devx": "jest --watch __tests__/switcher",
     "de": "commit",
     "buildweb": "rollup -c files/rollup.web.config.js",
     "build": "run-p rambda rollup",
