@@ -250,9 +250,18 @@ function less(x, y) {
 
 async function mapAsyncFn(fn, arr) {
   try {
-    const willReturn = [];
-    for (const a of arr) {
-      willReturn.push((await fn(a)));
+    if (Array.isArray(arr)) {
+      const willReturn = [];
+      for (const a of arr) {
+        willReturn.push((await fn(a)));
+      }
+
+      return willReturn;
+    }
+
+    const willReturn = {};
+    for (const prop$$1 in arr) {
+      willReturn[prop$$1] = await fn(arr[prop$$1], prop$$1);
     }
 
     return willReturn;
