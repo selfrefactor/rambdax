@@ -178,25 +178,34 @@ function isValid({ input, schema }) {
         const inputPropType = R.type(input[requirement]);
 
         if (ruleType === 'Object') {
-          // This rule is standalone schema - schema = {a: {b: 'string'}}  
+          /**
+           * This rule is standalone schema - schema = {a: {b: 'string'}}
+           */
           const isValidResult = isValid({
             input: inputProp,
             schema: rule
           });
           boom(isValidResult);
         } else if (ruleType === 'String') {
-          // rule is concrete rule such as 'number' so two types are compared
+          /**
+           * rule is concrete rule such as 'number' so two types are compared
+           */
           boom(R.toLower(inputPropType) === rule);
         } else if (typeof rule === 'function') {
-          // rule is function so we pass to it the input
+          /**
+           * rule is function so we pass to it the input
+           */
           boom(rule(inputProp));
         } else if (ruleType === 'Array' && inputPropType === 'String') {
-          // enum case | rule is like a: ['foo', 'bar']
+          /**
+           * enum case | rule is like a: ['foo', 'bar']
+           */
           boom(R.contains(inputProp, rule));
         } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
-          // 1. array of type | rule is like a: ['number']
-          // 2. rule is like a: [{from: 'string'}]
-
+          /**
+           * 1. array of type | rule is like a: ['number']
+           * 2. rule is like a: [{from: 'string'}]
+           */
           const currentRule = rule[0];
           const currentRuleType = R.type(rule[0]);
           // Check if rule is invalid
@@ -204,14 +213,18 @@ function isValid({ input, schema }) {
 
           if (currentRuleType === 'String') {
 
-            // 1. array of type
+            /**
+             * 1. array of type
+             */
             const isInvalidResult = R.any(inputPropInstance => R.type(inputPropInstance).toLowerCase() !== currentRule, inputProp);
             boom(!isInvalidResult);
           }
 
           if (currentRuleType === 'Object') {
 
-            // 2. rule is like a: [{from: 'string'}]
+            /**
+             * 2. rule is like a: [{from: 'string'}]
+             */
             const isValidResult = R.all(inputPropInstance => isValid({ input: inputPropInstance, schema: currentRule }), inputProp);
             boom(isValidResult);
           }
@@ -578,17 +591,11 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
     iterationValue = cases[index].test(testValue);
 
     if (iterationValue !== NO_MATCH_FOUND) {
-      return {
-        key: cases[index].key,
-        value: iterationValue
-      };
+      return iterationValue;
     }
   }
 
-  return {
-    key: 'default',
-    value: defaultValue
-  };
+  return defaultValue;
 };
 
 const isEqual = (testValue, matchValue) => {
@@ -629,9 +636,8 @@ class Switchem {
   }
 
   match(matchValue) {
-    const { key, value } = getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
 
-    return typeof value === 'function' ? value(key, matchValue) : value;
+    return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
   }
 
 }
@@ -684,6 +690,45 @@ function when(condition, whenTrueFn) {
 
     return input;
   };
+}
+
+function createThenable$1(x) {
+  return async function (input) {
+    return x(input);
+  };
+}
+
+function whenAsync(condition, whenTrueFn) {
+  if (whenTrueFn === undefined) {
+
+    return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder);
+  }
+
+  return input => new Promise((resolve, reject) => {
+
+    if (typeof condition === 'boolean') {
+
+      if (condition === false) {
+
+        return resolve(input);
+      }
+
+      whenTrueFn(input).then(resolve).catch(reject);
+    } else {
+
+      const conditionPromise = createThenable$1(condition);
+
+      conditionPromise(input).then(conditionResult => {
+
+        if (conditionResult === false) {
+
+          return resolve(input);
+        }
+
+        whenTrueFn(input).then(resolve).catch(reject);
+      }).catch(reject);
+    }
+  });
 }
 
 function where(conditions, obj) {
@@ -923,4 +968,5 @@ exports.switcher = switcher;
 exports.tapAsync = tapAsync;
 exports.throttle = throttle;
 exports.when = when;
+exports.whenAsync = whenAsync;
 exports.where = where;

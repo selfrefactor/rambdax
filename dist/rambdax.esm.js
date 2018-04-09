@@ -174,25 +174,34 @@ function isValid({ input, schema }) {
         const inputPropType = type(input[requirement]);
 
         if (ruleType === 'Object') {
-          // This rule is standalone schema - schema = {a: {b: 'string'}}  
+          /**
+           * This rule is standalone schema - schema = {a: {b: 'string'}}
+           */
           const isValidResult = isValid({
             input: inputProp,
             schema: rule
           });
           boom(isValidResult);
         } else if (ruleType === 'String') {
-          // rule is concrete rule such as 'number' so two types are compared
+          /**
+           * rule is concrete rule such as 'number' so two types are compared
+           */
           boom(toLower(inputPropType) === rule);
         } else if (typeof rule === 'function') {
-          // rule is function so we pass to it the input
+          /**
+           * rule is function so we pass to it the input
+           */
           boom(rule(inputProp));
         } else if (ruleType === 'Array' && inputPropType === 'String') {
-          // enum case | rule is like a: ['foo', 'bar']
+          /**
+           * enum case | rule is like a: ['foo', 'bar']
+           */
           boom(contains(inputProp, rule));
         } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
-          // 1. array of type | rule is like a: ['number']
-          // 2. rule is like a: [{from: 'string'}]
-
+          /**
+           * 1. array of type | rule is like a: ['number']
+           * 2. rule is like a: [{from: 'string'}]
+           */
           const currentRule = rule[0];
           const currentRuleType = type(rule[0]);
           // Check if rule is invalid
@@ -200,14 +209,18 @@ function isValid({ input, schema }) {
 
           if (currentRuleType === 'String') {
 
-            // 1. array of type
+            /**
+             * 1. array of type
+             */
             const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== currentRule, inputProp);
             boom(!isInvalidResult);
           }
 
           if (currentRuleType === 'Object') {
 
-            // 2. rule is like a: [{from: 'string'}]
+            /**
+             * 2. rule is like a: [{from: 'string'}]
+             */
             const isValidResult = all(inputPropInstance => isValid({ input: inputPropInstance, schema: currentRule }), inputProp);
             boom(isValidResult);
           }
@@ -574,17 +587,11 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
     iterationValue = cases[index].test(testValue);
 
     if (iterationValue !== NO_MATCH_FOUND) {
-      return {
-        key: cases[index].key,
-        value: iterationValue
-      };
+      return iterationValue;
     }
   }
 
-  return {
-    key: 'default',
-    value: defaultValue
-  };
+  return defaultValue;
 };
 
 const isEqual = (testValue, matchValue) => {
@@ -625,9 +632,8 @@ class Switchem {
   }
 
   match(matchValue) {
-    const { key, value } = getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
 
-    return typeof value === 'function' ? value(key, matchValue) : value;
+    return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
   }
 
 }
@@ -680,6 +686,45 @@ function when(condition, whenTrueFn) {
 
     return input;
   };
+}
+
+function createThenable$1(x) {
+  return async function (input) {
+    return x(input);
+  };
+}
+
+function whenAsync(condition, whenTrueFn) {
+  if (whenTrueFn === undefined) {
+
+    return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder);
+  }
+
+  return input => new Promise((resolve, reject$$1) => {
+
+    if (typeof condition === 'boolean') {
+
+      if (condition === false) {
+
+        return resolve(input);
+      }
+
+      whenTrueFn(input).then(resolve).catch(reject$$1);
+    } else {
+
+      const conditionPromise = createThenable$1(condition);
+
+      conditionPromise(input).then(conditionResult => {
+
+        if (conditionResult === false) {
+
+          return resolve(input);
+        }
+
+        whenTrueFn(input).then(resolve).catch(reject$$1);
+      }).catch(reject$$1);
+    }
+  });
 }
 
 function where(conditions, obj) {
@@ -794,4 +839,4 @@ const update$1 = update;
 const values$1 = values;
 const without$1 = without;
 
-export { DELAY, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, always$1 as always, any$1 as any, append$1 as append, both$1 as both, complement$1 as complement, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, dissoc$1 as dissoc, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, inc$1 as inc, equals$1 as equals, F$1 as F, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, identity$1 as identity, ifElse$1 as ifElse, is$2 as is, isNil$1 as isNil, includes$1 as includes, indexBy$1 as indexBy, indexOf$1 as indexOf, init$1 as init, join$1 as join, lastIndexOf$1 as lastIndexOf, last$1 as last, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, not$1 as not, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$1 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, toLower$1 as toLower, toUpper$1 as toUpper, toString$1 as toString, trim$1 as trim, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, assocPath$1 as assocPath, compact, composeAsync, debounce, delay, debug, evolve$1 as evolve, greater, ifElseAsync, inject, isPromiseLike, isValid, less, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, switcher, tapAsync, throttle, when, where };
+export { DELAY, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, anyPass$1 as anyPass, always$1 as always, any$1 as any, append$1 as append, both$1 as both, complement$1 as complement, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, dissoc$1 as dissoc, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, inc$1 as inc, equals$1 as equals, F$1 as F, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, has$1 as has, head$1 as head, identity$1 as identity, ifElse$1 as ifElse, is$2 as is, isNil$1 as isNil, includes$1 as includes, indexBy$1 as indexBy, indexOf$1 as indexOf, init$1 as init, join$1 as join, lastIndexOf$1 as lastIndexOf, last$1 as last, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, not$1 as not, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$1 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, tap$1 as tap, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, test$1 as test, times$1 as times, toLower$1 as toLower, toUpper$1 as toUpper, toString$1 as toString, trim$1 as trim, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, assocPath$1 as assocPath, compact, composeAsync, debounce, delay, debug, evolve$1 as evolve, greater, ifElseAsync, inject, isPromiseLike, isValid, less, mapAsync, mapFastAsync, memoize, mergeAll, omitBy, once, pickBy, produce, random, rangeBy, renameProps, resolveMethod as resolve, resolveSecure, shuffle, switcher, tapAsync, throttle, when, whenAsync, where };
