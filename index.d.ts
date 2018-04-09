@@ -156,6 +156,7 @@ declare namespace R {
   }
 
   type Async<T> = (x: any) => Promise<T>
+  type AsyncWithProp<T> = (x: any, prop?: string) => Promise<T>
 
   interface TypedObject<T> {
     [key: string]: T
@@ -190,14 +191,14 @@ declare namespace R {
     less(x: number): (y: number) => boolean
 
     ifElseAsync<T>(
-      condition: Async | Function,
-      ifFn: Async | Function,
-      elseFn: Async | Function
+      condition: Async<any> | Function,
+      ifFn: Async<any> | Function,
+      elseFn: Async<any> | Function
     ): Async<T>
 
     whenAsync<T>(
-      condition: Async | Function | boolean,
-      whenFn: Async | Function
+      condition: Async<any> | Function | boolean,
+      whenFn: Async<any> | Function
     ): Async<T>
 
     inject(injection: string, marker: string, str: string): string
@@ -213,11 +214,13 @@ declare namespace R {
 
     isValid(input: IsValid): boolean
 
-    mapAsync<T>(fn: Async, x: any[]): Promise<Array<T>>
-    mapAsync<T>(fn: Async): (x: any[]) => Promise<Array<T>>
+    mapAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithProp<any>, x: object): Promise<Array<T>>
+    mapAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithProp<any>): (x: object) => Promise<Array<T>>
 
-    mapFastAsync<T>(fn: Async, x: any[]): Promise<Array<T>>
-    mapFastAsync<T>(fn: Async): (x: any[]) => Promise<Array<T>>
+    mapFastAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
+    mapFastAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
 
     memoize(fn: Function | Promise<any>): any
 

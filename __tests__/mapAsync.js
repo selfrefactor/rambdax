@@ -31,6 +31,11 @@ test('', async () => {
   expect(result).toEqual([ 21, 22, 23 ])
 })
 
+test('with object', async () => {
+  const result = await R.mapAsync(delay, {a: 1, b: 2, c: 3})
+  expect(result).toEqual({"a": 21, "b": 22, "c": 23})
+})
+
 test('composeAsync', async () => {
   const result = await R.composeAsync(
     R.mapAsync(delay),

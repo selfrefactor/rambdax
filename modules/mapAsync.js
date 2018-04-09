@@ -1,8 +1,17 @@
 async function mapAsyncFn (fn, arr) {
   try {
-    const willReturn = []
-    for (const a of arr) {
-      willReturn.push(await fn(a))
+    if(Array.isArray(arr)){
+      const willReturn = []
+      for (const a of arr) {
+        willReturn.push(await fn(a))
+      }
+  
+      return willReturn
+    }
+
+    const willReturn = {}
+    for (const prop in arr) {
+      willReturn[prop] = await fn(arr[prop], prop)
     }
 
     return willReturn
