@@ -5,6 +5,7 @@
   "main": "./dist/rambdax.cjs.js",
   "module": "./dist/rambdax.esm.js",
   "typings": "./index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "dev": "jest --watch",
     "devx": "jest --watch __tests__/mapAsync",
@@ -47,6 +48,7 @@
     "rollup-plugin-node-resolve"
   ],
   "devDependencies": {
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
     "babel-plugin-external-helpers": "^7.0.0-beta.3",
     "babel-preset-env": "^1.6.1",
     "commit-message": "https://github.com/selfrefactor/commit-message#3.0.0",
