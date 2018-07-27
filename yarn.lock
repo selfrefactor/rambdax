@@ -3166,9 +3166,13 @@ qs@~6.5.1:
   dependencies:
     rambdax "^0.8.8"
 
-rambda@^1.0.9, rambda@^1.1.0:
+rambda@^1.0.9:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.1.0.tgz#f184f22acead64287c74c9de94853fb4cc32b852"
+
+rambda@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.0.tgz#22f1cb028932a8b38eeeabdf8f20b96cfd091f1e"
 
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
