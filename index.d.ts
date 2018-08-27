@@ -296,6 +296,10 @@ declare namespace R {
     append<T>(el: T, list: T[]): T[]
     append<T>(el: T): <T>(list: T[]) => T[]
 
+    assoc<T, U, K extends string>(prop: K, val: T, obj: U): Record<K, T> & U;
+    assoc<K extends string>(prop: K): <T, U>(val: T, obj: U) => Record<K, T> & U;
+    assoc<T, K extends string>(prop: K, val: T): <U>(obj: U) => Record<K, T> & U;
+
     both(pred1: Pred, pred2: Pred): Pred
     both(pred1: Pred): (pred2: Pred) => Pred
 
@@ -364,18 +368,21 @@ declare namespace R {
     defaultTo<T>(a: T, b: null | undefined | T): T
     defaultTo<T>(a: T): (b: null | undefined | T) => T
 
+    dissoc<T>(prop: string, obj: any): T
+    dissoc(prop: string): <U>(obj: any) => U
+
     divide(a: number, b: number): number
     divide(a: number): (b: number) => number
 
-    drop<T>(n: number, input: T[]): T[]
     drop(n: number, input: string): string
+    drop<T>(n: number, input: T[]): T[]
     drop<T>(n: number): {
       (input: string): string
       (input: T[]): T[]
     }
 
-    dropLast<T>(n: number, input: T[]): T[]
     dropLast(n: number, input: string): string
+    dropLast<T>(n: number, input: T[]): T[]
     dropLast<T>(n: number): {
       (input: T[]): T[]
       (input: string): string
@@ -421,7 +428,9 @@ declare namespace R {
     identity<T>(x: T): T
 
     ifElse(fn: Pred | boolean, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
-    
+
+    inc(n: number): number
+
     includes(input: any, arrOrStr: any[]|string): boolean
     includes(input: any) : (arrOrStr: any[]|string) => boolean
 
@@ -436,14 +445,17 @@ declare namespace R {
     join(x: string, input: any[]): string
     join(x: string): (input: any[]) => string
 
+    keys<T extends object>(x: T): Array<keyof T>
+    keys<T>(x: T): string[]
+
     last<T>(list: T[]): T | undefined
     last(list: string): string
 
     length<T>(list: T[]): number
-    
+
     map<In, Out>(fn: MapFunction<In, Out>): MapInterface<Out>
     map<In, Out>(fn: MapFunction<In, Out>, list: In[]): Out[]
-    
+
     map<In, Out>(
       fn: MapFunction<In, Out>,
       obj: Dictionary<In>
@@ -461,10 +473,26 @@ declare namespace R {
     multiply(a: number, b: number): number
     multiply(a: number): (b: number) => number
 
+    max<T>(a: T, b: T): T
+    max<T>(a: T): (b: T) => T
+
+    maxBy<T>(keyFn: Function, a: T, b: T): T
+    maxBy<T>(keyFn: Function, a: T): (b: T) => T
+    maxBy<T>(keyFn: Function): CurriedFunction2<T, T, T>
+
+    min<T>(a: T, b: T): T
+    min<T>(a: T): (b: T) => T
+
+    minBy<T>(keyFn: Function, a: T, b: T): T
+    minBy<T>(keyFn: Function, a: T): (b: T) => T
+    minBy<T>(keyFn: Function): CurriedFunction2<T, T, T>
+
     none<T>(fn: (x: T) => boolean, list: T[]): boolean
     none<T>(fn: (x: T) => boolean): (list: T[]) => boolean
 
     not(value: any): boolean
+    nth<T>(n: number, list: Array<T>): T | undefined;
+    nth(n: number): <T>(list: Array<T>) => T | undefined;
 
     omit<T>(names: string[] | string, obj: T): T
     omit(names: string[] | string): <T>(obj: T) => T
@@ -579,15 +607,15 @@ declare namespace R {
     tail<T>(list: T[]): T[]
     tail(list: string): string
 
-    take<T>(n: number, input: T[]): T[]
     take(n: number, input: string): string
+    take<T>(n: number, input: T[]): T[]
     take<T>(n: number): {
       (input: string): string
       (input: T[]): T[]
     }
 
-    takeLast<T>(n: number, input: T[]): T[]
     takeLast(n: number, input: string): string
+    takeLast<T>(n: number, input: T[]): T[]
     takeLast(n: number): {
       <T>(input: T[]): T[]
       (input: string): string
@@ -624,6 +652,12 @@ declare namespace R {
 
     without<T>(list1: T[], list2: T[]): T[]
     without<T>(list1: T[]): (list2: T[]) => T[]
+
+    zip<K, V>(list1: ReadonlyArray<K>, list2: ReadonlyArray<V>): Array<KeyValuePair<K, V>>
+    zip<K>(list1: ReadonlyArray<K>): <V>(list2: ReadonlyArray<V>) => Array<KeyValuePair<K, V>>
+
+    zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T };
+    zipObj(keys: ReadonlyArray<string>): <T>(values: ReadonlyArray<T>) => { [index: string]: T };
   }
 }
 

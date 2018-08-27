@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^1.2.0"
+    "rambda": "^1.2.1"
   },
   "depFn": [
     "babel-plugin-external-helpers",
@@ -66,6 +66,7 @@
     ],
     "support": [
       "build"
-    ]
+    ],
+    "workInProgress": "rambda to ramdax types"
   }
 }

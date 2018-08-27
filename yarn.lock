@@ -3170,9 +3170,9 @@ rambda@^1.0.9:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.1.0.tgz#f184f22acead64287c74c9de94853fb4cc32b852"
 
-rambda@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.0.tgz#22f1cb028932a8b38eeeabdf8f20b96cfd091f1e"
+rambda@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.1.tgz#022921b51252c829a2022a153c0735efb03370a1"
 
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
