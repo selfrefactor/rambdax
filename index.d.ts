@@ -39,6 +39,7 @@ declare namespace R {
     default: IdentityFunction<T>
   }
   // RAMBDAX_END
+  // RAMDA_START
   type Ord = number | string | boolean
 
   type Path = Array<number | string>
@@ -161,9 +162,9 @@ declare namespace R {
   interface TypedObject<T> {
     [key: string]: T
   }
-
+  // RAMDA_END
   interface X {
-    // RAMBDAX_TYPES
+    // RAMBDAX_START
     assocPath<T, U>(path: Path | string, val: T, obj: U): U
     assocPath<T, U>(path: Path | string, val: T): (obj: U) => U
     assocPath<T, U>(path: Path | string): CurriedFunction2<T, U, U>
@@ -266,9 +267,9 @@ declare namespace R {
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>
-
-    // RAMBDA_TYPES
-    add(a: number, b: number): number
+    // RAMBDAX_END
+    // RAMBDA_MARKER
+add(a: number, b: number): number
     add(a: string, b: string): string
     add(a: number): (b: number) => number
     add(a: string): (b: string) => string
@@ -656,9 +657,8 @@ declare namespace R {
     zip<K, V>(list1: ReadonlyArray<K>, list2: ReadonlyArray<V>): Array<KeyValuePair<K, V>>
     zip<K>(list1: ReadonlyArray<K>): <V>(list2: ReadonlyArray<V>) => Array<KeyValuePair<K, V>>
 
-    zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T };
-    zipObj(keys: ReadonlyArray<string>): <T>(values: ReadonlyArray<T>) => { [index: string]: T };
-  }
+    zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T }
+    zipObj(keys: ReadonlyArray<string>): <T>(values: ReadonlyArray<T>) => { [index: string]: T }  }
 }
 
 declare let Rambdax: R.X

@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^1.2.1"
+    "rambda": "^1.2.2"
   },
   "depFn": [
     "babel-plugin-external-helpers",
@@ -57,7 +57,8 @@
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-resolve": "^3.0.2"
+    "rollup-plugin-node-resolve": "^3.0.2",
+    "string-fn": "^1.7.0"
   },
   "commitMessage": {
     "feature": [
@@ -67,6 +68,6 @@
     "support": [
       "build"
     ],
-    "workInProgress": "rambda to ramdax types"
+    "workInProgress": ""
   }
 }

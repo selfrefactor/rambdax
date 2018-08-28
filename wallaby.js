@@ -3,7 +3,8 @@ module.exports = function (wallaby){
     files: [
       'rambdax.js',
       'package.json',
-      'modules/**/*.js'
+      'modules/**/*.js',
+      'files/**/*.js'
     ],
     tests: [
       '__tests__/**/*.js'

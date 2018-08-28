@@ -3170,9 +3170,9 @@ rambda@^1.0.9:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.1.0.tgz#f184f22acead64287c74c9de94853fb4cc32b852"
 
-rambda@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.1.tgz#022921b51252c829a2022a153c0735efb03370a1"
+rambda@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.2.tgz#92e22c70e3eac170b79defe75053a9806d88c6ca"
 
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
@@ -3737,6 +3737,12 @@ stream-combiner@~0.0.4:
 string-fn@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/string-fn/-/string-fn-1.6.0.tgz#67ec51f045969c79970888f879277e4864c11cdb"
+  dependencies:
+    rambda "^1.0.9"
+
+string-fn@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/string-fn/-/string-fn-1.7.0.tgz#ba3133c99812b56d2954baf7cbb83c3ab3647dac"
   dependencies:
     rambda "^1.0.9"
 
