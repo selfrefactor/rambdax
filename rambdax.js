@@ -45,6 +45,7 @@ export const always = R.always
 export const any = R.any
 export const anyPass = R.anyPass
 export const append = R.append
+export const assoc = R.assoc
 export const both = R.both
 export const complement = R.complement
 export const compose = R.compose
