@@ -1,14 +1,23 @@
 {
 	"recommendations": [
     "ChakrounAnas.turbo-console-log",
+    "DavidAnson.vscode-markdownlint",
+    "IBM.output-colorizer",
     "WallabyJs.wallaby-vscode",
+    "axiomaticstudios.one-monokai-80s",
+    "be5invis.vscode-icontheme-nomo-dark",
+    "ftsamoyed.theme-pink-cat-boo",
+    "hoovercj.vscode-power-mode",
+    "johnpapa.winteriscoming".
     "josef.rouge-theme",
     "jwoelper.theme-miami",
+    "lkytal.FlatUI",
+    "mariorodeghiero.vue-theme",
     "ms-vscode.atom-keybindings",
-    "pywhere.guides",
     "rafamel.subtle-brackets",
     "sean.Macaroon-theme",
     "spywhere.guides",
+    "veggiemonk.theme-solarized-light-fjs",
     "selfrefactor.order-props"
 	]
 }
