@@ -1,71 +1,71 @@
 {
-	"name": "rambdax",
-	"version": "0.10.1",
-	"description": "Lightweight alternative to Ramda - extended version",
-	"main": "./dist/rambdax.cjs.js",
-	"module": "./dist/rambdax.esm.js",
-	"typings": "./index.d.ts",
-	"sideEffects": false,
-	"scripts": {
-		"dev": "jest --watch",
-		"de": "commit",
-		"build": "run-p rambda build-main",
-		"build-main": "microbundle --entry rambdax.js",
-		"test": "jest",
-		"rambda": "node files/generateRambdaExports",
-		"docs": "docsify init ./docs",
-		"cover": "jest __tests__ --coverage",
-		"lint": "run-p lint-test lint-modules lint-rambdax",
-		"lint-test": "cd __tests__&&run lintFolder",
-		"lint-modules": "cd modules&&run lintFolder",
-		"lint-rambdax": "run lint rambdax.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/selfrefactor/rambdax.git"
-	},
-	"keywords": [
-		"rambda",
-		"ramda",
-		"util"
-	],
-	"author": "self_refactor",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/selfrefactor/rambdax/issues"
-	},
-	"homepage": "https://github.com/selfrefactor/rambdax#readme",
-	"dependencies": {
-		"rambda": "^1.2.2"
-	},
-	"depFn": [
-		"babel-plugin-external-helpers",
-		"babel-preset-env",
-		"rollup-plugin-babel",
-		"rollup-plugin-babel",
-		"rollup-plugin-node-resolve"
-	],
-	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-plugin-annotate-pure-calls": "^0.2.2",
-		"babel-plugin-external-helpers": "^6.22.0",
-		"babel-preset-env": "^1.6.1",
-		"commit-message": "https://github.com/selfrefactor/commit-message#3.0.1",
-		"fs-extra": "^7.0.0",
-		"jest": "^23.5.0",
-		"microbundle": "^0.6.0",
-		"npm-run-all": "^4.1.2",
-		"rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
-		"string-fn": "^1.7.0"
-	},
-	"commitMessage": {
-		"feature": [
-			"method",
-			"remove"
-		],
-		"support": [
-			"build"
-		],
-		"workInProgress": ""
-	}
+  "name": "rambdax",
+  "version": "0.10.1",
+  "description": "Lightweight alternative to Ramda - extended version",
+  "main": "./dist/rambdax.cjs.js",
+  "module": "./dist/rambdax.esm.js",
+  "typings": "./index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "dev": "jest --watch",
+    "de": "commit",
+    "build": "run-p rambda build-main",
+    "build-main": "microbundle --entry rambdax.js",
+    "test": "jest",
+    "rambda": "node files/generateRambdaExports",
+    "docs": "docsify init ./docs",
+    "cover": "jest __tests__ --coverage",
+    "lint": "run-p lint-test lint-modules lint-rambdax",
+    "lint-test": "cd __tests__&&run lintFolder",
+    "lint-modules": "cd modules&&run lintFolder",
+    "lint-rambdax": "run lint rambdax.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selfrefactor/rambdax.git"
+  },
+  "keywords": [
+    "rambda",
+    "ramda",
+    "util"
+  ],
+  "author": "self_refactor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/selfrefactor/rambdax/issues"
+  },
+  "homepage": "https://github.com/selfrefactor/rambdax#readme",
+  "dependencies": {
+    "rambda": "^1.2.2"
+  },
+  "depFn": [
+    "babel-plugin-external-helpers",
+    "babel-preset-env",
+    "rollup-plugin-babel",
+    "rollup-plugin-babel",
+    "rollup-plugin-node-resolve"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-annotate-pure-calls": "^0.2.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "commit-message": "https://github.com/selfrefactor/commit-message#3.0.1",
+    "fs-extra": "^7.0.0",
+    "jest": "^23.5.0",
+    "microbundle": "^0.6.0",
+    "npm-run-all": "^4.1.2",
+    "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
+    "string-fn": "^1.7.0"
+  },
+  "commitMessage": {
+    "feature": [
+      "method",
+      "remove"
+    ],
+    "support": [
+      "build"
+    ],
+    "workInProgress": "vscode extensions recommendations"
+  }
 }
