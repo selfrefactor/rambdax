@@ -358,6 +358,25 @@ const result = R.mergeAll(arr)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mergeAll.js)
 
+#### multiline
+
+> multiline(input: string, glue?: string): string
+
+It transforms multiline strings to single line.
+
+```
+const result = R.multiline`
+  foo
+  bar
+  baz
+`
+
+const expectedResult = 'foo bar baz'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/multiline.js)
+
 #### omitBy
 
 > omitBy(fn: function, input: Object): Object
