@@ -66,6 +66,6 @@
     "support": [
       "build"
     ],
-    "workInProgress": ""
+    "workInProgress": "from __tests__ to .spec.js"
   }
 }

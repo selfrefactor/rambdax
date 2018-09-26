@@ -1,5 +1,6 @@
 {
 	"recommendations": [
+    "naumovs.color-highlight",
     "ChakrounAnas.turbo-console-log",
     "39digits.anchorage-vscode-theme",
     "DavidAnson.vscode-markdownlint",
