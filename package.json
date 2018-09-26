@@ -65,7 +65,8 @@
       "remove"
     ],
     "support": [
-      "build"
+      "build",
+      "vscode"
     ],
     "workInProgress": ""
   }
