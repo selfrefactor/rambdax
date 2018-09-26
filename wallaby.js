@@ -4,10 +4,10 @@ module.exports = function (wallaby){
       'rambdax.js',
       'package.json',
       'modules/**/*.js',
-      'files/**/*.js'
+      '!modules/**/*.spec.js'
     ],
     tests: [
-      '__tests__/**/*.js'
+      'modules/**/*.spec.js'
     ],
     env: {
       type: 'node',

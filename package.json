@@ -26,6 +26,7 @@
   },
   "keywords": [
     "rambda",
+    "lodash",
     "ramda",
     "util"
   ],
@@ -66,6 +67,6 @@
     "support": [
       "build"
     ],
-    "workInProgress": "from __tests__ to .spec.js"
+    "workInProgress": ""
   }
 }
