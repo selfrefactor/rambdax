@@ -6,32 +6,26 @@ function createThenable (x) {
 
 function whenAsync (condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
-
     return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder)
   }
 
   return input => new Promise((resolve, reject) => {
     const whenTrueFnPromise = createThenable(whenTrueFn)
 
-    if(typeof condition === 'boolean'){
-
-      if(condition === false){
-
+    if (typeof condition === 'boolean') {
+      if (condition === false) {
         return resolve(input)
       }
 
       whenTrueFn(input)
         .then(resolve)
         .catch(reject)
-    }else{
-
+    } else {
       const conditionPromise = createThenable(condition)
-  
+
       conditionPromise(input)
         .then(conditionResult => {
-          
-          if(conditionResult === false){
-
+          if (conditionResult === false) {
             return resolve(input)
           }
 

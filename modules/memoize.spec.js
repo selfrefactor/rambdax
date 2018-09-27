@@ -3,7 +3,7 @@ const R = require('../rambdax')
 describe('memoize', () => {
   it('normal function', () => {
     let counter = 0
-    
+
     const fn = ({ a, b, c }) => {
       counter++
 

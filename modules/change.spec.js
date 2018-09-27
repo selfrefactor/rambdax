@@ -1,22 +1,20 @@
 import change from './change'
 
 const origin = {
-  a: 0,
-  foo: {
-    bar: 1,
-    baz: false,
-    bax: {
-      nested: 2
-    }
+  a   : 0,
+  foo : {
+    bar : 1,
+    baz : false,
+    bax : { nested : 2 },
   },
-  first: {
-    second: {
-      third: {
-        fourth: 3,
-        fourthA: 4
-      }
-    }
-  }
+  first : {
+    second : {
+      third : {
+        fourth  : 3,
+        fourthA : 4,
+      },
+    },
+  },
 }
 
 test('when rule is not an object', () => {
@@ -34,19 +32,11 @@ test('when rule is not an object', () => {
 
 test('preserve origin object if nesting level is below 3', () => {
   const changeData = {
-    foo: {
-      bar: 7,
-      bax: {
-        bay: 8
-      }
+    foo : {
+      bar : 7,
+      bax : { bay : 8 },
     },
-    first: {
-      second: {
-        third: {
-          fourth: 9
-        }
-      }
-    }
+    first : { second : { third : { fourth : 9 } } },
   }
   const result = change(
     origin,

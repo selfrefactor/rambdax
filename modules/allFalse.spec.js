@@ -14,7 +14,7 @@ test('usage with variables', () => {
 
 test('usage with boolean', () => {
   const foo = 1
-  const bar = {a: 0}
+  const bar = { a : 0 }
   const baz = []
   const result = allFalse(
     foo > 2,

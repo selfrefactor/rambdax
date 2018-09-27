@@ -16,8 +16,7 @@
     "rambda": "node files/generateRambdaExports",
     "docs": "docsify init ./docs",
     "cover": "jest __tests__ --coverage",
-    "lint": "run-p lint-test lint-modules lint-rambdax",
-    "lint-test": "cd __tests__&&run lintFolder",
+    "lint": "run-p lint-modules lint-rambdax",
     "lint-modules": "cd modules&&run lintFolder",
     "lint-rambdax": "run lint rambdax.js",
     "devx": "jest modules/is.spec.js --watch"
@@ -69,7 +68,8 @@
     ],
     "support": [
       "build",
-      "vscode"
+      "vscode",
+      "lint"
     ],
     "workInProgress": ""
   }

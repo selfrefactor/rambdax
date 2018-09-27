@@ -1,8 +1,8 @@
 const allTrue = require('./allTrue').default
 
 const foo = 4
-const bar = {a: 1}
-const baz = [1,2,3]
+const bar = { a : 1 }
+const baz = [ 1, 2, 3 ]
 
 test('usage with non boolean', () => {
   const result = allTrue(

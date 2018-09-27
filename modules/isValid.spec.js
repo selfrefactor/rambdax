@@ -175,7 +175,7 @@ test('readme example', () => {
   }
   const input = {
     b : [
-        { a : [ 'led', 'zeppelin' ] },
+      { a : [ 'led', 'zeppelin' ] },
     ],
     c : {
       d : { e : true },
@@ -231,30 +231,30 @@ test('compatible schemas with nested object', () => {
   }
 
   expect(
-      isValid({
-        input,
-        schema,
-      })
-    ).toBeTruthy()
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
 
   expect(
-      isValid({
-        input : invalidInputFirst,
-        schema,
-      })
-    ).toBeFalsy()
+    isValid({
+      input : invalidInputFirst,
+      schema,
+    })
+  ).toBeFalsy()
   expect(
-      isValid({
-        input : invalidInputSecond,
-        schema,
-      })
-    ).toBeFalsy()
+    isValid({
+      input : invalidInputSecond,
+      schema,
+    })
+  ).toBeFalsy()
   expect(
-      isValid({
-        input : invalidInputThird,
-        schema,
-      })
-    ).toBeFalsy()
+    isValid({
+      input : invalidInputThird,
+      schema,
+    })
+  ).toBeFalsy()
 })
 
 test('should return true when schema is empty object', () => {

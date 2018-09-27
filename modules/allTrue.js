@@ -1,3 +1,3 @@
-export default function allTrue(...inputs){
+export default function allTrue (...inputs) {
   return inputs.filter(Boolean).length === inputs.length
 }

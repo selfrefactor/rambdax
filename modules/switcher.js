@@ -60,7 +60,6 @@ class Switchem {
   }
 
   match (matchValue) {
-
     return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
   }
 
