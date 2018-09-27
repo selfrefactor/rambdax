@@ -7,7 +7,8 @@
   "typings": "./index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "dev": "jest --watch",
+    "do": "node files/do",
+    "dev": "jest modules/is.spec.js",
     "de": "commit",
     "build": "run-p rambda build-main",
     "build-main": "microbundle --entry rambdax.js",
@@ -18,7 +19,8 @@
     "lint": "run-p lint-test lint-modules lint-rambdax",
     "lint-test": "cd __tests__&&run lintFolder",
     "lint-modules": "cd modules&&run lintFolder",
-    "lint-rambdax": "run lint rambdax.js"
+    "lint-rambdax": "run lint rambdax.js",
+    "devx": "jest modules/is.spec.js --watch"
   },
   "repository": {
     "type": "git",
@@ -52,6 +54,7 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "commit-message": "https://github.com/selfrefactor/commit-message#3.0.1",
+    "do": "https://github.com/selfrefactor/do#1.8.1",
     "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
     "microbundle": "^0.6.0",
