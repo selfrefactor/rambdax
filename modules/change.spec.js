@@ -1,4 +1,4 @@
-import { change } from './change'
+import change from './change'
 
 const origin = {
   a: 0,

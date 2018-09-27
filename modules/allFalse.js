@@ -1,4 +1,4 @@
-export function allFalse(...inputs){
+export default function allFalse(...inputs){
   if(inputs.length === 0) return true
   
   return inputs.filter(

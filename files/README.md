@@ -216,18 +216,18 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/inject.js)
 
-#### isPromiseLike
+#### isPromise
 
-> isPromiseLike(x: any): boolean
+> isPromise(x: any): boolean
 
 It returns true if `x` is either async function or unresolved promise.
 
 ```
-R.isPromiseLike(R.delay)
+R.isPromise(R.delay)
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromiseLike.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromise.js)
 
 #### isValid
 

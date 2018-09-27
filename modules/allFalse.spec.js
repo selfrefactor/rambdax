@@ -1,5 +1,4 @@
-const {allFalse} = require('./allFalse')
-
+import allFalse from './allFalse'
 
 test('usage with variables', () => {
   const foo = null

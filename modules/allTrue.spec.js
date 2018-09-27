@@ -1,4 +1,4 @@
-const {allTrue} = require('./allTrue')
+const allTrue = require('./allTrue').default
 
 const foo = 4
 const bar = {a: 1}

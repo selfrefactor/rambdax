@@ -1,4 +1,4 @@
-const R = require('../rambdax')
+const isValid = require('./isValid').default
 
 test('nested schema', () => {
   const input = {
@@ -19,7 +19,7 @@ test('nested schema', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
@@ -35,7 +35,7 @@ test('nested schema', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInputFirst,
       schema,
     })
@@ -51,7 +51,7 @@ test('nested schema', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInputSecond,
       schema,
     })
@@ -63,7 +63,7 @@ test('nested schema', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInputThird,
       schema,
     })
@@ -81,7 +81,7 @@ test('array of type', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
@@ -93,7 +93,7 @@ test('array of type', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInput,
       schema,
     })
@@ -116,14 +116,14 @@ test('function as rule', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
   ).toBeTruthy()
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInput,
       schema,
     })
@@ -135,7 +135,7 @@ test('input prop is undefined', () => {
   const schema = { a : 'number' }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
@@ -149,14 +149,14 @@ test('enum', () => {
   const schema = { a : [ 'foo', 'bar', 'baz' ] }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
   ).toBeTruthy()
 
   expect(
-    R.isValid({
+    isValid({
       input : invalidInput,
       schema,
     })
@@ -185,7 +185,7 @@ test('readme example', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
@@ -201,7 +201,7 @@ test('should allow additional properties', () => {
   const schema = { title : 'string' }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
@@ -231,26 +231,26 @@ test('compatible schemas with nested object', () => {
   }
 
   expect(
-      R.isValid({
+      isValid({
         input,
         schema,
       })
     ).toBeTruthy()
 
   expect(
-      R.isValid({
+      isValid({
         input : invalidInputFirst,
         schema,
       })
     ).toBeFalsy()
   expect(
-      R.isValid({
+      isValid({
         input : invalidInputSecond,
         schema,
       })
     ).toBeFalsy()
   expect(
-      R.isValid({
+      isValid({
         input : invalidInputThird,
         schema,
       })
@@ -259,7 +259,7 @@ test('compatible schemas with nested object', () => {
 
 test('should return true when schema is empty object', () => {
   expect(
-    R.isValid({
+    isValid({
       input  : { a : 1 },
       schema : {},
     })
@@ -268,7 +268,7 @@ test('should return true when schema is empty object', () => {
 
 test('should return false when schema is undefined', () => {
   expect(
-    R.isValid({
+    isValid({
       input  : { a : 1 },
       schema : undefined,
     })
@@ -288,14 +288,14 @@ test('should return false with invalid schema rule', () => {
   }
 
   expect(
-    R.isValid({
+    isValid({
       input,
       schema,
     })
   ).toBeFalsy()
 
   expect(
-    R.isValid({
+    isValid({
       input : inputSecond,
       schema,
     })

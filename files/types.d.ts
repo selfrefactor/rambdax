@@ -211,7 +211,7 @@ declare namespace R {
     isArray(x: any): boolean
     isString(x: any): boolean
     isObject(x: any): boolean
-    isPromiseLike(x: any): boolean
+    isPromise(x: any): boolean
 
     isValid(input: IsValid): boolean
 

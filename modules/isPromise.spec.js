@@ -1,20 +1,14 @@
-const R = require('../rambdax')
+import isPromise from './isPromise'
 
 test('', () => {
   expect(
-    R.complement(R.isNil)(null)
-  ).toBeFalsy()
-})
-
-test('isPromiseLike', () => {
-  expect(
-    R.isPromiseLike(
+    isPromise(
       () => {}
     )
   ).toBeFalsy()
 
   expect(
-    R.isPromiseLike(
+    isPromise(
       async () => {}
     )
   ).toBeTruthy()
@@ -26,7 +20,7 @@ test('isPromiseLike', () => {
   })
 
   expect(
-    R.isPromiseLike(
+    isPromise(
       delay(10)
     )
   ).toBeTruthy()

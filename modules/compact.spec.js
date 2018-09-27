@@ -1,7 +1,6 @@
-const R = require('../rambdax')
+import compact from './compact'
 
-describe('compact', () => {
-  it('', () => {
+test('', () => {
     const arr = [
       1,
       null,
@@ -14,8 +13,7 @@ describe('compact', () => {
       [ 1 ],
       /\s/g,
     ]
-    const result = R.compact(arr)
+    const result = compact(arr)
     const expectedResult = [ 1, false, ' ', 'foo', [ 1 ] ]
     expect(result).toEqual(expectedResult)
-  })
 })
