@@ -1,4 +1,4 @@
-import { type, toLower, contains, test, any, all } from 'rambda'
+import { type, toLower, contains, test, any, all, init } from 'rambda'
 
 export default function isValid ({ input, schema }) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
@@ -9,12 +9,21 @@ export default function isValid ({ input, schema }) {
       }
     }
 
-    for (const requirement in schema) {
+    for (const requirementRaw in schema) {
       if (flag) {
-        const rule = schema[ requirement ]
+        const isOptional = requirementRaw.endsWith('?')
+        const requirement = isOptional ?
+          init(requirementRaw) :
+          requirementRaw
+
+        const rule = schema[ requirementRaw ]
         const ruleType = type(rule)
         const inputProp = input[ requirement ]
         const inputPropType = type(input[ requirement ])
+        const ok = (isOptional && inputProp !== undefined) ||
+          !isOptional
+        
+        if(!ok) continue
 
         if (
           ruleType === 'Object'

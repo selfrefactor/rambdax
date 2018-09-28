@@ -318,7 +318,7 @@ R.isPromise(R.delay)
 
 It checks if `input` is following `schema` specifications.
 
-This is modified version of [json-validity](https://github.com/selfrefactor/json-validity) library.
+> TODO refer to correct md file
 
 ```
 const schema = {

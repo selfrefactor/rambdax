@@ -1,4 +1,159 @@
-const isValid = require('./isValid').default
+import isValid from './isValid'
+
+test('function is not schema', () => {
+  const input = {
+    a : {
+      ab : () => true,
+      ac : 3,
+    },
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : /fo/,
+      ac : 'number',
+    },
+    'b?' : 'string',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
+
+test('regex ok', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac : 3,
+    },
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : /fo/,
+      ac : 'number',
+    },
+    'b?' : 'string',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('regex !ok', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac : 3,
+    },
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : /ba/,
+      ac : 'number',
+    },
+    'b?' : 'string',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
+
+test('optional props is missing', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac : 3,
+    },
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : 'string',
+      ac : 'number',
+    },
+    'b?' : 'string',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('optional props is wrong type', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac : 3,
+    },
+    b: [],
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : 'string',
+      ac : 'number',
+    },
+    'b?' : 'string',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
+
+test('optional props - nested', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac : 3,
+    },
+    b: [],
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : 'string',
+      'ac?' : 'number',
+    },
+    b : 'array',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('optional props is missing - nested', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+    },
+    b: [],
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : 'string',
+      'ac?' : 'number',
+    },
+    b : 'array',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('optional props is wrong type - nested', () => {
+  const input = {
+    a : {
+      ab : 'foo',
+      ac: 'bar'
+    },
+    b: [],
+    c: [1,2]
+  }
+  const schema = {
+    a : {
+      ab : 'string',
+      'ac?' : 'number',
+    },
+    b : 'array',
+    c: ['number']
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
 
 test('nested schema', () => {
   const input = {
