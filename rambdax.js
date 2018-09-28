@@ -1,6 +1,5 @@
 import * as R from 'rambda'
 
-export { default as assocPath } from './modules/assocPath'
 export { default as allTrue } from './modules/allTrue'
 export { default as allFalse } from './modules/allFalse'
 export { default as compact } from './modules/compact'
