@@ -60,20 +60,6 @@ R.allTrue([1,2], x > 1, {})
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/allTrue.js)
 
-#### assocPath
-
-> assocPath(path: string[]|string, x: any, obj: object): object
-
-It creates a shallow copy of object `obj` with value `x` and object path `path`.
-If the object don't have object path `path`, then this path is created.
-
-```
-R.assocPath('a.b.c', 42, {a: {b: {c: 0}}})
-//=> {a: {b: {c: 42} } }
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
-
 #### change
 
 > change(origin: object, path: string, changeData: any): object
