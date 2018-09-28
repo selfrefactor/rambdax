@@ -71,6 +71,9 @@
       "vscode",
       "lint"
     ],
-    "workInProgress": ""
+    "workInProgress": "",
+    "docs": [
+      "method"
+    ]
   }
 }

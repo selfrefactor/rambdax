@@ -33,6 +33,33 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 Methods between `assocPath` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
+#### allTrue
+
+> allTrue(...inputs: any[]): boolean
+
+It returns `true` if all passed elements return `false` when passed to `Boolean`.
+
+```
+R.allFalse(null, undefined, '')
+//=> true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/allFalse.js)
+
+#### allTrue
+
+> allTrue(...inputs: any[]): boolean
+
+It returns `true` if all passed elements return `true` when passed to `Boolean`.
+
+```
+const x = 2
+R.allTrue([1,2], x > 1, {})
+//=> true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/allTrue.js)
+
 #### assocPath
 
 > assocPath(path: string[]|string, x: any, obj: object): object
@@ -46,6 +73,62 @@ R.assocPath('a.b.c', 42, {a: {b: {c: 0}}})
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+
+#### change
+
+> change(origin: object, path: string, changeData: any): object
+
+It helps changing object's properties if there are below 3 levels deep.
+
+Explanation:
+
+`path` provide way to specify which object's sub-branch you want to manipulate. Pass empty string if you target the whole `origin` object.
+
+`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch. 
+
+```
+const simpleResult = change(
+  { a: 1, b: { c: 2 } },
+  'b.c',
+  3
+)
+const expectedSimpleResult = {
+  a: 1,
+  b: { c: 3 }
+}
+// simpleResult === expectedSimpleResult
+
+const origin = {
+  a   : 0,
+  foo : {
+    bar : 1,
+    bax : { nested : 2 },
+  },
+}
+const changeData = {
+  bar: 2,
+  bay: 3,
+  bax: { baq: 9 }
+}
+const result = change(
+  origin,
+  'foo',
+  changeData
+)
+
+const expectedResult = {
+  a   : 0,
+  foo : {
+    bar : 2,
+    bay : 3,
+    bax : {
+      nested : 2,
+      baq: 9
+    },
+  },
+}
+// result === expectedResult
+```
 
 #### compact
 
