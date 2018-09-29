@@ -248,6 +248,7 @@ declare namespace R {
 
     resolveSecure(input: Array<Promise<any>>): Array<ResolveSecureResult>
 
+    s(): undefined
     shuffle<T>(arr: T[]): T[]
 
     switcher<T>(valueToMatch: any): Switchem<T>

@@ -645,6 +645,28 @@ const expectedResult = [
 // `result` resolves to `expectedResult`
 ```
 
+#### s
+
+> s(): undefined
+
+Taken from `https://github.com/staltz/zii`
+Chain function calls using a prototype function `s`
+
+```
+// To turn it on
+R.s()
+
+// Then
+const result = 'foo'
+  .s(R.toUpper)
+  .s(R.take(2))
+  .s(R.add('bar'))
+
+const expectedResult = 'barFO'
+// result === expectedResult
+```
+
+
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
 
 #### shuffle
