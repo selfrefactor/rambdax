@@ -1,26 +1,32 @@
 const getOccurances = input => 
-  input.match(/{{.+}}/g)
+  input.match(/{{[_a-zA-Z0-9]+}}/g)
 
-const getFirstOccurance = input => {
-  const [matched] = input.match(/{{.+}}/)
-
-  const prop = matched.replace(
+const getOccuranceProp = occurance => {
+  return occurance.replace(
     /{{|}}/g,
     ''
   )
 } 
 
-const replaceFirstOccurance = (input, replacer) => {
-  return input.replace(
-    /{{.+}}/,
+const replace = ({inputHolder, prop, replacer}) => {
+  return inputHolder.replace(
+    `{{${prop}}}`,
     replacer
   )
 } 
 
 export default function template(input,templateInput){
   const occurances = getOccurances(input)
-  console.log(occurances)
   if(occurances === null ) return input
-  return
-}
+  
+  let inputHolder = input
+  for (const occurance of occurances) {
+    const prop = getOccuranceProp(occurance)
+    const replacer = templateInput[prop]
+    
+    if(replacer === undefined) continue
+    inputHolder = replace({inputHolder, prop, replacer})
+  }
 
+  return inputHolder
+}
