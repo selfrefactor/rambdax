@@ -1,25 +1,19 @@
-import allFalse from './allFalse'
+import defaultWhen from './defaultWhen'
 
-test('usage with variables', () => {
-  const foo = null
-  const bar = undefined
-  const baz = false
-  const result = allFalse(
-    foo,
-    bar,
-    baz
-  )
-  expect(result).toBe(true)
+test('', () => {
+  const fn = x => x > 2
+  const fallback = 10
+
+  expect(defaultWhen(fn, fallback, 1)).toBe(10)
+  expect(defaultWhen(fn, fallback, 3)).toBe(3)
 })
 
-test('usage with boolean', () => {
-  const foo = 1
-  const bar = { a : 0 }
-  const baz = []
-  const result = allFalse(
-    foo > 2,
-    bar.a === 1,
-    baz.length === 3
+test('with curry', () => {
+  const validationFn = defaultWhen(
+    x => x > 2,
+    10,
   )
-  expect(result).toBe(true)
+
+  expect(validationFn(1)).toBe(10)
+  expect(validationFn(3)).toBe(3)
 })

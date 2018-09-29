@@ -31,7 +31,7 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 ## API
 
-Methods between `assocPath` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
+Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 #### allTrue
 
