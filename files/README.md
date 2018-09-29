@@ -721,6 +721,23 @@ const result = R.tapAsync(fn, "foo")
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/tapAsync.js)
 
+#### template
+
+> template(input: string, templateInput: object): string
+
+It generages a new string from `input` by replacing all `{{foo}}` occurances with values provided by `templateInput.
+
+```
+const input = 'foo is {{bar}} even {{a}} more'
+const templateInput = {"bar":"BAR", a: 1}
+
+const result = template(input,templateInput)
+const expectedResult = 'foo is BAR even 1 more'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/template.js)
+
 #### throttle
 
 > throttle(fn: Function, period: number): Function

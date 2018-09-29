@@ -257,7 +257,8 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle(fn: Function, ms: number): Function
-
+    template(input: string, templateInput: object): string
+    
     where(conditions: object, input: object): boolean
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
