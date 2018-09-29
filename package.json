@@ -8,7 +8,7 @@
   "sideEffects": false,
   "scripts": {
     "do": "node files/do",
-    "dev": "jest modules/s.spec.js",
+    "dev": "jest modules/template.spec.js",
     "de": "commit",
     "build": "run-p rambda build-main",
     "build-main": "microbundle --entry rambdax.js",
@@ -19,7 +19,7 @@
     "lint": "run-p lint-modules lint-rambdax",
     "lint-modules": "cd modules&&run lintFolder",
     "lint-rambdax": "run lint rambdax.js",
-    "devx": "jest modules/s.spec.js --watch"
+    "devx": "jest modules/template.spec.js --watch"
   },
   "repository": {
     "type": "git",
@@ -71,7 +71,7 @@
       "vscode",
       "lint"
     ],
-    "workInProgress": "",
+    "workInProgress": "template method",
     "docs": [
       "method"
     ]
