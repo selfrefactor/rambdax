@@ -15,7 +15,7 @@
     "test": "jest",
     "rambda": "node files/generateRambdaExports",
     "docs": "docsify init ./docs",
-    "cover": "jest __tests__ --coverage",
+    "cover": "jest --coverage",
     "lint": "run-p lint-modules lint-rambdax",
     "lint-modules": "cd modules&&run lintFolder",
     "lint-rambdax": "run lint rambdax.js",
