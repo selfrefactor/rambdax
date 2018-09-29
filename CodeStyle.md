@@ -1,16 +1,29 @@
 # Code style
+
 General tips for React and Javascript programming
 
 ## OK pattern
 
-Make `if` statement or ternary operations more readable. Used exclusevly in this cases. 
+Make `if` statement or ternary operations more readable. Used exclusively in this context.
 
 Also it is very clear that `ok` variables are `boolean` type. 
 
-```
+```javascript
 const ok = foo.a && (foo.b > 1 || foo.b === 2)
 
 if(!ok) return
+```
+
+```javascript
+render(){
+  const ok = this.props.store.loaded && this.props.store.initLoaded
+  const okLogged = ok && this.props.store.logged
+
+  if(!ok) return <div>Loading...</div>
+  if(!okLogged) return <div>You need to login</div>
+  
+  return <div>Master of puppets</div>
+}
 ```
 
 ## Maybe pattern
@@ -19,7 +32,7 @@ It signifies that there is uncertainty about getting the correct data.
 
 It may imply that there will be `if` check before assigning `foo` to be `maybeFoo` 
 
-```
+```javascript
 const maybeResult = await getResult()
 
 if(!maybeResult) return
