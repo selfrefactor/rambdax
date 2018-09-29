@@ -1,4 +1,4 @@
-import is from './is'
+import ok from './ok'
 
 const schema = {
   a : {
@@ -19,7 +19,7 @@ test('no curry', () => {
     b : 'foo',
   }
 
-  const positiveResult = is(
+  const positiveResult = ok(
     input,
     schema
   )
@@ -36,7 +36,7 @@ test('with curry', () => {
     b : 5,
   }
 
-  const negativeResult = is(
+  const negativeResult = ok(
     invalidInput
   )(schema)
   expect(negativeResult).toBeFalsy()
@@ -56,7 +56,7 @@ test('create validation function', () => {
     b : 'string',
   }
 
-  const validationFn = x => is(x, Schema)
+  const validationFn = x => ok(x, Schema)
 
   expect(validationFn(input)).toBeTruthy()
   expect(validationFn(invalidInput)).toBeFalsy()

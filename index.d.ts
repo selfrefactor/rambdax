@@ -151,11 +151,6 @@ declare namespace R {
     [key: string]: SchemaStringTypes | Array<SchemaStringTypes> | Array<Schema>
   }
 
-  interface IsValid {
-    input: object
-    schema: Schema
-  }
-
   type Async<T> = (x: any) => Promise<T>
   type AsyncWithProp<T> = (x: any, prop?: string) => Promise<T>
 
@@ -180,8 +175,6 @@ declare namespace R {
     delay(ms: Number): Promise<string>
 
     DELAY: string
-
-    debug(...input: Array<any>): never
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
@@ -213,7 +206,8 @@ declare namespace R {
     isObject(x: any): boolean
     isPromiseLike(x: any): boolean
 
-    isValid(input: IsValid): boolean
+    ok(input: object, schema: Schema): boolean
+    ok(input: object): (schema: Schema) => boolean
 
     mapAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, x: object): Promise<Array<T>>
@@ -269,7 +263,7 @@ declare namespace R {
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>
     // RAMBDAX_END
     // RAMBDA_MARKER
-add(a: number, b: number): number
+    add(a: number, b: number): number
     add(a: string, b: string): string
     add(a: number): (b: number) => number
     add(a: string): (b: string) => string
@@ -277,7 +271,6 @@ add(a: number, b: number): number
     addIndex<T, U>(fn: (f: (item: T) => U, list: T[]) => U[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => U, T[], U[]>
     addIndex<T>(fn: (f: (item: T) => void, list: T[]) => T[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => void, T[], T[]>
     addIndex<T, U>(fn: (f: (acc: U, item: T) => U, aci: U, list: T[]) => U): CurriedFunction3<(acc: U, item: T, idx: number, list?: T[]) => U, U, T[], U>
-
 
     adjust<T>(fn: (a: T) => T, index: number, list: T[]): T[]
     adjust<T>(fn: (a: T) => T, index: number): (list: T[]) => T[]

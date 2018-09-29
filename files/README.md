@@ -298,33 +298,6 @@ R.isPromise(R.delay)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromise.js)
 
-#### isValid
-
-> isValid({input: Object, schema: Object}): Boolean
-
-It checks if `input` is following `schema` specifications.
-
-> TODO refer to correct md file
-
-```
-const schema = {
-  published: "number",
-  style: [ "rock", "jazz" ],
-  title: "string",
-}
-
-const input = {
-  published: 1975,
-  style: "rock",
-  title: "In my time of dying",
-}
-
-const result = R.isValid({input,schema})
-// => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isValid.js)
-
 #### less
 
 > less(x: number, y: number): boolean
@@ -445,6 +418,34 @@ const expectedResult = 'foo bar baz'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/multiline.js)
+
+#### ok
+
+> ok(input: Object, schema: Object): boolean
+
+It checks if `input` is following `schema` specifications.
+It is in fact `R.isValid` but with
+
+> TODO refer to correct md file
+
+```
+const schema = {
+  published: "number",
+  style: [ "rock", "jazz" ],
+  title: "string",
+}
+
+const input = {
+  published: 1975,
+  style: "rock",
+  title: "In my time of dying",
+}
+
+const result = R.ok(input,schema)
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/ok.js)
 
 #### omitBy
 

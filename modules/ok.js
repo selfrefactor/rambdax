@@ -1,6 +1,6 @@
 import isValid from './isValid'
 
-export default function is (input, schema) {
+export default function ok (input, schema) {
   if (arguments.length === 2) {
     return isValid({
       input,
