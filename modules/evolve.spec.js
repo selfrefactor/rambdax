@@ -1,4 +1,5 @@
-const R = require('../rambdax')
+import evolve from './evolve'
+import {add, trim} from 'rambda'
 
 test('', () => {
   const tomato = {
@@ -10,14 +11,14 @@ test('', () => {
     id : 123,
   }
   const transformations = {
-    firstName : R.trim,
-    lastName  : R.trim, //Will not get invoked.
+    firstName : trim,
+    lastName  : trim, //Will not get invoked.
     data      : {
-      elapsed   : R.add(1),
-      remaining : R.add(-1),
+      elapsed   : add(1),
+      remaining : add(-1),
     },
   }
-  const result = R.evolve(transformations, tomato)
+  const result = evolve(transformations, tomato)
   expect(result).toEqual({
     firstName : 'Foo',
     data      : {

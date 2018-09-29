@@ -1,4 +1,8 @@
-const R = require('../rambdax')
+import {map, prop, equals} from 'rambda'
+import composeAsync from './composeAsync'
+import tapAsync from './tapAsync'
+import mapAsync from './mapAsync'
+import delay from './delay'
 
 test('', async () => {
   const fn = input => new Promise(resolve => {
@@ -12,10 +16,10 @@ test('', async () => {
 
   const list = [ 'foo', 'bar' ].map(a => fn(a))
 
-  const result = await R.composeAsync(
-    R.map(R.prop('payload')),
+  const result = await composeAsync(
+    map(prop('payload')),
     async inputs => Promise.all(inputs.map(async input => fn(input))),
-    R.map(R.prop('payload'))
+    map(prop('payload'))
   )(await Promise.all(list))
 
   expect(
@@ -32,7 +36,7 @@ test('', async () => {
     }, ms)
   })
 
-  const result = await R.composeAsync(
+  const result = await composeAsync(
     a => a - 1000,
     a => a,
     async a => delayAsync(a),
@@ -52,7 +56,7 @@ test('', async () => {
         reject('error')
       }, ms)
     })
-    const result = await R.composeAsync(
+    await composeAsync(
       a => a - 1000,
       delayAsync
     )(20)
@@ -65,14 +69,14 @@ test('', async () => {
 
 test('', async () => {
   let sideEffect
-  const result = await R.composeAsync(
-    R.tapAsync(async x => {
-      sideEffect = R.equals(x, [ 2, 4, 6 ])
+  const result = await composeAsync(
+    tapAsync(async x => {
+      sideEffect = equals(x, [ 2, 4, 6 ])
 
-      return await R.delay(x * 3)
+      return await delay(x * 3)
     }),
-    R.mapAsync(async x => {
-      await R.delay(x * 100)
+    mapAsync(async x => {
+      await delay(x * 100)
 
       return x * 2
     })
