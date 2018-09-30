@@ -213,6 +213,26 @@ const result = async function(){
 <a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20R.debounce(inc%2C%20900)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20debouncedInc()%0A%20%20await%20R.delay(500)%0A%20%20debouncedInc()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
 
 ---
+#### defaultWhen
+
+> defaultWhen(fn: Function, fallback: T, input: any): T
+
+It returns `fallback`, if `input` returns `false` when applied to `fn`.
+
+It returns `input` in the other case.
+
+```
+const fn = x => x > 2
+const fallback = 10
+const result = defaultWhen(fn, fallback, 1)
+// `result` is `10`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/defaultWhen.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20defaultWhen(fn%2C%20fallback%2C%201)%0A%2F%2F%20%60result%60%20is%20%6010%60">Try in REPL</a>
+
+---
 #### delay
 
 > delay(ms: number): Promise
@@ -452,11 +472,11 @@ const result = R.mergeAll(arr)
 It transforms multiline strings to single line.
 
 ```
-const result = R.multiline`
+const result = R.multiline(`
   foo
   bar
   baz
-`
+`)
 
 const expectedResult = 'foo bar baz'
 // result === expectedResult
@@ -464,7 +484,7 @@ const expectedResult = 'foo bar baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/multiline.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.multiline%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.multiline(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
 #### ok
@@ -737,7 +757,6 @@ const result = 'foo'
 const expectedResult = 'barFO'
 // result === expectedResult
 ```
-
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
 
