@@ -196,6 +196,23 @@ const result = async function(){
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/debounce.js)
 
+#### defaultWhen
+
+> defaultWhen(fn: Function, fallback: T, input: any): T
+
+It returns `fallback`, if `input` returns `false` when applied to `fn`.
+
+It returns `input` in the other case.
+
+```
+const fn = x => x > 2
+const fallback = 10
+const result = defaultWhen(fn, fallback, 1)
+// `result` is `10`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/defaultWhen.js)
+
 #### delay
 
 > delay(ms: number): Promise
@@ -402,7 +419,7 @@ const result = R.mergeAll(arr)
 
 #### multiline
 
-> multiline(input: string, glue?: string): string
+> multiline(input: string | string[], glue?: string): string
 
 It transforms multiline strings to single line.
 

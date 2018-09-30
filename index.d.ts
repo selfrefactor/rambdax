@@ -160,9 +160,10 @@ declare namespace R {
   // RAMDA_END
   interface X {
     // RAMBDAX_START
-    assocPath<T, U>(path: Path | string, val: T, obj: U): U
-    assocPath<T, U>(path: Path | string, val: T): (obj: U) => U
-    assocPath<T, U>(path: Path | string): CurriedFunction2<T, U, U>
+    allFalse(...input: Array<any>): boolean
+    allTrue(...input: Array<any>): boolean
+
+    change(origin: object, path: string, changeData: any): object
 
     compact<T>(x: T[]): T[]
 
@@ -171,6 +172,12 @@ declare namespace R {
     ): (input: any) => Promise<any>
 
     debounce<T>(fn: Function, ms: number): T
+
+    defaultWhen<T>(
+      fn: (x: T) => boolean, 
+      fallback: T, 
+      input: any
+    ): T  
 
     delay(ms: Number): Promise<string>
 
@@ -219,7 +226,12 @@ declare namespace R {
 
     memoize<T>(fn: Function | Async<any>): T
 
+    mergeRight(x: object, y: object): object
+    mergeRight(x: object): (y: object) => object
+    
     mergeAll(input: object[]): object
+
+    multiline(input: string | string[], glue?: string): string
 
     omitBy<T,OT>(fn: Function, input: T): OT
 
