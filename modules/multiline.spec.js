@@ -1,21 +1,59 @@
-const R = require('../rambdax')
+import multiline from './multiline'
 
-test('readable', () => {
-  const result = R.multiline`
-    foo
-    bar
-    baz
-  `
+test('case 0', () => {
+  const zero = `node node_modules/jest`
+  const first = `--runInBand`
+  const last = `-- src/a.spec.js`
+  const flag = false
+  const result = multiline(`
+    ${zero}
+    ${first}
+    ${flag ? '--env=node' : ''}
+    ${last}
+  `)
 
-  const expectedResult = 'foo bar baz'
+  const expectedResult = `${zero} ${first} ${last}`
 
   expect(
     result
   ).toBe(expectedResult)
 })
 
-test('', () => {
-  const result = R.multiline(`
+test('case 1', () => {
+  const zero = `node node_modules/jest`
+  const first = `--runInBand`
+  const last = `-- src/a.spec.js`
+  const flag = true
+  const result = multiline(`
+    ${zero}
+    ${first}
+    ${flag ? '--env=node' : ''}
+    ${last}
+  `)
+
+  const expectedResult = `${zero} ${first} --env=node ${last}`
+
+  expect(
+    result
+  ).toBe(expectedResult)
+})
+
+test('case 2', () => {
+  const first = `--runInBand`
+  const result = multiline(`
+    zero
+    ${first}
+    last
+  `)
+  const expectedResult = `zero ${first} last`
+
+  expect(
+    result
+  ).toBe(expectedResult)
+})
+
+test('case 3', () => {
+  const result = multiline(`
     foo
     bar
     baz
@@ -28,8 +66,9 @@ test('', () => {
   ).toBe(expectedResult)
 })
 
-test('define glue', () => {
-  const result = R.multiline(`
+
+test('with glue', () => {
+  const result = multiline(`
     foo
     bar
     baz

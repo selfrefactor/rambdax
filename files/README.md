@@ -419,16 +419,16 @@ const result = R.mergeAll(arr)
 
 #### multiline
 
-> multiline(input: string | string[], glue?: string): string
+> multiline(input: string, glue?: string): string
 
 It transforms multiline strings to single line.
 
 ```
-const result = R.multiline`
+const result = R.multiline(`
   foo
   bar
   baz
-`
+`)
 
 const expectedResult = 'foo bar baz'
 // result === expectedResult
@@ -682,7 +682,6 @@ const result = 'foo'
 const expectedResult = 'barFO'
 // result === expectedResult
 ```
-
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
 
