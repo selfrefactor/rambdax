@@ -75,7 +75,8 @@
     ],
     "workInProgress": "",
     "docs": [
-      "method"
+      "method",
+      "build"
     ]
   }
 }
