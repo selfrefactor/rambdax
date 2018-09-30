@@ -217,7 +217,7 @@ declare namespace R {
     mapFastAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
 
-    memoize<T>(fn: Function | Async): T
+    memoize<T>(fn: Function | Async<any>): T
 
     mergeAll(input: object[]): object
 

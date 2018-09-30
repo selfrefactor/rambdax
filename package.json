@@ -78,6 +78,9 @@
       "method",
       "build",
       "docsify"
+    ],
+    "fix": [
+      "typescript"
     ]
   }
 }
