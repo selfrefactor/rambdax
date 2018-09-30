@@ -7,55 +7,13 @@ const suite = new Benchmark.Suite()
 
 const suiteToRun = suite
   .add('plain', () => {
-    let counter = 0
-    const fn = (a, b) => {
-      counter++
-      return a + b
-    }  
-
-    const memoized = fn
-    const expected = 5
-    
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(2, 2)
-    memoized(1, 2)
-    assert.ok(counter <= expected)
+    base()
   })
   .add('current', () => {
-    let counter = 0
-    const fn = (a, b) => {
-      counter++
-      return a + b
-    }  
-
-    const memoized = R.memoize(fn)
-    const expected = 2
-    
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(2, 2)
-    memoized(1, 2)
-    assert.ok(counter <= expected)
+    base(R.memoize)
   })
   .add('next', () => {
-    let counter = 0
-    const fn = (a, b) => {
-      counter++
-      return a + b
-    }  
-
-    const memoized = memoizeNext(fn)
-    const expected = 2
-    
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(1, 2)
-    memoized(2, 2)
-    memoized(1, 2)
-    assert.ok(counter <= expected)
+    base(memoizeNext)
   })
 
 suiteToRun
@@ -83,7 +41,7 @@ function base(memoizeFn){
     return a + b
   }  
 
-  const memoized = memoizeFn ? R.memoize(fn) : fn
+  const memoized = memoizeFn ? memoizeFn(fn) : fn
   const expected = memoizeFn ? 2 : 5
   
   memoized(1, 2)
