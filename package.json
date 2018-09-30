@@ -76,7 +76,8 @@
     "workInProgress": "",
     "docs": [
       "method",
-      "build"
+      "build",
+      "docsify"
     ]
   }
 }

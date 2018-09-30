@@ -31,24 +31,97 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 ## API
 
-Methods between `assocPath` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
+Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 ---
-#### assocPath
+#### allTrue
 
-> assocPath(path: string[]|string, x: any, obj: object): object
+> allTrue(...inputs: any[]): boolean
 
-It creates a shallow copy of object `obj` with value `x` and object path `path`.
-If the object don't have object path `path`, then this path is created.
+It returns `true` if all passed elements return `false` when passed to `Boolean`.
 
 ```
-R.assocPath('a.b.c', 42, {a: {b: {c: 0}}})
-//=> {a: {b: {c: 42} } }
+R.allFalse(null, undefined, '')
+//=> true
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/assocPath.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/allFalse.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.assocPath('a.b.c'%2C%2042%2C%20%7Ba%3A%20%7Bb%3A%20%7Bc%3A%200%7D%7D%7D)%0A%2F%2F%3D%3E%20%7Ba%3A%20%7Bb%3A%20%7Bc%3A%2042%7D%20%7D%20%7D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.allFalse(null%2C%20undefined%2C%20'')%0A%2F%2F%3D%3E%20true">Try in REPL</a>
+
+---
+#### allTrue
+
+> allTrue(...inputs: any[]): boolean
+
+It returns `true` if all passed elements return `true` when passed to `Boolean`.
+
+```
+const x = 2
+R.allTrue([1,2], x > 1, {})
+//=> true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/allTrue.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20const%20x%20%3D%202%0AR.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
+
+---
+#### change
+
+> change(origin: object, path: string, changeData: any): object
+
+It helps changing object's properties if there are below 3 levels deep.
+
+Explanation:
+
+`path` provide way to specify which object's sub-branch you want to manipulate. Pass empty string if you target the whole `origin` object.
+
+`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch. 
+
+```
+const simpleResult = change(
+  { a: 1, b: { c: 2 } },
+  'b.c',
+  3
+)
+const expectedSimpleResult = {
+  a: 1,
+  b: { c: 3 }
+}
+// simpleResult === expectedSimpleResult
+
+const origin = {
+  a   : 0,
+  foo : {
+    bar : 1,
+    bax : { nested : 2 },
+  },
+}
+const changeData = {
+  bar: 2,
+  bay: 3,
+  bax: { baq: 9 }
+}
+const result = change(
+  origin,
+  'foo',
+  changeData
+)
+
+const expectedResult = {
+  a   : 0,
+  foo : {
+    bar : 2,
+    bay : 3,
+    bax : {
+      nested : 2,
+      baq: 9
+    },
+  },
+}
+// result === expectedResult
+```
 
 ---
 #### compact
@@ -222,68 +295,39 @@ R.greater(1,2) // => true
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
-#### intersection
+#### inject
 
-> intersection(x: T[], y: T[]): T[]
-
-It returns array with the overlapped members of `x` and `y`.
+> inject(injection: string, marker: string, str: string): string
 
 ```
-R.intersection([ 1, 3, 5 ], [ 2, 3, 5 ])
-//=> [3, 5]
+const result = R.inject(
+  ' INJECTION',
+  'MARKER',
+  'foo bar MARKER baz'
+)
+
+const expectedResult = 'foo bar MARKER INJECTION baz'
 ```
 
-It returns `true` if `R.type` of `x` is equal to `xType`.
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/inject.js)
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/intersection.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.intersection(%5B%201%2C%203%2C%205%20%5D%2C%20%5B%202%2C%203%2C%205%20%5D)%0A%2F%2F%3D%3E%20%5B3%2C%205%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
 
 ---
-#### isPromiseLike
+#### isPromise
 
-> isPromiseLike(x: any): boolean
+> isPromise(x: any): boolean
 
 It returns true if `x` is either async function or unresolved promise.
 
 ```
-R.isPromiseLike(R.delay)
+R.isPromise(R.delay)
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromiseLike.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isPromise.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.isPromiseLike(R.delay)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
-
----
-#### isValid
-
-> isValid({input: Object, schema: Object}): Boolean
-
-It checks if `input` is following `schema` specifications.
-
-This is modified version of [json-validity](https://github.com/selfrefactor/json-validity) library.
-
-```
-const schema = {
-  published: "number",
-  style: [ "rock", "jazz" ],
-  title: "string",
-}
-
-const input = {
-  published: 1975,
-  style: "rock",
-  title: "In my time of dying",
-}
-
-const result = R.isValid({input,schema})
-// => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/isValid.js)
-
-<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20input%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.isValid(%7Binput%2Cschema%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isPromise(R.delay)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### less
@@ -399,6 +443,59 @@ const result = R.mergeAll(arr)
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/mergeAll.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
+#### multiline
+
+> multiline(input: string, glue?: string): string
+
+It transforms multiline strings to single line.
+
+```
+const result = R.multiline`
+  foo
+  bar
+  baz
+`
+
+const expectedResult = 'foo bar baz'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/multiline.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.multiline%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
+#### ok
+
+> ok(input: Object, schema: Object): boolean
+
+It checks if `input` is following `schema` specifications.
+It is in fact `R.isValid` but with
+
+> TODO refer to correct md file
+
+```
+const schema = {
+  published: "number",
+  style: [ "rock", "jazz" ],
+  title: "string",
+}
+
+const input = {
+  published: 1975,
+  style: "rock",
+  title: "In my time of dying",
+}
+
+const result = R.ok(input,schema)
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/ok.js)
+
+<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20input%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.ok(input%2Cschema)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### omitBy
@@ -619,9 +716,32 @@ const expectedResult = [
 // `result` resolves to `expectedResult`
 ```
 
+---
+#### s
+
+> s(): undefined
+
+Taken from `https://github.com/staltz/zii`
+Chain function calls using a prototype function `s`
+
+```
+// To turn it on
+R.s()
+
+// Then
+const result = 'foo'
+  .s(R.toUpper)
+  .s(R.take(2))
+  .s(R.add('bar'))
+
+const expectedResult = 'barFO'
+// result === expectedResult
+```
+
+
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/resolveSecure.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20try%20%7B%0A%20%20%20%20JSON.parse(%22%7B%3Aa%22)%0A%20%20%7D%0A%20%20catch%20(err)%20%7B%0A%20%20%20%20throw%20new%20Error(err)%0A%20%20%7D%0A%7D%0A%0Aconst%20result%20%3D%20R.resolveSecure(%5B%0A%20%20R.delay(2000)%2C%0A%20%20fn(1000)%0A%5D)%0A%0Aconst%20expectedResult%20%3D%20%5B%0A%20%20%7B%0A%20%20%20%20%22payload%22%3A%20'RAMBDAX_DELAY'%2C%0A%20%20%20%20%22type%22%3A%20%22RESULT%22%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20payload%3A%22Unexpected%20token%20%3A%20in%20JSON%20at%20position%201%22%2C%0A%20%20%20%20type%3A%20%22ERROR%22%0A%20%20%7D%0A%5D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+<a href="https://rambda.now.sh?%2F%2F%20To%20turn%20it%20on%0AR.s()%0A%0A%2F%2F%20Then%0Aconst%20result%20%3D%20'foo'%0A%20%20.s(R.toUpper)%0A%20%20.s(R.take(2))%0A%20%20.s(R.add('bar'))%0A%0Aconst%20expectedResult%20%3D%20'barFO'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
 #### shuffle
@@ -681,6 +801,26 @@ const result = R.tapAsync(fn, "foo")
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/tapAsync.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(1000)%0A%20%20console.log(x)%0A%7D%0A%0Aconst%20result%20%3D%20R.tapAsync(fn%2C%20%22foo%22)%0A%2F%2F%20the%20console%20logs%20%60foo%60%0A%2F%2F%20%60result%60%20is%20equal%20to%20'foo'">Try in REPL</a>
+
+---
+#### template
+
+> template(input: string, templateInput: object): string
+
+It generages a new string from `input` by replacing all `{{foo}}` occurances with values provided by `templateInput.
+
+```
+const input = 'foo is {{bar}} even {{a}} more'
+const templateInput = {"bar":"BAR", a: 1}
+
+const result = template(input,templateInput)
+const expectedResult = 'foo is BAR even 1 more'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/template.js)
+
+<a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
 #### throttle
@@ -755,6 +895,30 @@ const result = truncate('12345678')
 [Source](https://github.com/selfrefactor/rambdax/tree/master/modules/when.js)
 
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
+
+---
+#### whenAsync
+
+> whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
+
+```
+const fn = await R.whenAsync(
+  async x => {
+    await R.delay(x*100)
+    return x > 2
+  },
+  async x => {
+    await R.delay(x*100)
+    return x * 2
+  }
+)
+
+const result = fn(5) // => 10
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/modules/whenAsync.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20await%20R.whenAsync(%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20%3E%202%0A%20%20%7D%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20*%202%0A%20%20%7D%0A)%0A%0Aconst%20result%20%3D%20fn(5)%20%2F%2F%20%3D%3E%2010">Try in REPL</a>
 
 ---
 #### add
@@ -853,23 +1017,42 @@ It returns function that always returns `x`.
 const fn = R.always(7)
 
 console.log(fn())// => 7
-console.log(fn())// => 7
 ```
 
 ---
 #### any
 
-> any(condition: Function, arr: T[]): Boolean
+> any(condition: Function, arr: T[]): boolean
 
 It returns `true`, if at least one member of `arr` returns true, when passed to the `condition` function.
 
 ```
-R.any(a => a * a > 8)([1, 2, 3]) // => true
+R.any(a => a * a > 8)([1, 2, 3])
+// => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/any.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.any(a%20%3D%3E%20a%20*%20a%20%3E%208)(%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.any(a%20%3D%3E%20a%20*%20a%20%3E%208)(%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### anyPass
+
+> anyPass(conditions: Function[]): Function
+
+```
+const isBig = a => a > 20
+const isOdd = a => a % 2 === 1
+
+const result = R.anyPass(
+  [isBig, isOdd]
+)(11)
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/modules/anyPass.js)
+
+<a href="https://rambda.now.sh?const%20isBig%20%3D%20a%20%3D%3E%20a%20%3E%2020%0Aconst%20isOdd%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.anyPass(%0A%20%20%5BisBig%2C%20isOdd%5D%0A)(11)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### append
