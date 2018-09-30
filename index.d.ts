@@ -164,13 +164,13 @@ declare namespace R {
     assocPath<T, U>(path: Path | string, val: T): (obj: U) => U
     assocPath<T, U>(path: Path | string): CurriedFunction2<T, U, U>
 
-    compact(x: any[]): any[]
+    compact<T>(x: T[]): T[]
 
     composeAsync(
       ...fns: Array<Promise<any> | Function>
     ): (input: any) => Promise<any>
 
-    debounce(fn: Function, ms: number): any
+    debounce<T>(fn: Function, ms: number): T
 
     delay(ms: Number): Promise<string>
 
@@ -204,7 +204,7 @@ declare namespace R {
     isArray(x: any): boolean
     isString(x: any): boolean
     isObject(x: any): boolean
-    isPromiseLike(x: any): boolean
+    isPromise(x: any): boolean
 
     ok(input: object, schema: Schema): boolean
     ok(input: object): (schema: Schema) => boolean
@@ -217,11 +217,11 @@ declare namespace R {
     mapFastAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
 
-    memoize(fn: Function | Promise<any>): any
+    memoize<T>(fn: Function | Async): T
 
     mergeAll(input: object[]): object
 
-    omitBy(fn: Function, input: object): object
+    omitBy<T,OT>(fn: Function, input: T): OT
 
     once(fn: Function): Function
 
@@ -256,7 +256,8 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
-    throttle(fn: Function, ms: number): Function
+    throttle<T>(fn: Function, ms: number): T
+
     template(input: string, templateInput: object): string
     
     where(conditions: object, input: object): boolean
