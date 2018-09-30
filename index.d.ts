@@ -231,7 +231,7 @@ declare namespace R {
     
     mergeAll(input: object[]): object
 
-    multiline(input: string | string[], glue?: string): string
+    multiline(...input: any[]): string
 
     omitBy<T,OT>(fn: Function, input: T): OT
 
