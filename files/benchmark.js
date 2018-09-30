@@ -1,7 +1,7 @@
 const assert = require('assert')
 const Benchmark = require('benchmark')
 const benchmarks = require('beautify-benchmark')
-const R = require('../dist/rambdax.cjs')
+const R = require('../dist/rambdax.js')
 
 const suite = new Benchmark.Suite()
 

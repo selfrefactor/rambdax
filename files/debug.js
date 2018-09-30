@@ -2,7 +2,7 @@ const testFile = `isValid.spec.js`
 
 const command0 = `node node_modules/jest/bin/jest.js -- modules/${testFile}`
 const command1 = `node node_modules/jest/bin/jest.js -- modules/${testFile} --runInBand`
-const command2 = `node node_modules/jest/bin/jest.js -- modules/${testFile} --runInBand --env=node`
+const command2 = `node node_modules/jest/bin/jest.js -- modules/${testFile} --noStackTrace --runInBand --env=node`
 const command3 = `node node_modules/jest/bin/jest.js -- modules/${testFile} --env=node`
 
 const commands = [
@@ -12,7 +12,9 @@ const commands = [
   command3,
 ]
 
-const R = require('../dist/rambdax.cjs')
+const R = require('../dist/rambdax.js')
+console.log(R.multiline);
+
 const {exec} = require('child_process')
 const cwd = process.cwd()
 

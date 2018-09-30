@@ -2,7 +2,7 @@
   "name": "rambdax",
   "version": "0.11.2",
   "description": "Lightweight alternative to Ramda - extended version",
-  "main": "./dist/rambdax.cjs.js",
+  "main": "./dist/rambdax.js",
   "module": "./dist/rambdax.esm.js",
   "typings": "./index.d.ts",
   "sideEffects": false,
