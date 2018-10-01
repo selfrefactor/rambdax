@@ -1,6 +1,8 @@
 import { equals } from 'rambda'
 
-const NO_MATCH_FOUND = Symbol('NO_MATCH_FOUND')
+const NO_MATCH_FOUND = Symbol ? 
+  Symbol('NO_MATCH_FOUND') :
+  undefined
 
 const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
   let iterationValue

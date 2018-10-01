@@ -2,6 +2,17 @@
 
 General tips for React and Javascript programming
 
+## X pattern
+
+Use it in `package.json` to define script `foox` that is similar to `foo`
+
+```
+{
+  "do": "node files/do",
+  "dox": "NODE_ENV=test node files/do",
+}
+```
+
 ## OK pattern
 
 Make `if` statement or ternary operations more readable. Used exclusively in this context.
