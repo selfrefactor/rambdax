@@ -1,12 +1,11 @@
 import isInit from './isInit'
-import template from './template'
-import { omit } from 'rambda'
+import runTests from './runTests'
 
 /**
  * TODO
  * isInit can be used to initialize with sets of schemas
  */
- isInit()
+isInit()
 
 const schemaA = {a: 'number', 'b?': 'string'} 
 const schemaB = {c: 'object', d: [schemaA]} 
@@ -71,36 +70,9 @@ export const testData = [
   {stringArray},
 ]
 
-export function runTests({
-  testSuite,
-  evaluations,
-  data
-}){
-  describe(testSuite, () => {
-    evaluations.forEach(singleEvaluation => {
-      data.forEach(dataInstance => {
-        const {
-          prop: tag,
-          value: x
-        } = headObject(dataInstance)
-        const {
-          value: evaluationFunction
-        } = headObject(omit('label', singleEvaluation))
-        
-        const label = template(singleEvaluation.label, {tag})
-         
-        test(label, () => {
-          evaluationFunction(dataInstance[tag])
-        })
-      })
-    })
-  })
-}
-
 const trueEvaluation = x => {
   expect(x.foo.is(x.t)).toBeTruthy()
 }
-
 const falseEvaluation = x => {
   expect(x.foo.is(x.f)).toBeFalsy()
 }
@@ -113,11 +85,6 @@ runTests({
   ],
   testSuite: 'isInit',
 })
-
-function headObject(x){
-  const [tag] = Object.keys(x) 
-  return {prop: tag, value: x[tag]}
-}
 
 test('null throws', () =>{
   try{
