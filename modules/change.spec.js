@@ -83,7 +83,6 @@ test('simpler', () => {
       },
     },
   }
-  console.log(result.foo);
   
   expect(result).toEqual(expectedResult)
 })

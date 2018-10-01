@@ -62,6 +62,13 @@
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "string-fn": "^1.7.0"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "modules/*.js",
+      "!modules/shuffle.*",
+      "!_internals"
+    ]
+  },
   "files": [
     "dist",
     "index.d.ts"
