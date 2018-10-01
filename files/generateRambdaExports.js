@@ -16,7 +16,9 @@ const generateRambdaExports = async () => {
     const content = R.compose(
       R.join('\n'),
       R.prepend(rambdaxContent),
-      R.map(x => `export const ${x} = R.${x}`)
+      R.map(x => `export const ${x} = R.${x}`),
+      R.filter(x => x !== 'is'),
+      // R.filter(R.not('is')),
     )(Object.keys(R))
 
     fs.writeFileSync(filePath, content)

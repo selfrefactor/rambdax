@@ -207,6 +207,8 @@ declare namespace R {
     intersection<T>(list1: T[], list2: T[]): T[]
     intersection<T>(list1: T[]): (list2: T[]) => T[]
 
+    is(...inputs: any[]): (...rules: any[]) => undefined | never
+
     isType(xType: RambdaTypes, x: any): boolean
     isArray(x: any): boolean
     isString(x: any): boolean
@@ -445,9 +447,6 @@ declare namespace R {
 
     init<T>(list: T[]): T[]
     init(list: string): string
-
-    is(xPrototype: any, x: any): boolean
-    is(xPrototype: any): (x: any) => boolean
 
     isNil(value: any): value is null | undefined
 

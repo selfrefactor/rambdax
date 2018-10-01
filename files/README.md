@@ -29,6 +29,8 @@ Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods
 
 The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** compatibility.
 
+- `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
+
 ## API
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
@@ -1386,19 +1388,6 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/modules/join.js)
-
-#### is
-
-> is(xPrototype: any, x: any): boolean
-
-It returns `true` is `x` is instance of `xPrototype`.
-
-```
-R.is(String, 'foo')  // => true
-R.is(Array, 1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/is.js)
 
 #### isNil
 
