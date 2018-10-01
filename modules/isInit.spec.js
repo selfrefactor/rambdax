@@ -54,20 +54,20 @@ const conditional = {foo: 5, t: x => x > 2, f:x => x > 10}
 const regex = {foo: 'foo', t: /fo/, f:/ba/}
 export const testData = [
   {fn1},
-  {fn2},
-  {conditional},
-  {regex},
-  {schemaA1},
-  {schemaA2},
-  {schemaA3},
-  {schemaB1},
-  {schemaB2},
-  {schemaC1},
-  {arrayArray},
-  {number},
-  {numberArray},
-  {string},
-  {stringArray},
+  // {fn2},
+  // {conditional},
+  // {regex},
+  // {schemaA1},
+  // {schemaA2},
+  // {schemaA3},
+  // {schemaB1},
+  // {schemaB2},
+  // {schemaC1},
+  // {arrayArray},
+  // {number},
+  // {numberArray},
+  // {string},
+  // {stringArray},
 ]
 
 const trueEvaluation = x => {
@@ -81,7 +81,7 @@ runTests({
   data: testData,
   evaluations: [
     {label: '{{tag}} - true',trueEvaluation},
-    {label: '{{tag}} - false', falseEvaluation},
+    // {label: '{{tag}} - false', falseEvaluation},
   ],
   testSuite: 'isInit',
 })
