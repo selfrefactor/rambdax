@@ -91,6 +91,9 @@
     ],
     "fix": [
       "typescript"
+    ],
+    "test": [
+      "method"
     ]
   }
 }
