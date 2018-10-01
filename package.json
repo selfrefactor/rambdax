@@ -84,7 +84,7 @@
       "lint",
       "codestyle"
     ],
-    "workInProgress": "is.init",
+    "workInProgress": "",
     "docs": [
       "method",
       "build",
