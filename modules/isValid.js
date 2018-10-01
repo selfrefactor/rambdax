@@ -23,7 +23,7 @@ export default function isValid ({ input, schema }) {
         const ok = (isOptional && inputProp !== undefined) ||
           !isOptional
         
-        if(!ok) continue
+        if(!ok || rule === 'any') continue
 
         if (
           ruleType === 'Object'

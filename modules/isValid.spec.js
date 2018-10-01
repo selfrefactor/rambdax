@@ -1,5 +1,25 @@
 import isValid from './isValid'
 
+test('type can be `"any"`', () => {
+  const input = {
+    a : () => {}
+  }
+  const schema = {
+    a :'any'
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('type can be `"function"`', () => {
+  const input = {
+    a : () => {}
+  }
+  const schema = {
+    a :'function'
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
 test('function is not schema', () => {
   const input = {
     a : {

@@ -1,20 +1,16 @@
 import { omit } from 'rambda'
 import template from './template'
 import headObject from './headObject'
-import isType from './isType'
 import ok from './ok'
-console.log(headObject)
+
 const evaluationsSchema = {
   label: 'string'
 }
-/**
- * TODO
- * any,function can be supported
- */
-const dataSchemaX = {
+
+const dataSchema = {
   foo: 'any',
-  t: 'function',
-  f: 'function'
+  t: 'any',
+  f: 'any'
 }
 
 export default function runTests(input){
