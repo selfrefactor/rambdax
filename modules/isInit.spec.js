@@ -70,28 +70,37 @@ export const data = [
 ]
 
 export function runTests({
-  testSuite
+  testSuite, 
+  trueEvaluation,
+  falseEvaluation,
+  dataInstance
 }){
-  describe('isInit', () => {
-    data.forEach(x => {
+  describe(testSuite, () => {
+    dataInstance.forEach(x => {
       const [tag] = Object.keys(x) 
       test(`${tag} - true`, () => {
-        expect(x[tag].foo.is(x[tag].t)).toBeTruthy()
+        trueEvaluation(x[tag])
       })
       test(`${tag} - false`, () => {
-        expect(x[tag].foo.is(x[tag].f)).toBeFalsy()
+        falseEvaluation(x[tag])
       })
     })
   })
 }
 
 const trueEvaluation = x => {
-  
+  expect(x.foo.is(x.t)).toBeTruthy()
+}
+
+const falseEvaluation = x => {
+  expect(x.foo.is(x.f)).toBeFalsy()
 }
 
 runTests({
+  dataInstance: data,
+  falseEvaluation,
   testSuite: 'isInit',
-  trueEvaluation 
+  trueEvaluation,
 })
 
 test('null throws', () =>{
