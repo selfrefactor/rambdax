@@ -1,4 +1,6 @@
 import isInit from './isInit'
+import template from './template'
+import { omit } from 'rambda'
 
 /**
  * TODO
@@ -51,7 +53,7 @@ const fn1 = {foo: () => {}, t:'function', f:'object'}
 const fn2 = {foo: [() => {}, () =>{}], t:['function'], f:'object'}
 const conditional = {foo: 5, t: x => x > 2, f:x => x > 10}
 const regex = {foo: 'foo', t: /fo/, f:/ba/}
-export const data = [
+export const testData = [
   {fn1},
   {fn2},
   {conditional},
@@ -70,19 +72,26 @@ export const data = [
 ]
 
 export function runTests({
-  testSuite, 
-  trueEvaluation,
-  falseEvaluation,
-  dataInstance
+  testSuite,
+  evaluations,
+  data
 }){
   describe(testSuite, () => {
-    dataInstance.forEach(x => {
-      const [tag] = Object.keys(x) 
-      test(`${tag} - true`, () => {
-        trueEvaluation(x[tag])
-      })
-      test(`${tag} - false`, () => {
-        falseEvaluation(x[tag])
+    evaluations.forEach(singleEvaluation => {
+      data.forEach(dataInstance => {
+        const {
+          prop: tag,
+          value: x
+        } = headObject(dataInstance)
+        const {
+          value: evaluationFunction
+        } = headObject(omit('label', singleEvaluation))
+        
+        const label = template(singleEvaluation.label, {tag})
+         
+        test(label, () => {
+          evaluationFunction(dataInstance[tag])
+        })
       })
     })
   })
@@ -97,11 +106,18 @@ const falseEvaluation = x => {
 }
 
 runTests({
-  dataInstance: data,
-  falseEvaluation,
+  data: testData,
+  evaluations: [
+    {label: '{{tag}} - true',trueEvaluation},
+    {label: '{{tag}} - false', falseEvaluation},
+  ],
   testSuite: 'isInit',
-  trueEvaluation,
 })
+
+function headObject(x){
+  const [tag] = Object.keys(x) 
+  return {prop: tag, value: x[tag]}
+}
 
 test('null throws', () =>{
   try{
