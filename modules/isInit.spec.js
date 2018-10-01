@@ -51,7 +51,7 @@ const fn1 = {foo: () => {}, t:'function', f:'object'}
 const fn2 = {foo: [() => {}, () =>{}], t:['function'], f:'object'}
 const conditional = {foo: 5, t: x => x > 2, f:x => x > 10}
 const regex = {foo: 'foo', t: /fo/, f:/ba/}
-const data = [
+export const data = [
   {fn1},
   {fn2},
   {conditional},
@@ -69,18 +69,30 @@ const data = [
   {stringArray},
 ]
 
-describe('isInit', () => {
-  data.forEach(x => {
-    const [tag] = Object.keys(x) 
-    test(`${tag} - true`, () => {
-      expect(x[tag].foo.is(x[tag].t)).toBeTruthy()
-    })
-    test(`${tag} - false`, () => {
-      expect(x[tag].foo.is(x[tag].f)).toBeFalsy()
+export function runTests({
+  testSuite
+}){
+  describe('isInit', () => {
+    data.forEach(x => {
+      const [tag] = Object.keys(x) 
+      test(`${tag} - true`, () => {
+        expect(x[tag].foo.is(x[tag].t)).toBeTruthy()
+      })
+      test(`${tag} - false`, () => {
+        expect(x[tag].foo.is(x[tag].f)).toBeFalsy()
+      })
     })
   })
-})
+}
 
+const trueEvaluation = x => {
+  
+}
+
+runTests({
+  testSuite: 'isInit',
+  trueEvaluation 
+})
 
 test('null throws', () =>{
   try{
