@@ -2,7 +2,22 @@
 
 General tips for React and Javascript programming
 
-## X pattern
+## `input*` pattern
+
+It makes easier to see which one is the input argument.
+With plain `input` are either the root input or the only input in the scope.
+
+```
+function foo(input){
+  const barInput = {
+    a: 1,
+    b: 2
+  }
+  const barResult = bar(barInput)
+}
+```
+
+## `*x` pattern
 
 Use it in `package.json` to define script `foox` that is similar to `foo`
 
@@ -13,7 +28,7 @@ Use it in `package.json` to define script `foox` that is similar to `foo`
 }
 ```
 
-## OK pattern
+## `ok*` pattern
 
 Make `if` statement or ternary operations more readable. Used exclusively in this context.
 
