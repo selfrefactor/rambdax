@@ -23,7 +23,7 @@ function helper ({ condition, inputArgument, prop }) {
   })
 }
 
-export default function produce (conditions, inputArgument) {
+export function produce (conditions, inputArgument) {
   if (arguments.length === 1) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder)
   }

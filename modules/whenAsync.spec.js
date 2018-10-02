@@ -1,14 +1,15 @@
-const R = require('../rambdax')
+import { whenAsync } from './whenAsync'
+import { delay } from './delay'
 
 test('', async () => {
-  const fn = await R.whenAsync(
+  const fn = await whenAsync(
     async x => {
-      await R.delay(x * 100)
+      await delay(x * 100)
 
       return x > 2
     },
     async x => {
-      await R.delay(x * 100)
+      await delay(x * 100)
 
       return x * 2
     }
@@ -24,10 +25,10 @@ test('', async () => {
 
 test('use boolean', async () => {
   const some = 5
-  const fn = await R.whenAsync(
+  const fn = await whenAsync(
     some === 5,
     async x => {
-      await R.delay(x * 100)
+      await delay(x * 100)
 
       return x * 2
     }

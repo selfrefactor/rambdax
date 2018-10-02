@@ -1,4 +1,5 @@
-const R = require('../rambdax')
+import { throttle } from './throttle'
+import { delay } from './delay'
 
 test('', async () => {
   let counter = 0
@@ -11,11 +12,11 @@ test('', async () => {
     counter++
   }
 
-  const incWrapped = R.throttle(inc, 1000)
+  const incWrapped = throttle(inc, 1000)
 
   incWrapped(1, 2)
 
-  await R.delay(500)
+  await delay(500)
 
   incWrapped(2, 3)
   incWrapped(3, 4)
@@ -24,7 +25,7 @@ test('', async () => {
   expect(aHolder).toBe(1)
   expect(bHolder).toBe(2)
 
-  await R.delay(1000)
+  await delay(1000)
 
   incWrapped(5, 6)
 

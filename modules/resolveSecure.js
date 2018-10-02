@@ -14,7 +14,7 @@ const resolveSecureWrapper = promise => new Promise(res => {
   })
 })
 
-async function resolveSecure (input) {
+export async function resolveSecure (input) {
   try {
     const promised = map(
       a => resolveSecureWrapper(a),
@@ -26,5 +26,3 @@ async function resolveSecure (input) {
     console.log(err)
   }
 }
-
-export default resolveSecure

@@ -1,4 +1,4 @@
-import headObject from './headObject'
+import {headObject} from './headObject'
 
 test('undefined throws', () => {
   expect(() => headObject()).toThrow()

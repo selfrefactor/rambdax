@@ -15,7 +15,7 @@ const replace = ({inputHolder, prop, replacer}) => {
   )
 } 
 
-export default function template(input,templateInput){
+export function template(input,templateInput){
   const occurances = getOccurances(input)
   if(occurances === null ) return input
   

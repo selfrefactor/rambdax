@@ -1,4 +1,4 @@
-export default function when (condition, whenTrueFn) {
+export function when (condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
     return whenTrueFnHolder => when(condition, whenTrueFnHolder)
   }

@@ -1,6 +1,6 @@
 import { replace } from 'rambda'
 
-export default function inject (
+export function inject (
   injection,
   marker,
   content

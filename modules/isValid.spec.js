@@ -1,4 +1,4 @@
-import isValid from './isValid'
+import {isValid} from './isValid'
 
 test('type can be `"any"`', () => {
   const input = {

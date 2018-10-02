@@ -1,5 +1,5 @@
-import isInit from './isInit'
-import runTests from './runTests'
+import {isInit} from './isInit'
+import {runTests} from './runTests'
 
 /**
  * TODO

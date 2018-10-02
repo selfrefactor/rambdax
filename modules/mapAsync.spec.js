@@ -1,16 +1,10 @@
-const R = require('../rambdax')
+import { map } from 'rambda';
+import { mapAsync } from './mapAsync';
+import { composeAsync } from './composeAsync';
 
 const delay = a => new Promise(resolve => {
   setTimeout(() => {
     resolve(a + 20)
-  }, 100)
-})
-const fn = a => new Promise(resolve => {
-  setTimeout(() => {
-    if (a.length === undefined) {
-      return resolve(typeof a)
-    }
-    resolve(a.length)
   }, 100)
 })
 
@@ -27,12 +21,12 @@ const rejectDelay = a => new Promise((_, reject) => {
 })
 
 test('', async () => {
-  const result = await R.mapAsync(delay, [ 1, 2, 3 ])
+  const result = await mapAsync(delay, [ 1, 2, 3 ])
   expect(result).toEqual([ 21, 22, 23 ])
 })
 
 test('with object', async () => {
-  const result = await R.mapAsync(delay, {
+  const result = await mapAsync(delay, {
     a : 1,
     b : 2,
     c : 3,
@@ -45,17 +39,17 @@ test('with object', async () => {
 })
 
 test('composeAsync', async () => {
-  const result = await R.composeAsync(
-    R.mapAsync(delay),
-    R.mapAsync(async a => delay(a)),
-    R.map(a => a * 10)
+  const result = await composeAsync(
+    mapAsync(delay),
+    mapAsync(async a => delay(a)),
+    map(a => a * 10)
   )(await tap([ 1, 2, 3 ]))
   expect(result).toEqual([ 50, 60, 70 ])
 })
 
 test('error', async () => {
   try {
-    const result = await R.mapAsync(rejectDelay)([ 1, 2, 3 ])
+    const result = await mapAsync(rejectDelay)([ 1, 2, 3 ])
   } catch (err) {
     expect(err).toBe(21)
   }

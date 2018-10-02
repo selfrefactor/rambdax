@@ -1,7 +1,7 @@
-const R = require('../rambdax')
+import { inject } from './inject'
 
 test('', () => {
-  const result = R.inject(
+  const result = inject(
     ' INJECTION',
     'MARKER',
     'foo bar MARKER baz'

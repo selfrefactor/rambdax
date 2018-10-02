@@ -1,7 +1,7 @@
 import { omit } from 'rambda'
-import template from './template'
-import headObject from './headObject'
-import ok from './ok'
+import {template} from './template'
+import {headObject} from './headObject'
+import {ok} from './ok'
 
 const evaluationsSchema = {
   label: 'string'
@@ -13,7 +13,7 @@ const dataSchema = {
   f: 'any'
 }
 
-export default function runTests(input){
+export function runTests(input){
   const pass = ok(input)({
     testSuite: 'string',
     evaluations: [evaluationsSchema],

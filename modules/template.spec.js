@@ -1,4 +1,4 @@
-import template from './template'
+import {template} from './template'
 
 test('', () =>{
   const input = 'foo is {{bar}} even {{a}} more'

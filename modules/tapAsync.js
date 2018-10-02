@@ -1,6 +1,6 @@
-import isPromise from './isPromise'
+import {isPromise} from './isPromise'
 
-export default function tapAsync (fn, input) {
+export function tapAsync (fn, input) {
   if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder)
   }

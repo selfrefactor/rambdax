@@ -1,4 +1,5 @@
-import intersection from './intersection'
+import { intersection } from './intersection';
+
 const foo = [0,1,2,4,5]
 const bar = [0,3,4]
 

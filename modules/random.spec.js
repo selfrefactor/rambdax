@@ -1,12 +1,12 @@
-const R = require('../rambdax')
 
-describe('random', () => {
-  it('when returns true', () => {
-    R.range(0, 100).map(() => {
-      const randomResult = R.random(1, 10)
-      expect(randomResult).toBeLessThanOrEqual(10)
-      expect(randomResult).toBeGreaterThanOrEqual(1)
-    })
+import { range } from 'rambda'
+import { random } from './random'
+
+test('when returns true', () => {
+  range(0, 100).map(() => {
+    const randomResult = random(1, 10)
+    expect(randomResult).toBeLessThanOrEqual(10)
+    expect(randomResult).toBeGreaterThanOrEqual(1)
   })
 })
 

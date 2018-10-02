@@ -20,7 +20,7 @@ async function mapAsyncFn (fn, arr) {
   }
 }
 
-export default function mapAsync (fn, arr) {
+export function mapAsync (fn, arr) {
   if (arr === undefined) {
     return async holder => await mapAsyncFn(fn, holder)
   }

@@ -1,26 +1,25 @@
-const R = require('../rambdax')
+import { once } from './once'
 
-describe('once', () => {
-  it('', () => {
-    let counter = 0
-    const once = R.once(x => {
-      counter++
+it('', () => {
+  let counter = 0
+  const runOnce = once(x => {
+    counter++
 
-      return x + 2
-    })
-    expect(once(1)).toEqual(3)
-    once(1)
-    once(1)
-    once(1)
-    expect(counter).toEqual(1)
+    return x + 2
   })
-
-  it('', () => {
-    const addOneOnce = R.once((a, b, c) => a + b + c)
-
-    expect(addOneOnce(10, 20, 30)).toBe(60)
-    expect(
-      addOneOnce(40)
-    ).toEqual(60)
-  })
+  expect(runOnce(1)).toEqual(3)
+  runOnce(1)
+  runOnce(1)
+  runOnce(1)
+  expect(counter).toEqual(1)
 })
+
+it('', () => {
+  const addOneOnce = once((a, b, c) => a + b + c)
+
+  expect(addOneOnce(10, 20, 30)).toBe(60)
+  expect(
+    addOneOnce(40)
+  ).toEqual(60)
+})
+

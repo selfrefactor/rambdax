@@ -1,13 +1,13 @@
-const R = require('../rambdax')
+import { less } from './less';
 
-test('', () => {
+test('curry', () => {
   expect(
-    R.less(1)(2)
+    less(1)(2)
   ).toBeFalsy()
 })
 
 test('', () => {
   expect(
-    R.less(3, 2)
+    less(3, 2)
   ).toBeTruthy()
 })

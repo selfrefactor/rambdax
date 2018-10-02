@@ -1,4 +1,4 @@
-export default function multiline (input, glue) {
+export function multiline (input, glue) {
 
   return input.split('\n')
     .filter(x => x.trim().length > 0)

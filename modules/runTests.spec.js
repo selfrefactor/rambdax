@@ -1,5 +1,5 @@
 import { omit } from 'rambda'
-import runTests from './runTests'
+import {runTests} from './runTests'
 
 const whenTrue = {
   label: '{{tag}} my sweet lord',

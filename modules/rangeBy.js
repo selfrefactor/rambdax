@@ -1,6 +1,6 @@
 import { range, length, last, split, compose } from 'rambda'
 
-export default function rangeBy (startNum, endNum, distance) {
+export function rangeBy (startNum, endNum, distance) {
   if (endNum === undefined) {
     return (endNumHolder, distanceHolder) => rangeBy(startNum, endNumHolder, distanceHolder)
   } else if (distance === undefined) {

@@ -1,1 +1,1 @@
-export default function is(){}
+export function is(){}

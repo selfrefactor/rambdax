@@ -13,7 +13,7 @@ function onceFn (fn, context) {
   }
 }
 
-export default function once (fn, context) {
+export function once (fn, context) {
   if (arguments.length === 1) {
     const wrap = onceFn(fn, context)
 

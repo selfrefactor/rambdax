@@ -1,4 +1,4 @@
-import s from './s'
+import {s} from './s'
 import {toUpper, take, add} from 'rambda'
 
 test('', () =>{

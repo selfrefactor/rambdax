@@ -1,7 +1,7 @@
 import {data} from './isInit.spec'
-import initOk from './initOk'
+import {okInit} from './okInit'
 
-test('', () =>{
+test.skip('', () =>{
   const what = 1
   const followRules = 'number'
 

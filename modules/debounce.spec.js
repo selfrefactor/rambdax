@@ -1,5 +1,5 @@
-import debounce from './debounce'
-import delay from './delay'
+import {debounce} from './debounce'
+import {delay} from './delay'
 
 test('', async () => {
   let counter = 0

@@ -1,4 +1,4 @@
-import mergeRight from './mergeRight'
+import {mergeRight} from './mergeRight'
 
 test('', () => {
   const x = { a: 10}

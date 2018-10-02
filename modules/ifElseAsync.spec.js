@@ -1,15 +1,17 @@
-const R = require('../rambdax')
+import { ifElseAsync } from './ifElseAsync'
+import { type, T, F } from 'rambda';
+import { delay } from './delay';
 
 test('', async () => {
-  const result = await R.ifElseAsync(
-    async x => R.type(await R.delay(x * 80)) === 'String',
+  const result = await ifElseAsync(
+    async x => type(await delay(x * 80)) === 'String',
     async x => {
-      await R.delay(x * 60)
+      await delay(x * 60)
 
       return true
     },
     async x => {
-      await R.delay(x * 60)
+      await delay(x * 60)
 
       return false
     },
@@ -19,10 +21,10 @@ test('', async () => {
 })
 
 test('works with regular functions', async () => {
-  const result = await R.ifElseAsync(
-    async x => R.type(await R.delay(x * 80)) === 'String',
-    R.T,
-    R.F
+  const result = await ifElseAsync(
+    async x => type(await delay(x * 80)) === 'String',
+    T,
+    F
   )(7)
 
   expect(result).toEqual(true)

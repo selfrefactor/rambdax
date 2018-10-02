@@ -1,4 +1,7 @@
-const R = require('../rambdax')
+
+import { mapFastAsync } from './mapFastAsync'
+import { composeAsync } from './composeAsync'
+import { map } from 'rambda'
 
 const delay = a => new Promise(resolve => {
   setTimeout(() => {
@@ -18,27 +21,25 @@ const rejectDelay = a => new Promise((_, reject) => {
   }, 100)
 })
 
-describe('mapFastAsync', () => {
-  it('', async () => {
-    const result = await R.mapFastAsync(delay)([ 1, 2, 3 ])
-    expect(result).toEqual([ 21, 22, 23 ])
-  })
+test('', async () => {
+  const result = await mapFastAsync(delay)([ 1, 2, 3 ])
+  expect(result).toEqual([ 21, 22, 23 ])
+})
 
-  it('composeAsync', async () => {
-    const result = await R.composeAsync(
-      R.mapFastAsync(async a => await delay(a)),
-      R.mapFastAsync(delay),
-      R.map(a => a * 10)
-    )(await tap([ 1, 2, 3 ]))
-    expect(result).toEqual([ 50, 60, 70 ])
-  })
+test('composeAsync', async () => {
+  const result = await composeAsync(
+    mapFastAsync(async a => await delay(a)),
+    mapFastAsync(delay),
+    map(a => a * 10)
+  )(await tap([ 1, 2, 3 ]))
+  expect(result).toEqual([ 50, 60, 70 ])
+})
 
-  it('error', async () => {
-    try {
-      const result = await R.mapFastAsync(rejectDelay)([ 1, 2, 3 ])
-    } catch (err) {
-      expect(err).toBe(21)
-    }
-  })
+test('error', async () => {
+  try {
+    const result = await mapFastAsync(rejectDelay)([ 1, 2, 3 ])
+  } catch (err) {
+    expect(err).toBe(21)
+  }
 })
 

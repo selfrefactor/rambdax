@@ -1,4 +1,4 @@
-const R = require('../rambdax')
+import { resolveSecure } from "./resolveSecure";
 
 const delay = ms => new Promise(res => {
   setTimeout(() => res(ms), ms)
@@ -14,7 +14,7 @@ const fail = async ms => {
 
 test('resolve', async () => {
   const arr = [ delay(2000), fail(1000), delay(1000) ]
-  const result = await R.resolveSecure(arr)
+  const result = await resolveSecure(arr)
 
   expect(result[ 0 ]).toEqual({
     payload : 2000,

@@ -67,6 +67,6 @@ class Switchem {
 
 }
 
-export default function switcher (input) {
+export function switcher (input) {
   return new Switchem(input)
 }

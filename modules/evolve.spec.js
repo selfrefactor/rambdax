@@ -1,7 +1,7 @@
-import evolve from './evolve'
+import {evolve} from './evolve'
 import {add, trim} from 'rambda'
 
-test('', () => {
+test('ok', () => {
   const tomato = {
     firstName : '  Foo ',
     data      : {

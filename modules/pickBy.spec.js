@@ -1,7 +1,6 @@
-const R = require('../rambdax')
+import { pickBy } from './pickBy'
 
-describe('pickBy', () => {
-  it('', () => {
+test('pickBy', () => {
     const input = {
       a : 1,
       b : 2,
@@ -13,7 +12,6 @@ describe('pickBy', () => {
       a : 1,
       c : 3,
     }
-    expect(R.pickBy(fn, input)).toEqual(expectedResult)
-  })
+    expect(pickBy(fn, input)).toEqual(expectedResult)
 })
 

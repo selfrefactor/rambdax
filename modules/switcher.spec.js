@@ -1,10 +1,12 @@
-const R = require('../rambdax')
+import { delay } from './delay'
+import { switcher } from './switcher'
+import { add, trim, tap, type, identity } from 'rambda'
 
 test('', () => {
-  const result = R.switcher('foo')
-    .is('bar', R.tap)
-    .is('foo', R.add(1))
-    .default(R.trim)
+  const result = switcher('foo')
+    .is('bar', tap)
+    .is('foo', add(1))
+    .default(trim)
 
   expect(
     result(2)
@@ -14,7 +16,7 @@ test('', () => {
 test('with boolean tuple', () => {
   const a = true
   const b = false
-  const result = R.switcher([ a, b ])
+  const result = switcher([ a, b ])
     .is([ false, false ], '0')
     .is([ false, true ], '1')
     .is([ true, true ], '2')
@@ -28,7 +30,7 @@ test('with boolean tuple', () => {
 test('with boolean tuple - second test', () => {
   const a = true
   const b = true
-  const result = R.switcher([ a, b ])
+  const result = switcher([ a, b ])
     .is([ false, false ], '0')
     .is([ false, true ], '1')
     .is([ true, true ], '2')
@@ -40,7 +42,7 @@ test('with boolean tuple - second test', () => {
 })
 
 test('works with objects as arguments', () => {
-  const result = R.switcher({ a : 1 })
+  const result = switcher({ a : 1 })
     .is({ a : 1 }, 'it is bar')
     .is('baz', 'it is baz')
     .default('it is default')
@@ -50,7 +52,7 @@ test('works with objects as arguments', () => {
   ).toEqual('it is bar')
 })
 
-const switchFn = input => R.switcher(input)
+const switchFn = input => switcher(input)
   .is({ a : 1 }, 'it is bar')
   .is(x => x.length && x.length === 7, 'has length of 7')
   .is('baz', 'it is baz')
@@ -61,6 +63,7 @@ test('hits default of no matches', () => {
     switchFn(1)
   ).toEqual('it is default')
 })
+
 
 test('works with function as condition', () => {
   expect(
@@ -76,11 +79,11 @@ test('works with string as condition', () => {
 
 test('works with functions as condition result', () => {
   const input = 'foo'
-  const result = R.switcher(input)
-    .is('foo', R.delay)
-    .default(R.identity)
+  const result = switcher(input)
+    .is('foo', delay)
+    .default(identity)
 
   expect(
-    R.type(result())
+    type(result())
   ).toEqual('Promise')
 })

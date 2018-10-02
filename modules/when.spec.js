@@ -1,9 +1,10 @@
-const R = require('../rambdax')
+import { when } from './when'
+import { compose, take } from 'rambda'
 
 test('', () => {
-  const truncate = R.when(
+  const truncate = when(
     x => x.length > 5,
-    R.compose(x => `${ x }...`, R.take(5))
+    compose(x => `${ x }...`, take(5))
   )
 
   expect(truncate('1234')).toEqual('1234')
@@ -11,14 +12,14 @@ test('', () => {
 })
 
 test('use boolean', () => {
-  const truncateTrue = R.when(
+  const truncateTrue = when(
     true,
-    R.compose(x => `${ x }...`, R.take(5))
+    compose(x => `${ x }...`, take(5))
   )
 
-  const truncateFalse = R.when(
+  const truncateFalse = when(
     false,
-    R.compose(x => `${ x }...`, R.take(5))
+    compose(x => `${ x }...`, take(5))
   )
 
   expect(truncateFalse('1234')).toEqual('1234')

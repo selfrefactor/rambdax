@@ -1,14 +1,21 @@
-const R = require('../rambdax')
+import { produce } from './produce'
+import { take } from '../rambdax'
 
+/**
+ * TODO
+ * any('string')
+ * any(['string'])
+ * any(schemaA)
+ * random
+ */
 const delay = () => new Promise(resolve => {
   setTimeout(() => {
-    resolve(R.take(5, `${ Math.random() }`))
+    resolve(take(5, `${ Math.random() }`))
   }, 333)
 })
 
-describe('produce', () => {
-  it('', async () => {
-    const fn = R.produce({
+test('produce', async () => {
+    const fn = produce({
       foo : async () => {
         const result = await delay()
 
@@ -26,5 +33,4 @@ describe('produce', () => {
     expect(
       typeof result.foo
     ).toEqual('string')
-  })
 })

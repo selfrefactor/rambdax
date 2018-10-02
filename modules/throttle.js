@@ -1,4 +1,4 @@
-export default function throttle (fn, ms) {
+export function throttle (fn, ms) {
   let wait = false
 
   return function (...input) {

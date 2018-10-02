@@ -4,7 +4,7 @@ function createThenable (x) {
   }
 }
 
-function whenAsync (condition, whenTrueFn) {
+export function whenAsync (condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
     return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder)
   }
@@ -37,5 +37,3 @@ function whenAsync (condition, whenTrueFn) {
     }
   })
 }
-
-export default whenAsync

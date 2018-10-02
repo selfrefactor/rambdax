@@ -8,7 +8,7 @@ async function mapFastAsyncFn (fn, arr) {
   }
 }
 
-export default function mapFastAsync (fn, arr) {
+export function mapFastAsync (fn, arr) {
   if (arr === undefined) {
     return async holder => await mapFastAsyncFn(fn, holder)
   }

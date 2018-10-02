@@ -4,7 +4,7 @@ function createThenable (x) {
   }
 }
 
-function ifElseAsync (condition, ifFn, elseFn) {
+export function ifElseAsync (condition, ifFn, elseFn) {
   if (ifFn === undefined) {
     return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder)
   } else if (elseFn === undefined) {
@@ -29,5 +29,3 @@ function ifElseAsync (condition, ifFn, elseFn) {
       .catch(reject)
   })
 }
-
-export default ifElseAsync

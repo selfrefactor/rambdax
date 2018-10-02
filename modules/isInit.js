@@ -1,6 +1,6 @@
-import isValid from './isValid'
+import {isValid} from './isValid'
 
-export default function isInit(){
+export function isInit(){
   Object.defineProperty(
     Object.prototype,
     'is',

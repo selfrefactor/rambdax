@@ -1,4 +1,4 @@
-import isType from './isType'
+import {isType} from './isType'
 
 test('array', () => {
   const foo = [1,2,3]

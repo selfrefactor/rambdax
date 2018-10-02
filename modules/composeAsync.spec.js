@@ -1,8 +1,8 @@
 import {map, prop, equals} from 'rambda'
-import composeAsync from './composeAsync'
-import tapAsync from './tapAsync'
-import mapAsync from './mapAsync'
-import delay from './delay'
+import {composeAsync} from './composeAsync'
+import {tapAsync} from './tapAsync'
+import {mapAsync} from './mapAsync'
+import {delay} from './delay'
 
 test('', async () => {
   const fn = input => new Promise(resolve => {

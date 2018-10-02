@@ -1,6 +1,6 @@
 // https://github.com/staltz/zii
 
-export default function s(){
+export function s(){
 
   Object.defineProperty(
     Object.prototype,

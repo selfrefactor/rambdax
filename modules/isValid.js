@@ -1,6 +1,6 @@
 import { type, toLower, contains, test, any, all, init } from 'rambda'
 
-export default function isValid ({ input, schema }) {
+export function isValid ({ input, schema }) {
   if (type(input) === 'Object' && type(schema) === 'Object') {
     let flag = true
     const boom = boomFlag => {

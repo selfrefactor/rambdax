@@ -11,7 +11,7 @@ const isObject = x => {
   return Object.keys(x).length > 0
 }
 
-export default function change (origin, pathRaw, rules) {
+export function change (origin, pathRaw, rules) {
   const willReturn = JSON.parse(JSON.stringify(origin))
 
   if (!isObject(rules)) {

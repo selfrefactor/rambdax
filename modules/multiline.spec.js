@@ -1,4 +1,4 @@
-import multiline from './multiline'
+import {multiline} from './multiline'
 
 test('case 0', () => {
   const zero = `node node_modules/jest`
