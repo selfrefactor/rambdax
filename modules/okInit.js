@@ -1,4 +1,4 @@
-function initOk(what,followRules){
+export default function initOk(what,followRules){
 
   return true
 }

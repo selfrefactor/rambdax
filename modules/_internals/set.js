@@ -999,8 +999,6 @@ function toString (value) {
  * console.log(object.x[0].y.z);
  * // => 5
  */
-function set (object, path, value) {
+export function set (object, path, value) {
   return object == null ? object : baseSet(object, path, value)
 }
-
-module.exports = set

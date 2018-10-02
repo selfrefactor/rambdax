@@ -1,4 +1,4 @@
-const allTrue = require('./allTrue').default
+import {allTrue} from './allTrue'
 
 const foo = 4
 const bar = { a : 1 }
