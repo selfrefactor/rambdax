@@ -7,7 +7,6 @@
   "sideEffects": false,
   "scripts": {
     "do": "node files/do",
-    "dev": "jest modules/initOk.spec.js",
     "de": "commit",
     "build": "run-p rambda build-main",
     "build-main": "microbundle --entry rambdax.js",
@@ -17,8 +16,7 @@
     "cover": "jest --coverage",
     "lint": "run-p lint-modules lint-rambdax",
     "lint-modules": "cd modules&&run lintFolder",
-    "lint-rambdax": "run lint rambdax.js",
-    "devx": "jest modules/initOk.spec.js --watch"
+    "lint-rambdax": "run lint rambdax.js"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,7 @@
 	"recommendations": [
         // THEMES
         /////////////
+        "joaomoreno.github-sharp-theme",
         "jolaleye.horizon-theme-vscode",
         "39digits.anchorage-vscode-theme",
         "DiryoX.Paper-tmTheme",

@@ -1,6 +1,4 @@
 const {
-  match,
-  init,
   all,
   replace,
   dropLast,
@@ -22,7 +20,7 @@ function getCodeExample(input){
 
 function getMethod(sourceLink){
   const baseURL = '(https://github.com/selfrefactor/rambda/tree/master/modules/'
-  const rambdaxBaseURL = '(https://github.com/selfrefactor/rambdax/tree/master/modules/'
+  const rambdaxBaseURL = '(https://github.com/selfrefactor/rambdax/tree/master/src/'
   
   const fileNameRaw = replace(
     baseURL,
