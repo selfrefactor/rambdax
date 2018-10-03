@@ -304,6 +304,23 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/inject.js)
 
+#### is
+
+> is(...inputs: any[]): (schemas: any[]) => boolean
+
+It checks if `inputs` are following `schemas` specifications.
+
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+
+If validation fails, it returns `false`.
+
+```
+const result = R.is(1,['foo','bar'])('number',['string'])
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
+
 #### isPromise
 
 > isPromise(x: any): boolean
@@ -316,6 +333,19 @@ R.isPromise(R.delay)
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isPromise.js)
+
+#### isType
+
+> isType(xType: string, x: any): boolean
+
+It returns true if `x` matches the type returned from `R.type`.
+
+```
+R.isType('Async',async () => {})
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/isType.js)
 
 #### less
 
@@ -440,27 +470,17 @@ const expectedResult = 'foo bar baz'
 
 #### ok
 
-> ok(input: Object, schema: Object): boolean
+> ok(...inputs: any[]): (schemas: any[]) => true | Error
 
-It checks if `input` is following `schema` specifications.
-It is in fact `R.isValid` but with
+It checks if `inputs` are following `schemas` specifications.
 
-> TODO refer to correct md file
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+
+If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
-const schema = {
-  published: "number",
-  style: [ "rock", "jazz" ],
-  title: "string",
-}
 
-const input = {
-  published: 1975,
-  style: "rock",
-  title: "In my time of dying",
-}
-
-const result = R.ok(input,schema)
+const result = R.ok(1,['foo','bar'])('number',['string'])
 // => true
 ```
 

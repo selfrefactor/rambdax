@@ -336,6 +336,26 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
 
 ---
+#### is
+
+> is(...inputs: any[]): (schemas: any[]) => boolean
+
+It checks if `inputs` are following `schemas` specifications.
+
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+
+If validation fails, it returns `false`.
+
+```
+const result = R.is(1,['foo','bar'])('number',['string'])
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.is(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
 #### isPromise
 
 > isPromise(x: any): boolean
@@ -350,6 +370,22 @@ R.isPromise(R.delay)
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isPromise.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isPromise(R.delay)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### isType
+
+> isType(xType: string, x: any): boolean
+
+It returns true if `x` matches the type returned from `R.type`.
+
+```
+R.isType('Async',async () => {})
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/isType.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isType('Async'%2Casync%20()%20%3D%3E%20%7B%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### less
@@ -491,33 +527,23 @@ const expectedResult = 'foo bar baz'
 ---
 #### ok
 
-> ok(input: Object, schema: Object): boolean
+> ok(...inputs: any[]): (schemas: any[]) => true | Error
 
-It checks if `input` is following `schema` specifications.
-It is in fact `R.isValid` but with
+It checks if `inputs` are following `schemas` specifications.
 
-> TODO refer to correct md file
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+
+If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
-const schema = {
-  published: "number",
-  style: [ "rock", "jazz" ],
-  title: "string",
-}
 
-const input = {
-  published: 1975,
-  style: "rock",
-  title: "In my time of dying",
-}
-
-const result = R.ok(input,schema)
+const result = R.ok(1,['foo','bar'])('number',['string'])
 // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
 
-<a href="https://rambda.now.sh?const%20schema%20%3D%20%7B%0A%20%20published%3A%20%22number%22%2C%0A%20%20style%3A%20%5B%20%22rock%22%2C%20%22jazz%22%20%5D%2C%0A%20%20title%3A%20%22string%22%2C%0A%7D%0A%0Aconst%20input%20%3D%20%7B%0A%20%20published%3A%201975%2C%0A%20%20style%3A%20%22rock%22%2C%0A%20%20title%3A%20%22In%20my%20time%20of%20dying%22%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.ok(input%2Cschema)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### omitBy
