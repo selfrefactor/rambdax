@@ -1,5 +1,25 @@
 import {isValid} from './isValid'
 
+test('`any` safeguard against `null`', () => {
+  const input = {
+    a : null
+  }
+  const schema = {
+    a :'any'
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
+
+test('`any` safeguard against `undefined`', () => {
+  const input = {
+    a : undefined
+  }
+  const schema = {
+    a :'any'
+  }
+  expect(isValid({input, schema})).toBeFalsy()
+})
+
 test('type can be `"any"`', () => {
   const input = {
     a : () => {}
@@ -16,6 +36,16 @@ test('type can be `"function"`', () => {
   }
   const schema = {
     a :'function'
+  }
+  expect(isValid({input, schema})).toBeTruthy()
+})
+
+test('type can be `"async"`', () => {
+  const input = {
+    a : async () => {}
+  }
+  const schema = {
+    a :'async'
   }
   expect(isValid({input, schema})).toBeTruthy()
 })
@@ -373,12 +403,10 @@ test('should allow additional properties', () => {
     year  : 1969,
   }
 
-  const schema = { title : 'string' }
-
   expect(
     isValid({
       input,
-      schema,
+      schema: { title : 'string' },
     })
   ).toBeTruthy()
 })
@@ -441,12 +469,12 @@ test('should return true when schema is empty object', () => {
   ).toBeTruthy()
 })
 
-test('should return false when schema is undefined', () => {
+test('when schema is undefined', () => {
   expect(
     isValid({
       input  : { a : 1 },
       schema : undefined,
-    })
+    }) 
   ).toBeFalsy()
 })
 

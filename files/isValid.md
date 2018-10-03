@@ -8,6 +8,33 @@
 
 - schema - schema object with rules
 
+## Optional requirements
+
+Note that you can have have optional requiremens that you append with `_`.
+
+For example:
+
+```javascript
+const schema = {
+  a: 'number',
+  b_: 'string',
+}
+const inputA = {
+  a: 1
+}
+const inputB = {
+  a: 1,
+  b: 'bar'
+}
+const inputC = {
+  a: 1,
+  b: 2
+}
+assert.ok(isValid({schema, input: inputA}))
+assert.ok(isValid({schema, input: inputB}))
+assert.ok(isValid({schema, input: inputC})) // throws as `2` is not a string
+```
+
 ## Valid schema declarations
 
 ### Evaluation function

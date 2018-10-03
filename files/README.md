@@ -347,6 +347,26 @@ R.isType('Async',async () => {})
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isType.js)
 
+#### isValid
+
+> isValid({ input: object: schema: object }): boolean
+
+It checks if `input` is following `schema` specifications.
+
+If validation fails, it returns `false`.
+
+Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md) as it is hard to write a short description of this method.
+
+```
+const result = R.isValid({
+  input:{ a: ['foo','bar'] },
+  schema: {a: ['string'] }
+})  
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
+
 #### less
 
 > less(x: number, y: number): boolean
