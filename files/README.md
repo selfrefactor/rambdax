@@ -274,6 +274,10 @@ console.log(result === expectedResult)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/evolve.js)
 
+#### findInObject
+
+> greater(x: any, obj: object): any
+
 #### greater
 
 > greater(x: number, y: number): boolean
@@ -541,6 +545,16 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
+```
+
+#### perf
+
+> perf(label: string): undefined
+
+```
+R.perf('foo') // console.time('foo')
+...
+R.perf('foo') // console.timeEnd('foo')
 ```
 
 #### pickBy
