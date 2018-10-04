@@ -1,6 +1,6 @@
 # TODO
 
-### `run-fn`
+## `run-fn`
 
 - `run init`
 
@@ -105,12 +105,21 @@ There is, so it runs:
 
 ```javascript
 if(Object.keys(customCommands).includes(command)){
-  await processCustomCommands(customCommands[command])
+  await processCustomCommands(customCommands[command], inputs)
 }
 ```
 
 processCustomCommands.js:
 
 ```javascript
-async function processCustomCommands(){}
+async function processCustomCommands({projectDir, file}, inputs){
+  const customCommand = require(file)
+  const inputToUse = {projectDir, inputs, cwd: process.cwd()}
+
+  const result = customCommand.async ?
+    await customCommand(inputToUse) :
+    customCommand(inputToUse)
+  
+  if(result !== undefined) console.log(result)
+}
 ```
