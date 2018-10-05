@@ -1,18 +1,30 @@
-import {isValid} from './isValid'
+import { isValid } from './isValid'
 
-export function ok (input, schema) {
-  if (arguments.length === 2) {
-    return isValid({
-      input,
-      schema,
-    })
+function any (fn, arr) {
+  let counter = 0
+  while (counter < arr.length) {
+    if (fn(arr[ counter ], counter)) {
+      return true
+    }
+    counter++
   }
 
-  return schemaHolder => isValid(
-    {
-      input,
-      schema : schemaHolder,
-    }
-  )
+  return false
 }
 
+function check(singleInput, schema){
+  return isValid({
+    input: {singleInput},
+    schema : {singleInput: schema},
+  })
+}
+
+export function ok(...inputs){
+  return (...schemas) => {
+    if(inputs.length !== schemas.length) return false
+    
+    return any((singleInput, i)=> 
+      !check(singleInput, schemas[i])
+    , inputs) === false    
+  }
+}
