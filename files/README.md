@@ -21,7 +21,7 @@ console.log(result) // => [3, 4]
 
 Simple `yarn add rambdax` is sufficient
 
-ES5 compatible version - `yarn add rambdax#0.8.0`
+> ES5 compatible version - `yarn add rambdax#0.8.0`
 
 ## Differences between Rambda and Ramdax
 
@@ -35,9 +35,9 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
-#### allTrue
+#### allFalse
 
-> allTrue(...inputs: any[]): boolean
+> allFalse(...inputs: any[]): boolean
 
 It returns `true` if all passed elements return `false` when passed to `Boolean`.
 
