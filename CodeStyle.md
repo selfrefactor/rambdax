@@ -2,6 +2,25 @@
 
 General tips for React and Javascript programming
 
+## `{{theme}}` folder naming pattern
+
+Lke in `lint-fn` we have `isReact`, `isJest`, `isSaga` functions.
+
+In this case a folder named `is` is created and there is file called `jest.js`
+
+`jest.js` exports method `{{theme}}FILENAME`, i.e. `isJest`
+
+```javascript
+exports.isJest = filePath => {
+  if(filePath.endsWith('spec.jsx')) return true
+  if(filePath.endsWith('spec.js')) return true
+
+  return false
+}
+```
+
+The pattern is sutable for cases like `sagas`, `epics`.
+
 ## `input*` pattern
 
 It makes easier to see which one is the input argument.
