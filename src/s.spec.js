@@ -3,7 +3,8 @@ import {toUpper, take, add} from 'rambda'
 
 test('', () =>{
   
-  expect(s()).toBe(undefined)
+  expect(s()).toBe(true)
+  expect(s()).toBe(false)
   
   const input = 'foo'
   const result = input
@@ -16,4 +17,8 @@ test('', () =>{
   expect(
     result
   ).toEqual(expectedResult)
+})
+
+test('init only once', () => {
+  expect(s()).toBe(false)
 })

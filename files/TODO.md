@@ -1,5 +1,11 @@
 # TODO
 
+## is, ok init with schemas
+
+## initIs to initIsProperty
+
+## before archiving `is` library, make okInit able to read `index.d.ts` typings and turn them to schemas
+
 ## `run-fn`
 
 - `run init`

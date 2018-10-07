@@ -13,7 +13,7 @@ const commands = [
 ]
 
 const R = require('../dist/rambdax.js')
-console.log(R.allTrue);
+console.log(R.allTrue, R.match);
 console.log(R.allTrue(1,2,3));
 
 const {exec} = require('child_process')
