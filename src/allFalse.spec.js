@@ -1,4 +1,4 @@
-import {allFalse} from './allFalse'
+import { allFalse } from './allFalse'
 
 test('usage with variables', () => {
   const foo = null

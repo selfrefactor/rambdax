@@ -8,7 +8,7 @@
   "scripts": {
     "do": "node files/do",
     "de": "commit",
-    "build": "run-p rambda build-main",
+    "build": "yarn rambda&&yarn build-main",
     "build-main": "microbundle --entry rambdax.js",
     "test": "jest",
     "rambda": "node files/generateRambdaExports",
@@ -56,7 +56,6 @@
     "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
     "microbundle": "^0.4.4",
-    "npm-run-all": "^4.1.2",
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "string-fn": "^1.7.0"
   },
