@@ -314,7 +314,7 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid)
 
 If validation fails, it returns `false`.
 
@@ -359,7 +359,7 @@ It checks if `input` is following `schema` specifications.
 
 If validation fails, it returns `false`.
 
-Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md) as it is hard to write a short description of this method.
+Please [check the detailed explanation](#isvalid) as it is hard to write a short description of this method.
 
 ```
 const result = R.isValid({
@@ -498,7 +498,7 @@ const expectedResult = 'foo bar baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid).
 
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
