@@ -1,8 +1,8 @@
-import {map, prop, equals} from 'rambda'
-import {composeAsync} from './composeAsync'
-import {tapAsync} from './tapAsync'
-import {mapAsync} from './mapAsync'
-import {delay} from './delay'
+import { map, prop, equals } from 'rambda'
+import { composeAsync } from './composeAsync'
+import { tapAsync } from './tapAsync'
+import { mapAsync } from './mapAsync'
+import { delay as delayModule } from './delay'
 
 test('', async () => {
   const fn = input => new Promise(resolve => {
@@ -73,10 +73,10 @@ test('', async () => {
     tapAsync(async x => {
       sideEffect = equals(x, [ 2, 4, 6 ])
 
-      return await delay(x * 3)
+      return await delayModule(x * 3)
     }),
     mapAsync(async x => {
-      await delay(x * 100)
+      await delayModule(x * 100)
 
       return x * 2
     })
@@ -89,4 +89,24 @@ test('', async () => {
   expect(
     sideEffect
   ).toEqual(true)
+})
+
+
+// TODO
+test.skip('when throw', async () => {
+  const delay = ms => new Promise((res, rej) =>
+    // rej(ms + 7)
+    res(ms + 7)
+  )
+
+  const result = await composeAsync(
+    a => a,
+    a => a + 1000,
+    delay,
+    a => a + 11
+  )(20)
+  console.log({result})
+  expect(
+    1
+  ).toEqual(1)
 })
