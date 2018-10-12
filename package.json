@@ -38,8 +38,8 @@
     "rambda": "^1.2.2"
   },
   "depFn": [
-    "babel-plugin-external-helpers",
     "babel-preset-env",
+    "babel-plugin-external-helpers",
     "rollup-plugin-babel",
     "rollup-plugin-babel",
     "rollup-plugin-node-resolve"
