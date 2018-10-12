@@ -2,12 +2,12 @@ import { inject } from './inject'
 
 test('', () => {
   const result = inject(
-    ' INJECTION',
+    '\nINJECTION',
     'MARKER',
     'foo bar MARKER baz'
   )
 
-  const expectedResult = 'foo bar MARKER INJECTION baz'
+  const expectedResult = 'foo bar MARKER\nINJECTION baz'
 
   expect(
     result

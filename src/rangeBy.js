@@ -1,12 +1,6 @@
 import { range, length, last, split, compose } from 'rambda'
 
-export function rangeBy (startNum, endNum, distance) {
-  if (endNum === undefined) {
-    return (endNumHolder, distanceHolder) => rangeBy(startNum, endNumHolder, distanceHolder)
-  } else if (distance === undefined) {
-    return distanceHolder => rangeBy(startNum, endNum, distanceHolder)
-  }
-
+export function rangeBy(startNum, endNum, distance) {
   const isInteger = !distance.toString().includes('.')
   if (startNum > endNum) {
     const startNumHolder = startNum

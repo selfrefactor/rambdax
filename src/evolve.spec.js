@@ -1,5 +1,5 @@
-import {evolve} from './evolve'
-import {add, trim} from 'rambda'
+import { evolve } from './evolve'
+import { add, trim } from 'rambda'
 
 test('ok', () => {
   const tomato = {
@@ -27,5 +27,19 @@ test('ok', () => {
     },
     id : 123,
   })
+})
+
+test('empty rules', () => {
+  const tomato = {
+    firstName : '  Foo ',
+    data      : {
+      elapsed   : 100,
+      remaining : 1400,
+    },
+    id : 123,
+  }
+  const transformations = {}
+  const result = evolve(transformations, tomato)
+  expect(result).toEqual(result)
 })
 

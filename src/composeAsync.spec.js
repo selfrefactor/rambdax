@@ -91,11 +91,10 @@ test('', async () => {
   ).toEqual(true)
 })
 
-
-// TODO
+//TODO
 test.skip('when throw', async () => {
   const delay = ms => new Promise((res, rej) =>
-    // rej(ms + 7)
+    //rej(ms + 7)
     res(ms + 7)
   )
 
@@ -105,7 +104,7 @@ test.skip('when throw', async () => {
     delay,
     a => a + 11
   )(20)
-  console.log({result})
+  console.log({ result })
   expect(
     1
   ).toEqual(1)

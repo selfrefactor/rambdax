@@ -13,5 +13,6 @@ test('should remove omitted props', () => {
     d : 4,
   }
   expect(omitBy(fn, input)).toEqual(expectedResult)
+  expect(omitBy(fn)(input)).toEqual(expectedResult)
 })
 
