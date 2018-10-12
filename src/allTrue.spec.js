@@ -1,4 +1,4 @@
-import {allTrue} from './allTrue'
+import { allTrue } from './allTrue'
 
 const foo = 4
 const bar = { a : 1 }
@@ -18,6 +18,35 @@ test('usage with boolean', () => {
     foo > 2,
     bar.a === 1,
     baz.length === 3
+  )
+  expect(result).toBe(true)
+})
+
+test('escapes early - case 1', () => {
+  const foo = null
+  const result = allTrue(
+    foo,
+    () => foo.a,
+  )
+  expect(result).toBe(false)
+})
+
+test('escapes early - case 2', () => {
+  const foo = { a : 'bar' }
+  const result = allTrue(
+    foo,
+    foo.a,
+    foo.a.b,
+  )
+  expect(result).toBe(false)
+})
+
+test('escapes early - case 3', () => {
+  const foo = { a : { b : 'bar' } }
+  const result = allTrue(
+    foo,
+    () => foo.a,
+    () => foo.a.b,
   )
   expect(result).toBe(true)
 })

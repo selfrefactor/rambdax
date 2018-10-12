@@ -1,5 +1,21 @@
-export function allTrue(...inputs) {
-  //TODO escape early
+import { type } from 'rambda'
 
-  return inputs.filter(Boolean).length === inputs.length
+export function allTrue(...inputs) {
+  let counter = 0
+  while (counter < inputs.length) {
+    const x = inputs[ counter ]
+
+    if (type(x) === 'Function'){
+      if (!inputs[ counter ]()) {
+        return false
+      }
+    } else if (!inputs[ counter ]) {
+      return false
+    }
+
+    counter++
+  }
+
+  return true
 }
+
