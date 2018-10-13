@@ -3,8 +3,8 @@ import { isValid } from './isValid'
 export function isInit(){
   if (Object.prototype.is !== undefined){
     return false
-  } 
-  
+  }
+
   Object.defineProperty(
     Object.prototype,
     'is',

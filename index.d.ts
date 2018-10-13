@@ -245,7 +245,6 @@ declare namespace R {
     multiline(input: string, glue?: string): string
 
     // ok(input: object): boolean
-
     ok(...inputs: any[]): (...rules: any[]) => undefined | never 
 
     omitBy<T,OT>(fn: Function, input: T): OT

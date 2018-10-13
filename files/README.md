@@ -687,6 +687,22 @@ console.log(R.rangeBy(0, 2, 0.3))
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
 
+#### remove
+
+> remove(inputs: string|RegExp[], text: string): string
+
+It will remove all inputs from `text` sequentially.
+
+```
+const result = R.remove(
+  ['foo','bar']),
+  'foo bar baz foo'
+)
+// => 'baz foo'
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/remove.js)
+
 #### renameProps
 
 > renameProps(rules: Object, input: Object): Object
