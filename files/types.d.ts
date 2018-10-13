@@ -32,6 +32,9 @@ declare namespace R {
   }
   // RAMBDA_END
   // RAMBDAX_START
+  type ArgumentTypes<T> = T extends (... args: infer U ) => infer R ? U: never;
+  type ReplaceReturnType<T, TNewReturn> = (...a: ArgumentTypes<T>) => TNewReturn;
+
   type isfn<T> = (x: any, y: any) => T
 
   interface Switchem<T> {
@@ -181,9 +184,7 @@ declare namespace R {
       ...fns: Array<Promise<any> | Function>
     ): (input: any) => Promise<any>
 
-    debounce<T>(
-      fn: T, ms: number
-    ): ReplaceReturnType<T, void>
+    debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>;
 
     defaultWhen<T>(
       fn: (x: T) => boolean, 
@@ -292,7 +293,7 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
-    throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>
+    throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
 
     template(input: string, templateInput: object): string
     
