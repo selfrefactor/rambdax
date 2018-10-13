@@ -67,6 +67,7 @@
     ]
   },
   "files": [
+    "src",
     "dist",
     "index.d.ts"
   ],
