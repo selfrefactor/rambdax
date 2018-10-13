@@ -134,7 +134,7 @@ declare namespace R {
     [key: string]: Promise<any>
   }
 
-  interface ResolveSecureResult {
+  interface PromiseAllSecureResult {
     type: "RESULT" | "ERROR"
     payload: any
   }
@@ -165,29 +165,42 @@ declare namespace R {
   // RAMDA_END
   interface X {
     // RAMBDAX_START
-    assocPath<T, U>(path: Path | string, val: T, obj: U): U
-    assocPath<T, U>(path: Path | string, val: T): (obj: U) => U
-    assocPath<T, U>(path: Path | string): CurriedFunction2<T, U, U>
+    allFalse(...input: Array<any>): boolean
 
-    compact(x: any[]): any[]
+    allTrue(...input: Array<any>): boolean
+
+    change(
+      origin: object, 
+      path: string, 
+      changeData: any
+    ): object
+
+    compact<T>(x: T[]): T[]
 
     composeAsync(
       ...fns: Array<Promise<any> | Function>
     ): (input: any) => Promise<any>
 
-    debounce(fn: Function, ms: number): any
+    debounce<T>(
+      fn: T, ms: number
+    ): ReplaceReturnType<T, void>
+
+    defaultWhen<T>(
+      fn: (x: T) => boolean, 
+      fallback: T, 
+      input: any
+    ): T  
 
     delay(ms: Number): Promise<string>
 
     DELAY: string
-
-    debug(...input: Array<any>): never
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
 
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean
+    
     less(x: number, y: number): boolean
     less(x: number): (y: number) => boolean
 
@@ -207,13 +220,14 @@ declare namespace R {
     intersection<T>(list1: T[], list2: T[]): T[]
     intersection<T>(list1: T[]): (list2: T[]) => T[]
 
+    isInit() : boolean
+    is(...inputs: any[]): (...rules: any[]) => boolean
+
     isType(xType: RambdaTypes, x: any): boolean
     isArray(x: any): boolean
     isString(x: any): boolean
     isObject(x: any): boolean
     isPromise(x: any): boolean
-
-    isValid(input: IsValid): boolean
 
     mapAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, x: object): Promise<Array<T>>
@@ -223,11 +237,19 @@ declare namespace R {
     mapFastAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
 
-    memoize(fn: Function | Promise<any>): any
+    memoize<T>(fn: Function | Async<any>): T
 
+    mergeRight(x: object, y: object): object
+    mergeRight(x: object): (y: object) => object
+    
     mergeAll(input: object[]): object
 
-    omitBy(fn: Function, input: object): object
+    multiline(input: string, glue?: string): string
+
+    // ok(input: object): boolean
+    ok(...inputs: any[]): (...rules: any[]) => undefined | never 
+
+    omitBy<T,OT>(fn: Function, input: T): OT
 
     once(fn: Function): Function
 
@@ -243,16 +265,25 @@ declare namespace R {
       conditions: any,
     ): (input: any) => Out
 
+    
+    promiseAllObject(
+      input: ObjectWithPromises
+    ): Promise<object>
+
+    promiseAllSecure(
+      input: Array<Promise<any>>
+    ): Array<PromiseAllSecureResult>  
+
     random(min: number, max: number): number
 
     rangeBy(start: number, end: number, step: number): number[]
+     
+    remove(inputs: Array<string|RegExp>, text: string): string
 
     renameProps(rules: object, input: object): object
     renameProps(rules: object): (input: object) => object
 
-    resolve(input: ObjectWithPromises): Promise<object>
-
-    resolveSecure(input: Array<Promise<any>>): Array<ResolveSecureResult>
+    s(): boolean
 
     shuffle<T>(arr: T[]): T[]
 
@@ -261,8 +292,10 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
-    throttle(fn: Function, ms: number): Function
+    throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>
 
+    template(input: string, templateInput: object): string
+    
     where(conditions: object, input: object): boolean
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>

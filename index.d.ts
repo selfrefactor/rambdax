@@ -32,9 +32,6 @@ declare namespace R {
   }
   // RAMBDA_END
   // RAMBDAX_START
-  type ArgumentTypes<T> = T extends (... args: infer U ) => infer R ? U: never;
-  type ReplaceReturnType<T, TNewReturn> = (...a: ArgumentTypes<T>) => TNewReturn;
-
   type isfn<T> = (x: any, y: any) => T
 
   interface Switchem<T> {
@@ -152,6 +149,11 @@ declare namespace R {
 
   interface Schema {
     [key: string]: SchemaStringTypes | Array<SchemaStringTypes> | Array<Schema>
+  }
+
+  interface IsValid {
+    input: object
+    schema: Schema
   }
 
   type Async<T> = (x: any) => Promise<T>
@@ -300,7 +302,7 @@ declare namespace R {
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>
     // RAMBDAX_END
     // RAMBDA_MARKER
-    add(a: number, b: number): number
+add(a: number, b: number): number
     add(a: string, b: string): string
     add(a: number): (b: number) => number
     add(a: string): (b: string) => string
@@ -308,6 +310,7 @@ declare namespace R {
     addIndex<T, U>(fn: (f: (item: T) => U, list: T[]) => U[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => U, T[], U[]>
     addIndex<T>(fn: (f: (item: T) => void, list: T[]) => T[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => void, T[], T[]>
     addIndex<T, U>(fn: (f: (acc: U, item: T) => U, aci: U, list: T[]) => U): CurriedFunction3<(acc: U, item: T, idx: number, list?: T[]) => U, U, T[], U>
+
 
     adjust<T>(fn: (a: T) => T, index: number, list: T[]): T[]
     adjust<T>(fn: (a: T) => T, index: number): (list: T[]) => T[]
@@ -440,7 +443,7 @@ declare namespace R {
     findIndex<T>(fn: (a: T) => boolean, list: T[]): number
     findIndex<T>(fn: (a: T) => boolean): (list: T[]) => number
 
-    flatten<T>(x: Array<T[]|T>): T[]
+    flatten<T>(x: T[] | T[][]): T[]
 
     flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult
     flip<T, U, TResult>(fn: (arg0: T, arg1: U, ...args: any[]) => TResult): (arg1: U, arg0?: T, ...args: any[]) => TResult
@@ -467,6 +470,9 @@ declare namespace R {
 
     init<T>(list: T[]): T[]
     init(list: string): string
+
+    
+    
 
     isNil(value: any): value is null | undefined
 

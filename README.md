@@ -163,6 +163,10 @@ const expectedResult = [1, false, " ", "foo", [1]]
 
 Asyncronous version of `R.compose`.
 
+Note that you should wrap the block with this function with `try/catch` in order to handle possible errors.
+
+Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+
 ```
 const fn = async x => {
   await R.delay(500)
@@ -615,17 +619,6 @@ console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
 ---
-#### perf
-
-> perf(label: string): undefined
-
-```
-R.perf('foo') // console.time('foo')
-...
-R.perf('foo') // console.timeEnd('foo')
-```
-
----
 #### pickBy
 
 > pickBy(fn: Function, input: Object): Object
@@ -684,6 +677,72 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 <a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### promiseAllObject
+
+> promiseAllObject(promises: Object): Promise
+
+It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
+
+```
+const fn = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : fn(1),
+  b : fn(2),
+}
+
+const result = R.promiseAllObject(promises)
+const expectedResult = { a:1, b:2 }
+// `result` resolves to `expectedResult`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.promiseAllObject(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+
+---
+#### promiseAllSecure
+
+> promiseAllSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
+
+It acts as `Promise.all` with fault tollerance.
+
+Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
+Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
+
+```
+const fn = async () => {
+  try {
+    JSON.parse("{:a")
+  }
+  catch (err) {
+    throw new Error(err)
+  }
+}
+
+const result = R.promiseAllSecure([
+  R.delay(2000),
+  fn(1000)
+])
+
+const expectedResult = [
+  {
+    "payload": 'RAMBDAX_DELAY',
+    "type": "RESULT"
+  },
+  {
+    payload:"Unexpected token : in JSON at position 1",
+    type: "ERROR"
+  }
+]
+// `result` resolves to `expectedResult`
+```
+
+---
 #### random
 
 > random(min: number, max: number): number
@@ -708,6 +767,25 @@ console.log(R.rangeBy(0, 2, 0.3))
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.rangeBy(0%2C%2010%2C%202)%0A%2F%2F%20%3D%3E%20%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0A%0Aconsole.log(R.rangeBy(0%2C%202%2C%200.3))%0A%2F%2F%20%3D%3E%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D">Try in REPL</a>
+
+---
+#### remove
+
+> remove(inputs: string|RegExp[], text: string): string
+
+It will remove all inputs from `text` sequentially.
+
+```
+const result = R.remove(
+  ['foo','bar']),
+  'foo bar baz foo'
+)
+// => 'baz foo'
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/remove.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.remove(%0A%20%20%5B'foo'%2C'bar'%5D)%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try in REPL</a>
 
 ---
 #### renameProps
@@ -738,72 +816,6 @@ const expectedResult = {
 <a href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20f%3A%20%22foo%22%2C%0A%20%20b%3A%20%22bar%22%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20f%3A1%2C%0A%20%20b%3A2%0A%7D%0Aconst%20result%20%3D%20R.renameProps(rules%2C%20input)%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A1%2C%0A%20%20bar%3A2%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
-#### resolve
-
-> resolve(promises: Object): Promise
-
-It acts as `Promise.all` for object with Promises.
-It returns a promise that resolve to object.
-
-```
-const fn = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : fn(1),
-  b : fn(2),
-}
-
-const result = R.resolve(promises)
-const expectedResult = { a:1, b:2 }
-// `result` resolves to `expectedResult`
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolve.js)
-
-<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.resolve(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
-
----
-#### resolveSecure
-
-> resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
-
-It acts as `Promise.all` with fault tollerance.
-
-Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
-Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
-
-```
-const fn = async () => {
-  try {
-    JSON.parse("{:a")
-  }
-  catch (err) {
-    throw new Error(err)
-  }
-}
-
-const result = R.resolveSecure([
-  R.delay(2000),
-  fn(1000)
-])
-
-const expectedResult = [
-  {
-    "payload": 'RAMBDAX_DELAY',
-    "type": "RESULT"
-  },
-  {
-    payload:"Unexpected token : in JSON at position 1",
-    type: "ERROR"
-  }
-]
-// `result` resolves to `expectedResult`
-```
-
----
 #### s
 
 > s(): undefined
@@ -825,7 +837,7 @@ const expectedResult = 'barFO'
 // result === expectedResult
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolveSecure.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllSecure.js)
 
 <a href="https://rambda.now.sh?%2F%2F%20To%20turn%20it%20on%0AR.s()%0A%0A%2F%2F%20Then%0Aconst%20result%20%3D%20'foo'%0A%20%20.s(R.toUpper)%0A%20%20.s(R.take(2))%0A%20%20.s(R.add('bar'))%0A%0Aconst%20expectedResult%20%3D%20'barFO'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 

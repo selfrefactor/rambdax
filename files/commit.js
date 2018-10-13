@@ -1,1 +1,0 @@
-const { method } = require('library')

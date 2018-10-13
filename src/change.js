@@ -1,6 +1,6 @@
 //Its lodash's set method taken from
 //https://github.com/lodash/lodash/blob/4.5.0-npm-packages
-import {set} from './_internals/set'
+import { set } from './_internals/set'
 
 const isObject = x => {
   const ok = x !== null && !Array.isArray(x) && typeof x === 'object'
@@ -11,7 +11,7 @@ const isObject = x => {
   return Object.keys(x).length > 0
 }
 
-export function change (origin, pathRaw, rules) {
+export function change(origin, pathRaw, rules) {
   const willReturn = JSON.parse(JSON.stringify(origin))
 
   if (!isObject(rules)) {

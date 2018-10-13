@@ -1,4 +1,4 @@
-const R = require('../rambdax')
+const R = require('../dist/rambdax.js')
 
 const x = {
   doc : {
