@@ -1,6 +1,6 @@
 import { map } from 'rambda'
 
-const resolveSecureWrapper = promise => new Promise(res => {
+const promiseAllSecureWrapper = promise => new Promise(res => {
   promise.then(result => {
     res({
       payload : result,
@@ -14,10 +14,10 @@ const resolveSecureWrapper = promise => new Promise(res => {
   })
 })
 
-export async function resolveSecure (input) {
+export async function promiseAllSecure(input) {
   try {
     const promised = map(
-      a => resolveSecureWrapper(a),
+      a => promiseAllSecureWrapper(a),
       input
     )
 

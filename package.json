@@ -16,7 +16,9 @@
     "cover": "jest --coverage",
     "lint": "run-p lint-modules lint-rambdax",
     "lint-modules": "cd modules&&run lintFolder",
-    "lint-rambdax": "run lint rambdax.js"
+    "lint-rambdax": "run lint rambdax.js",
+    "dev": "jest modules/remove.spec.js",
+    "devx": "jest modules/remove.spec.js --watch"
   },
   "repository": {
     "type": "git",

@@ -551,16 +551,6 @@ console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
-#### perf
-
-> perf(label: string): undefined
-
-```
-R.perf('foo') // console.time('foo')
-...
-R.perf('foo') // console.timeEnd('foo')
-```
-
 #### pickBy
 
 > pickBy(fn: Function, input: Object): Object
@@ -613,6 +603,68 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
 
+#### promiseAllObject
+
+> promiseAllObject(promises: Object): Promise
+
+It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
+
+```
+const fn = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : fn(1),
+  b : fn(2),
+}
+
+const result = R.promiseAllObject(promises)
+const expectedResult = { a:1, b:2 }
+// `result` resolves to `expectedResult`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
+
+#### promiseAllSecure
+
+> promiseAllSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
+
+It acts as `Promise.all` with fault tollerance.
+
+Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
+Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
+
+```
+const fn = async () => {
+  try {
+    JSON.parse("{:a")
+  }
+  catch (err) {
+    throw new Error(err)
+  }
+}
+
+const result = R.promiseAllSecure([
+  R.delay(2000),
+  fn(1000)
+])
+
+const expectedResult = [
+  {
+    "payload": 'RAMBDAX_DELAY',
+    "type": "RESULT"
+  },
+  {
+    payload:"Unexpected token : in JSON at position 1",
+    type: "ERROR"
+  }
+]
+// `result` resolves to `expectedResult`
+```
+
 #### random
 
 > random(min: number, max: number): number
@@ -660,68 +712,6 @@ const expectedResult = {
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/renameProps.js)
 
-#### resolve
-
-> resolve(promises: Object): Promise
-
-It acts as `Promise.all` for object with Promises.
-It returns a promise that resolve to object.
-
-```
-const fn = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : fn(1),
-  b : fn(2),
-}
-
-const result = R.resolve(promises)
-const expectedResult = { a:1, b:2 }
-// `result` resolves to `expectedResult`
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolve.js)
-
-#### resolveSecure
-
-> resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
-
-It acts as `Promise.all` with fault tollerance.
-
-Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
-Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
-
-```
-const fn = async () => {
-  try {
-    JSON.parse("{:a")
-  }
-  catch (err) {
-    throw new Error(err)
-  }
-}
-
-const result = R.resolveSecure([
-  R.delay(2000),
-  fn(1000)
-])
-
-const expectedResult = [
-  {
-    "payload": 'RAMBDAX_DELAY',
-    "type": "RESULT"
-  },
-  {
-    payload:"Unexpected token : in JSON at position 1",
-    type: "ERROR"
-  }
-]
-// `result` resolves to `expectedResult`
-```
-
 #### s
 
 > s(): undefined
@@ -743,7 +733,7 @@ const expectedResult = 'barFO'
 // result === expectedResult
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolveSecure.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllSecure.js)
 
 #### shuffle
 

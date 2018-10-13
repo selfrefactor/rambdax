@@ -1,6 +1,6 @@
-import { resolve } from './resolve'
+import { promiseAllObject } from './promiseAllObject'
 
-test('resolve', async () => {
+test('promiseAllObject', async () => {
   const delay = ms => new Promise(res => {
     setTimeout(() => {
       res(ms)
@@ -11,7 +11,7 @@ test('resolve', async () => {
     b : delay(2),
     c : delay(3),
   }
-  const result = await resolve(promises)
+  const result = await promiseAllObject(promises)
 
   expect(result).toEqual({
     a : 1,
