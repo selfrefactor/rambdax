@@ -91,12 +91,31 @@ test('', async () => {
   ).toEqual(true)
 })
 
-//TODO
-test.skip('when throw', async () => {
-  const delay = ms => new Promise((res, rej) =>
-    //rej(ms + 7)
-    res(ms + 7)
-  )
+test('inside compose explicit `async` keyword', async () => {
+  const delay = ms => new Promise((res, rej) => {
+    const b = ms + 7
+
+    res(b)
+  })
+
+  const result = await composeAsync(
+    a => a,
+    a => a + 1000,
+    async a => delay(a),
+    a => a + 11
+  )(20)
+
+  expect(
+    result
+  ).toEqual(1038)
+})
+
+test('known issue - function returning promise', async () => {
+  const delay = ms => new Promise((res, rej) => {
+    const b = ms + 7
+
+    res(b)
+  })
 
   const result = await composeAsync(
     a => a,
@@ -104,8 +123,77 @@ test.skip('when throw', async () => {
     delay,
     a => a + 11
   )(20)
-  console.log({ result })
+
   expect(
-    1
-  ).toEqual(1)
+    result
+  ).toEqual('[object Promise]1000')
+})
+
+test('throw error - case 1', async () => {
+  const delay = ms => new Promise((res, rej) => {
+    const b = ms + 7
+
+    rej(new Error('foo'))
+  })
+
+  let flag = true
+  try {
+    const result = await composeAsync(
+      a => a,
+      a => a + 1000,
+      async a => delay(a),
+      a => a + 11
+    )(20)
+  } catch (e){
+    flag = false
+  }
+
+  expect(
+    flag
+  ).toBe(false)
+})
+
+test('throw error - case 2', async () => {
+  const delay = async ms => JSON.parse('{foo')
+
+  let flag = true
+  try {
+    const result = await composeAsync(
+      a => a,
+      a => a + 1000,
+      async a => delay(a),
+      a => a + 11
+    )(20)
+  } catch (e){
+    flag = false
+  }
+
+  expect(
+    flag
+  ).toBe(false)
+})
+
+test('throw error - case 3', done => {
+  const delay = ms => new Promise((res, rej) => {
+    const b = ms + 7
+
+    rej(new Error('foo'))
+  })
+
+  const promise = composeAsync(
+    a => a,
+    a => a + 1000,
+    delay,
+    a => a + 11
+  )(20)
+
+  promise.then(() => {
+    expect(true).toBe(false)
+    done()
+  }).catch(err => {
+    expect(
+      err
+    ).toBeInstanceOf(Error)
+    done()
+  })
 })

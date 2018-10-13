@@ -152,6 +152,10 @@ const expectedResult = [1, false, " ", "foo", [1]]
 
 Asyncronous version of `R.compose`.
 
+Note that you should wrap the block with this function with `try/catch` in order to handle possible errors.
+
+Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+
 ```
 const fn = async x => {
   await R.delay(500)
