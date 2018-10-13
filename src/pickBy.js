@@ -1,4 +1,4 @@
-export function pickBy (fn, obj) {
+export function pickBy(fn, obj) {
   if (arguments.length === 1) {
     return holder => pickBy(fn, holder)
   }

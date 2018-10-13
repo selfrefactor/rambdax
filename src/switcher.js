@@ -1,6 +1,6 @@
 import { equals } from 'rambda'
 
-const NO_MATCH_FOUND = Symbol ? 
+const NO_MATCH_FOUND = Symbol ?
   Symbol('NO_MATCH_FOUND') :
   undefined
 
@@ -33,7 +33,7 @@ const is = (testValue, matchResult = true) => ({
 
 class Switchem {
 
-  constructor (defaultValue, cases, willMatch) {
+  constructor(defaultValue, cases, willMatch) {
     if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
       this.cases = []
       this.defaultValue = undefined
@@ -47,13 +47,13 @@ class Switchem {
     return this
   }
 
-  default (defaultValue) {
+  default(defaultValue) {
     const holder = new Switchem(defaultValue, this.cases, this.willMatch)
 
     return holder.match(this.willMatch)
   }
 
-  is (testValue, matchResult) {
+  is(testValue, matchResult) {
     return new Switchem(
       this.defaultValue,
       [ ...this.cases, is(testValue, matchResult) ],
@@ -61,12 +61,12 @@ class Switchem {
     )
   }
 
-  match (matchValue) {
+  match(matchValue) {
     return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
   }
 
 }
 
-export function switcher (input) {
+export function switcher(input) {
   return new Switchem(input)
 }

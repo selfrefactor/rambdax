@@ -1,6 +1,6 @@
 import { ifElseAsync } from './ifElseAsync'
-import { type, T, F } from 'rambda';
-import { delay } from './delay';
+import { type, T, F } from 'rambda'
+import { delay } from './delay'
 
 test('', async () => {
   const result = await ifElseAsync(

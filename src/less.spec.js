@@ -1,4 +1,4 @@
-import { less } from './less';
+import { less } from './less'
 
 test('curry', () => {
   expect(

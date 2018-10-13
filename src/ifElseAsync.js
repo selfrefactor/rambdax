@@ -1,10 +1,10 @@
-function createThenable (x) {
-  return async function (input) {
+function createThenable(x) {
+  return async function(input) {
     return x(input)
   }
 }
 
-export function ifElseAsync (condition, ifFn, elseFn) {
+export function ifElseAsync(condition, ifFn, elseFn) {
   if (ifFn === undefined) {
     return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder)
   } else if (elseFn === undefined) {

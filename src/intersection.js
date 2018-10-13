@@ -1,6 +1,6 @@
 import { filter } from 'rambda'
 
-export function intersection (a, b) {
+export function intersection(a, b) {
   if (b === undefined) {
     return bHolder => intersection(a, bHolder)
   }

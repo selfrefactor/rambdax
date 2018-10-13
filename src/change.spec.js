@@ -1,4 +1,4 @@
-import {change} from './change'
+import { change } from './change'
 
 const origin = {
   a   : 0,
@@ -23,7 +23,7 @@ test('when rule is not an object', () => {
     'foo.bar.baz',
     7
   )
-    
+
   expect(result.foo.bar.baz).toBe(7)
   expect(result.foo.bax.nested).toBe(2)
   expect(result.a).toBe(0)
@@ -62,16 +62,16 @@ test('simpler', () => {
     },
   }
   const changeData = {
-    bar: 2,
-    bay: 3,
-    bax: {baq: 9}
+    bar : 2,
+    bay : 3,
+    bax : { baq : 9 },
   }
   const result = change(
     localOrigin,
     'foo',
     changeData
   )
-  
+
   const expectedResult = {
     a   : 0,
     foo : {
@@ -79,10 +79,10 @@ test('simpler', () => {
       bay : 3,
       bax : {
         nested : 2,
-        baq: 9
+        baq    : 9,
       },
     },
   }
-  
+
   expect(result).toEqual(expectedResult)
 })

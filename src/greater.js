@@ -1,4 +1,4 @@
-export function greater (x, y) {
+export function greater(x, y) {
   if (y === undefined) {
     return yHolder => greater(x, yHolder)
   }

@@ -1,11 +1,11 @@
-import {s} from './s'
-import {toUpper, take, add} from 'rambda'
+import { s } from './s'
+import { toUpper, take, add } from 'rambda'
 
-test('', () =>{
-  
+test('', () => {
+
   expect(s()).toBe(true)
   expect(s()).toBe(false)
-  
+
   const input = 'foo'
   const result = input
     .s(toUpper)

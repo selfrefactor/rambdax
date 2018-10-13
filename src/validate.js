@@ -1,6 +1,6 @@
-import {isValid} from './isValid'
+import { isValid } from './isValid'
 
-export function validate (input, schema) {
+export function validate(input, schema) {
   if (arguments.length === 2) {
     return isValid({
       input,

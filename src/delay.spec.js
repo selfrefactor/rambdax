@@ -1,4 +1,4 @@
-import {DELAY, delay } from '../rambdax'
+import { DELAY, delay } from '../rambdax'
 
 test('usage with variables', async () => {
 

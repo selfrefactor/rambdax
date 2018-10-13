@@ -1,10 +1,13 @@
-import {template} from './template'
+import { template } from './template'
 
-test('', () =>{
+test('', () => {
   const input = 'foo is {{bar}} even {{a}} more'
-  const templateInput = {"bar":"BAR", a: 1}
+  const templateInput = {
+    bar : 'BAR',
+    a   : 1,
+  }
 
-  const result = template(input,templateInput)
+  const result = template(input, templateInput)
   const expectedResult = 'foo is BAR even 1 more'
 
   expect(
@@ -12,11 +15,11 @@ test('', () =>{
   ).toEqual(expectedResult)
 })
 
-test('no interpolation', () =>{
+test('no interpolation', () => {
   const input = 'foo is bar even more'
-  const templateInput = {"bar":"BAR"}
+  const templateInput = { bar : 'BAR' }
 
-  const result = template(input,templateInput)
+  const result = template(input, templateInput)
   const expectedResult = 'foo is bar even more'
 
   expect(
@@ -24,11 +27,14 @@ test('no interpolation', () =>{
   ).toEqual(expectedResult)
 })
 
-test('with missing template input', () =>{
+test('with missing template input', () => {
   const input = 'foo is {{bar}} even {{a}} more'
-  const templateInput = {"baz":"BAR", a: 1}
+  const templateInput = {
+    baz : 'BAR',
+    a   : 1,
+  }
 
-  const result = template(input,templateInput)
+  const result = template(input, templateInput)
   const expectedResult = 'foo is {{bar}} even 1 more'
 
   expect(

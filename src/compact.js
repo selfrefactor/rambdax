@@ -6,7 +6,7 @@ const types = [
   'RegExp',
 ]
 
-export function compact (arr) {
+export function compact(arr) {
   return filter(
     a => {
       const currentType = type(a)

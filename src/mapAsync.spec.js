@@ -1,6 +1,6 @@
-import { map } from 'rambda';
-import { mapAsync } from './mapAsync';
-import { composeAsync } from './composeAsync';
+import { map } from 'rambda'
+import { mapAsync } from './mapAsync'
+import { composeAsync } from './composeAsync'
 
 const delay = a => new Promise(resolve => {
   setTimeout(() => {

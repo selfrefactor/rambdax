@@ -15,22 +15,22 @@ const delay = () => new Promise(resolve => {
 })
 
 test('produce', async () => {
-    const fn = produce({
-      foo : async () => {
-        const result = await delay()
+  const fn = produce({
+    foo : async () => {
+      const result = await delay()
 
-        return result
-      },
-      bar : inputArgument => inputArgument === 5,
-    })
+      return result
+    },
+    bar : inputArgument => inputArgument === 5,
+  })
 
-    const result = await fn(5)
+  const result = await fn(5)
 
-    expect(
-      result.bar
-    ).toEqual(true)
+  expect(
+    result.bar
+  ).toEqual(true)
 
-    expect(
-      typeof result.foo
-    ).toEqual('string')
+  expect(
+    typeof result.foo
+  ).toEqual('string')
 })

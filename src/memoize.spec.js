@@ -1,4 +1,4 @@
-import {memoize} from './memoize'
+import { memoize } from './memoize'
 
 test('', () => {
   let counter = 0

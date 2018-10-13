@@ -1,7 +1,7 @@
 import { type, toLower, contains, test, any, all, init } from 'rambda'
 
-export function isValid ({ input, schema }) {
-  if(input === undefined || schema === undefined) return false
+export function isValid({ input, schema }) {
+  if (input === undefined || schema === undefined) return false
 
   let flag = true
   const boom = boomFlag => {
@@ -21,10 +21,10 @@ export function isValid ({ input, schema }) {
       const ruleType = type(rule)
       const inputProp = input[ requirement ]
       const inputPropType = type(input[ requirement ])
-      const ok = (isOptional && inputProp !== undefined) ||
+      const ok = isOptional && inputProp !== undefined ||
         !isOptional
-      
-      if(!ok || (rule === 'any' && inputProp != null)) continue
+
+      if (!ok || rule === 'any' && inputProp != null) continue
 
       if (
         ruleType === 'Object'

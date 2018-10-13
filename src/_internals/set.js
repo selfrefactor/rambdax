@@ -51,7 +51,7 @@ const root = freeGlobal || freeSelf || Function('return this')()
  * @param {string} key The key of the property to get.
  * @returns {*} Returns the property value.
  */
-function getValue (object, key) {
+function getValue(object, key) {
   return object == null ? undefined : object[ key ]
 }
 
@@ -62,7 +62,7 @@ function getValue (object, key) {
  * @param {*} value The value to check.
  * @returns {boolean} Returns `true` if `value` is a host object, else `false`.
  */
-function isHostObject (value) {
+function isHostObject(value) {
   //Many host objects are `Object` objects that can coerce to strings
   //despite having improperly defined `toString` methods.
   let result = false
@@ -84,7 +84,7 @@ let arrayProto = Array.prototype,
 const coreJsData = root[ '__core-js_shared__' ]
 
 /**Used to detect methods masquerading as native. */
-const maskSrcKey = (function () {
+const maskSrcKey = (function() {
   const uid = (/[^.]+$/).exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '')
 
   return uid ? 'Symbol(src)_1.' + uid : ''
@@ -128,7 +128,7 @@ let symbolProto = Symbol ? Symbol.prototype : undefined,
  * @constructor
  * @param {Array} [entries] The key-value pairs to cache.
  */
-function Hash (entries) {
+function Hash(entries) {
   let index = -1,
     length = entries ? entries.length : 0
 
@@ -146,7 +146,7 @@ function Hash (entries) {
  * @name clear
  * @memberOf Hash
  */
-function hashClear () {
+function hashClear() {
   this.__data__ = nativeCreate ? nativeCreate(null) : {}
 }
 
@@ -160,7 +160,7 @@ function hashClear () {
  * @param {string} key The key of the value to remove.
  * @returns {boolean} Returns `true` if the entry was removed, else `false`.
  */
-function hashDelete (key) {
+function hashDelete(key) {
   return this.has(key) && delete this.__data__[ key ]
 }
 
@@ -173,7 +173,7 @@ function hashDelete (key) {
  * @param {string} key The key of the value to get.
  * @returns {*} Returns the entry value.
  */
-function hashGet (key) {
+function hashGet(key) {
   const data = this.__data__
   if (nativeCreate) {
     const result = data[ key ]
@@ -193,7 +193,7 @@ function hashGet (key) {
  * @param {string} key The key of the entry to check.
  * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
  */
-function hashHas (key) {
+function hashHas(key) {
   const data = this.__data__
 
   return nativeCreate ? data[ key ] !== undefined : hasOwnProperty.call(data, key)
@@ -209,7 +209,7 @@ function hashHas (key) {
  * @param {*} value The value to set.
  * @returns {Object} Returns the hash instance.
  */
-function hashSet (key, value) {
+function hashSet(key, value) {
   const data = this.__data__
   data[ key ] = nativeCreate && value === undefined ? HASH_UNDEFINED : value
 
@@ -230,7 +230,7 @@ Hash.prototype.set = hashSet
  * @constructor
  * @param {Array} [entries] The key-value pairs to cache.
  */
-function ListCache (entries) {
+function ListCache(entries) {
   let index = -1,
     length = entries ? entries.length : 0
 
@@ -248,7 +248,7 @@ function ListCache (entries) {
  * @name clear
  * @memberOf ListCache
  */
-function listCacheClear () {
+function listCacheClear() {
   this.__data__ = []
 }
 
@@ -261,7 +261,7 @@ function listCacheClear () {
  * @param {string} key The key of the value to remove.
  * @returns {boolean} Returns `true` if the entry was removed, else `false`.
  */
-function listCacheDelete (key) {
+function listCacheDelete(key) {
   let data = this.__data__,
     index = assocIndexOf(data, key)
 
@@ -287,7 +287,7 @@ function listCacheDelete (key) {
  * @param {string} key The key of the value to get.
  * @returns {*} Returns the entry value.
  */
-function listCacheGet (key) {
+function listCacheGet(key) {
   let data = this.__data__,
     index = assocIndexOf(data, key)
 
@@ -303,7 +303,7 @@ function listCacheGet (key) {
  * @param {string} key The key of the entry to check.
  * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
  */
-function listCacheHas (key) {
+function listCacheHas(key) {
   return assocIndexOf(this.__data__, key) > -1
 }
 
@@ -317,7 +317,7 @@ function listCacheHas (key) {
  * @param {*} value The value to set.
  * @returns {Object} Returns the list cache instance.
  */
-function listCacheSet (key, value) {
+function listCacheSet(key, value) {
   let data = this.__data__,
     index = assocIndexOf(data, key)
 
@@ -344,7 +344,7 @@ ListCache.prototype.set = listCacheSet
  * @constructor
  * @param {Array} [entries] The key-value pairs to cache.
  */
-function MapCache (entries) {
+function MapCache(entries) {
   let index = -1,
     length = entries ? entries.length : 0
 
@@ -362,7 +362,7 @@ function MapCache (entries) {
  * @name clear
  * @memberOf MapCache
  */
-function mapCacheClear () {
+function mapCacheClear() {
   this.__data__ = {
     hash   : new Hash,
     map    : new (Map || ListCache),
@@ -379,7 +379,7 @@ function mapCacheClear () {
  * @param {string} key The key of the value to remove.
  * @returns {boolean} Returns `true` if the entry was removed, else `false`.
  */
-function mapCacheDelete (key) {
+function mapCacheDelete(key) {
   return getMapData(this, key).delete(key)
 }
 
@@ -392,7 +392,7 @@ function mapCacheDelete (key) {
  * @param {string} key The key of the value to get.
  * @returns {*} Returns the entry value.
  */
-function mapCacheGet (key) {
+function mapCacheGet(key) {
   return getMapData(this, key).get(key)
 }
 
@@ -405,7 +405,7 @@ function mapCacheGet (key) {
  * @param {string} key The key of the entry to check.
  * @returns {boolean} Returns `true` if an entry for `key` exists, else `false`.
  */
-function mapCacheHas (key) {
+function mapCacheHas(key) {
   return getMapData(this, key).has(key)
 }
 
@@ -419,7 +419,7 @@ function mapCacheHas (key) {
  * @param {*} value The value to set.
  * @returns {Object} Returns the map cache instance.
  */
-function mapCacheSet (key, value) {
+function mapCacheSet(key, value) {
   getMapData(this, key).set(key, value)
 
   return this
@@ -442,7 +442,7 @@ MapCache.prototype.set = mapCacheSet
  * @param {string} key The key of the property to assign.
  * @param {*} value The value to assign.
  */
-function assignValue (object, key, value) {
+function assignValue(object, key, value) {
   const objValue = object[ key ]
   if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
       value === undefined && !(key in object)) {
@@ -458,7 +458,7 @@ function assignValue (object, key, value) {
  * @param {*} key The key to search for.
  * @returns {number} Returns the index of the matched value, else `-1`.
  */
-function assocIndexOf (array, key) {
+function assocIndexOf(array, key) {
   let length = array.length
   while (length--) {
     if (eq(array[ length ][ 0 ], key)) {
@@ -477,7 +477,7 @@ function assocIndexOf (array, key) {
  * @returns {boolean} Returns `true` if `value` is a native function,
  *  else `false`.
  */
-function baseIsNative (value) {
+function baseIsNative(value) {
   if (!isObject(value) || isMasked(value)) {
     return false
   }
@@ -496,7 +496,7 @@ function baseIsNative (value) {
  * @param {Function} [customizer] The function to customize path creation.
  * @returns {Object} Returns `object`.
  */
-function baseSet (object, path, value, customizer) {
+function baseSet(object, path, value, customizer) {
   if (!isObject(object)) {
     return object
   }
@@ -535,7 +535,7 @@ function baseSet (object, path, value, customizer) {
  * @param {*} value The value to process.
  * @returns {string} Returns the string.
  */
-function baseToString (value) {
+function baseToString(value) {
   //Exit early for strings to avoid a performance hit in some environments.
   if (typeof value === 'string') {
     return value
@@ -555,7 +555,7 @@ function baseToString (value) {
  * @param {*} value The value to inspect.
  * @returns {Array} Returns the cast property path array.
  */
-function castPath (value) {
+function castPath(value) {
   return isArray(value) ? value : stringToPath(value)
 }
 
@@ -567,7 +567,7 @@ function castPath (value) {
  * @param {string} key The reference key.
  * @returns {*} Returns the map data.
  */
-function getMapData (map, key) {
+function getMapData(map, key) {
   const data = map.__data__
 
   return isKeyable(key) ?
@@ -583,7 +583,7 @@ function getMapData (map, key) {
  * @param {string} key The key of the method to get.
  * @returns {*} Returns the function if it's native, else `undefined`.
  */
-function getNative (object, key) {
+function getNative(object, key) {
   const value = getValue(object, key)
 
   return baseIsNative(value) ? value : undefined
@@ -597,7 +597,7 @@ function getNative (object, key) {
  * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
  * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
  */
-function isIndex (value, length) {
+function isIndex(value, length) {
   length = length == null ? MAX_SAFE_INTEGER : length
 
   return Boolean(length) &&
@@ -613,7 +613,7 @@ function isIndex (value, length) {
  * @param {Object} [object] The object to query keys on.
  * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
  */
-function isKey (value, object) {
+function isKey(value, object) {
   if (isArray(value)) {
     return false
   }
@@ -634,7 +634,7 @@ function isKey (value, object) {
  * @param {*} value The value to check.
  * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
  */
-function isKeyable (value) {
+function isKeyable(value) {
   const type = typeof value
 
   return type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean' ?
@@ -649,7 +649,7 @@ function isKeyable (value) {
  * @param {Function} func The function to check.
  * @returns {boolean} Returns `true` if `func` is masked, else `false`.
  */
-function isMasked (func) {
+function isMasked(func) {
   return Boolean(maskSrcKey) && maskSrcKey in func
 }
 
@@ -681,7 +681,7 @@ var stringToPath = memoize(string => {
  * @param {*} value The value to inspect.
  * @returns {string|symbol} Returns the key.
  */
-function toKey (value) {
+function toKey(value) {
   if (typeof value === 'string' || isSymbol(value)) {
     return value
   }
@@ -697,7 +697,7 @@ function toKey (value) {
  * @param {Function} func The function to process.
  * @returns {string} Returns the source code.
  */
-function toSource (func) {
+function toSource(func) {
   if (func != null) {
     try {
       return funcToString.call(func)
@@ -754,11 +754,11 @@ function toSource (func) {
  * // Replace `_.memoize.Cache`.
  * _.memoize.Cache = WeakMap;
  */
-function memoize (func, resolver) {
+function memoize(func, resolver) {
   if (typeof func !== 'function' || resolver && typeof resolver !== 'function') {
     throw new TypeError(FUNC_ERROR_TEXT)
   }
-  var memoized = function () {
+  var memoized = function() {
     let args = arguments,
       key = resolver ? resolver.apply(this, args) : args[ 0 ],
       cache = memoized.cache
@@ -811,7 +811,7 @@ memoize.Cache = MapCache
  * _.eq(NaN, NaN);
  * // => true
  */
-function eq (value, other) {
+function eq(value, other) {
   return value === other || value !== value && other !== other
 }
 
@@ -857,7 +857,7 @@ var isArray = Array.isArray
  * _.isFunction(/abc/);
  * // => false
  */
-function isFunction (value) {
+function isFunction(value) {
   //The use of `Object#toString` avoids issues with the `typeof` operator
   //in Safari 8-9 which returns 'object' for typed array and other constructors.
   const tag = isObject(value) ? objectToString.call(value) : ''
@@ -890,7 +890,7 @@ function isFunction (value) {
  * _.isObject(null);
  * // => false
  */
-function isObject (value) {
+function isObject(value) {
   const type = typeof value
 
   return Boolean(value) && (type == 'object' || type == 'function')
@@ -920,7 +920,7 @@ function isObject (value) {
  * _.isObjectLike(null);
  * // => false
  */
-function isObjectLike (value) {
+function isObjectLike(value) {
   return Boolean(value) && typeof value === 'object'
 }
 
@@ -941,7 +941,7 @@ function isObjectLike (value) {
  * _.isSymbol('abc');
  * // => false
  */
-function isSymbol (value) {
+function isSymbol(value) {
   return typeof value === 'symbol' ||
     isObjectLike(value) && objectToString.call(value) == symbolTag
 }
@@ -967,7 +967,7 @@ function isSymbol (value) {
  * _.toString([1, 2, 3]);
  * // => '1,2,3'
  */
-function toString (value) {
+function toString(value) {
   return value == null ? '' : baseToString(value)
 }
 
@@ -999,6 +999,6 @@ function toString (value) {
  * console.log(object.x[0].y.z);
  * // => 5
  */
-export function set (object, path, value) {
+export function set(object, path, value) {
   return object == null ? object : baseSet(object, path, value)
 }

@@ -1,4 +1,4 @@
-export function where (conditions, obj) {
+export function where(conditions, obj) {
   if (obj === undefined) {
     return objHolder => where(conditions, objHolder)
   }

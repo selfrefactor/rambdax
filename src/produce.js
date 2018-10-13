@@ -3,7 +3,7 @@ import {
   map,
 } from 'rambda'
 
-function helper ({ condition, inputArgument, prop }) {
+function helper({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
@@ -23,7 +23,7 @@ function helper ({ condition, inputArgument, prop }) {
   })
 }
 
-export function produce (conditions, inputArgument) {
+export function produce(conditions, inputArgument) {
   if (arguments.length === 1) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder)
   }

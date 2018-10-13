@@ -1,4 +1,4 @@
-import {where} from './where'
+import { where } from './where'
 import { equals } from 'rambda'
 
 test('', () => {

@@ -64,7 +64,6 @@ test('hits default of no matches', () => {
   ).toEqual('it is default')
 })
 
-
 test('works with function as condition', () => {
   expect(
     switchFn([ 0, 1, 2, 3, 4, 5, 6 ])

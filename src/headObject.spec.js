@@ -1,11 +1,14 @@
-import {headObject} from './headObject'
+import { headObject } from './headObject'
 
 test('undefined throws', () => {
   expect(() => headObject()).toThrow()
 })
 
 test('too many keys throws', () => {
-  expect(() => headObject({a:1, b:2})).toThrow()
+  expect(() => headObject({
+    a : 1,
+    b : 2,
+  })).toThrow()
 })
 
 test('empty object throws', () => {
@@ -14,8 +17,11 @@ test('empty object throws', () => {
 
 test('ok', () => {
   expect(
-    headObject({a:1})
+    headObject({ a : 1 })
   ).toEqual(
-    {prop: 'a', value: 1}
+    {
+      prop  : 'a',
+      value : 1,
+    }
   )
 })

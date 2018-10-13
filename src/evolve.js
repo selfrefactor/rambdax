@@ -1,6 +1,6 @@
 import { type, curry, filter } from 'rambda'
 
-function evolveFn (rules, input) {
+function evolveFn(rules, input) {
   const clone = Object.assign({}, input)
   const propRules = filter(
     x => clone[ x ] !== undefined

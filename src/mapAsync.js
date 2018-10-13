@@ -1,4 +1,4 @@
-async function mapAsyncFn (fn, arr) {
+async function mapAsyncFn(fn, arr) {
   try {
     if (Array.isArray(arr)) {
       const willReturn = []
@@ -20,7 +20,7 @@ async function mapAsyncFn (fn, arr) {
   }
 }
 
-export function mapAsync (fn, arr) {
+export function mapAsync(fn, arr) {
   if (arr === undefined) {
     return async holder => await mapAsyncFn(fn, holder)
   }

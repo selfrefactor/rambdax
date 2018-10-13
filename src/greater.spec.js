@@ -1,4 +1,4 @@
-import {greater} from './greater'
+import { greater } from './greater'
 
 test('', () => {
   expect(

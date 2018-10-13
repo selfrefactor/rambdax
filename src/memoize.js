@@ -42,7 +42,7 @@ const generateProp = (fn, ...inputArguments) => {
   return `${ propString }${ stringify(fn) }`
 }
 
-export function memoize (fn, ...inputArguments) {
+export function memoize(fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder)
   }

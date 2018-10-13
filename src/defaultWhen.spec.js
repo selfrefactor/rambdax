@@ -1,4 +1,4 @@
-import {defaultWhen} from './defaultWhen'
+import { defaultWhen } from './defaultWhen'
 
 test('', () => {
   const fn = x => x > 2

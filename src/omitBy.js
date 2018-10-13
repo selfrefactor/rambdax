@@ -1,4 +1,4 @@
-export function omitBy (fn, obj) {
+export function omitBy(fn, obj) {
   if (arguments.length === 1) {
     return holder => omitBy(fn, holder)
   }
