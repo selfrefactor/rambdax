@@ -1,25 +1,38 @@
 import { allTrue } from './allTrue'
 
-const foo = 4
-const bar = { a : 1 }
-const baz = [ 1, 2, 3 ]
-
 test('usage with non boolean', () => {
+  const foo = 4
+  const foo = { a : 1 }
+  const baz = [ 1, 2, 3 ]
+
   const result = allTrue(
     foo,
-    bar,
+    foo,
     baz
   )
   expect(result).toBe(true)
 })
 
 test('usage with boolean', () => {
+  const foo = 4
+  const foo = { a : 1 }
+  const baz = [ 1, 2, 3 ]
+
   const result = allTrue(
     foo > 2,
-    bar.a === 1,
+    foo.a === 1,
     baz.length === 3
   )
   expect(result).toBe(true)
+})
+
+test('escapes early - case 0', () => {
+  const foo = undefined
+  const result = allTrue(
+    foo,
+    () => foo.a,
+  )
+  expect(result).toBe(false)
 })
 
 test('escapes early - case 1', () => {
@@ -42,7 +55,7 @@ test('escapes early - case 2', () => {
 })
 
 test('escapes early - case 3', () => {
-  const foo = { a : { b : 'bar' } }
+  const foo = { a : { b : 'foo' } }
   const result = allTrue(
     foo,
     () => foo.a,
