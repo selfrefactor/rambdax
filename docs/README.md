@@ -21,7 +21,7 @@ console.log(result) // => [3, 4]
 
 Simple `yarn add rambdax` is sufficient
 
-ES5 compatible version - `yarn add rambdax#0.8.0`
+> ES5 compatible version - `yarn add rambdax#0.8.0`
 
 ## Differences between Rambda and Ramdax
 
@@ -31,14 +31,18 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 - `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
 
+## Typescript
+
+You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
+
 ## API
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 ---
-#### allTrue
+#### allFalse
 
-> allTrue(...inputs: any[]): boolean
+> allFalse(...inputs: any[]): boolean
 
 It returns `true` if all passed elements return `false` when passed to `Boolean`.
 
@@ -162,6 +166,10 @@ const expectedResult = [1, false, " ", "foo", [1]]
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
 
 Asyncronous version of `R.compose`.
+
+Note that you should wrap the block with this function with `try/catch` in order to handle possible errors.
+
+Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
 
 ```
 const fn = async x => {
@@ -300,6 +308,11 @@ console.log(result === expectedResult)
 <a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20firstName%20%3A%20'%20%20Tomato%20'%2C%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20100%2C%0A%20%20%20%20remaining%20%3A%201400%2C%0A%20%20%7D%2C%0A%20%20id%20%3A%20123%2C%0A%7D%0Aconst%20rules%20%3D%20%7B%0A%20%20firstName%20%3A%20R.trim%2C%0A%20%20lastName%20%20%3A%20R.trim%2C%20%2F%2FWill%20not%20get%20invoked.%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20R.add(1)%2C%0A%20%20%20%20remaining%20%3A%20R.add(-1)%2C%0A%20%20%7D%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.evolve(rules%2C%20input)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20firstName%3A%20'Tomato'%2C%0A%20%20data%3A%20%7B%0A%20%20%20%20elapsed%3A%20101%2C%0A%20%20%20%20remaining%3A%201399%2C%0A%20%20%7D%2C%0A%20%20id%3A%20123%2C%0A%7D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%0A%2F%2F%20true">Try in REPL</a>
 
 ---
+#### findInObject
+
+> greater(x: any, obj: object): any
+
+---
 #### greater
 
 > greater(x: number, y: number): boolean
@@ -342,7 +355,7 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid)
 
 If validation fails, it returns `false`.
 
@@ -354,6 +367,39 @@ const result = R.is(1,['foo','bar'])('number',['string'])
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.is(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### isAttach
+
+> isAttach(): boolean
+
+It attaches `is` method to object-like variables. This `is` method acts like `R.is`.
+
+It returns `true` when it is called initially and it returns `false` for sequential calls.
+
+```
+R.isAttach()
+const foo = [1,2,3]
+
+const result = foo.is(['number'])
+// => true
+```
+
+---
+#### isNil
+
+> isNil(x: any): boolean
+
+It returns `true` is `x` is either `null` or `undefined`.
+
+```
+R.isNil(null)  // => true
+R.isNil(1)  // => false
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
 ---
 #### isPromise
@@ -386,6 +432,29 @@ R.isType('Async',async () => {})
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isType.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isType('Async'%2Casync%20()%20%3D%3E%20%7B%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### isValid
+
+> isValid({ input: object: schema: object }): boolean
+
+It checks if `input` is following `schema` specifications.
+
+If validation fails, it returns `false`.
+
+Please [check the detailed explanation](#isvalid) as it is hard to write a short description of this method.
+
+```
+const result = R.isValid({
+  input:{ a: ['foo','bar'] },
+  schema: {a: ['string'] }
+})  
+// => true
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%20%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### less
@@ -531,19 +600,47 @@ const expectedResult = 'foo bar baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](https://github.com/selfrefactor/rambdax/tree/master/files/isValid.md).
+It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid).
 
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
-
-const result = R.ok(1,['foo','bar'])('number',['string'])
+const result = R.ok(
+  1, [ 'foo', 'bar' ]
+)('number', [ 'string' ])
 // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(%0A%20%201%2C%20%5B%20'foo'%2C%20'bar'%20%5D%0A)('number'%2C%20%5B%20'string'%20%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### okInit
+
+> okInit(schemas: object): undefined
+
+It allows `R.ok` and `R.is` to be initialized with set of schemas.
+It can be used multiple times, each time adding rules to the set.
+
+```
+R.okInit({
+  foo : {
+    a : 'number',
+    b : 'string',
+  },
+  bar : {
+    c : [ 'number' ],
+    d : [ 'string' ],
+  },
+})
+
+const result = ok({
+  a : 1,
+  b : 'baz',
+})('foo')
+// result === true
+```
 
 ---
 #### omitBy
@@ -645,6 +742,72 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 <a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### promiseAllObject
+
+> promiseAllObject(promises: Object): Promise
+
+It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
+
+```
+const fn = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : fn(1),
+  b : fn(2),
+}
+
+const result = R.promiseAllObject(promises)
+const expectedResult = { a:1, b:2 }
+// `result` resolves to `expectedResult`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.promiseAllObject(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+
+---
+#### promiseAllSecure
+
+> promiseAllSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
+
+It acts as `Promise.all` with fault tollerance.
+
+Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
+Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
+
+```
+const fn = async () => {
+  try {
+    JSON.parse("{:a")
+  }
+  catch (err) {
+    throw new Error(err)
+  }
+}
+
+const result = R.promiseAllSecure([
+  R.delay(2000),
+  fn(1000)
+])
+
+const expectedResult = [
+  {
+    "payload": 'RAMBDAX_DELAY',
+    "type": "RESULT"
+  },
+  {
+    payload:"Unexpected token : in JSON at position 1",
+    type: "ERROR"
+  }
+]
+// `result` resolves to `expectedResult`
+```
+
+---
 #### random
 
 > random(min: number, max: number): number
@@ -669,6 +832,25 @@ console.log(R.rangeBy(0, 2, 0.3))
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.rangeBy(0%2C%2010%2C%202)%0A%2F%2F%20%3D%3E%20%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0A%0Aconsole.log(R.rangeBy(0%2C%202%2C%200.3))%0A%2F%2F%20%3D%3E%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D">Try in REPL</a>
+
+---
+#### remove
+
+> remove(inputs: string|RegExp[], text: string): string
+
+It will remove all inputs from `text` sequentially.
+
+```
+const result = R.remove(
+  ['foo','bar']),
+  'foo bar baz foo'
+)
+// => 'baz foo'
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/remove.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.remove(%0A%20%20%5B'foo'%2C'bar'%5D)%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try in REPL</a>
 
 ---
 #### renameProps
@@ -699,72 +881,6 @@ const expectedResult = {
 <a href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20f%3A%20%22foo%22%2C%0A%20%20b%3A%20%22bar%22%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20f%3A1%2C%0A%20%20b%3A2%0A%7D%0Aconst%20result%20%3D%20R.renameProps(rules%2C%20input)%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A1%2C%0A%20%20bar%3A2%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
-#### resolve
-
-> resolve(promises: Object): Promise
-
-It acts as `Promise.all` for object with Promises.
-It returns a promise that resolve to object.
-
-```
-const fn = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : fn(1),
-  b : fn(2),
-}
-
-const result = R.resolve(promises)
-const expectedResult = { a:1, b:2 }
-// `result` resolves to `expectedResult`
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolve.js)
-
-<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.resolve(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
-
----
-#### resolveSecure
-
-> resolveSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
-
-It acts as `Promise.all` with fault tollerance.
-
-Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
-Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
-
-```
-const fn = async () => {
-  try {
-    JSON.parse("{:a")
-  }
-  catch (err) {
-    throw new Error(err)
-  }
-}
-
-const result = R.resolveSecure([
-  R.delay(2000),
-  fn(1000)
-])
-
-const expectedResult = [
-  {
-    "payload": 'RAMBDAX_DELAY',
-    "type": "RESULT"
-  },
-  {
-    payload:"Unexpected token : in JSON at position 1",
-    type: "ERROR"
-  }
-]
-// `result` resolves to `expectedResult`
-```
-
----
 #### s
 
 > s(): undefined
@@ -786,7 +902,7 @@ const expectedResult = 'barFO'
 // result === expectedResult
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/resolveSecure.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllSecure.js)
 
 <a href="https://rambda.now.sh?%2F%2F%20To%20turn%20it%20on%0AR.s()%0A%0A%2F%2F%20Then%0Aconst%20result%20%3D%20'foo'%0A%20%20.s(R.toUpper)%0A%20%20.s(R.take(2))%0A%20%20.s(R.add('bar'))%0A%0Aconst%20expectedResult%20%3D%20'barFO'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
@@ -1612,22 +1728,6 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/join.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.join('-'%2C%20%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20'1-2-3'">Try in REPL</a>
-
----
-#### isNil
-
-> isNil(x: any): boolean
-
-It returns `true` is `x` is either `null` or `undefined`.
-
-```
-R.isNil(null)  // => true
-R.isNil(1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
 ---
 #### last
