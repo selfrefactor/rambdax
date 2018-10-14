@@ -333,6 +333,35 @@ const result = R.is(1,['foo','bar'])('number',['string'])
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
 
+#### isAttach
+
+> isAttach(): boolean
+
+It attaches `is` method to object-like variables. This `is` method acts like `R.is`.
+
+It returns `true` when it is called initially and it returns `false` for sequential calls.
+
+```
+R.isAttach()
+const foo = [1,2,3]
+
+const result = foo.is(['number'])
+// => true
+```
+
+#### isNil
+
+> isNil(x: any): boolean
+
+It returns `true` is `x` is either `null` or `undefined`.
+
+```
+R.isNil(null)  // => true
+R.isNil(1)  // => false
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
+
 #### isPromise
 
 > isPromise(x: any): boolean
@@ -511,12 +540,39 @@ It uses underneath `R.isValid`, so you may want to [check its detailed explanati
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
-
-const result = R.ok(1,['foo','bar'])('number',['string'])
+const result = R.ok(
+  1, [ 'foo', 'bar' ]
+)('number', [ 'string' ])
 // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
+
+#### okInit
+
+> okInit(schemas: object): undefined
+
+It allows `R.ok` and `R.is` to be initialized with set of schemas.
+It can be used multiple times, each time adding rules to the set.
+
+```
+R.okInit({
+  foo : {
+    a : 'number',
+    b : 'string',
+  },
+  bar : {
+    c : [ 'number' ],
+    d : [ 'string' ],
+  },
+})
+
+const result = ok({
+  a : 1,
+  b : 'baz',
+})('foo')
+// result === true
+```
 
 #### omitBy
 
@@ -1456,19 +1512,6 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/join.js)
-
-#### isNil
-
-> isNil(x: any): boolean
-
-It returns `true` is `x` is either `null` or `undefined`.
-
-```
-R.isNil(null)  // => true
-R.isNil(1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
 
 #### last
 

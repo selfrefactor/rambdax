@@ -1,11 +1,11 @@
-import { isInit } from './isInit'
+import { isAttach } from './isAttach'
 import { runTests } from './runTests'
 
 test('only one initialization', () => {
-  expect(isInit()).toBe(false)
+  expect(isAttach()).toBe(false)
 })
 
-console.log(isInit())
+console.log(isAttach())
 
 const schemaA = {
   'a'  : 'number',
@@ -160,7 +160,7 @@ runTests({
       falseEvaluation,
     },
   ],
-  testSuite : 'isInit',
+  testSuite : 'isAttach',
 })
 
 test('null throws', () => {

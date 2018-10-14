@@ -1,3 +1,4 @@
+import { allTrue } from './allTrue'
 import { isValid } from './isValid'
 
 function any(fn, arr) {
@@ -19,12 +20,44 @@ function check(singleInput, schema){
   })
 }
 
+let holder = {}
+export function okInit(rules){
+  holder = {
+    ...holder,
+    ...rules,
+  }
+}
+
 export function ok(...inputs){
   return (...schemas) => {
     if (inputs.length !== schemas.length) return false
 
-    return any((singleInput, i) =>
-      !check(singleInput, schemas[ i ])
-    , inputs) === false
+    let failedSchema
+    const pass = any(
+      (singleInput, i) => {
+        const isCustomSchema = allTrue(
+          typeof schemas[ i ] === 'string',
+          holder[ schemas[ i ] ]
+        )
+
+        const schema = isCustomSchema ?
+          holder[ schemas[ i ] ] :
+          schemas[ i ]
+
+        const checked = check(singleInput, schema)
+        if (!checked){
+          failedSchema = JSON.stringify(schema)
+        }
+
+        return !checked
+      },
+      inputs
+    ) === false
+
+    if (!pass) throw new Error(
+      `Failed R.ok with schema ${ failedSchema }`
+    )
+
+    return true
   }
 }

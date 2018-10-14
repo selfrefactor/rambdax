@@ -221,7 +221,7 @@ declare namespace R {
     intersection<T>(list1: T[], list2: T[]): T[]
     intersection<T>(list1: T[]): (list2: T[]) => T[]
 
-    isInit() : boolean
+    isAttach() : boolean
     is(...inputs: any[]): (...rules: any[]) => boolean
 
     isType(xType: RambdaTypes, x: any): boolean
@@ -247,8 +247,8 @@ declare namespace R {
 
     multiline(input: string, glue?: string): string
 
-    // ok(input: object): boolean
     ok(...inputs: any[]): (...rules: any[]) => undefined | never 
+    okInit(schemas: object): undefined
 
     omitBy<T,OT>(fn: Function, input: T): OT
 

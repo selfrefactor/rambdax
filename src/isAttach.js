@@ -1,6 +1,6 @@
 import { isValid } from './isValid'
 
-export function isInit(){
+export function isAttach(){
   if (Object.prototype.is !== undefined){
     return false
   }
