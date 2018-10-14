@@ -31,6 +31,10 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 - `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
 
+## Typescript
+
+You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
+
 ## API
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
@@ -365,6 +369,39 @@ const result = R.is(1,['foo','bar'])('number',['string'])
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.is(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
+#### isAttach
+
+> isAttach(): boolean
+
+It attaches `is` method to object-like variables. This `is` method acts like `R.is`.
+
+It returns `true` when it is called initially and it returns `false` for sequential calls.
+
+```
+R.isAttach()
+const foo = [1,2,3]
+
+const result = foo.is(['number'])
+// => true
+```
+
+---
+#### isNil
+
+> isNil(x: any): boolean
+
+It returns `true` is `x` is either `null` or `undefined`.
+
+```
+R.isNil(null)  // => true
+R.isNil(1)  // => false
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+
+---
 #### isPromise
 
 > isPromise(x: any): boolean
@@ -568,14 +605,42 @@ It uses underneath `R.isValid`, so you may want to [check its detailed explanati
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
-
-const result = R.ok(1,['foo','bar'])('number',['string'])
+const result = R.ok(
+  1, [ 'foo', 'bar' ]
+)('number', [ 'string' ])
 // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(%0A%20%201%2C%20%5B%20'foo'%2C%20'bar'%20%5D%0A)('number'%2C%20%5B%20'string'%20%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### okInit
+
+> okInit(schemas: object): undefined
+
+It allows `R.ok` and `R.is` to be initialized with set of schemas.
+It can be used multiple times, each time adding rules to the set.
+
+```
+R.okInit({
+  foo : {
+    a : 'number',
+    b : 'string',
+  },
+  bar : {
+    c : [ 'number' ],
+    d : [ 'string' ],
+  },
+})
+
+const result = ok({
+  a : 1,
+  b : 'baz',
+})('foo')
+// result === true
+```
 
 ---
 #### omitBy
@@ -1663,22 +1728,6 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/join.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.join('-'%2C%20%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20'1-2-3'">Try in REPL</a>
-
----
-#### isNil
-
-> isNil(x: any): boolean
-
-It returns `true` is `x` is either `null` or `undefined`.
-
-```
-R.isNil(null)  // => true
-R.isNil(1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
 ---
 #### last

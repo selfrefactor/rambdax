@@ -247,7 +247,7 @@ declare namespace R {
 
     multiline(input: string, glue?: string): string
 
-    ok(...inputs: any[]): (...rules: any[]) => undefined | never 
+    ok(...inputs: any[]): (...rules: any[]) => true | never 
     okInit(schemas: object): undefined
 
     omitBy<T,OT>(fn: Function, input: T): OT
@@ -265,7 +265,6 @@ declare namespace R {
     produce<Out>(
       conditions: any,
     ): (input: any) => Out
-
     
     promiseAllObject(
       input: ObjectWithPromises
