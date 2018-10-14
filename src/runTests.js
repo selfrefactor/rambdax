@@ -5,12 +5,6 @@ import { ok } from './ok'
 
 const evaluationsSchema = { label : 'string' }
 
-const dataSchema = {
-  foo : 'any',
-  t   : 'any',
-  f   : 'any',
-}
-
 export function runTests(input){
   const pass = ok(input)({
     testSuite   : 'string',
@@ -41,9 +35,6 @@ export function runTests(input){
             singleEvaluation.label,
             { tag }
           )
-
-          const okData = ok(x)(dataSchema)
-          if (!okData) throw new Error('R.runTests.okData')
 
           test(label, () => {
             evaluationFunction(x)
