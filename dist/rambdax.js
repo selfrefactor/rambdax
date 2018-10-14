@@ -1330,6 +1330,19 @@ function isValid({ input, schema }) {
   return flag;
 }
 
+let holder = {};
+
+function okInit(rules) {
+  if (!rules) throw new Error('R.okInit !rules');
+  if (rules._internal) return holder;
+
+  holder = rules;
+}
+
+/**
+ * TODO apply to Rambda
+ * Check if Rambda.any returns early
+ */
 function any(fn, arr) {
   let counter = 0;
   while (counter < arr.length) {
@@ -1349,31 +1362,63 @@ function check(singleInput, schema) {
   });
 }
 
-function is(...inputs) {
+let holder$1 = {};
+
+function ok(...inputs) {
+  if (Object.keys(holder$1).length === 0) {
+    holder$1 = okInit({ _internal: true });
+  }
+
   return (...schemas) => {
-    if (inputs.length !== schemas.length) throw new Error('inputs.length !== schemas.length');
+    if (inputs.length !== schemas.length) {
+      throw new Error('inputs.length !== schemas.length');
+    }
 
-    let reason;
-    const wrong = any((singleInput, i) => {
-      const ok = check(singleInput, schemas[i]);
+    let failedSchema;
 
-      if (!ok) {
-        reason = {
-          singleInput,
-          schema: schemas[i]
-        };
+    const pass = any((singleInput, i) => {
+      const isCustomSchema = allTrue(typeof schemas[i] === 'string', holder$1[schemas[i]]);
+
+      const schema = isCustomSchema ? holder$1[schemas[i]] : schemas[i];
+
+      const checked = check(singleInput, schema);
+      if (!checked) {
+        failedSchema = JSON.stringify({
+          input: singleInput,
+          schema
+        });
       }
 
-      return !ok;
-    }, inputs);
+      return !checked;
+    }, inputs) === false;
 
-    if (wrong) throw new Error(JSON.stringify(reason));
+    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
 
     return true;
   };
 }
 
-function isInit() {
+let holder$2 = {};
+
+function is(...inputs) {
+  if (Object.keys(holder$2).length === 0) {
+    holder$2 = okInit({ _internal: true });
+  }
+
+  return (...schemas) => {
+    if (inputs.length !== schemas.length) return false;
+
+    return any((singleInput, i) => {
+      const isCustomSchema = allTrue(typeof schemas[i] === 'string', holder$2[schemas[i]]);
+
+      const schema = isCustomSchema ? holder$2[schemas[i]] : schemas[i];
+
+      return !check(singleInput, schema);
+    }, inputs) === false;
+  };
+}
+
+function isAttach() {
   if (Object.prototype.is !== undefined) {
     return false;
   }
@@ -1535,33 +1580,6 @@ function mergeRight(x, y) {
 function multiline(input, glue) {
 
   return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue ? glue : ' ');
-}
-
-function any$1(fn, arr) {
-  let counter = 0;
-  while (counter < arr.length) {
-    if (fn(arr[counter], counter)) {
-      return true;
-    }
-    counter++;
-  }
-
-  return false;
-}
-
-function check$1(singleInput, schema) {
-  return isValid({
-    input: { singleInput },
-    schema: { singleInput: schema }
-  });
-}
-
-function ok(...inputs) {
-  return (...schemas) => {
-    if (inputs.length !== schemas.length) return false;
-
-    return any$1((singleInput, i) => !check$1(singleInput, schemas[i]), inputs) === false;
-  };
 }
 
 function omitBy(fn, obj) {
@@ -2058,7 +2076,7 @@ const adjust = R.adjust;
 const all = R.all;
 const allPass = R.allPass;
 const always = R.always;
-const any$2 = R.any;
+const any$1 = R.any;
 const anyPass = R.anyPass;
 const append = R.append;
 const assoc = R.assoc;
@@ -2162,7 +2180,7 @@ exports.adjust = adjust;
 exports.all = all;
 exports.allPass = allPass;
 exports.always = always;
-exports.any = any$2;
+exports.any = any$1;
 exports.anyPass = anyPass;
 exports.append = append;
 exports.assoc = assoc;
@@ -2258,6 +2276,7 @@ exports.values = values;
 exports.without = without;
 exports.zip = zip;
 exports.zipObj = zipObj;
+exports.ok = ok;
 exports.allFalse = allFalse;
 exports.allTrue = allTrue;
 exports.change = change;
@@ -2274,7 +2293,7 @@ exports.ifElseAsync = ifElseAsync;
 exports.inject = inject;
 exports.intersection = intersection;
 exports.is = is;
-exports.isInit = isInit;
+exports.isAttach = isAttach;
 exports.isPromise = isPromise;
 exports.isType = isType;
 exports.isValid = isValid;
@@ -2285,7 +2304,7 @@ exports.memoize = memoize$1;
 exports.mergeAll = mergeAll;
 exports.mergeRight = mergeRight;
 exports.multiline = multiline;
-exports.ok = ok;
+exports.okInit = okInit;
 exports.omitBy = omitBy;
 exports.once = once;
 exports.pickBy = pickBy;

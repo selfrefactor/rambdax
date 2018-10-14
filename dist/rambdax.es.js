@@ -1326,6 +1326,19 @@ function isValid({ input, schema }) {
   return flag;
 }
 
+let holder = {};
+
+function okInit(rules) {
+  if (!rules) throw new Error('R.okInit !rules');
+  if (rules._internal) return holder;
+
+  holder = rules;
+}
+
+/**
+ * TODO apply to Rambda
+ * Check if Rambda.any returns early
+ */
 function any$1(fn, arr) {
   let counter = 0;
   while (counter < arr.length) {
@@ -1345,31 +1358,63 @@ function check(singleInput, schema) {
   });
 }
 
-function is(...inputs) {
+let holder$1 = {};
+
+function ok(...inputs) {
+  if (Object.keys(holder$1).length === 0) {
+    holder$1 = okInit({ _internal: true });
+  }
+
   return (...schemas) => {
-    if (inputs.length !== schemas.length) throw new Error('inputs.length !== schemas.length');
+    if (inputs.length !== schemas.length) {
+      throw new Error('inputs.length !== schemas.length');
+    }
 
-    let reason;
-    const wrong = any$1((singleInput, i) => {
-      const ok = check(singleInput, schemas[i]);
+    let failedSchema;
 
-      if (!ok) {
-        reason = {
-          singleInput,
-          schema: schemas[i]
-        };
+    const pass = any$1((singleInput, i) => {
+      const isCustomSchema = allTrue(typeof schemas[i] === 'string', holder$1[schemas[i]]);
+
+      const schema = isCustomSchema ? holder$1[schemas[i]] : schemas[i];
+
+      const checked = check(singleInput, schema);
+      if (!checked) {
+        failedSchema = JSON.stringify({
+          input: singleInput,
+          schema
+        });
       }
 
-      return !ok;
-    }, inputs);
+      return !checked;
+    }, inputs) === false;
 
-    if (wrong) throw new Error(JSON.stringify(reason));
+    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
 
     return true;
   };
 }
 
-function isInit() {
+let holder$2 = {};
+
+function is(...inputs) {
+  if (Object.keys(holder$2).length === 0) {
+    holder$2 = okInit({ _internal: true });
+  }
+
+  return (...schemas) => {
+    if (inputs.length !== schemas.length) return false;
+
+    return any$1((singleInput, i) => {
+      const isCustomSchema = allTrue(typeof schemas[i] === 'string', holder$2[schemas[i]]);
+
+      const schema = isCustomSchema ? holder$2[schemas[i]] : schemas[i];
+
+      return !check(singleInput, schema);
+    }, inputs) === false;
+  };
+}
+
+function isAttach() {
   if (Object.prototype.is !== undefined) {
     return false;
   }
@@ -1531,33 +1576,6 @@ function mergeRight(x, y) {
 function multiline(input, glue) {
 
   return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue ? glue : ' ');
-}
-
-function any$2(fn, arr) {
-  let counter = 0;
-  while (counter < arr.length) {
-    if (fn(arr[counter], counter)) {
-      return true;
-    }
-    counter++;
-  }
-
-  return false;
-}
-
-function check$1(singleInput, schema) {
-  return isValid({
-    input: { singleInput },
-    schema: { singleInput: schema }
-  });
-}
-
-function ok(...inputs) {
-  return (...schemas) => {
-    if (inputs.length !== schemas.length) return false;
-
-    return any$2((singleInput, i) => !check$1(singleInput, schemas[i]), inputs) === false;
-  };
 }
 
 function omitBy(fn, obj) {
@@ -2054,7 +2072,7 @@ const adjust$1 = adjust;
 const all$1 = all;
 const allPass$1 = allPass;
 const always$1 = always;
-const any$3 = any;
+const any$2 = any;
 const anyPass$1 = anyPass;
 const append$1 = append;
 const assoc$1 = assoc;
@@ -2151,4 +2169,4 @@ const without$1 = without;
 const zip$1 = zip;
 const zipObj$1 = zipObj;
 
-export { DELAY, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, always$1 as always, any$3 as any, anyPass$1 as anyPass, append$1 as append, assoc$1 as assoc, both$1 as both, complement$1 as complement, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, dissoc$1 as dissoc, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, equals$1 as equals, F$1 as F, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, groupBy$1 as groupBy, has$1 as has, head$1 as head, identity$1 as identity, ifElse$1 as ifElse, inc$1 as inc, includes$1 as includes, indexBy$1 as indexBy, indexOf$1 as indexOf, init$1 as init, isNil$1 as isNil, join$1 as join, keys$1 as keys, last$1 as last, lastIndexOf$1 as lastIndexOf, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, max$1 as max, maxBy$1 as maxBy, min$1 as min, minBy$1 as minBy, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, not$1 as not, nth$1 as nth, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$2 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, tap$1 as tap, test$2 as test, times$1 as times, toLower$1 as toLower, toString$2 as toString, toUpper$1 as toUpper, trim$1 as trim, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, zip$1 as zip, zipObj$1 as zipObj, allFalse, allTrue, change, compact, composeAsync, defaultWhen, debounce, delay, evolve, findInObject, greater, headObject, ifElseAsync, inject, intersection, is, isInit, isPromise, isType, isValid, less, mapAsync, mapFastAsync, memoize$1 as memoize, mergeAll, mergeRight, multiline, ok, omitBy, once, pickBy, produce, promiseAllObject, promiseAllSecure, random, rangeBy, remove, renameProps, runTests, s, shuffle, switcher, tapAsync, template, throttle, validate, when, whenAsync, where };
+export { DELAY, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, always$1 as always, any$2 as any, anyPass$1 as anyPass, append$1 as append, assoc$1 as assoc, both$1 as both, complement$1 as complement, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, dissoc$1 as dissoc, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, equals$1 as equals, F$1 as F, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, groupBy$1 as groupBy, has$1 as has, head$1 as head, identity$1 as identity, ifElse$1 as ifElse, inc$1 as inc, includes$1 as includes, indexBy$1 as indexBy, indexOf$1 as indexOf, init$1 as init, isNil$1 as isNil, join$1 as join, keys$1 as keys, last$1 as last, lastIndexOf$1 as lastIndexOf, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, max$1 as max, maxBy$1 as maxBy, min$1 as min, minBy$1 as minBy, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, not$1 as not, nth$1 as nth, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$2 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, tap$1 as tap, test$2 as test, times$1 as times, toLower$1 as toLower, toString$2 as toString, toUpper$1 as toUpper, trim$1 as trim, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, zip$1 as zip, zipObj$1 as zipObj, ok, allFalse, allTrue, change, compact, composeAsync, defaultWhen, debounce, delay, evolve, findInObject, greater, headObject, ifElseAsync, inject, intersection, is, isAttach, isPromise, isType, isValid, less, mapAsync, mapFastAsync, memoize$1 as memoize, mergeAll, mergeRight, multiline, okInit, omitBy, once, pickBy, produce, promiseAllObject, promiseAllSecure, random, rangeBy, remove, renameProps, runTests, s, shuffle, switcher, tapAsync, template, throttle, validate, when, whenAsync, where };
