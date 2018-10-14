@@ -48,6 +48,7 @@
     "beautify-benchmark": "^0.2.4",
     "benchmark": "^2.1.4",
     "commit-message": "https://github.com/selfrefactor/commit-message#3.0.1",
+    "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
