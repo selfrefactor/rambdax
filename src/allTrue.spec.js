@@ -1,7 +1,6 @@
 import { allTrue } from './allTrue'
 
 test('usage with non boolean', () => {
-  const foo = 4
   const foo = { a : 1 }
   const baz = [ 1, 2, 3 ]
 
@@ -15,12 +14,10 @@ test('usage with non boolean', () => {
 
 test('usage with boolean', () => {
   const foo = 4
-  const foo = { a : 1 }
   const baz = [ 1, 2, 3 ]
 
   const result = allTrue(
     foo > 2,
-    foo.a === 1,
     baz.length === 3
   )
   expect(result).toBe(true)
