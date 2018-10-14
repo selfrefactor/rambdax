@@ -1,8 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var R = require('rambda');
+import { type, filter, equals, curry, replace, toLower, contains, test as test$1, any, all, init, compose, map, sort, take, merge, range, length, last, split, omit, add, addIndex, adjust, allPass, always, anyPass, append, assoc, both, complement, concat, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, F, find, findIndex, flatten, flip, forEach, groupBy, has, head, identity, ifElse, inc, includes, indexBy, indexOf, isNil, join, keys, lastIndexOf, match, max, maxBy, min, minBy, modulo, multiply, none, not, nth, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, reduce, reject, repeat, reverse, sortBy, splitEvery, startsWith, subtract, T, tail, takeLast, tap, times, toString, toUpper, trim, uniq, uniqWith, update, values, without, zip, zipObj } from 'rambda';
 
 function allFalse(...inputs) {
   let counter = 0;
@@ -10,7 +6,7 @@ function allFalse(...inputs) {
   while (counter < inputs.length) {
     const x = inputs[counter];
 
-    if (R.type(x) === 'Function') {
+    if (type(x) === 'Function') {
       if (inputs[counter]()) {
 
         return false;
@@ -30,7 +26,7 @@ function allTrue(...inputs) {
   while (counter < inputs.length) {
     const x = inputs[counter];
 
-    if (R.type(x) === 'Function') {
+    if (type(x) === 'Function') {
       if (!inputs[counter]()) {
         return false;
       }
@@ -173,10 +169,10 @@ let symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
  */
 function Hash(entries) {
   let index = -1,
-      length = entries ? entries.length : 0;
+      length$$1 = entries ? entries.length : 0;
 
   this.clear();
-  while (++index < length) {
+  while (++index < length$$1) {
     const entry = entries[index];
     this.set(entry[0], entry[1]);
   }
@@ -275,10 +271,10 @@ Hash.prototype.set = hashSet;
  */
 function ListCache(entries) {
   let index = -1,
-      length = entries ? entries.length : 0;
+      length$$1 = entries ? entries.length : 0;
 
   this.clear();
-  while (++index < length) {
+  while (++index < length$$1) {
     const entry = entries[index];
     this.set(entry[0], entry[1]);
   }
@@ -389,10 +385,10 @@ ListCache.prototype.set = listCacheSet;
  */
 function MapCache(entries) {
   let index = -1,
-      length = entries ? entries.length : 0;
+      length$$1 = entries ? entries.length : 0;
 
   this.clear();
-  while (++index < length) {
+  while (++index < length$$1) {
     const entry = entries[index];
     this.set(entry[0], entry[1]);
   }
@@ -501,10 +497,10 @@ function assignValue(object, key, value) {
  * @returns {number} Returns the index of the matched value, else `-1`.
  */
 function assocIndexOf(array, key) {
-  let length = array.length;
-  while (length--) {
-    if (eq(array[length][0], key)) {
-      return length;
+  let length$$1 = array.length;
+  while (length$$1--) {
+    if (eq(array[length$$1][0], key)) {
+      return length$$1;
     }
   }
 
@@ -538,26 +534,26 @@ function baseIsNative(value) {
  * @param {Function} [customizer] The function to customize path creation.
  * @returns {Object} Returns `object`.
  */
-function baseSet(object, path, value, customizer) {
+function baseSet(object, path$$1, value, customizer) {
   if (!isObject(object)) {
     return object;
   }
-  path = isKey(path, object) ? [path] : castPath(path);
+  path$$1 = isKey(path$$1, object) ? [path$$1] : castPath(path$$1);
 
   let index = -1,
-      length = path.length,
-      lastIndex = length - 1,
+      length$$1 = path$$1.length,
+      lastIndex = length$$1 - 1,
       nested = object;
 
-  while (nested != null && ++index < length) {
-    let key = toKey(path[index]),
+  while (nested != null && ++index < length$$1) {
+    let key = toKey(path$$1[index]),
         newValue = value;
 
     if (index != lastIndex) {
       const objValue = nested[key];
       newValue = customizer ? customizer(objValue, key, nested) : undefined;
       if (newValue === undefined) {
-        newValue = isObject(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
+        newValue = isObject(objValue) ? objValue : isIndex(path$$1[index + 1]) ? [] : {};
       }
     }
     assignValue(nested, key, newValue);
@@ -607,8 +603,8 @@ function castPath(value) {
  * @param {string} key The reference key.
  * @returns {*} Returns the map data.
  */
-function getMapData(map, key) {
-  const data = map.__data__;
+function getMapData(map$$1, key) {
+  const data = map$$1.__data__;
 
   return isKeyable(key) ? data[typeof key === 'string' ? 'string' : 'hash'] : data.map;
 }
@@ -635,10 +631,10 @@ function getNative(object, key) {
  * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
  * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
  */
-function isIndex(value, length) {
-  length = length == null ? MAX_SAFE_INTEGER : length;
+function isIndex(value, length$$1) {
+  length$$1 = length$$1 == null ? MAX_SAFE_INTEGER : length$$1;
 
-  return Boolean(length) && (typeof value === 'number' || reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
+  return Boolean(length$$1) && (typeof value === 'number' || reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length$$1;
 }
 
 /**
@@ -653,8 +649,8 @@ function isKey(value, object) {
   if (isArray(value)) {
     return false;
   }
-  const type = typeof value;
-  if (type == 'number' || type == 'symbol' || type == 'boolean' || value == null || isSymbol(value)) {
+  const type$$1 = typeof value;
+  if (type$$1 == 'number' || type$$1 == 'symbol' || type$$1 == 'boolean' || value == null || isSymbol(value)) {
     return true;
   }
 
@@ -669,9 +665,9 @@ function isKey(value, object) {
  * @returns {boolean} Returns `true` if `value` is suitable, else `false`.
  */
 function isKeyable(value) {
-  const type = typeof value;
+  const type$$1 = typeof value;
 
-  return type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean' ? value !== '__proto__' : value === null;
+  return type$$1 == 'string' || type$$1 == 'number' || type$$1 == 'symbol' || type$$1 == 'boolean' ? value !== '__proto__' : value === null;
 }
 
 /**
@@ -693,14 +689,14 @@ function isMasked(func) {
  * @returns {Array} Returns the property path array.
  */
 var stringToPath = /*#__PURE__*/memoize(string => {
-  string = toString(string);
+  string = toString$1(string);
 
   const result = [];
   if (reLeadingDot.test(string)) {
     result.push('');
   }
-  string.replace(rePropName, (match, number, quote, string) => {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : number || match);
+  string.replace(rePropName, (match$$1, number, quote, string) => {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : number || match$$1);
   });
 
   return result;
@@ -923,9 +919,9 @@ function isFunction(value) {
  * // => false
  */
 function isObject(value) {
-  const type = typeof value;
+  const type$$1 = typeof value;
 
-  return Boolean(value) && (type == 'object' || type == 'function');
+  return Boolean(value) && (type$$1 == 'object' || type$$1 == 'function');
 }
 
 /**
@@ -998,7 +994,7 @@ function isSymbol(value) {
  * _.toString([1, 2, 3]);
  * // => '1,2,3'
  */
-function toString(value) {
+function toString$1(value) {
   return value == null ? '' : baseToString(value);
 }
 
@@ -1030,8 +1026,8 @@ function toString(value) {
  * console.log(object.x[0].y.z);
  * // => 5
  */
-function set(object, path, value) {
-  return object == null ? object : baseSet(object, path, value);
+function set(object, path$$1, value) {
+  return object == null ? object : baseSet(object, path$$1, value);
 }
 
 //Its lodash's set method taken from
@@ -1053,23 +1049,23 @@ function change(origin, pathRaw, rules) {
 
     return willReturn;
   }
-  const path = pathRaw === '' ? '' : `${pathRaw}.`;
+  const path$$1 = pathRaw === '' ? '' : `${pathRaw}.`;
 
   for (const ruleKey of Object.keys(rules)) {
     const rule = rules[ruleKey];
     if (!isObject$1(rule)) {
-      set(willReturn, `${path}${ruleKey}`, rule);
+      set(willReturn, `${path$$1}${ruleKey}`, rule);
       continue;
     }
     Object.keys(rule).filter(subruleKey => !isObject$1(rule[subruleKey])).map(subruleKey => {
       const subrule = rule[subruleKey];
-      set(willReturn, `${path}${ruleKey}.${subruleKey}`, subrule);
+      set(willReturn, `${path$$1}${ruleKey}.${subruleKey}`, subrule);
     });
     Object.keys(rule).filter(subruleKey => isObject$1(rule[subruleKey])).map(subruleKey => {
       const subrule = rule[subruleKey];
       Object.keys(subrule).map(deepKey => {
         const deep = rule[subruleKey][deepKey];
-        set(willReturn, `${path}${ruleKey}.${subruleKey}.${deepKey}`, deep);
+        set(willReturn, `${path$$1}${ruleKey}.${subruleKey}.${deepKey}`, deep);
       });
     });
   }
@@ -1080,13 +1076,13 @@ function change(origin, pathRaw, rules) {
 const types = ['Null', 'Undefined', 'RegExp'];
 
 function compact(arr) {
-  return R.filter(a => {
-    const currentType = R.type(a);
+  return filter(a => {
+    const currentType = type(a);
     if (types.includes(currentType)) {
       return false;
     }
     if (currentType === 'Object') {
-      return !R.equals(a, {});
+      return !equals(a, {});
     }
 
     return a.length !== 0;
@@ -1099,7 +1095,7 @@ function composeAsync(...inputArguments) {
 
     while (inputArguments.length !== 0) {
       const fn = inputArguments.pop();
-      const typeFn = R.type(fn);
+      const typeFn = type(fn);
 
       if (typeFn === 'Async' || typeFn === 'Promise') {
         argumentsToPass = await fn(argumentsToPass);
@@ -1149,34 +1145,34 @@ function delay(ms) {
 
 function evolveFn(rules, input) {
   const clone = Object.assign({}, input);
-  const propRules = R.filter(x => clone[x] !== undefined)(Object.keys(rules));
+  const propRules = filter(x => clone[x] !== undefined)(Object.keys(rules));
 
   if (propRules.length === 0) {
     return input;
   }
 
-  propRules.map(prop => {
-    const fn = rules[prop];
-    if (R.type(fn) === 'Function') {
-      clone[prop] = fn(clone[prop]);
-    } else if (R.type(fn) === 'Object') {
-      clone[prop] = evolve(fn, clone[prop]);
+  propRules.map(prop$$1 => {
+    const fn = rules[prop$$1];
+    if (type(fn) === 'Function') {
+      clone[prop$$1] = fn(clone[prop$$1]);
+    } else if (type(fn) === 'Object') {
+      clone[prop$$1] = evolve(fn, clone[prop$$1]);
     }
   });
 
   return clone;
 }
 
-const evolve = /*#__PURE__*/R.curry(evolveFn);
+const evolve = /*#__PURE__*/curry(evolveFn);
 
 function findInObject(fn, obj) {
   let willReturn = { fallback: true };
 
-  Object.entries(obj).map(([prop, value]) => {
+  Object.entries(obj).map(([prop$$1, value]) => {
     if (willReturn.fallback) {
-      if (fn(value, prop)) {
+      if (fn(value, prop$$1)) {
         willReturn = {
-          prop,
+          prop: prop$$1,
           value
         };
       }
@@ -1195,7 +1191,7 @@ function greater(x, y) {
 }
 
 function headObject(x) {
-  if (R.type(x) !== 'Object') throw new Error('R.headObject.type');
+  if (type(x) !== 'Object') throw new Error('R.headObject.type');
   const [tag, no] = Object.keys(x);
   if (tag === undefined) throw new Error('R.headObject.less');
   if (no !== undefined) throw new Error('R.headObject.more');
@@ -1219,7 +1215,7 @@ function ifElseAsync(condition, ifFn, elseFn) {
     return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder);
   }
 
-  return input => new Promise((resolve, reject) => {
+  return input => new Promise((resolve, reject$$1) => {
     const conditionPromise = createThenable(condition);
     const ifFnPromise = createThenable(ifFn);
     const elseFnPromise = createThenable(elseFn);
@@ -1227,13 +1223,13 @@ function ifElseAsync(condition, ifFn, elseFn) {
     conditionPromise(input).then(conditionResult => {
       const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
 
-      promised(input).then(resolve).catch(reject);
-    }).catch(reject);
+      promised(input).then(resolve).catch(reject$$1);
+    }).catch(reject$$1);
   });
 }
 
 function inject(injection, marker, content) {
-  return R.replace(marker, `${marker}${injection}`, content);
+  return replace(marker, `${marker}${injection}`, content);
 }
 
 function intersection(a, b) {
@@ -1241,7 +1237,7 @@ function intersection(a, b) {
     return bHolder => intersection(a, bHolder);
   }
 
-  return R.filter(val => b.includes(val))(a);
+  return filter(val => b.includes(val))(a);
 }
 
 function isValid({ input, schema }) {
@@ -1257,12 +1253,12 @@ function isValid({ input, schema }) {
   for (const requirementRaw in schema) {
     if (flag) {
       const isOptional = requirementRaw.endsWith('?');
-      const requirement = isOptional ? R.init(requirementRaw) : requirementRaw;
+      const requirement = isOptional ? init(requirementRaw) : requirementRaw;
 
       const rule = schema[requirementRaw];
-      const ruleType = R.type(rule);
+      const ruleType = type(rule);
       const inputProp = input[requirement];
-      const inputPropType = R.type(input[requirement]);
+      const inputPropType = type(input[requirement]);
       const ok = isOptional && inputProp !== undefined || !isOptional;
 
       if (!ok || rule === 'any' && inputProp != null) continue;
@@ -1280,7 +1276,7 @@ function isValid({ input, schema }) {
         /**
          * rule is actual rule such as 'number', so the two types are compared
          */
-        boom(R.toLower(inputPropType) === rule);
+        boom(toLower(inputPropType) === rule);
       } else if (typeof rule === 'function') {
         /**
          * rule is function so we pass to it the input
@@ -1290,14 +1286,14 @@ function isValid({ input, schema }) {
         /**
          * enum case | rule is like a: ['foo', 'bar']
          */
-        boom(R.contains(inputProp, rule));
+        boom(contains(inputProp, rule));
       } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
         /**
          * 1. array of type | rule is like a: ['number']
          * 2. rule is like a: [{from: 'string'}]
          */
         const currentRule = rule[0];
-        const currentRuleType = R.type(rule[0]);
+        const currentRuleType = type(rule[0]);
         //Check if rule is invalid
         boom(currentRuleType === 'String' || currentRuleType === 'Object');
 
@@ -1305,7 +1301,7 @@ function isValid({ input, schema }) {
           /**
            * 1. array of type
            */
-          const isInvalidResult = R.any(inputPropInstance => R.type(inputPropInstance).toLowerCase() !== currentRule, inputProp);
+          const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== currentRule, inputProp);
           boom(!isInvalidResult);
         }
 
@@ -1313,14 +1309,14 @@ function isValid({ input, schema }) {
           /**
            * 2. rule is like a: [{from: 'string'}]
            */
-          const isValidResult = R.all(inputPropInstance => isValid({
+          const isValidResult = all(inputPropInstance => isValid({
             input: inputPropInstance,
             schema: currentRule
           }), inputProp);
           boom(isValidResult);
         }
       } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-        boom(R.test(rule, inputProp));
+        boom(test$1(rule, inputProp));
       } else {
         boom(false);
       }
@@ -1330,7 +1326,7 @@ function isValid({ input, schema }) {
   return flag;
 }
 
-function any(fn, arr) {
+function any$1(fn, arr) {
   let counter = 0;
   while (counter < arr.length) {
     if (fn(arr[counter], counter)) {
@@ -1354,7 +1350,7 @@ function is(...inputs) {
     if (inputs.length !== schemas.length) throw new Error('inputs.length !== schemas.length');
 
     let reason;
-    const wrong = any((singleInput, i) => {
+    const wrong = any$1((singleInput, i) => {
       const ok = check(singleInput, schemas[i]);
 
       if (!ok) {
@@ -1393,7 +1389,7 @@ function isInit() {
 }
 
 function isPromise(x) {
-  return ['Async', 'Promise'].includes(R.type(x));
+  return ['Async', 'Promise'].includes(type(x));
 }
 
 function isType(xType, x) {
@@ -1401,7 +1397,7 @@ function isType(xType, x) {
     return xHolder => isType(xType, xHolder);
   }
 
-  return R.type(x) === xType;
+  return type(x) === xType;
 }
 
 function less(x, y) {
@@ -1424,8 +1420,8 @@ async function mapAsyncFn(fn, arr) {
     }
 
     const willReturn = {};
-    for (const prop in arr) {
-      willReturn[prop] = await fn(arr[prop], prop);
+    for (const prop$$1 in arr) {
+      willReturn[prop$$1] = await fn(arr[prop$$1], prop$$1);
     }
 
     return willReturn;
@@ -1439,8 +1435,8 @@ function mapAsync(fn, arr) {
     return async holder => await mapAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -1459,8 +1455,8 @@ function mapFastAsync(fn, arr) {
     return async holder => await mapFastAsyncFn(fn, holder);
   }
 
-  return new Promise((resolve, reject) => {
-    mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
+  return new Promise((resolve, reject$$1) => {
+    mapFastAsyncFn(fn, arr).then(resolve).catch(reject$$1);
   });
 }
 
@@ -1469,19 +1465,19 @@ const cache = {};
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b;
   const willReturn = {};
-  R.compose(R.map(prop => willReturn[prop] = obj[prop]), R.sort(sortFn))(Object.keys(obj));
+  compose(map(prop$$1 => willReturn[prop$$1] = obj[prop$$1]), sort(sortFn))(Object.keys(obj));
 
   return willReturn;
 };
 
 const stringify = a => {
-  if (R.type(a) === 'String') {
+  if (type(a) === 'String') {
     return a;
-  } else if (['Function', 'Async'].includes(R.type(a))) {
-    const compacted = R.replace(/\s{1,}/g, ' ', a.toString());
+  } else if (['Function', 'Async'].includes(type(a))) {
+    const compacted = replace(/\s{1,}/g, ' ', a.toString());
 
-    return R.replace(/\s/g, '_', R.take(15, compacted));
-  } else if (R.type(a) === 'Object') {
+    return replace(/\s/g, '_', take(15, compacted));
+  } else if (type(a) === 'Object') {
     a = normalizeObject(a);
   }
 
@@ -1501,35 +1497,35 @@ function memoize$1(fn, ...inputArguments) {
   if (arguments.length === 1) {
     return (...inputArgumentsHolder) => memoize$1(fn, ...inputArgumentsHolder);
   }
-  const prop = generateProp(fn, ...inputArguments);
-  if (prop in cache) {
-    return cache[prop];
+  const prop$$1 = generateProp(fn, ...inputArguments);
+  if (prop$$1 in cache) {
+    return cache[prop$$1];
   }
-  if (R.type(fn) === 'Async') {
+  if (type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
-        cache[prop] = result;
+        cache[prop$$1] = result;
         resolve(result);
       });
     });
   }
   const result = fn(...inputArguments);
-  cache[prop] = result;
+  cache[prop$$1] = result;
 
   return result;
 }
 
 function mergeAll(arr) {
   let willReturn = {};
-  R.map(val => {
-    willReturn = R.merge(willReturn, val);
+  map(val => {
+    willReturn = merge(willReturn, val);
   }, arr);
 
   return willReturn;
 }
 
 function mergeRight(x, y) {
-  return R.merge(y, x);
+  return merge(y, x);
 }
 
 function multiline(input, glue) {
@@ -1537,7 +1533,7 @@ function multiline(input, glue) {
   return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue ? glue : ' ');
 }
 
-function any$1(fn, arr) {
+function any$2(fn, arr) {
   let counter = 0;
   while (counter < arr.length) {
     if (fn(arr[counter], counter)) {
@@ -1560,7 +1556,7 @@ function ok(...inputs) {
   return (...schemas) => {
     if (inputs.length !== schemas.length) return false;
 
-    return any$1((singleInput, i) => !check$1(singleInput, schemas[i]), inputs) === false;
+    return any$2((singleInput, i) => !check$1(singleInput, schemas[i]), inputs) === false;
   };
 }
 
@@ -1570,9 +1566,9 @@ function omitBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (!fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (!fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
@@ -1596,7 +1592,7 @@ function once(fn, context) {
   if (arguments.length === 1) {
     const wrap = onceFn(fn, context);
 
-    return R.curry(wrap);
+    return curry(wrap);
   }
 
   return onceFn(fn, context);
@@ -1608,30 +1604,30 @@ function pickBy(fn, obj) {
   }
 
   const willReturn = {};
-  for (const prop in obj) {
-    if (fn(prop, obj[prop])) {
-      willReturn[prop] = obj[prop];
+  for (const prop$$1 in obj) {
+    if (fn(prop$$1, obj[prop$$1])) {
+      willReturn[prop$$1] = obj[prop$$1];
     }
   }
 
   return willReturn;
 }
 
-function helper({ condition, inputArgument, prop }) {
-  return new Promise((resolve, reject) => {
-    if (!(R.type(condition) === 'Async')) {
+function helper({ condition, inputArgument, prop: prop$$1 }) {
+  return new Promise((resolve, reject$$1) => {
+    if (!(type(condition) === 'Async')) {
       return resolve({
-        type: prop,
+        type: prop$$1,
         payload: condition(inputArgument)
       });
     }
 
     condition(inputArgument).then(result => {
       resolve({
-        type: prop,
+        type: prop$$1,
         payload: result
       });
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -1640,38 +1636,38 @@ function produce(conditions, inputArgument) {
     return inputArgumentHolder => produce(conditions, inputArgumentHolder);
   }
   let asyncConditionsFlag = false;
-  for (const prop in conditions) {
-    if (asyncConditionsFlag === false && R.type(conditions[prop]) === 'Async') {
+  for (const prop$$1 in conditions) {
+    if (asyncConditionsFlag === false && type(conditions[prop$$1]) === 'Async') {
       asyncConditionsFlag = true;
     }
   }
 
   if (asyncConditionsFlag === false) {
     const willReturn = {};
-    for (const prop in conditions) {
-      willReturn[prop] = conditions[prop](inputArgument);
+    for (const prop$$1 in conditions) {
+      willReturn[prop$$1] = conditions[prop$$1](inputArgument);
     }
 
     return willReturn;
   }
   const promised = [];
-  for (const prop in conditions) {
-    const condition = conditions[prop];
+  for (const prop$$1 in conditions) {
+    const condition = conditions[prop$$1];
     promised.push(helper({
       inputArgument,
       condition,
-      prop
+      prop: prop$$1
     }));
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject$$1) => {
     Promise.all(promised).then(results => {
       const willReturn = {};
 
-      R.map(result => willReturn[result.type] = result.payload, results);
+      map(result => willReturn[result.type] = result.payload, results);
 
       resolve(willReturn);
-    }).catch(err => reject(err));
+    }).catch(err => reject$$1(err));
   });
 }
 
@@ -1680,16 +1676,16 @@ function promiseAllObject(promises) {
     let counter = 0;
     const props = {};
     const promisedArr = [];
-    for (const prop in promises) {
-      props[counter] = prop;
-      promisedArr.push(promises[prop]);
+    for (const prop$$1 in promises) {
+      props[counter] = prop$$1;
+      promisedArr.push(promises[prop$$1]);
       counter++;
     }
     Promise.all(promisedArr).then(result => {
       const willReturn = {};
       result.map((val, key) => {
-        const prop = props[key];
-        willReturn[prop] = val;
+        const prop$$1 = props[key];
+        willReturn[prop$$1] = val;
       });
 
       res(willReturn);
@@ -1713,7 +1709,7 @@ const promiseAllSecureWrapper = promise => new Promise(res => {
 
 async function promiseAllSecure(input) {
   try {
-    const promised = R.map(a => promiseAllSecureWrapper(a), input);
+    const promised = map(a => promiseAllSecureWrapper(a), input);
 
     return await Promise.all(promised);
   } catch (err) {
@@ -1721,8 +1717,8 @@ async function promiseAllSecure(input) {
   }
 }
 
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function random(min$$1, max$$1) {
+  return Math.floor(Math.random() * (max$$1 - min$$1 + 1)) + min$$1;
 }
 
 function rangeBy(startNum, endNum, distance) {
@@ -1736,14 +1732,14 @@ function rangeBy(startNum, endNum, distance) {
   let valueToPush = startNum;
 
   if (isInteger) {
-    const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
+    const loopIndexes = range(0, Math.floor((endNum - startNum) / distance));
     for (const i of loopIndexes) {
       valueToPush += distance;
       willReturn.push(valueToPush);
     }
   } else {
-    const decimalLength = R.compose(R.length, R.last, R.split('.'))(distance.toString());
-    const loopIndexes = R.range(0, Math.floor((endNum - startNum) / distance));
+    const decimalLength = compose(length, last, split('.'))(distance.toString());
+    const loopIndexes = range(0, Math.floor((endNum - startNum) / distance));
     for (const i of loopIndexes) {
       valueToPush += distance;
       willReturn.push(Number(valueToPush.toFixed(decimalLength)));
@@ -1754,14 +1750,14 @@ function rangeBy(startNum, endNum, distance) {
 }
 
 function remove(inputs, text) {
-  if (R.type(inputs) !== 'Array') {
-    return R.replace(inputs, '', text).trim();
+  if (type(inputs) !== 'Array') {
+    return replace(inputs, '', text).trim();
   }
 
   let textCopy = text;
 
   inputs.forEach(singleInput => {
-    textCopy = R.replace(singleInput, '', textCopy).trim();
+    textCopy = replace(singleInput, '', textCopy).trim();
   });
 
   return textCopy;
@@ -1778,14 +1774,14 @@ function renameProps(conditions, inputObject) {
     }
   });
 
-  return R.merge(renamed, R.omit(Object.keys(conditions), inputObject));
+  return merge(renamed, omit(Object.keys(conditions), inputObject));
 }
 
 const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
 
 const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
 
-const replace = ({ inputHolder, prop, replacer }) => inputHolder.replace(`{{${prop}}}`, replacer);
+const replace$1 = ({ inputHolder, prop: prop$$1, replacer }) => inputHolder.replace(`{{${prop$$1}}}`, replacer);
 
 function template(input, templateInput) {
   const occurances = getOccurances(input);
@@ -1793,13 +1789,13 @@ function template(input, templateInput) {
 
   let inputHolder = input;
   for (const occurance of occurances) {
-    const prop = getOccuranceProp(occurance);
-    const replacer = templateInput[prop];
+    const prop$$1 = getOccuranceProp(occurance);
+    const replacer = templateInput[prop$$1];
 
     if (replacer === undefined) continue;
-    inputHolder = replace({
+    inputHolder = replace$1({
       inputHolder,
-      prop,
+      prop: prop$$1,
       replacer
     });
   }
@@ -1831,7 +1827,7 @@ function runTests(input) {
             prop: tag,
             value: x
           } = headObject(dataInstance);
-          const { value: evaluationFunction } = headObject(R.omit('label', singleEvaluation));
+          const { value: evaluationFunction } = headObject(omit('label', singleEvaluation));
 
           const label = template(singleEvaluation.label, { tag });
 
@@ -1896,7 +1892,7 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
 };
 
 const isEqual = (testValue, matchValue) => {
-  const willReturn = typeof testValue === 'function' ? testValue(matchValue) : R.equals(testValue, matchValue);
+  const willReturn = typeof testValue === 'function' ? testValue(matchValue) : equals(testValue, matchValue);
 
   return willReturn;
 };
@@ -1947,10 +1943,10 @@ function tapAsync(fn, input) {
     return inputHolder => tapAsync(fn, inputHolder);
   }
   if (isPromise(fn) === true) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject$$1) => {
       fn(input).then(() => {
         resolve(input);
-      }).catch(reject);
+      }).catch(reject$$1);
     });
   }
   fn(input);
@@ -2013,14 +2009,14 @@ function whenAsync(condition, whenTrueFn) {
     return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder);
   }
 
-  return input => new Promise((resolve, reject) => {
+  return input => new Promise((resolve, reject$$1) => {
 
     if (typeof condition === 'boolean') {
       if (condition === false) {
         return resolve(input);
       }
 
-      whenTrueFn(input).then(resolve).catch(reject);
+      whenTrueFn(input).then(resolve).catch(reject$$1);
     } else {
       const conditionPromise = createThenable$1(condition);
 
@@ -2029,8 +2025,8 @@ function whenAsync(condition, whenTrueFn) {
           return resolve(input);
         }
 
-        whenTrueFn(input).then(resolve).catch(reject);
-      }).catch(reject);
+        whenTrueFn(input).then(resolve).catch(reject$$1);
+      }).catch(reject$$1);
     }
   });
 }
@@ -2040,8 +2036,8 @@ function where(conditions, obj) {
     return objHolder => where(conditions, objHolder);
   }
   let flag = true;
-  for (const prop in conditions) {
-    const result = conditions[prop](obj[prop]);
+  for (const prop$$1 in conditions) {
+    const result = conditions[prop$$1](obj[prop$$1]);
     if (flag && result === false) {
       flag = false;
     }
@@ -2052,258 +2048,107 @@ function where(conditions, obj) {
 
 const DELAY = 'RAMBDAX_DELAY';
 //Follows code generated by `run rambda`
-const add = R.add;
-const addIndex = R.addIndex;
-const adjust = R.adjust;
-const all = R.all;
-const allPass = R.allPass;
-const always = R.always;
-const any$2 = R.any;
-const anyPass = R.anyPass;
-const append = R.append;
-const assoc = R.assoc;
-const both = R.both;
-const complement = R.complement;
-const compose = R.compose;
-const concat = R.concat;
-const contains = R.contains;
-const curry = R.curry;
-const dec = R.dec;
-const defaultTo = R.defaultTo;
-const dissoc = R.dissoc;
-const divide = R.divide;
-const drop = R.drop;
-const dropLast = R.dropLast;
-const either = R.either;
-const endsWith = R.endsWith;
-const equals = R.equals;
-const F = R.F;
-const filter = R.filter;
-const find = R.find;
-const findIndex = R.findIndex;
-const flatten = R.flatten;
-const flip = R.flip;
-const forEach = R.forEach;
-const groupBy = R.groupBy;
-const has = R.has;
-const head = R.head;
-const identity = R.identity;
-const ifElse = R.ifElse;
-const inc = R.inc;
-const includes = R.includes;
-const indexBy = R.indexBy;
-const indexOf = R.indexOf;
-const init = R.init;
-const isNil = R.isNil;
-const join = R.join;
-const keys = R.keys;
-const last = R.last;
-const lastIndexOf = R.lastIndexOf;
-const length = R.length;
-const map = R.map;
-const match = R.match;
-const merge = R.merge;
-const max = R.max;
-const maxBy = R.maxBy;
-const min = R.min;
-const minBy = R.minBy;
-const modulo = R.modulo;
-const multiply = R.multiply;
-const none = R.none;
-const not = R.not;
-const nth = R.nth;
-const omit = R.omit;
-const partialCurry = R.partialCurry;
-const path = R.path;
-const pathOr = R.pathOr;
-const pick = R.pick;
-const pickAll = R.pickAll;
-const pipe = R.pipe;
-const pluck = R.pluck;
-const prepend = R.prepend;
-const prop = R.prop;
-const propEq = R.propEq;
-const range = R.range;
-const reduce = R.reduce;
-const reject = R.reject;
-const repeat = R.repeat;
-const replace$1 = R.replace;
-const reverse = R.reverse;
-const sort = R.sort;
-const sortBy = R.sortBy;
-const split = R.split;
-const splitEvery = R.splitEvery;
-const startsWith = R.startsWith;
-const subtract = R.subtract;
-const T = R.T;
-const tail = R.tail;
-const take = R.take;
-const takeLast = R.takeLast;
-const tap = R.tap;
-const test$1 = R.test;
-const times = R.times;
-const toLower = R.toLower;
-const toString$1 = R.toString;
-const toUpper = R.toUpper;
-const trim = R.trim;
-const type = R.type;
-const uniq = R.uniq;
-const uniqWith = R.uniqWith;
-const update = R.update;
-const values = R.values;
-const without = R.without;
-const zip = R.zip;
-const zipObj = R.zipObj;
+const add$1 = add;
+const addIndex$1 = addIndex;
+const adjust$1 = adjust;
+const all$1 = all;
+const allPass$1 = allPass;
+const always$1 = always;
+const any$3 = any;
+const anyPass$1 = anyPass;
+const append$1 = append;
+const assoc$1 = assoc;
+const both$1 = both;
+const complement$1 = complement;
+const compose$1 = compose;
+const concat$1 = concat;
+const contains$1 = contains;
+const curry$1 = curry;
+const dec$1 = dec;
+const defaultTo$1 = defaultTo;
+const dissoc$1 = dissoc;
+const divide$1 = divide;
+const drop$1 = drop;
+const dropLast$1 = dropLast;
+const either$1 = either;
+const endsWith$1 = endsWith;
+const equals$1 = equals;
+const F$1 = F;
+const filter$1 = filter;
+const find$1 = find;
+const findIndex$1 = findIndex;
+const flatten$1 = flatten;
+const flip$1 = flip;
+const forEach$1 = forEach;
+const groupBy$1 = groupBy;
+const has$1 = has;
+const head$1 = head;
+const identity$1 = identity;
+const ifElse$1 = ifElse;
+const inc$1 = inc;
+const includes$1 = includes;
+const indexBy$1 = indexBy;
+const indexOf$1 = indexOf;
+const init$1 = init;
+const isNil$1 = isNil;
+const join$1 = join;
+const keys$1 = keys;
+const last$1 = last;
+const lastIndexOf$1 = lastIndexOf;
+const length$1 = length;
+const map$1 = map;
+const match$1 = match;
+const merge$1 = merge;
+const max$1 = max;
+const maxBy$1 = maxBy;
+const min$1 = min;
+const minBy$1 = minBy;
+const modulo$1 = modulo;
+const multiply$1 = multiply;
+const none$1 = none;
+const not$1 = not;
+const nth$1 = nth;
+const omit$1 = omit;
+const partialCurry$1 = partialCurry;
+const path$1 = path;
+const pathOr$1 = pathOr;
+const pick$1 = pick;
+const pickAll$1 = pickAll;
+const pipe$1 = pipe;
+const pluck$1 = pluck;
+const prepend$1 = prepend;
+const prop$1 = prop;
+const propEq$1 = propEq;
+const range$1 = range;
+const reduce$1 = reduce;
+const reject$1 = reject;
+const repeat$1 = repeat;
+const replace$2 = replace;
+const reverse$1 = reverse;
+const sort$1 = sort;
+const sortBy$1 = sortBy;
+const split$1 = split;
+const splitEvery$1 = splitEvery;
+const startsWith$1 = startsWith;
+const subtract$1 = subtract;
+const T$1 = T;
+const tail$1 = tail;
+const take$1 = take;
+const takeLast$1 = takeLast;
+const tap$1 = tap;
+const test$2 = test$1;
+const times$1 = times;
+const toLower$1 = toLower;
+const toString$2 = toString;
+const toUpper$1 = toUpper;
+const trim$1 = trim;
+const type$1 = type;
+const uniq$1 = uniq;
+const uniqWith$1 = uniqWith;
+const update$1 = update;
+const values$1 = values;
+const without$1 = without;
+const zip$1 = zip;
+const zipObj$1 = zipObj;
 
-exports.DELAY = DELAY;
-exports.add = add;
-exports.addIndex = addIndex;
-exports.adjust = adjust;
-exports.all = all;
-exports.allPass = allPass;
-exports.always = always;
-exports.any = any$2;
-exports.anyPass = anyPass;
-exports.append = append;
-exports.assoc = assoc;
-exports.both = both;
-exports.complement = complement;
-exports.compose = compose;
-exports.concat = concat;
-exports.contains = contains;
-exports.curry = curry;
-exports.dec = dec;
-exports.defaultTo = defaultTo;
-exports.dissoc = dissoc;
-exports.divide = divide;
-exports.drop = drop;
-exports.dropLast = dropLast;
-exports.either = either;
-exports.endsWith = endsWith;
-exports.equals = equals;
-exports.F = F;
-exports.filter = filter;
-exports.find = find;
-exports.findIndex = findIndex;
-exports.flatten = flatten;
-exports.flip = flip;
-exports.forEach = forEach;
-exports.groupBy = groupBy;
-exports.has = has;
-exports.head = head;
-exports.identity = identity;
-exports.ifElse = ifElse;
-exports.inc = inc;
-exports.includes = includes;
-exports.indexBy = indexBy;
-exports.indexOf = indexOf;
-exports.init = init;
-exports.isNil = isNil;
-exports.join = join;
-exports.keys = keys;
-exports.last = last;
-exports.lastIndexOf = lastIndexOf;
-exports.length = length;
-exports.map = map;
-exports.match = match;
-exports.merge = merge;
-exports.max = max;
-exports.maxBy = maxBy;
-exports.min = min;
-exports.minBy = minBy;
-exports.modulo = modulo;
-exports.multiply = multiply;
-exports.none = none;
-exports.not = not;
-exports.nth = nth;
-exports.omit = omit;
-exports.partialCurry = partialCurry;
-exports.path = path;
-exports.pathOr = pathOr;
-exports.pick = pick;
-exports.pickAll = pickAll;
-exports.pipe = pipe;
-exports.pluck = pluck;
-exports.prepend = prepend;
-exports.prop = prop;
-exports.propEq = propEq;
-exports.range = range;
-exports.reduce = reduce;
-exports.reject = reject;
-exports.repeat = repeat;
-exports.replace = replace$1;
-exports.reverse = reverse;
-exports.sort = sort;
-exports.sortBy = sortBy;
-exports.split = split;
-exports.splitEvery = splitEvery;
-exports.startsWith = startsWith;
-exports.subtract = subtract;
-exports.T = T;
-exports.tail = tail;
-exports.take = take;
-exports.takeLast = takeLast;
-exports.tap = tap;
-exports.test = test$1;
-exports.times = times;
-exports.toLower = toLower;
-exports.toString = toString$1;
-exports.toUpper = toUpper;
-exports.trim = trim;
-exports.type = type;
-exports.uniq = uniq;
-exports.uniqWith = uniqWith;
-exports.update = update;
-exports.values = values;
-exports.without = without;
-exports.zip = zip;
-exports.zipObj = zipObj;
-exports.allFalse = allFalse;
-exports.allTrue = allTrue;
-exports.change = change;
-exports.compact = compact;
-exports.composeAsync = composeAsync;
-exports.defaultWhen = defaultWhen;
-exports.debounce = debounce;
-exports.delay = delay;
-exports.evolve = evolve;
-exports.findInObject = findInObject;
-exports.greater = greater;
-exports.headObject = headObject;
-exports.ifElseAsync = ifElseAsync;
-exports.inject = inject;
-exports.intersection = intersection;
-exports.is = is;
-exports.isInit = isInit;
-exports.isPromise = isPromise;
-exports.isType = isType;
-exports.isValid = isValid;
-exports.less = less;
-exports.mapAsync = mapAsync;
-exports.mapFastAsync = mapFastAsync;
-exports.memoize = memoize$1;
-exports.mergeAll = mergeAll;
-exports.mergeRight = mergeRight;
-exports.multiline = multiline;
-exports.ok = ok;
-exports.omitBy = omitBy;
-exports.once = once;
-exports.pickBy = pickBy;
-exports.produce = produce;
-exports.promiseAllObject = promiseAllObject;
-exports.promiseAllSecure = promiseAllSecure;
-exports.random = random;
-exports.rangeBy = rangeBy;
-exports.remove = remove;
-exports.renameProps = renameProps;
-exports.runTests = runTests;
-exports.s = s;
-exports.shuffle = shuffle;
-exports.switcher = switcher;
-exports.tapAsync = tapAsync;
-exports.template = template;
-exports.throttle = throttle;
-exports.validate = validate;
-exports.when = when;
-exports.whenAsync = whenAsync;
-exports.where = where;
+export { DELAY, add$1 as add, addIndex$1 as addIndex, adjust$1 as adjust, all$1 as all, allPass$1 as allPass, always$1 as always, any$3 as any, anyPass$1 as anyPass, append$1 as append, assoc$1 as assoc, both$1 as both, complement$1 as complement, compose$1 as compose, concat$1 as concat, contains$1 as contains, curry$1 as curry, dec$1 as dec, defaultTo$1 as defaultTo, dissoc$1 as dissoc, divide$1 as divide, drop$1 as drop, dropLast$1 as dropLast, either$1 as either, endsWith$1 as endsWith, equals$1 as equals, F$1 as F, filter$1 as filter, find$1 as find, findIndex$1 as findIndex, flatten$1 as flatten, flip$1 as flip, forEach$1 as forEach, groupBy$1 as groupBy, has$1 as has, head$1 as head, identity$1 as identity, ifElse$1 as ifElse, inc$1 as inc, includes$1 as includes, indexBy$1 as indexBy, indexOf$1 as indexOf, init$1 as init, isNil$1 as isNil, join$1 as join, keys$1 as keys, last$1 as last, lastIndexOf$1 as lastIndexOf, length$1 as length, map$1 as map, match$1 as match, merge$1 as merge, max$1 as max, maxBy$1 as maxBy, min$1 as min, minBy$1 as minBy, modulo$1 as modulo, multiply$1 as multiply, none$1 as none, not$1 as not, nth$1 as nth, omit$1 as omit, partialCurry$1 as partialCurry, path$1 as path, pathOr$1 as pathOr, pick$1 as pick, pickAll$1 as pickAll, pipe$1 as pipe, pluck$1 as pluck, prepend$1 as prepend, prop$1 as prop, propEq$1 as propEq, range$1 as range, reduce$1 as reduce, reject$1 as reject, repeat$1 as repeat, replace$2 as replace, reverse$1 as reverse, sort$1 as sort, sortBy$1 as sortBy, split$1 as split, splitEvery$1 as splitEvery, startsWith$1 as startsWith, subtract$1 as subtract, T$1 as T, tail$1 as tail, take$1 as take, takeLast$1 as takeLast, tap$1 as tap, test$2 as test, times$1 as times, toLower$1 as toLower, toString$2 as toString, toUpper$1 as toUpper, trim$1 as trim, type$1 as type, uniq$1 as uniq, uniqWith$1 as uniqWith, update$1 as update, values$1 as values, without$1 as without, zip$1 as zip, zipObj$1 as zipObj, allFalse, allTrue, change, compact, composeAsync, defaultWhen, debounce, delay, evolve, findInObject, greater, headObject, ifElseAsync, inject, intersection, is, isInit, isPromise, isType, isValid, less, mapAsync, mapFastAsync, memoize$1 as memoize, mergeAll, mergeRight, multiline, ok, omitBy, once, pickBy, produce, promiseAllObject, promiseAllSecure, random, rangeBy, remove, renameProps, runTests, s, shuffle, switcher, tapAsync, template, throttle, validate, when, whenAsync, where };
