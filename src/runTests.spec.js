@@ -48,7 +48,7 @@ const whenTrueAsync = {
   label    : '{{tag}} hey hey what can I do',
   whenTrue : async x => {
     const result = await delay(x.foo)
-    
+
     expect(result).toBe(x.t)
   },
 }

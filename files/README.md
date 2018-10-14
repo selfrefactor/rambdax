@@ -31,6 +31,10 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 
 - `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
 
+## Typescript
+
+You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
+
 ## API
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
