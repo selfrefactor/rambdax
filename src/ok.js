@@ -1,7 +1,12 @@
 import { allTrue } from './allTrue'
 import { isValid } from './isValid'
+import { okInit } from './okInit'
 
-function any(fn, arr) {
+/**
+ * TODO apply to Rambda
+ * Check if Rambda.any returns early
+ */
+export function any(fn, arr) {
   let counter = 0
   while (counter < arr.length) {
     if (fn(arr[ counter ], counter)) {
@@ -13,7 +18,7 @@ function any(fn, arr) {
   return false
 }
 
-function check(singleInput, schema){
+export function check(singleInput, schema){
   return isValid({
     input  : { singleInput },
     schema : { singleInput : schema },
@@ -21,18 +26,19 @@ function check(singleInput, schema){
 }
 
 let holder = {}
-export function okInit(rules){
-  holder = {
-    ...holder,
-    ...rules,
-  }
-}
 
 export function ok(...inputs){
+  if (Object.keys(holder).length === 0){
+    holder = okInit({ _internal : true })
+  }
+
   return (...schemas) => {
-    if (inputs.length !== schemas.length) return false
+    if (inputs.length !== schemas.length){
+      throw new Error('inputs.length !== schemas.length')
+    }
 
     let failedSchema
+
     const pass = any(
       (singleInput, i) => {
         const isCustomSchema = allTrue(
@@ -46,7 +52,10 @@ export function ok(...inputs){
 
         const checked = check(singleInput, schema)
         if (!checked){
-          failedSchema = JSON.stringify(schema)
+          failedSchema = JSON.stringify({
+            input : singleInput,
+            schema,
+          })
         }
 
         return !checked

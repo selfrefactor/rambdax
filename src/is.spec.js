@@ -1,20 +1,15 @@
 import { is } from './is'
 
-test('ok', () => {
+test('true on success', () => {
   const result = is(1, 'foo', {})('number', 'string', 'object')
   expect(
     result
   ).toBe(true)
 })
 
-test('throw on failed validation', () => {
+test('false on failure', () => {
   expect(
-    () => is(1, 'foo', {})('number', 'string', 'string')
-  ).toThrow()
+    is(1, 'foo', {})('number', 'string', 'string')
+  ).toBe(false)
 })
 
-test('throw if both arguments list is not equal', () => {
-  expect(
-    () => is(1, 'foo', {})('number', 'string')
-  ).toThrow()
-})

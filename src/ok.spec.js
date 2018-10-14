@@ -1,4 +1,5 @@
-import { ok, okInit } from './ok'
+import { ok } from './ok'
+import { okInit } from './okInit'
 
 test('ok', () => {
   const result = ok(1, 'foo', {})('number', 'string', 'object')
@@ -18,17 +19,17 @@ test('error contains schema', () => {
     ok(1, 'foo', {})('number', 'string', 'string')
     expect(false).toBe(true)
   } catch (e){
-    expect(e.message).toBe(
-      'Failed R.ok with schema "string"'
-    )
+    expect(e.message.startsWith(
+      'Failed R.ok with schema'
+    )).toBeTruthy()
     expect(e).toBeInstanceOf(Error)
   }
 })
 
-test('when both arguments length is not equal', () => {
+test('throw if both arguments list is not equal', () => {
   expect(
-    ok(1, 'foo', {})('number', 'string')
-  ).toBe(false)
+    () => ok(1, 'foo', {})('number', 'string')
+  ).toThrow()
 })
 
 test('okInit', () => {

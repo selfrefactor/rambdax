@@ -1,44 +1,31 @@
-import { isValid } from './isValid'
+import { allTrue } from './allTrue'
+import { any, check } from './ok'
+import { okInit } from './okInit'
 
-function any(fn, arr) {
-  let counter = 0
-  while (counter < arr.length) {
-    if (fn(arr[ counter ], counter)) {
-      return true
-    }
-    counter++
-  }
-
-  return false
-}
-
-function check(singleInput, schema){
-  return isValid({
-    input  : { singleInput },
-    schema : { singleInput : schema },
-  })
-}
+let holder = {}
 
 export function is(...inputs){
+  if (Object.keys(holder).length === 0){
+    holder = okInit({ _internal : true })
+  }
+
   return (...schemas) => {
-    if (inputs.length !== schemas.length) throw new Error('inputs.length !== schemas.length')
+    if (inputs.length !== schemas.length) return false
 
-    let reason
-    const wrong = any((singleInput, i) => {
-      const ok = check(singleInput, schemas[ i ])
+    return any(
+      (singleInput, i) => {
+        const isCustomSchema = allTrue(
+          typeof schemas[ i ] === 'string',
+          holder[ schemas[ i ] ]
+        )
 
-      if (!ok){
-        reason = {
-          singleInput,
-          schema : schemas[ i ],
-        }
-      }
+        const schema = isCustomSchema ?
+          holder[ schemas[ i ] ] :
+          schemas[ i ]
 
-      return !ok
-    }, inputs)
-
-    if (wrong) throw new Error(JSON.stringify(reason))
-
-    return true
+        return !check(singleInput, schema)
+      },
+      inputs
+    ) === false
   }
 }
