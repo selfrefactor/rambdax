@@ -1,4 +1,5 @@
 import { omit } from 'rambda'
+import { delay } from './delay'
 import { runTests } from './runTests'
 
 const whenTrue = {
@@ -18,6 +19,7 @@ const singleCase = {
   t   : 'number',
   f   : 'boolean',
 }
+
 const runTestsInput = {
   testSuite   : 'foo',
   data        : [ { singleCase } ],
@@ -35,3 +37,26 @@ test('missing `testSuite`', () => {
 })
 
 runTests(runTestsInput)
+
+const singleCaseAsync = {
+  foo : 1,
+  t   : 'RAMBDAX_DELAY',
+  f   : 2,
+}
+
+const whenTrueAsync = {
+  label    : '{{tag}} hey hey what can I do',
+  whenTrue : async x => {
+    const result = await delay(x.foo)
+    
+    expect(result).toBe(x.t)
+  },
+}
+
+const runTestsInputAsync = {
+  testSuite   : 'foo',
+  data        : [ { singleCaseAsync } ],
+  evaluations : [ whenTrueAsync ],
+}
+
+runTests(runTestsInputAsync)
