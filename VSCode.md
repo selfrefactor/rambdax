@@ -12,9 +12,17 @@ Zen mode
 
 Open folder
 
+## Alt+2
+
+Toggle sidebar visibility
+
 ## Ctrl+3
 
 Start `Wallaby`
+
+## Alt+3
+
+Switch between terminals
 
 ## Ctrl+4
 

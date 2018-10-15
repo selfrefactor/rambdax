@@ -25,6 +25,7 @@
         "selfrefactor.Niketa-theme",
         // EXTENSIONS
         /////////////
+        "SirTori.indenticator",
         "DavidAnson.vscode-markdownlint",
         "WallabyJs.wallaby-vscode",
         "veggiemonk.theme-solarized-light-fjs",
