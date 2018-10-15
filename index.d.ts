@@ -1,5 +1,3 @@
-import { findInObject } from "../src/findInObject";
-
 declare namespace R {
   // RAMBDA_START
   type RambdaTypes =
