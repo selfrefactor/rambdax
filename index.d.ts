@@ -1,3 +1,5 @@
+import { findInObject } from "../src/findInObject";
+
 declare namespace R {
   // RAMBDA_START
   type RambdaTypes =
@@ -198,6 +200,9 @@ declare namespace R {
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
+
+    findInObject(fn: Function, obj: object): object  
+    findInObject(fn: Function) : (obj: object) => object  
 
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean
@@ -443,7 +448,7 @@ add(a: number, b: number): number
     findIndex<T>(fn: (a: T) => boolean, list: T[]): number
     findIndex<T>(fn: (a: T) => boolean): (list: T[]) => number
 
-    flatten<T>(x: T[] | T[][]): T[]
+    flatten<T>(x: Array<T[]|T>): T[]
 
     flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult
     flip<T, U, TResult>(fn: (arg0: T, arg1: U, ...args: any[]) => TResult): (arg1: U, arg0?: T, ...args: any[]) => TResult
@@ -452,6 +457,9 @@ add(a: number, b: number): number
     forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
     forEach<T>(fn: (x: T) => void, list: T[]): T[]
     forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
+
+    groupBy<T>(fn: (x: T) => string, list: T[]): { [index: string]: T[] }
+    groupBy<T>(fn: (x: T) => string): (list: T[]) => { [index: string]: T[] }
 
     has<T>(s: string, obj: T): boolean
     has(s: string): <T>(obj: T) => boolean
@@ -467,6 +475,12 @@ add(a: number, b: number): number
 
     includes(input: any, arrOrStr: any[]|string): boolean
     includes(input: any) : (arrOrStr: any[]|string) => boolean
+
+    indexBy<T>(fn: (x: T) => string, list: T[]): { [key: string]: T }
+    indexBy<T>(fn: (x: T) => string): (list: T[]) => { [key: string]: T }
+
+    indexOf<T>(x: T, arr: T[]): number;
+    indexOf<T>(x: T): (arr: T[]) => number;
 
     init<T>(list: T[]): T[]
     init(list: string): string
@@ -484,6 +498,9 @@ add(a: number, b: number): number
 
     last<T>(list: T[]): T | undefined
     last(list: string): string
+
+    lastIndexOf<T>(x: T, arr: T[]): number
+    lastIndexOf<T>(x: T): (arr: T[]) => number
 
     length<T>(list: T[]): number
 
