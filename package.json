@@ -9,7 +9,6 @@
     "test": "jest",
     "de": "commit",
     "do": "node files/do",
-    "prepublish": "yarn build",
     "build": "yarn rambda&&yarn build:main&&yarn build:web",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",

@@ -1,4 +1,7 @@
 export function findInObject(fn, obj){
+  if (arguments.length === 1){
+    return objHolder => findInObject(fn, objHolder)
+  }
   let willReturn = { fallback : true }
 
   Object.entries(obj).map(([ prop, value ]) => {

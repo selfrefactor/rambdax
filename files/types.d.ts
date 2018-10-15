@@ -1,3 +1,5 @@
+import { findInObject } from "../src/findInObject";
+
 declare namespace R {
   // RAMBDA_START
   type RambdaTypes =
@@ -198,6 +200,9 @@ declare namespace R {
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
+
+    findInObject(fn: Function, obj: object): object  
+    findInObject(fn: Function) : (obj: object) => object  
 
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean

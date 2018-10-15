@@ -217,7 +217,7 @@ It returns `input` in the other case.
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = defaultWhen(fn, fallback, 1)
+const result = R.defaultWhen(fn, fallback, 1)
 // `result` is `10`
 ```
 
@@ -284,7 +284,25 @@ console.log(result === expectedResult)
 
 #### findInObject
 
-> greater(x: any, obj: object): any
+> findInObject(fn: Function, obj: object): object
+
+It will return object with properties `prop` and `value` if predicate function returns `true` for a pair of property and value within `obj`.
+
+If predicate cannot be satisfied, it returns `{fallback: true}`.
+
+```
+const fn = (x, key) => x > 1 && key.length > 1
+const obj = {
+  a   : 1,
+  b   : 2,
+  foo : 3,
+}
+
+const result = findInObject(fn, obj)
+// => { prop  : 'foo',value : 3}
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
 
 #### greater
 
@@ -322,7 +340,7 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid)
+It uses underneath [R.isValid](#isvalid)
 
 If validation fails, it returns `false`.
 
@@ -396,7 +414,7 @@ It checks if `input` is following `schema` specifications.
 
 If validation fails, it returns `false`.
 
-Please [check the detailed explanation](#isvalid) as it is hard to write a short description of this method.
+Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/blob/master/files/isValid.md) as it is hard to write a short description of this method.
 
 ```
 const result = R.isValid({
@@ -535,7 +553,7 @@ const expectedResult = 'foo bar baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid).
+It uses underneath [R.isValid](#isvalid).
 
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 

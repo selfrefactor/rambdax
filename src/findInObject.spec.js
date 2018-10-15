@@ -9,7 +9,7 @@ test('ok', () => {
     foo : 3,
   }
   expect(
-    findInObject(fn, input)
+    findInObject(fn)(input)
   ).toEqual({
     prop  : 'foo',
     value : 3,
