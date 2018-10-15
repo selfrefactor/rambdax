@@ -3507,6 +3507,11 @@ rambda@^1.0.9, rambda@^1.2.2:
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.2.tgz#92e22c70e3eac170b79defe75053a9806d88c6ca"
   integrity sha512-nXHvvgXqtWJgbRY7k/UH4NBIcB2PHf7kE6OLnjRbTWjvntRqAShGaqEr0UNg3OzXE4TUrxrjMMQXQUqFcSG3fA==
 
+rambda@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.4.tgz#c592b34f0d8a837c78721f49540607c4eb11e917"
+  integrity sha512-LdTlplt7clryFdkCMMnvmO7ZcsSk1ox1Ri5UEMeQZOxQF3FcQnSlNhqXvIGw5TLAQiB5A+RSHAQ6CVJUzW5AxA==
+
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
   resolved "https://github.com/selfrefactor/rambda#ee04b4005da84b29d166364100d50e2a9be56a60"

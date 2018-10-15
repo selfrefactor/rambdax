@@ -1,22 +1,7 @@
 import { allTrue } from './allTrue'
 import { isValid } from './isValid'
 import { okInit } from './okInit'
-
-/**
- * TODO apply to Rambda
- * Check if Rambda.any returns early
- */
-export function any(fn, arr) {
-  let counter = 0
-  while (counter < arr.length) {
-    if (fn(arr[ counter ], counter)) {
-      return true
-    }
-    counter++
-  }
-
-  return false
-}
+import { any } from 'rambda'
 
 export function check(singleInput, schema){
   return isValid({

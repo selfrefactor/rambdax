@@ -1,5 +1,6 @@
+import { any } from 'rambda'
 import { allTrue } from './allTrue'
-import { any, check } from './ok'
+import { check } from './ok'
 import { okInit } from './okInit'
 
 let holder = {}
@@ -14,6 +15,8 @@ export function is(...inputs){
 
     return any(
       (singleInput, i) => {
+        console.log()
+
         const isCustomSchema = allTrue(
           typeof schemas[ i ] === 'string',
           holder[ schemas[ i ] ]
