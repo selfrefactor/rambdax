@@ -15,7 +15,6 @@ export function is(...inputs){
 
     return any(
       (singleInput, i) => {
-        console.log()
 
         const isCustomSchema = allTrue(
           typeof schemas[ i ] === 'string',

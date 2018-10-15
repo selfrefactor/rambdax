@@ -5,7 +5,7 @@ test('only one initialization', () => {
   expect(isAttach()).toBe(false)
 })
 
-console.log(isAttach())
+isAttach()
 
 const schemaA = {
   'a'  : 'number',
