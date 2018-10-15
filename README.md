@@ -234,13 +234,13 @@ It returns `input` in the other case.
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = defaultWhen(fn, fallback, 1)
+const result = R.defaultWhen(fn, fallback, 1)
 // `result` is `10`
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20defaultWhen(fn%2C%20fallback%2C%201)%0A%2F%2F%20%60result%60%20is%20%6010%60">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20R.defaultWhen(fn%2C%20fallback%2C%201)%0A%2F%2F%20%60result%60%20is%20%6010%60">Try in REPL</a>
 
 ---
 #### delay
@@ -310,7 +310,27 @@ console.log(result === expectedResult)
 ---
 #### findInObject
 
-> greater(x: any, obj: object): any
+> findInObject(fn: Function, obj: object): object
+
+It will return object with properties `prop` and `value` if predicate function returns `true` for a pair of property and value within `obj`.
+
+If predicate cannot be satisfied, it returns `{fallback: true}`.
+
+```
+const fn = (x, key) => x > 1 && key.length > 1
+const obj = {
+  a   : 1,
+  b   : 2,
+  foo : 3,
+}
+
+const result = findInObject(fn, obj)
+// => { prop  : 'foo',value : 3}
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
 
 ---
 #### greater
@@ -355,7 +375,7 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid)
+It uses underneath [R.isValid](#isvalid)
 
 If validation fails, it returns `false`.
 
@@ -442,7 +462,7 @@ It checks if `input` is following `schema` specifications.
 
 If validation fails, it returns `false`.
 
-Please [check the detailed explanation](#isvalid) as it is hard to write a short description of this method.
+Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/blob/master/files/isValid.md) as it is hard to write a short description of this method.
 
 ```
 const result = R.isValid({
@@ -600,7 +620,7 @@ const expectedResult = 'foo bar baz'
 
 It checks if `inputs` are following `schemas` specifications.
 
-It uses underneath `R.isValid`, so you may want to [check its detailed explanation](#isvalid).
+It uses underneath [R.isValid](#isvalid).
 
 If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
