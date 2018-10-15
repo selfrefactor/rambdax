@@ -1,5 +1,16 @@
 import { allTrue } from './allTrue'
 
+test('with functions', () => {
+  const foo = () => 1
+  const baz = () => false
+
+  const result = allTrue(
+    foo,
+    baz
+  )
+  expect(result).toBe(false)
+})
+
 test('usage with non boolean', () => {
   const foo = { a : 1 }
   const baz = [ 1, 2, 3 ]

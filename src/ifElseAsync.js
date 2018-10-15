@@ -5,11 +5,6 @@ function createThenable(x) {
 }
 
 export function ifElseAsync(condition, ifFn, elseFn) {
-  if (ifFn === undefined) {
-    return (ifFnHolder, elseFnHolder) => ifElseAsync(condition, ifFnHolder, elseFnHolder)
-  } else if (elseFn === undefined) {
-    return elseFnHolder => ifElseAsync(condition, ifFn, elseFnHolder)
-  }
 
   return input => new Promise((resolve, reject) => {
     const conditionPromise = createThenable(condition)

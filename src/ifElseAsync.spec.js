@@ -2,22 +2,44 @@ import { ifElseAsync } from './ifElseAsync'
 import { type, T, F } from 'rambda'
 import { delay } from './delay'
 
-test('', async () => {
+test('ok', async () => {
+  const condition = async x => {
+    const delayed = await delay(x * 80)
+
+    return type(delayed) === 'String'
+  }
+  const conditionFalse = async x => {
+    const delayed = await delay(x * 80)
+
+    return type(delayed) === 'Array'
+  }
+
+  const ifFn = async x => {
+    await delay(x * 60)
+
+    return true
+  }
+
+  const elseFn = async x => {
+    await delay(x * 60)
+
+    return false
+  }
+
   const result = await ifElseAsync(
-    async x => type(await delay(x * 80)) === 'String',
-    async x => {
-      await delay(x * 60)
-
-      return true
-    },
-    async x => {
-      await delay(x * 60)
-
-      return false
-    },
+    condition,
+    ifFn,
+    elseFn,
   )(7)
 
-  expect(result).toEqual(true)
+  const resultFalse = await ifElseAsync(
+    conditionFalse,
+    ifFn,
+    elseFn,
+  )(7)
+
+  expect(result).toBe(true)
+  expect(resultFalse).toBe(false)
 })
 
 test('works with regular functions', async () => {
