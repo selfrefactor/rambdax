@@ -9,11 +9,6 @@ module.exports = function (wallaby){
     tests: [
       'src/**/*.spec.js'
     ],
-    env: {
-      type: 'node',
-      kind:'chrome',
-      runner: 'node'
-    },
     projectCacheDir: 'node_modules',
     compilers: {
       '**/*.js?(x)': wallaby.compilers.babel()
@@ -25,6 +20,9 @@ module.exports = function (wallaby){
     },
     delays: {
       run: 1000
+    },
+    env: {
+      type: 'node',
     },
     testFramework: 'jest',
     debug:true

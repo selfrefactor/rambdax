@@ -12,12 +12,12 @@ export function allFalse(...inputs) {
         return false
       }
     } else if (inputs[ counter ]) {
+      
       return false
     }
 
     counter++
   }
-
+  
   return true
 }
-
