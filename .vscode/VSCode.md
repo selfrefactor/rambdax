@@ -4,15 +4,11 @@
 
 Toggle terminal panel
 
-## Ctrl+1
+## Alt+X
 
 Zen mode
 
-## Ctrl+2
-
-Open folder
-
-## Alt+2
+## Alt+5
 
 Toggle sidebar visibility
 
@@ -28,11 +24,11 @@ Switch between terminals
 
 See `Wallaby` snapshot diff
 
-## Ctrl+E
+## Alt+S
 
 Open editor view
 
-## Alt+E
+## Alt+3
 
 Switch between terminal windows
 
@@ -44,7 +40,7 @@ Open new terminal
 
 View extensions
 
-## Ctrl+Shift+T
+## Alt+2
 
 Change active theme
 
