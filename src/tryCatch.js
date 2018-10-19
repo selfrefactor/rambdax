@@ -5,7 +5,7 @@ import { isPromise } from './isPromise'
 export function tryCatch (fn,fallback){
   if(!isFunction(fn)){
     throw new Error(
-      `R.tryCatch | typeFn '${typeFn}'`
+      `R.tryCatch | fn '${fn}'`
     )
   }
   const passFallback = isFunction(fallback)
@@ -21,22 +21,19 @@ export function tryCatch (fn,fallback){
       }
     }
   }
-  
-  return async (...inputs) => {
-    try {
-        const result = await fn(...inputs)
+  return (...inputs ) => new Promise(resolve => {
+    fn(...inputs)
+      .then(resolve)
+      .catch(() => {
+        if(!passFallback){
+          return resolve(fallback)
+        } 
+        
+        if(!isPromise(fallback)){
+          return resolve(fallback(...inputs)) 
+        }
 
-        return result
-    } catch (e) {      
-      if(!passFallback) return fallback
-      
-      if(!isPromise(fallback)){
-        return fallback(...inputs) 
-      }
-
-      const fallbackResult = await fn(...inputs)
-
-      return fallbackResult
-    }
-  }
+        fallback(...inputs).then(resolve)
+      })
+  })
 }
