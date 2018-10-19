@@ -300,10 +300,10 @@ declare namespace R {
 
     template(input: string, templateInput: object): string
 
-    tryCatch(
-      fn: Async | Function, 
+    tryCatch<T>(
+      fn:  any, 
       fallback: any
-    ): Promise | Function
+    ): Async<T> | T
     
     where(conditions: object, input: object): boolean
 

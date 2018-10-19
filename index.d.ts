@@ -232,6 +232,7 @@ declare namespace R {
     isString(x: any): boolean
     isObject(x: any): boolean
     isPromise(x: any): boolean
+    isFunction(x: any): boolean
 
     mapAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, x: object): Promise<Array<T>>
@@ -298,6 +299,11 @@ declare namespace R {
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
 
     template(input: string, templateInput: object): string
+
+    tryCatch<T>(
+      fn:  any, 
+      fallback: any
+    ): Async<T> | T
     
     where(conditions: object, input: object): boolean
 

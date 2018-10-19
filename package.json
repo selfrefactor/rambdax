@@ -14,6 +14,7 @@
     "build:web": "rollup -c files/rollup.web.config.js",
     "minify": "node files/_modules/minify",
     "readme": "node files/_modules/createReadme",
+    "types": "node files/createTypes",
     "rambda": "node files/_modules/generateRambdaExports",
     "docs": "docsify init ./docs",
     "cover": "jest --coverage"
