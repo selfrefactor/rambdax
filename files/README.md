@@ -60,7 +60,8 @@ It returns `true` if all passed elements return `true` when passed to `Boolean`.
 
 ```
 const x = 2
-R.allTrue([1,2], x > 1, {})
+
+const result = R.allTrue([1,2], x > 1, {})
 //=> true
 ```
 
@@ -298,7 +299,7 @@ const obj = {
   foo : 3,
 }
 
-const result = findInObject(fn, obj)
+const result = R.findInObject(fn, obj)
 // => { prop  : 'foo',value : 3}
 ```
 
@@ -772,8 +773,8 @@ console.log(R.rangeBy(0, 2, 0.3))
 It will remove all inputs from `text` sequentially.
 
 ```
-const result = R.remove(
-  ['foo','bar']),
+const result = remove(
+  ['foo','bar'],
   'foo bar baz foo'
 )
 // => 'baz foo'
@@ -869,12 +870,23 @@ Rambda's `equals` is used as part of the comparison process.
 It is `R.tap` that accept promise-like `fn` argument.
 
 ```
-const fn = async x => {
-  await R.delay(1000)
-  console.log(x)
+let counter = 0
+const inc = () => {
+  counter++
 }
 
-const result = R.tapAsync(fn, "foo")
+const throttledInc = R.throttle(inc, 800)
+
+const replWrap = async x => {
+  throttledInc()
+  await R.delay(500)
+  throttledInc()
+
+  const a = await R.delay(1000)
+  console.log(counter)
+}
+
+const result = R.tapAsync(replWrap, "foo")
 // the console logs `foo`
 // `result` is equal to 'foo'
 ```
@@ -891,7 +903,7 @@ It generages a new string from `input` by replacing all `{{foo}}` occurances wit
 const input = 'foo is {{bar}} even {{a}} more'
 const templateInput = {"bar":"BAR", a: 1}
 
-const result = template(input,templateInput)
+const result = R.template(input,templateInput)
 const expectedResult = 'foo is BAR even 1 more'
 // result === expectedResult
 ```
@@ -968,18 +980,24 @@ const result = truncate('12345678')
 > whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
 
 ```
-const fn = await R.whenAsync(
-  async x => {
-    await R.delay(x*100)
-    return x > 2
-  },
-  async x => {
-    await R.delay(x*100)
-    return x * 2
-  }
-)
+const replWrap = async input => {
 
-const result = fn(5) // => 10
+  const wrapResult = await R.whenAsync(
+    async x => {
+      await R.delay(x*100)
+      return x > 2
+    },
+    async x => {
+      await R.delay(x*100)
+      return x * 5
+    }
+  )(input)
+  
+  return wrapResult
+}
+
+const result = replWrap(5)
+// => 25
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/whenAsync.js)

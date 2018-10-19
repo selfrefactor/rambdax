@@ -64,13 +64,14 @@ It returns `true` if all passed elements return `true` when passed to `Boolean`.
 
 ```
 const x = 2
-R.allTrue([1,2], x > 1, {})
+
+const result = R.allTrue([1,2], x > 1, {})
 //=> true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/allTrue.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20const%20x%20%3D%202%0AR.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20x%20%3D%202%0A%0Aconst%20result%20%3D%20R.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
 #### change
@@ -324,13 +325,13 @@ const obj = {
   foo : 3,
 }
 
-const result = findInObject(fn, obj)
+const result = R.findInObject(fn, obj)
 // => { prop  : 'foo',value : 3}
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
 
 ---
 #### greater
@@ -861,8 +862,8 @@ console.log(R.rangeBy(0, 2, 0.3))
 It will remove all inputs from `text` sequentially.
 
 ```
-const result = R.remove(
-  ['foo','bar']),
+const result = remove(
+  ['foo','bar'],
   'foo bar baz foo'
 )
 // => 'baz foo'
@@ -870,7 +871,7 @@ const result = R.remove(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/remove.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.remove(%0A%20%20%5B'foo'%2C'bar'%5D)%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20remove(%0A%20%20%5B'foo'%2C'bar'%5D%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try in REPL</a>
 
 ---
 #### renameProps
@@ -971,19 +972,30 @@ Rambda's `equals` is used as part of the comparison process.
 It is `R.tap` that accept promise-like `fn` argument.
 
 ```
-const fn = async x => {
-  await R.delay(1000)
-  console.log(x)
+let counter = 0
+const inc = () => {
+  counter++
 }
 
-const result = R.tapAsync(fn, "foo")
+const throttledInc = R.throttle(inc, 800)
+
+const replWrap = async x => {
+  throttledInc()
+  await R.delay(500)
+  throttledInc()
+
+  const a = await R.delay(1000)
+  console.log(counter)
+}
+
+const result = R.tapAsync(replWrap, "foo")
 // the console logs `foo`
 // `result` is equal to 'foo'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/tapAsync.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(1000)%0A%20%20console.log(x)%0A%7D%0A%0Aconst%20result%20%3D%20R.tapAsync(fn%2C%20%22foo%22)%0A%2F%2F%20the%20console%20logs%20%60foo%60%0A%2F%2F%20%60result%60%20is%20equal%20to%20'foo'">Try in REPL</a>
+<a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20R.throttle(inc%2C%20800)%0A%0Aconst%20replWrap%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20const%20a%20%3D%20await%20R.delay(1000)%0A%20%20console.log(counter)%0A%7D%0A%0Aconst%20result%20%3D%20R.tapAsync(replWrap%2C%20%22foo%22)%0A%2F%2F%20the%20console%20logs%20%60foo%60%0A%2F%2F%20%60result%60%20is%20equal%20to%20'foo'">Try in REPL</a>
 
 ---
 #### template
@@ -996,14 +1008,14 @@ It generages a new string from `input` by replacing all `{{foo}}` occurances wit
 const input = 'foo is {{bar}} even {{a}} more'
 const templateInput = {"bar":"BAR", a: 1}
 
-const result = template(input,templateInput)
+const result = R.template(input,templateInput)
 const expectedResult = 'foo is BAR even 1 more'
 // result === expectedResult
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/template.js)
 
-<a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
 #### throttle
@@ -1085,23 +1097,29 @@ const result = truncate('12345678')
 > whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
 
 ```
-const fn = await R.whenAsync(
-  async x => {
-    await R.delay(x*100)
-    return x > 2
-  },
-  async x => {
-    await R.delay(x*100)
-    return x * 2
-  }
-)
+const replWrap = async input => {
 
-const result = fn(5) // => 10
+  const wrapResult = await R.whenAsync(
+    async x => {
+      await R.delay(x*100)
+      return x > 2
+    },
+    async x => {
+      await R.delay(x*100)
+      return x * 5
+    }
+  )(input)
+  
+  return wrapResult
+}
+
+const result = replWrap(5)
+// => 25
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/whenAsync.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20await%20R.whenAsync(%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20%3E%202%0A%20%20%7D%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20return%20x%20*%202%0A%20%20%7D%0A)%0A%0Aconst%20result%20%3D%20fn(5)%20%2F%2F%20%3D%3E%2010">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20replWrap%20%3D%20async%20input%20%3D%3E%20%7B%0A%0A%20%20const%20wrapResult%20%3D%20await%20R.whenAsync(%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20%3E%202%0A%20%20%20%20%7D%2C%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20*%205%0A%20%20%20%20%7D%0A%20%20)(input)%0A%20%20%0A%20%20return%20wrapResult%0A%7D%0A%0Aconst%20result%20%3D%20replWrap(5)%0A%2F%2F%20%3D%3E%2025">Try in REPL</a>
 
 ---
 #### add
