@@ -1,36 +1,64 @@
 # VSCode
 
-## Ctrl+`
-
-Toggle terminal panel
-
 ## Alt+X
 
 Zen mode
-
-## Alt+5
-
-Toggle sidebar visibility
-
-## Ctrl+3
-
-Start `Wallaby`
-
-## Alt+3
-
-Switch between terminals
-
-## Ctrl+4
-
-See `Wallaby` snapshot diff
 
 ## Alt+S
 
 Open editor view
 
+## Ctrl+W
+
+Close current tab
+
+## Ctrl+Q
+
+Close other tabs
+
+## Ctrl+`
+
+Toggle terminal panel
+
+---
+> Ctrl/Alt section
+---
+
+## Alt+1
+
+Show `git` state
+
+## Ctrl+1
+
+Stage all chages
+
+## Alt+2
+
+Change active theme
+
+## Ctrl+2
+
+Open folder
+
 ## Alt+3
 
 Switch between terminal windows
+
+## Ctrl+3
+
+Start `Wallaby`
+
+## Alt+4
+
+Toggle sidebar visibility
+
+## Ctrl+4
+
+See `Wallaby` snapshot diff
+
+---
+> Others
+---
 
 ## Ctrl+Shift+A
 
@@ -39,10 +67,6 @@ Open new terminal
 ## Ctrl+Shift+X
 
 View extensions
-
-## Alt+2
-
-Change active theme
 
 ## F5
 
@@ -59,14 +83,6 @@ Go to type definition
 ## Ctrl+G
 
 Go to declaration
-
-## Ctrl+W
-
-Close current tab
-
-## Ctrl+Q
-
-Close other tabs
 
 ## Ctrl+M
 
