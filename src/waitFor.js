@@ -1,0 +1,1 @@
+export function waitFor (condition,howLong,loops){ }
