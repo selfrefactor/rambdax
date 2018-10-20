@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {
-    "rambda": "^1.2.4"
+    "rambda": "^1.2.5"
   },
   "depFn": [
     "babel-preset-env",
