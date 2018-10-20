@@ -1,23 +1,15 @@
 {
+  "presets": [
+    ["@babel/preset-env", {
+      "modules": false,
+      "targets": {
+        "browsers": "ie >= 11"
+      }
+    }]
+  ],
   "env": {
-    "development": {
-      "presets": [
-        ["env", {
-          "targets": {"node": "current"},
-          "modules" : false
-        }]
-      ],
-      "plugins": [
-        "external-helpers",
-        "annotate-pure-calls"
-      ]
-    },
     "test": {
-      "presets": [
-        ["env", {
-          "targets": {"node": "current"}
-        }]
-      ]
+      "presets": [["@babel/preset-env"]]
     }
   }
 }

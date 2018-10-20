@@ -1,6 +1,3 @@
-src/rambda/*.spec.js
-
-
 dist
 # Logs
 logs
