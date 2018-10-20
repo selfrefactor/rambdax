@@ -6,6 +6,7 @@
   "typings": "./index.d.ts",
   "sideEffects": false,
   "scripts": {
+    "sync": "node files/_modules/sync",
     "test": "jest",
     "de": "commit",
     "do": "node files/_modules/do",
