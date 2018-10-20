@@ -6,7 +6,7 @@
   "typings": "./index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "sync":"yarn sync:work&&yarn sync:after",
+    "sync": "yarn sync:work&&yarn sync:after",
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
     "test": "jest",
@@ -53,8 +53,7 @@
     "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
-    "minify": 
-    "https://github.com/selfrefactor/minify#0.1.0",
+    "minify": "https://github.com/selfrefactor/minify#0.1.0",
     "rambda": "^1.2.6",
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "rollup": "^0.57.1",
@@ -93,6 +92,9 @@
     ],
     "test": [
       "method"
+    ],
+    "typings": [
+      "rambda"
     ]
   }
 }

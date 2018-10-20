@@ -549,9 +549,14 @@ add(a: number, b: number): number
     nth<T>(n: number, list: Array<T>): T | undefined;
     nth(n: number): <T>(list: Array<T>) => T | undefined;
 
-    omit<T>(names: string[] | string, obj: T): T
-    omit(names: string[] | string): <T>(obj: T) => T
+    omit<T, K extends Array<keyof T>>(names: K, obj: T): Omit<T, K[number]>
 
+    omit<T, K extends keyof T>(name: K, obj: T): Omit<T, K>
+    
+    omit<T, K extends Array<keyof T>>(names: K): (obj: T) => Omit<T, K[number]>
+    
+    omit<T, K extends keyof T>(name: K): (obj: T) => Omit<T, K>
+    
     partialCurry<Out>(
       fn: (input: Dictionary<any>) => Out,
       input: Dictionary<any>
