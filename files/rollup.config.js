@@ -2,7 +2,6 @@ import babel from 'rollup-plugin-babel'
 
 export default {
   input    : './rambdax.js',
-  external : [ 'rambda' ],
   plugins  : [ babel() ],
   output   : [
     {
