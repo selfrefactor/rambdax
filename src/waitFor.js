@@ -13,10 +13,7 @@ export function waitFor (
     const interval = Math.floor(howLong/loops)
 
     if(!(passPromise || passFunction)){
-      console.log(2);
-      
       throw new Error('R.waitFor')
-      // return false
     }
     
     if(passFunction){

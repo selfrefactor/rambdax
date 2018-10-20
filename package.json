@@ -80,7 +80,8 @@
       "build",
       "vscode",
       "lint",
-      "codestyle"
+      "codestyle",
+      "clean"
     ],
     "workInProgress": "",
     "docs": [
