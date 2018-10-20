@@ -1,20 +1,25 @@
 import { range, type } from 'rambda'
 import { delay } from './delay'
-import { isPromise } from './isPromise'
-import { isFunction } from './isFunction'
-
 
 export function waitFor (
     condition,
     howLong,
     loops = 10
   ){
-    
-    const passPromise = isPromise(condition)
+    const typeCondition = type(condition)
+
+    const passPromise = typeCondition === 'Async'
+    const passFunction = typeCondition === 'Function'
     const interval = Math.floor(howLong/loops)
-    console.log({type: type(condition), passPromise});
+
+    if(!(passPromise || passFunction)){
+      console.log(2);
+      
+      throw new Error('R.waitFor')
+      // return false
+    }
     
-    if(!passPromise && isFunction(condition)){
+    if(passFunction){
       return async (...inputs) => {
         
         for (const i of range(0,loops)) {
@@ -32,16 +37,11 @@ export function waitFor (
       }
     }
 
-    if(!isPromise) throw new Error('R.waitFor')
-
     return async (...inputs) => {
-      console.log(2);
         
       for (const i of range(0,loops)) {
         
         const resultCondition = await condition(...inputs)
-        console.log({resultCondition});
-        
 
         if(resultCondition === false){
           await delay(interval)

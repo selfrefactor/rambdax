@@ -1,24 +1,8 @@
-import { runTests } from './runTests'
 import { waitFor } from './waitFor'
-import { delay } from './delay'
 
-const fn = x => {
-  let counterFn = 0
-  return () => {
-    counterFn++
-  
-    return counterFn> x
-  }
-}
 const howLong = 1000
 
-// const promiseFn = new Promise(resolve => {
-
-//   counter++
-//   resolve(counter > x)
-
-// })
-test('a1', async () =>{
+test('true', async () =>{
   let counter = 0
   const condition = x => {
     counter++
@@ -31,7 +15,7 @@ test('a1', async () =>{
   ).toEqual(true)
 })
 
-test('a2', async () =>{
+test('false', async () =>{
   let counter = 0
   const condition = x => {
     counter++
@@ -44,7 +28,7 @@ test('a2', async () =>{
   ).toEqual(false)
 })
 
-test('a3', async () =>{
+test('async condition | true', async () =>{
   let counter = 0
   const condition = async x => {
     counter++
@@ -60,7 +44,7 @@ test('a3', async () =>{
   ).toEqual(true)
 })
 
-test('a4', async () =>{
+test('async condition | false', async () =>{
   let counter = 0
   const condition = async x => {
     counter++
@@ -74,4 +58,12 @@ test('a4', async () =>{
   expect(
     result
   ).toEqual(false)
+})
+
+test('throws when fn is not function', () =>{
+  const fn = 'foo'
+
+  expect(
+    () => waitFor(fn,howLong)()
+  ).toThrow('R.waitFor')
 })
