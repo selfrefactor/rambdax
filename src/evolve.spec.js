@@ -1,5 +1,6 @@
 import { evolve } from './evolve'
-import { add, trim } from 'rambda'
+import { add } from './rambda/add'
+import { trim } from './rambda/trim'
 
 test('ok', () => {
   const tomato = {

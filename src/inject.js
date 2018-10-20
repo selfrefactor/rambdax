@@ -1,4 +1,4 @@
-import { replace } from 'rambda'
+import { replace } from './rambda/replace'
 
 export function inject(
   injection,

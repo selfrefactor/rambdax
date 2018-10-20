@@ -1,4 +1,4 @@
-import { map } from 'rambda'
+import { map } from './rambda/map'
 
 const promiseAllSecureWrapper = promise => new Promise(res => {
   promise.then(result => {

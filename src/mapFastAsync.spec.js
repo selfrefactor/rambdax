@@ -1,7 +1,7 @@
 
 import { mapFastAsync } from './mapFastAsync'
 import { composeAsync } from './composeAsync'
-import { map } from 'rambda'
+import { map } from './rambda/map'
 
 const delay = a => new Promise(resolve => {
   setTimeout(() => {

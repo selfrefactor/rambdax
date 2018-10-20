@@ -1,5 +1,7 @@
 import { ifElseAsync } from './ifElseAsync'
-import { type, T, F } from 'rambda'
+import { type } from './rambda/type'
+import { T } from './rambda/T'
+import { F } from './rambda/F'
 import { delay } from './delay'
 
 test('ok', async () => {

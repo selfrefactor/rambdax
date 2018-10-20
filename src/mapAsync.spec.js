@@ -1,4 +1,4 @@
-import { map } from 'rambda'
+import { map } from './rambda/map'
 import { mapAsync } from './mapAsync'
 import { composeAsync } from './composeAsync'
 

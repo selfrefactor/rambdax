@@ -1,4 +1,6 @@
-import { filter, type, equals } from 'rambda'
+import { equals } from './rambda/equals'
+import { filter } from './rambda/filter'
+import { type } from './rambda/type'
 
 const types = [
   'Null',

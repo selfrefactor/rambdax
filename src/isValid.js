@@ -1,4 +1,10 @@
-import { type, toLower, contains, test, any, all, init } from 'rambda'
+import { type } from './rambda/type'
+import { toLower } from './rambda/toLower'
+import { contains } from './rambda/contains'
+import { test } from './rambda/testModule'
+import { any } from './rambda/any'
+import { all } from './rambda/all'
+import { init } from './rambda/init'
 
 export function isValid({ input, schema }) {
   if (input === undefined || schema === undefined) return false

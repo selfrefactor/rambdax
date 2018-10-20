@@ -1,6 +1,10 @@
 import { delay } from './delay'
 import { switcher } from './switcher'
-import { add, trim, tap, type, identity } from 'rambda'
+import { add } from './rambda/add'
+import { trim } from './rambda/trim'
+import { tap } from './rambda/tap'
+import { type } from './rambda/type'
+import { identity } from './rambda/identity'
 
 test('', () => {
   const result = switcher('foo')

@@ -1,4 +1,4 @@
-import { any } from 'rambda'
+import { any } from './rambda/any'
 import { allTrue } from './allTrue'
 import { check } from './ok'
 import { okInit } from './okInit'

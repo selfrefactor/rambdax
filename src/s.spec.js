@@ -1,5 +1,7 @@
 import { s } from './s'
-import { toUpper, take, add } from 'rambda'
+import { toUpper } from './rambda/toUpper'
+import { take} from './rambda/take'
+import { add } from './rambda/add'
 
 test('', () => {
 

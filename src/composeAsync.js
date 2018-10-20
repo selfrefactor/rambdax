@@ -1,4 +1,4 @@
-import { type } from 'rambda'
+import { type } from './rambda/type'
 
 export function composeAsync(...inputArguments) {
   return async function(startArgument) {

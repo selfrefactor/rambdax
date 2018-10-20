@@ -1,7 +1,7 @@
 import { allTrue } from './allTrue'
 import { isValid } from './isValid'
 import { okInit } from './okInit'
-import { any } from 'rambda'
+import { any } from './rambda/any'
 
 export function check(singleInput, schema){
   return isValid({

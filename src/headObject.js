@@ -1,4 +1,4 @@
-import { type } from 'rambda'
+import { type } from './rambda/type'
 
 export function headObject(x){
   if (type(x) !== 'Object') throw new Error('R.headObject.type')

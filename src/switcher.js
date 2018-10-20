@@ -1,4 +1,4 @@
-import { equals } from 'rambda'
+import { equals } from './rambda/equals'
 
 const NO_MATCH_FOUND = Symbol ?
   Symbol('NO_MATCH_FOUND') :

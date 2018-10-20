@@ -1,4 +1,5 @@
-import { range, type } from 'rambda'
+import { range } from './rambda/range'
+import { type } from './rambda/type'
 import { delay } from './delay'
 
 export function waitFor (

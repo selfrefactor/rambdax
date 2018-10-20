@@ -1,4 +1,5 @@
-import { type, replace } from 'rambda'
+import { type } from './rambda/type'
+import { replace } from './rambda/replace'
 
 export function remove(inputs, text){
   if (type(inputs) !== 'Array'){

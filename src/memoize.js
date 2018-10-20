@@ -1,11 +1,10 @@
-import {
-  compose,
-  map,
-  sort,
-  type,
-  replace,
-  take,
-} from 'rambda'
+import { compose } from './rambda/compose'
+import { map } from './rambda/map'
+import { sort } from './rambda/sort'
+import { type } from './rambda/type'
+import { replace } from './rambda/replace'
+import { take } from './rambda/take'
+
 const cache = {}
 
 const normalizeObject = obj => {

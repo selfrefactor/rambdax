@@ -1,4 +1,4 @@
-import { type } from 'rambda'
+import { type } from './rambda/type'
 
 export function allFalse(...inputs) {
   let counter = 0

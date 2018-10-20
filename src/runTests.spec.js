@@ -1,4 +1,4 @@
-import { omit } from 'rambda'
+import { omit } from './rambda/omit'
 import { delay } from './delay'
 import { runTests } from './runTests'
 

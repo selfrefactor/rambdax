@@ -1,5 +1,5 @@
 import { delay } from './delay'
-import { prop } from 'rambda'
+import { prop } from './rambda/prop'
 import { tryCatch } from './tryCatch'
 
 test('throws when fn is not function', () =>{

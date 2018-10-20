@@ -1,7 +1,5 @@
-import {
-  type,
-  map,
-} from 'rambda'
+import {type} from './rambda/type'
+import {map} from './rambda/map'
 
 function helper({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {

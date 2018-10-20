@@ -1,5 +1,6 @@
 import { when } from './when'
-import { compose, take } from 'rambda'
+import { compose } from './rambda/compose'
+import { take } from './rambda/take'
 
 test('', () => {
   const truncate = when(

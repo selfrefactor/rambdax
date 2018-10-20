@@ -1,4 +1,4 @@
-import { filter } from 'rambda'
+import { filter } from './rambda/filter'
 
 export function intersection(a, b) {
   if (b === undefined) {

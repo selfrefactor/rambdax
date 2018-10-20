@@ -1,4 +1,8 @@
-import { range, length, last, split, compose } from 'rambda'
+import { range } from './rambda/range'
+import { length } from './rambda/length'
+import { last } from './rambda/last'
+import { split } from './rambda/split'
+import { compose } from './rambda/compose'
 
 export function rangeBy(startNum, endNum, distance) {
   const isInteger = !distance.toString().includes('.')

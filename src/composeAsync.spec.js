@@ -1,4 +1,6 @@
-import { map, prop, equals } from 'rambda'
+import { map} from './rambda/map'
+import { prop} from './rambda/prop'
+import { equals} from './rambda/equals'
 import { composeAsync } from './composeAsync'
 import { tapAsync } from './tapAsync'
 import { mapAsync } from './mapAsync'

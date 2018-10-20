@@ -1,4 +1,6 @@
-import { type, curry, filter } from 'rambda'
+import { type } from './rambda/type'
+import { curry } from './rambda/curry'
+import { filter } from './rambda/filter'
 
 function evolveFn(rules, input) {
   const clone = Object.assign({}, input)

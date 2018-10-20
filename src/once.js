@@ -1,4 +1,4 @@
-import { curry } from 'rambda'
+import { curry } from './rambda/curry'
 
 function onceFn(fn, context) {
   let result

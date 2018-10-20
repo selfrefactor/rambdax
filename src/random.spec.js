@@ -1,5 +1,5 @@
 
-import { range } from 'rambda'
+import { range } from './rambda/range'
 import { random } from './random'
 
 test('when returns true', () => {

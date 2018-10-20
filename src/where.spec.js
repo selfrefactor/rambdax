@@ -1,5 +1,5 @@
 import { where } from './where'
-import { equals } from 'rambda'
+import { equals } from './rambda/equals'
 
 test('', () => {
   const pred = where({
