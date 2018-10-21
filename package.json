@@ -19,6 +19,7 @@
     "types": "node files/createTypes",
     "docs": "docsify init ./docs",
     "cover": "jest --coverage",
+    "prepublish": "BABEL_ENV=development babel src/ --out-dir lib/",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",
     "build": "yarn build:main&&yarn build:web&&yarn minify"
@@ -40,14 +41,8 @@
   },
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {},
-  "depFn": [
-    "babel-preset-env",
-    "babel-plugin-external-helpers",
-    "rollup-plugin-babel",
-    "rollup-plugin-babel",
-    "rollup-plugin-node-resolve"
-  ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-plugin-annotate-pure-calls": "^0.2.2",
     "babel-plugin-external-helpers": "^7.0.0-beta.3",
     "babel-preset-env": "^1.6.1",
@@ -72,7 +67,7 @@
   },
   "files": [
     "dist",
-    "src",
+    "lib",
     "index.d.ts"
   ],
   "commitMessage": {

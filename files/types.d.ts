@@ -203,6 +203,9 @@ declare namespace R {
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
 
+    flatMap<T>(fn: Function, input: any[]): T[]
+    flatMap<T>(fn: Function) : (input: any[]) => T[]
+
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean
     
