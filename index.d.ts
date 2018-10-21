@@ -184,6 +184,7 @@ declare namespace R {
       ...fns: Array<Promise<any> | Function>
     ): (input: any) => Promise<any>
 
+    composed<T>(...fnList: Function[], input: any): T
     debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>;
 
     defaultWhen<T>(
@@ -260,6 +261,8 @@ declare namespace R {
 
     pickBy(fn: Function, input: object): object
     pickBy(fn: Function): (input: object) => object
+
+    piped<T>(input: any, ...fnList: Function[]): T
 
     produce<Out>(
       conditions: any,
