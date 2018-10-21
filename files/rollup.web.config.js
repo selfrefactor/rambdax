@@ -13,6 +13,7 @@ export default {
     {
       file   : './dist/rambdax.umd.js',
       format : 'umd',
+      sourcemap: true,
       name   : 'R',
     },
   ],

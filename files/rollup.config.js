@@ -5,10 +5,12 @@ export default {
   plugins  : [ babel() ],
   output   : [
     {
+      sourcemap: true,
       file   : './dist/rambdax.js',
       format : 'cjs',
     },
     {
+      sourcemap: true,
       file   : './dist/rambdax.esm.js',
       format : 'es',
     },
