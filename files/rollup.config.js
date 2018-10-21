@@ -9,7 +9,7 @@ export default {
       format : 'cjs',
     },
     {
-      file   : './dist/rambdax.es.js',
+      file   : './dist/rambdax.esm.js',
       format : 'es',
     },
   ],
