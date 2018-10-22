@@ -76,7 +76,6 @@
     ],
     "support": [
       "build",
-      "vscode",
       "lint",
       "codestyle",
       "clean"
