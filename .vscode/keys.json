@@ -11,7 +11,7 @@
     "command": "editor.action.goToTypeDefinition"
   },
   {
-    "key": "alt+x",
+    "key": "ctrl+shift+a",
     "command": "workbench.action.terminal.new"
   },
   {
@@ -73,7 +73,7 @@
     "command": "workbench.view.scm"
   },
   {
-    "key": "ctrl+shift+a",
+    "key": "alt+x",
     "command": "workbench.action.terminal.toggleTerminal"
   },
   {

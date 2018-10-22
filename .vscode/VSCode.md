@@ -8,9 +8,13 @@ Toggle zen mode
 
 Open editor view
 
-## Ctrl+Shft+A
+## Alt+X
 
 Toggle terminal panel
+
+## Ctrl+Shft+A
+
+Open new terminal
 
 ## Ctrl+Shft+Z
 
@@ -59,10 +63,6 @@ Stage all chages
 ---
 > Others
 ---
-
-## Alt+X
-
-Open new terminal
 
 ## Ctrl+Shift+X
 
