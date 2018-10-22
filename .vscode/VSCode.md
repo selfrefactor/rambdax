@@ -1,12 +1,20 @@
 # VSCode
 
-## Alt+X
+## Ctrl+`
 
-Zen mode
+Toggle zen mode
 
 ## Alt+S
 
 Open editor view
+
+## Ctrl+Shft+A
+
+Toggle terminal panel
+
+## Ctrl+Shft+Z
+
+Show `git` state
 
 ## Ctrl+W
 
@@ -16,21 +24,9 @@ Close current tab
 
 Close other tabs
 
-## Ctrl+`
-
-Toggle terminal panel
-
 ---
 > Ctrl/Alt section
 ---
-
-## Alt+1
-
-Show `git` state
-
-## Ctrl+1
-
-Stage all chages
 
 ## Alt+2
 
@@ -56,11 +52,15 @@ Toggle sidebar visibility
 
 See `Wallaby` snapshot diff
 
+## Ctrl+7
+
+Stage all chages
+
 ---
 > Others
 ---
 
-## Ctrl+Shift+A
+## Alt+X
 
 Open new terminal
 

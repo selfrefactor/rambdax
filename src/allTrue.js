@@ -15,7 +15,7 @@ export function allTrue(...inputs) {
 
     counter++
   }
-
+  
   return true
 }
 

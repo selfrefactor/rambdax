@@ -31,6 +31,7 @@
         "WallabyJs.wallaby-vscode",
         "rafamel.subtle-brackets",
         "spywhere.guides",
-        "selfrefactor.order-props"
+        "selfrefactor.auto-jest",
+        // "selfrefactor.order-props"
 	]
 }
