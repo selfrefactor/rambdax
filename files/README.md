@@ -1617,19 +1617,6 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 R.keys({a:1, b:2})  // => ['a', 'b']
 ```
 
-#### is
-
-> is(xPrototype: any, x: any): boolean
-
-It returns `true` is `x` is instance of `xPrototype`.
-
-```
-R.is(String, 'foo')  // => true
-R.is(Array, 1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/is.js)
-
 #### isNil
 
 > isNil(x: any): boolean
