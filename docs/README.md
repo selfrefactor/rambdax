@@ -1847,22 +1847,6 @@ R.keys({a:1, b:2})  // => ['a', 'b']
 ```
 
 ---
-#### is
-
-> is(xPrototype: any, x: any): boolean
-
-It returns `true` is `x` is instance of `xPrototype`.
-
-```
-R.is(String, 'foo')  // => true
-R.is(Array, 1)  // => false
-```
-
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/is.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.is(String%2C%20'foo')%20%20%2F%2F%20%3D%3E%20true%0AR.is(Array%2C%201)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
-
----
 #### isNil
 
 > isNil(x: any): boolean
