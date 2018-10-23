@@ -14,6 +14,7 @@ declare namespace R {
 
   type FilterFunction<T> = (x: T, prop?: string) => boolean
   type MapFunction<In, Out> = (x: In, prop?: string) => Out
+  type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
   interface MapInterface<T> {
     (list: T[]): T[]
@@ -184,7 +185,7 @@ declare namespace R {
       ...fns: Array<Promise<any> | Function>
     ): (input: any) => Promise<any>
 
-    composed<T>(...fnList: Function[], input: any): T
+    composed<T>(...fnList: any[]): T
     debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>;
 
     defaultWhen<T>(
