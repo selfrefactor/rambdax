@@ -3,11 +3,13 @@ export function promiseAllObject(promises) {
     let counter = 0
     const props = {}
     const promisedArr = []
+    
     for (const prop in promises) {
       props[ counter ] = prop
       promisedArr.push(promises[ prop ])
       counter++
     }
+
     Promise.all(promisedArr)
       .then(result => {
         const willReturn = {}

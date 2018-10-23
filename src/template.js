@@ -6,7 +6,11 @@ const getOccuranceProp = occurance => occurance.replace(
   ''
 )
 
-const replace = ({ inputHolder, prop, replacer }) => inputHolder.replace(
+const replace = ({ 
+  inputHolder, 
+  prop, 
+  replacer 
+}) => inputHolder.replace(
   `{{${ prop }}}`,
   replacer
 )
