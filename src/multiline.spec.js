@@ -1,5 +1,20 @@
 import { multiline } from './multiline'
 
+
+test('empty string as a glue', () => {
+  const result = multiline(`
+    foo
+    bar
+    baz
+  `, '')
+
+  const expectedResult = 'foobarbaz'
+
+  expect(
+    result
+  ).toBe(expectedResult)
+})
+
 test('case 0', () => {
   const zero = 'node node_modules/jest'
   const first = '--runInBand'
