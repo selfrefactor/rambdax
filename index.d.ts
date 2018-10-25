@@ -209,6 +209,10 @@ declare namespace R {
 
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean
+
+    getter<T>(key: string|string[]|undefined): T
+    setter(key: string|object, value?: any): void
+    reset(): void
     
     less(x: number, y: number): boolean
     less(x: number): (y: number) => boolean
