@@ -21,7 +21,7 @@ async function mapAsyncFn(fn, arr) {
 }
 
 export function mapAsync(fn, arr) {
-  if (arr === undefined) {
+  if (arguments.length === 1) {
     return async holder => await mapAsyncFn(fn, holder)
   }
 
