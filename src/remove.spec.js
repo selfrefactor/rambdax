@@ -1,10 +1,10 @@
 import { remove } from './remove'
 
-test('with strings', () => {
+test('with strings + curry', () => {
   const inputs = [ 'foo', 'bar' ]
   const text = 'foo bar baz foo'
 
-  const result = remove(inputs, text)
+  const result = remove(inputs)(text)
   const expectedResult = 'baz foo'
 
   expect(
