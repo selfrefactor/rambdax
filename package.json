@@ -19,7 +19,6 @@
     "types": "node files/createTypes",
     "docs": "docsify init ./docs",
     "cover": "jest --coverage",
-    "prepublish": "BABEL_ENV=development babel src/ --out-dir lib/",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",
     "build": "yarn build:main&&yarn build:web&&yarn minify"
@@ -67,7 +66,6 @@
   },
   "files": [
     "dist",
-    "lib",
     "index.d.ts"
   ],
   "commitMessage": {
