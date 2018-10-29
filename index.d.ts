@@ -234,7 +234,7 @@ declare namespace R {
     intersection<T>(list1: T[]): (list2: T[]) => T[]
 
     isAttach() : boolean
-    is(...inputs: any[]): (...rules: any[]) => boolean
+    pass(...inputs: any[]): (...rules: any[]) => boolean
 
     isType(xType: RambdaTypes, x: any): boolean
     isArray(x: any): boolean
@@ -261,7 +261,6 @@ declare namespace R {
     multiline(input: string, glue?: string): string
 
     ok(...inputs: any[]): (...rules: any[]) => true | never 
-    okInit(schemas: object): undefined
 
     omitBy<T,OT>(fn: Function, input: T): OT
 
@@ -293,7 +292,15 @@ declare namespace R {
 
     rangeBy(start: number, end: number, step: number): number[]
      
-    remove(inputs: Array<string|RegExp>, text: string): string
+    
+    remove(
+      inputs: string|RegExp|Array<string|RegExp>,
+      text: string
+    ): string
+
+    remove(
+      inputs: string|RegExp|Array<string|RegExp>
+    ): (text: string) => string
 
     renameProps(rules: object, input: object): object
     renameProps(rules: object): (input: object) => object
@@ -500,8 +507,8 @@ add(a: number, b: number): number
     init<T>(list: T[]): T[]
     init(list: string): string
 
-    
-    
+    is(xPrototype: any, x: any): boolean
+    is(xPrototype: any): (x: any) => boolean
 
     isNil(value: any): value is null | undefined
 

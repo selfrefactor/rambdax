@@ -1,6 +1,5 @@
 import { allTrue } from './allTrue'
 import { isValid } from './isValid'
-import { okInit } from './okInit'
 import { any } from './rambda/any'
 
 export function check(singleInput, schema){
@@ -10,13 +9,7 @@ export function check(singleInput, schema){
   })
 }
 
-let holder = {}
-
 export function ok(...inputs){
-  if (Object.keys(holder).length === 0){
-    holder = okInit({ _internal : true })
-  }
-
   return (...schemas) => {
     if (inputs.length !== schemas.length){
       throw new Error('inputs.length !== schemas.length')
@@ -26,14 +19,7 @@ export function ok(...inputs){
 
     const pass = any(
       (singleInput, i) => {
-        const isCustomSchema = allTrue(
-          typeof schemas[ i ] === 'string',
-          holder[ schemas[ i ] ]
-        )
-
-        const schema = isCustomSchema ?
-          holder[ schemas[ i ] ] :
-          schemas[ i ]
+        const schema = schemas[ i ]
 
         const checked = check(singleInput, schema)
         if (!checked){

@@ -637,33 +637,6 @@ const result = R.ok(
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(%0A%20%201%2C%20%5B%20'foo'%2C%20'bar'%20%5D%0A)('number'%2C%20%5B%20'string'%20%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
-#### okInit
-
-> okInit(schemas: object): undefined
-
-It allows `R.ok` and `R.is` to be initialized with set of schemas.
-It can be used multiple times, each time adding rules to the set.
-
-```
-R.okInit({
-  foo : {
-    a : 'number',
-    b : 'string',
-  },
-  bar : {
-    c : [ 'number' ],
-    d : [ 'string' ],
-  },
-})
-
-const result = ok({
-  a : 1,
-  b : 'baz',
-})('foo')
-// result === true
-```
-
----
 #### omitBy
 
 > omitBy(fn: function, input: Object): Object

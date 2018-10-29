@@ -1,5 +1,5 @@
 const { between } = require('string-fn')
-const { inject, remove } = require('../dist/rambdax')
+const { inject } = require('../dist/rambdax')
 const { readFileSync, writeFileSync } = require('fs')
 const { resolve } = require('path')
 
@@ -26,13 +26,8 @@ function createTypes() {
       '// RAMBDA_START_MARKER',
       '// RAMBDA_END_MARKER',
     )
-    const foundNoIs = remove([
-      'is(xPrototype: any, x: any): boolean',
-      'is(xPrototype: any): (x: any) => boolean',
-    ], found)
-
     const injected = inject(
-      foundNoIs,
+      found,
       '// RAMBDA_MARKER\n',
       source
     )

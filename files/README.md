@@ -567,32 +567,6 @@ const result = R.ok(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
 
-#### okInit
-
-> okInit(schemas: object): undefined
-
-It allows `R.ok` and `R.is` to be initialized with set of schemas.
-It can be used multiple times, each time adding rules to the set.
-
-```
-R.okInit({
-  foo : {
-    a : 'number',
-    b : 'string',
-  },
-  bar : {
-    c : [ 'number' ],
-    d : [ 'string' ],
-  },
-})
-
-const result = ok({
-  a : 1,
-  b : 'baz',
-})('foo')
-// result === true
-```
-
 #### omitBy
 
 > omitBy(fn: function, input: Object): Object
