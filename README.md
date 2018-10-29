@@ -370,26 +370,6 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
 
 ---
-#### is
-
-> is(...inputs: any[]): (schemas: any[]) => boolean
-
-It checks if `inputs` are following `schemas` specifications.
-
-It uses underneath [R.isValid](#isvalid)
-
-If validation fails, it returns `false`.
-
-```
-const result = R.is(1,['foo','bar'])('number',['string'])
-// => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.is(1%2C%5B'foo'%2C'bar'%5D)('number'%2C%5B'string'%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
-
----
 #### isAttach
 
 > isAttach(): boolean
@@ -675,6 +655,22 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
+```
+
+---
+#### pass
+
+> pass(...inputs: any[]): (schemas: any[]) => boolean
+
+It checks if `inputs` are following `schemas` specifications.
+
+It uses underneath [R.isValid](#isvalid)
+
+If validation fails, it returns `false`.
+
+```
+const result = R.pass(1,['foo','bar'])('number',['string'])
+// => true
 ```
 
 ---

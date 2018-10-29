@@ -335,23 +335,6 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/inject.js)
 
-#### is
-
-> is(...inputs: any[]): (schemas: any[]) => boolean
-
-It checks if `inputs` are following `schemas` specifications.
-
-It uses underneath [R.isValid](#isvalid)
-
-If validation fails, it returns `false`.
-
-```
-const result = R.is(1,['foo','bar'])('number',['string'])
-// => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/is.js)
-
 #### isAttach
 
 > isAttach(): boolean
@@ -602,6 +585,21 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
+```
+
+#### pass
+
+> pass(...inputs: any[]): (schemas: any[]) => boolean
+
+It checks if `inputs` are following `schemas` specifications.
+
+It uses underneath [R.isValid](#isvalid)
+
+If validation fails, it returns `false`.
+
+```
+const result = R.pass(1,['foo','bar'])('number',['string'])
+// => true
 ```
 
 #### pickBy
