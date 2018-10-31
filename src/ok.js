@@ -1,4 +1,3 @@
-import { allTrue } from './allTrue'
 import { isValid } from './isValid'
 import { any } from './rambda/any'
 

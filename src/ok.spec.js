@@ -1,5 +1,4 @@
 import { ok } from './ok'
-import { okInit } from './okInit'
 
 test('ok', () => {
   const result = ok(1, 'foo', {})('number', 'string', 'object')
@@ -29,32 +28,5 @@ test('error contains schema', () => {
 test('throw if both arguments list is not equal', () => {
   expect(
     () => ok(1, 'foo', {})('number', 'string')
-  ).toThrow()
-})
-
-test('okInit', () => {
-  okInit({
-    foo : {
-      a : 'number',
-      b : 'string',
-    },
-    bar : {
-      c : [ 'number' ],
-      d : [ 'string' ],
-    },
-  })
-
-  expect(
-    ok({
-      a : 1,
-      b : 'baz',
-    })('foo')
-  ).toBeTruthy()
-
-  expect(
-    () => ok({
-      a : '1',
-      b : 'baz',
-    })('foo')
   ).toThrow()
 })

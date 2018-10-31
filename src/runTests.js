@@ -1,6 +1,6 @@
 import { omit } from './rambda/omit'
 import { template } from './template'
-import { headObject } from './headObject'
+import { headObject } from './_internals/headObject'
 import { ok } from './ok'
 
 const evaluationsSchema = { label : 'string' }

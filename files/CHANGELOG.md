@@ -1,5 +1,7 @@
 # CHANGELOG
 
+0.18.0 `R.anyType` `R.allType`
+
 0.17.0 restore `R.is` original purpose. Rename `R.is` to `R.pass`
 
 0.16.0 getter, setter, reset methods

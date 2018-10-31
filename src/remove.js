@@ -16,6 +16,7 @@ export function remove(inputs, text){
 
   let textCopy = text
 
+  
   inputs.forEach(singleInput => {
     textCopy = replace(
       singleInput,
