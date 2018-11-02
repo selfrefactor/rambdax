@@ -9,10 +9,7 @@ test('', () => {
 })
 
 test('with curry', () => {
-  const validationFn = defaultWhen(
-    x => x > 2,
-    10,
-  )
+  const validationFn = defaultWhen(x => x > 2, 10)
 
   expect(validationFn(1)).toBe(10)
   expect(validationFn(3)).toBe(3)

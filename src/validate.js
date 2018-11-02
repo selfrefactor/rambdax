@@ -8,11 +8,9 @@ export function validate(input, schema) {
     })
   }
 
-  return schemaHolder => isValid(
-    {
+  return schemaHolder =>
+    isValid({
       input,
-      schema : schemaHolder,
-    }
-  )
+      schema: schemaHolder,
+    })
 }
-

@@ -4,9 +4,7 @@ export function when(condition, whenTrueFn) {
   }
 
   return input => {
-    const flag = typeof condition === 'boolean' ?
-      condition :
-      condition(input)
+    const flag = typeof condition === 'boolean' ? condition : condition(input)
 
     if (flag) {
       return whenTrueFn(input)

@@ -3,10 +3,10 @@ export function promiseAllObject(promises) {
     let counter = 0
     const props = {}
     const promisedArr = []
-    
+
     for (const prop in promises) {
-      props[ counter ] = prop
-      promisedArr.push(promises[ prop ])
+      props[counter] = prop
+      promisedArr.push(promises[prop])
       counter++
     }
 
@@ -14,8 +14,8 @@ export function promiseAllObject(promises) {
       .then(result => {
         const willReturn = {}
         result.map((val, key) => {
-          const prop = props[ key ]
-          willReturn[ prop ] = val
+          const prop = props[key]
+          willReturn[prop] = val
         })
 
         res(willReturn)

@@ -1,4 +1,3 @@
-
 import { range } from './rambda/range'
 import { random } from './random'
 
@@ -9,4 +8,3 @@ test('when returns true', () => {
     expect(randomResult).toBeGreaterThanOrEqual(1)
   })
 })
-

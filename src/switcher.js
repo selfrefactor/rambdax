@@ -1,14 +1,12 @@
 import { equals } from './rambda/equals'
 
-const NO_MATCH_FOUND = Symbol ?
-  Symbol('NO_MATCH_FOUND') :
-  undefined
+const NO_MATCH_FOUND = Symbol ? Symbol('NO_MATCH_FOUND') : undefined
 
 const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
   let iterationValue
 
   for (let index = 0; index < cases.length; index++) {
-    iterationValue = cases[ index ].test(testValue)
+    iterationValue = cases[index].test(testValue)
 
     if (iterationValue !== NO_MATCH_FOUND) {
       return iterationValue
@@ -19,22 +17,27 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
 }
 
 const isEqual = (testValue, matchValue) => {
-  const willReturn = typeof testValue === 'function' ?
-    testValue(matchValue) :
-    equals(testValue, matchValue)
+  const willReturn =
+    typeof testValue === 'function'
+      ? testValue(matchValue)
+      : equals(testValue, matchValue)
 
   return willReturn
 }
 
 const is = (testValue, matchResult = true) => ({
-  key  : testValue,
-  test : matchValue => isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND,
+  key: testValue,
+  test: matchValue =>
+    isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND,
 })
 
 class Switchem {
-
   constructor(defaultValue, cases, willMatch) {
-    if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
+    if (
+      defaultValue !== undefined &&
+      cases === undefined &&
+      willMatch === undefined
+    ) {
       this.cases = []
       this.defaultValue = undefined
       this.willMatch = defaultValue
@@ -56,7 +59,7 @@ class Switchem {
   is(testValue, matchResult) {
     return new Switchem(
       this.defaultValue,
-      [ ...this.cases, is(testValue, matchResult) ],
+      [...this.cases, is(testValue, matchResult)],
       this.willMatch
     )
   }
@@ -64,7 +67,6 @@ class Switchem {
   match(matchValue) {
     return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
   }
-
 }
 
 export function switcher(input) {

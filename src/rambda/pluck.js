@@ -5,14 +5,11 @@ export function pluck(keyToPluck, arr) {
 
   const willReturn = []
 
-  map(
-    val => {
-      if (!(val[ keyToPluck ] === undefined)) {
-        willReturn.push(val[ keyToPluck ])
-      }
-    },
-    arr
-  )
+  map(val => {
+    if (!(val[keyToPluck] === undefined)) {
+      willReturn.push(val[keyToPluck])
+    }
+  }, arr)
 
   return willReturn
 }

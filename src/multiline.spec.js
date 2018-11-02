@@ -1,18 +1,18 @@
 import { multiline } from './multiline'
 
-
 test('empty string as a glue', () => {
-  const result = multiline(`
+  const result = multiline(
+    `
     foo
     bar
     baz
-  `, '')
+  `,
+    ''
+  )
 
   const expectedResult = 'foobarbaz'
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })
 
 test('case 0', () => {
@@ -21,17 +21,15 @@ test('case 0', () => {
   const last = '-- src/a.spec.js'
   const flag = false
   const result = multiline(`
-    ${ zero }
-    ${ first }
-    ${ flag ? '--env=node' : '' }
-    ${ last }
+    ${zero}
+    ${first}
+    ${flag ? '--env=node' : ''}
+    ${last}
   `)
 
-  const expectedResult = `${ zero } ${ first } ${ last }`
+  const expectedResult = `${zero} ${first} ${last}`
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })
 
 test('case 1', () => {
@@ -40,31 +38,27 @@ test('case 1', () => {
   const last = '-- src/a.spec.js'
   const flag = true
   const result = multiline(`
-    ${ zero }
-    ${ first }
-    ${ flag ? '--env=node' : '' }
-    ${ last }
+    ${zero}
+    ${first}
+    ${flag ? '--env=node' : ''}
+    ${last}
   `)
 
-  const expectedResult = `${ zero } ${ first } --env=node ${ last }`
+  const expectedResult = `${zero} ${first} --env=node ${last}`
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })
 
 test('case 2', () => {
   const first = '--runInBand'
   const result = multiline(`
     zero
-    ${ first }
+    ${first}
     last
   `)
-  const expectedResult = `zero ${ first } last`
+  const expectedResult = `zero ${first} last`
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })
 
 test('case 3', () => {
@@ -76,21 +70,20 @@ test('case 3', () => {
 
   const expectedResult = 'foo bar baz'
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })
 
 test('with glue', () => {
-  const result = multiline(`
+  const result = multiline(
+    `
     foo
     bar
     baz
-  `, '==')
+  `,
+    '=='
+  )
 
   const expectedResult = 'foo==bar==baz'
 
-  expect(
-    result
-  ).toBe(expectedResult)
+  expect(result).toBe(expectedResult)
 })

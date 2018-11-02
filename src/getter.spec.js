@@ -1,66 +1,56 @@
-import {add} from './rambda/add'
+import { add } from './rambda/add'
 import { getter, setter, reset } from './getter'
 
-afterEach(()=>{
+afterEach(() => {
   reset()
 })
 
-test('', () =>{
+test('', () => {
   const key = 'foo'
   setter(key, 1)
 
-  expect(
-    getter(key)
-  ).toBe(1)
+  expect(getter(key)).toBe(1)
 })
 
-test('when array is key in getter', () =>{
+test('when array is key in getter', () => {
   setter({
-    a:1,
-    b:2,
-    c:3,
+    a: 1,
+    b: 2,
+    c: 3,
   })
 
-  expect(
-    getter(['a','b'])
-  ).toEqual({a: 1, b: 2})
+  expect(getter(['a', 'b'])).toEqual({ a: 1, b: 2 })
 })
 
-test('getter with undefined as key returns all', () =>{
+test('getter with undefined as key returns all', () => {
   const data = {
-    a:1,
-    b:2,
-    c:3,
+    a: 1,
+    b: 2,
+    c: 3,
   }
 
   setter(data)
 
-  expect(
-    getter()
-  ).toEqual(data)
+  expect(getter()).toEqual(data)
 })
 
-test('function as setter value', () =>{
+test('function as setter value', () => {
   const data = {
-    a:1,
-    b:2,
-    c:3,
+    a: 1,
+    b: 2,
+    c: 3,
   }
-  
+
   setter(data)
   setter('a', add(10))
-  
-  expect(
-    getter()
-  ).toEqual({
-    a:11,
-    b:2,
-    c:3,
+
+  expect(getter()).toEqual({
+    a: 11,
+    b: 2,
+    c: 3,
   })
 })
 
-test('setter fallbacks to undefined', () =>{
-  expect(
-    setter()
-  ).toBeUndefined
+test('setter fallbacks to undefined', () => {
+  expect(setter()).toBeUndefined
 })

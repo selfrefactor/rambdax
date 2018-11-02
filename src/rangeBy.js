@@ -11,7 +11,7 @@ export function rangeBy(startNum, endNum, distance) {
     startNum = endNum
     endNum = startNumHolder
   }
-  const willReturn = [ startNum ]
+  const willReturn = [startNum]
   let valueToPush = startNum
 
   if (isInteger) {

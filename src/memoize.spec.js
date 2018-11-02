@@ -9,17 +9,21 @@ test('', () => {
     return a + b - c
   }
   const memoized = memoize(fn)
-  expect(memoized({
-    a : 1,
-    c : 3,
-    b : 2,
-  })).toBe(0)
+  expect(
+    memoized({
+      a: 1,
+      c: 3,
+      b: 2,
+    })
+  ).toBe(0)
   expect(counter).toBe(1)
-  expect(memoized({
-    b : 2,
-    c : 3,
-    a : 1,
-  })).toBe(0)
+  expect(
+    memoized({
+      b: 2,
+      c: 3,
+      a: 1,
+    })
+  ).toBe(0)
   expect(counter).toBe(1)
 })
 
@@ -43,9 +47,10 @@ test('normal function', () => {
 
 test('async function', async () => {
   let counter = 0
-  const delay = ms => new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
+  const delay = ms =>
+    new Promise(resolve => {
+      setTimeout(resolve, ms)
+    })
   const fn = async (ms, a, b) => {
     await delay(ms)
     counter++
@@ -75,21 +80,13 @@ test('s', () => {
   tester(5)
   tester(5)
 
-  expect(
-    tester(5)
-  ).toEqual(11)
+  expect(tester(5)).toEqual(11)
 
-  expect(
-    count
-  ).toEqual(1)
+  expect(count).toEqual(1)
 
   tester(6)
 
-  expect(
-    tester(6)
-  ).toEqual(12)
+  expect(tester(6)).toEqual(12)
 
-  expect(
-    count
-  ).toEqual(2)
+  expect(count).toEqual(2)
 })

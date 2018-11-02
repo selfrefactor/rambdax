@@ -1,20 +1,20 @@
-import {type} from './rambda/type'
-import {map} from './rambda/map'
+import { type } from './rambda/type'
+import { map } from './rambda/map'
 
 function helper({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
-        type    : prop,
-        payload : condition(inputArgument),
+        type: prop,
+        payload: condition(inputArgument),
       })
     }
 
     condition(inputArgument)
       .then(result => {
         resolve({
-          type    : prop,
-          payload : result,
+          type: prop,
+          payload: result,
         })
       })
       .catch(err => reject(err))
@@ -27,10 +27,7 @@ export function produce(conditions, inputArgument) {
   }
   let asyncConditionsFlag = false
   for (const prop in conditions) {
-    if (
-      asyncConditionsFlag === false &&
-    type(conditions[ prop ]) === 'Async'
-    ) {
+    if (asyncConditionsFlag === false && type(conditions[prop]) === 'Async') {
       asyncConditionsFlag = true
     }
   }
@@ -38,19 +35,21 @@ export function produce(conditions, inputArgument) {
   if (asyncConditionsFlag === false) {
     const willReturn = {}
     for (const prop in conditions) {
-      willReturn[ prop ] = conditions[ prop ](inputArgument)
+      willReturn[prop] = conditions[prop](inputArgument)
     }
 
     return willReturn
   }
   const promised = []
   for (const prop in conditions) {
-    const condition = conditions[ prop ]
-    promised.push(helper({
-      inputArgument,
-      condition,
-      prop,
-    }))
+    const condition = conditions[prop]
+    promised.push(
+      helper({
+        inputArgument,
+        condition,
+        prop,
+      })
+    )
   }
 
   return new Promise((resolve, reject) => {
@@ -58,10 +57,7 @@ export function produce(conditions, inputArgument) {
       .then(results => {
         const willReturn = {}
 
-        map(
-          result => willReturn[ result.type ] = result.payload,
-          results
-        )
+        map(result => (willReturn[result.type] = result.payload), results)
 
         resolve(willReturn)
       })

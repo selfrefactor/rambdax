@@ -11,7 +11,7 @@ async function mapAsyncFn(fn, arr) {
 
     const willReturn = {}
     for (const prop in arr) {
-      willReturn[ prop ] = await fn(arr[ prop ], prop)
+      willReturn[prop] = await fn(arr[prop], prop)
     }
 
     return willReturn
@@ -26,7 +26,8 @@ export function mapAsync(fn, arr) {
   }
 
   return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve)
+    mapAsyncFn(fn, arr)
+      .then(resolve)
       .catch(reject)
   })
 }

@@ -4,7 +4,7 @@ export function where(conditions, obj) {
   }
   let flag = true
   for (const prop in conditions) {
-    const result = conditions[ prop ](obj[ prop ])
+    const result = conditions[prop](obj[prop])
     if (flag && result === false) {
       flag = false
     }

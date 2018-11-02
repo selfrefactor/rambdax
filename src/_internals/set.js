@@ -35,10 +35,12 @@ const reIsHostCtor = /^\[object .+?Constructor\]$/
 const reIsUint = /^(?:0|[1-9]\d*)$/
 
 /**Detect free variable `global` from Node.js. */
-const freeGlobal = typeof global === 'object' && global && global.Object === Object && global
+const freeGlobal =
+  typeof global === 'object' && global && global.Object === Object && global
 
 /**Detect free variable `self`. */
-const freeSelf = typeof self === 'object' && self && self.Object === Object && self
+const freeSelf =
+  typeof self === 'object' && self && self.Object === Object && self
 
 /**Used as a reference to the global object. */
 const root = freeGlobal || freeSelf || Function('return this')()
@@ -52,7 +54,7 @@ const root = freeGlobal || freeSelf || Function('return this')()
  * @returns {*} Returns the property value.
  */
 function getValue(object, key) {
-  return object == null ? undefined : object[ key ]
+  return object == null ? undefined : object[key]
 }
 
 /**
@@ -81,14 +83,16 @@ let arrayProto = Array.prototype,
   objectProto = Object.prototype
 
 /**Used to detect overreaching core-js shims. */
-const coreJsData = root[ '__core-js_shared__' ]
+const coreJsData = root['__core-js_shared__']
 
 /**Used to detect methods masquerading as native. */
 const maskSrcKey = (function() {
-  const uid = (/[^.]+$/).exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '')
+  const uid = /[^.]+$/.exec(
+    (coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO) || ''
+  )
 
   return uid ? 'Symbol(src)_1.' + uid : ''
-}())
+})()
 
 /**Used to resolve the decompiled source of functions. */
 const funcToString = funcProto.toString
@@ -104,9 +108,16 @@ const hasOwnProperty = objectProto.hasOwnProperty
 const objectToString = objectProto.toString
 
 /**Used to detect if a method is native. */
-const reIsNative = RegExp('^' +
-  funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&')
-    .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+const reIsNative = RegExp(
+  '^' +
+    funcToString
+      .call(hasOwnProperty)
+      .replace(reRegExpChar, '\\$&')
+      .replace(
+        /hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
+        '$1.*?'
+      ) +
+    '$'
 )
 
 /**Built-in value references. */
@@ -134,8 +145,8 @@ function Hash(entries) {
 
   this.clear()
   while (++index < length) {
-    const entry = entries[ index ]
-    this.set(entry[ 0 ], entry[ 1 ])
+    const entry = entries[index]
+    this.set(entry[0], entry[1])
   }
 }
 
@@ -161,7 +172,7 @@ function hashClear() {
  * @returns {boolean} Returns `true` if the entry was removed, else `false`.
  */
 function hashDelete(key) {
-  return this.has(key) && delete this.__data__[ key ]
+  return this.has(key) && delete this.__data__[key]
 }
 
 /**
@@ -176,12 +187,12 @@ function hashDelete(key) {
 function hashGet(key) {
   const data = this.__data__
   if (nativeCreate) {
-    const result = data[ key ]
+    const result = data[key]
 
     return result === HASH_UNDEFINED ? undefined : result
   }
 
-  return hasOwnProperty.call(data, key) ? data[ key ] : undefined
+  return hasOwnProperty.call(data, key) ? data[key] : undefined
 }
 
 /**
@@ -196,7 +207,7 @@ function hashGet(key) {
 function hashHas(key) {
   const data = this.__data__
 
-  return nativeCreate ? data[ key ] !== undefined : hasOwnProperty.call(data, key)
+  return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key)
 }
 
 /**
@@ -211,7 +222,7 @@ function hashHas(key) {
  */
 function hashSet(key, value) {
   const data = this.__data__
-  data[ key ] = nativeCreate && value === undefined ? HASH_UNDEFINED : value
+  data[key] = nativeCreate && value === undefined ? HASH_UNDEFINED : value
 
   return this
 }
@@ -236,8 +247,8 @@ function ListCache(entries) {
 
   this.clear()
   while (++index < length) {
-    const entry = entries[ index ]
-    this.set(entry[ 0 ], entry[ 1 ])
+    const entry = entries[index]
+    this.set(entry[0], entry[1])
   }
 }
 
@@ -291,7 +302,7 @@ function listCacheGet(key) {
   let data = this.__data__,
     index = assocIndexOf(data, key)
 
-  return index < 0 ? undefined : data[ index ][ 1 ]
+  return index < 0 ? undefined : data[index][1]
 }
 
 /**
@@ -322,9 +333,9 @@ function listCacheSet(key, value) {
     index = assocIndexOf(data, key)
 
   if (index < 0) {
-    data.push([ key, value ])
+    data.push([key, value])
   } else {
-    data[ index ][ 1 ] = value
+    data[index][1] = value
   }
 
   return this
@@ -350,8 +361,8 @@ function MapCache(entries) {
 
   this.clear()
   while (++index < length) {
-    const entry = entries[ index ]
-    this.set(entry[ 0 ], entry[ 1 ])
+    const entry = entries[index]
+    this.set(entry[0], entry[1])
   }
 }
 
@@ -364,9 +375,9 @@ function MapCache(entries) {
  */
 function mapCacheClear() {
   this.__data__ = {
-    hash   : new Hash,
-    map    : new (Map || ListCache),
-    string : new Hash,
+    hash: new Hash(),
+    map: new (Map || ListCache)(),
+    string: new Hash(),
   }
 }
 
@@ -443,10 +454,12 @@ MapCache.prototype.set = mapCacheSet
  * @param {*} value The value to assign.
  */
 function assignValue(object, key, value) {
-  const objValue = object[ key ]
-  if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
-      value === undefined && !(key in object)) {
-    object[ key ] = value
+  const objValue = object[key]
+  if (
+    !(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
+    (value === undefined && !(key in object))
+  ) {
+    object[key] = value
   }
 }
 
@@ -461,7 +474,7 @@ function assignValue(object, key, value) {
 function assocIndexOf(array, key) {
   let length = array.length
   while (length--) {
-    if (eq(array[ length ][ 0 ], key)) {
+    if (eq(array[length][0], key)) {
       return length
     }
   }
@@ -481,7 +494,8 @@ function baseIsNative(value) {
   if (!isObject(value) || isMasked(value)) {
     return false
   }
-  const pattern = isFunction(value) || isHostObject(value) ? reIsNative : reIsHostCtor
+  const pattern =
+    isFunction(value) || isHostObject(value) ? reIsNative : reIsHostCtor
 
   return pattern.test(toSource(value))
 }
@@ -500,7 +514,7 @@ function baseSet(object, path, value, customizer) {
   if (!isObject(object)) {
     return object
   }
-  path = isKey(path, object) ? [ path ] : castPath(path)
+  path = isKey(path, object) ? [path] : castPath(path)
 
   let index = -1,
     length = path.length,
@@ -508,20 +522,22 @@ function baseSet(object, path, value, customizer) {
     nested = object
 
   while (nested != null && ++index < length) {
-    let key = toKey(path[ index ]),
+    let key = toKey(path[index]),
       newValue = value
 
     if (index != lastIndex) {
-      const objValue = nested[ key ]
+      const objValue = nested[key]
       newValue = customizer ? customizer(objValue, key, nested) : undefined
       if (newValue === undefined) {
-        newValue = isObject(objValue) ?
-          objValue :
-          isIndex(path[ index + 1 ]) ? [] : {}
+        newValue = isObject(objValue)
+          ? objValue
+          : isIndex(path[index + 1])
+            ? []
+            : {}
       }
     }
     assignValue(nested, key, newValue)
-    nested = nested[ key ]
+    nested = nested[key]
   }
 
   return object
@@ -570,9 +586,9 @@ function castPath(value) {
 function getMapData(map, key) {
   const data = map.__data__
 
-  return isKeyable(key) ?
-    data[ typeof key === 'string' ? 'string' : 'hash' ] :
-    data.map
+  return isKeyable(key)
+    ? data[typeof key === 'string' ? 'string' : 'hash']
+    : data.map
 }
 
 /**
@@ -600,9 +616,11 @@ function getNative(object, key) {
 function isIndex(value, length) {
   length = length == null ? MAX_SAFE_INTEGER : length
 
-  return Boolean(length) &&
+  return (
+    Boolean(length) &&
     (typeof value === 'number' || reIsUint.test(value)) &&
     (value > -1 && value % 1 == 0 && value < length)
+  )
 }
 
 /**
@@ -618,13 +636,21 @@ function isKey(value, object) {
     return false
   }
   const type = typeof value
-  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
-      value == null || isSymbol(value)) {
+  if (
+    type == 'number' ||
+    type == 'symbol' ||
+    type == 'boolean' ||
+    value == null ||
+    isSymbol(value)
+  ) {
     return true
   }
 
-  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-    object != null && value in Object(object)
+  return (
+    reIsPlainProp.test(value) ||
+    !reIsDeepProp.test(value) ||
+    (object != null && value in Object(object))
+  )
 }
 
 /**
@@ -637,9 +663,12 @@ function isKey(value, object) {
 function isKeyable(value) {
   const type = typeof value
 
-  return type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean' ?
-    value !== '__proto__' :
-    value === null
+  return type == 'string' ||
+    type == 'number' ||
+    type == 'symbol' ||
+    type == 'boolean'
+    ? value !== '__proto__'
+    : value === null
 }
 
 /**
@@ -755,12 +784,15 @@ function toSource(func) {
  * _.memoize.Cache = WeakMap;
  */
 function memoize(func, resolver) {
-  if (typeof func !== 'function' || resolver && typeof resolver !== 'function') {
+  if (
+    typeof func !== 'function' ||
+    (resolver && typeof resolver !== 'function')
+  ) {
     throw new TypeError(FUNC_ERROR_TEXT)
   }
   var memoized = function() {
     let args = arguments,
-      key = resolver ? resolver.apply(this, args) : args[ 0 ],
+      key = resolver ? resolver.apply(this, args) : args[0],
       cache = memoized.cache
 
     if (cache.has(key)) {
@@ -771,7 +803,7 @@ function memoize(func, resolver) {
 
     return result
   }
-  memoized.cache = new (memoize.Cache || MapCache)
+  memoized.cache = new (memoize.Cache || MapCache)()
 
   return memoized
 }
@@ -812,7 +844,7 @@ memoize.Cache = MapCache
  * // => true
  */
 function eq(value, other) {
-  return value === other || value !== value && other !== other
+  return value === other || (value !== value && other !== other)
 }
 
 /**
@@ -942,8 +974,10 @@ function isObjectLike(value) {
  * // => false
  */
 function isSymbol(value) {
-  return typeof value === 'symbol' ||
-    isObjectLike(value) && objectToString.call(value) == symbolTag
+  return (
+    typeof value === 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag)
+  )
 }
 
 /**

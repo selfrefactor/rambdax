@@ -12,72 +12,59 @@ test('', () => {
     .is('foo', add(1))
     .default(trim)
 
-  expect(
-    result(2)
-  ).toEqual(3)
+  expect(result(2)).toEqual(3)
 })
 
 test('with boolean tuple', () => {
   const a = true
   const b = false
-  const result = switcher([ a, b ])
-    .is([ false, false ], '0')
-    .is([ false, true ], '1')
-    .is([ true, true ], '2')
+  const result = switcher([a, b])
+    .is([false, false], '0')
+    .is([false, true], '1')
+    .is([true, true], '2')
     .default('3')
 
-  expect(
-    result
-  ).toEqual('3')
+  expect(result).toEqual('3')
 })
 
 test('with boolean tuple - second test', () => {
   const a = true
   const b = true
-  const result = switcher([ a, b ])
-    .is([ false, false ], '0')
-    .is([ false, true ], '1')
-    .is([ true, true ], '2')
+  const result = switcher([a, b])
+    .is([false, false], '0')
+    .is([false, true], '1')
+    .is([true, true], '2')
     .default('3')
 
-  expect(
-    result
-  ).toEqual('2')
+  expect(result).toEqual('2')
 })
 
 test('works with objects as arguments', () => {
-  const result = switcher({ a : 1 })
-    .is({ a : 1 }, 'it is bar')
+  const result = switcher({ a: 1 })
+    .is({ a: 1 }, 'it is bar')
     .is('baz', 'it is baz')
     .default('it is default')
 
-  expect(
-    result
-  ).toEqual('it is bar')
+  expect(result).toEqual('it is bar')
 })
 
-const switchFn = input => switcher(input)
-  .is({ a : 1 }, 'it is bar')
-  .is(x => x.length && x.length === 7, 'has length of 7')
-  .is('baz', 'it is baz')
-  .default('it is default')
+const switchFn = input =>
+  switcher(input)
+    .is({ a: 1 }, 'it is bar')
+    .is(x => x.length && x.length === 7, 'has length of 7')
+    .is('baz', 'it is baz')
+    .default('it is default')
 
 test('hits default of no matches', () => {
-  expect(
-    switchFn(1)
-  ).toEqual('it is default')
+  expect(switchFn(1)).toEqual('it is default')
 })
 
 test('works with function as condition', () => {
-  expect(
-    switchFn([ 0, 1, 2, 3, 4, 5, 6 ])
-  ).toEqual('has length of 7')
+  expect(switchFn([0, 1, 2, 3, 4, 5, 6])).toEqual('has length of 7')
 })
 
 test('works with string as condition', () => {
-  expect(
-    switchFn('baz')
-  ).toEqual('it is baz')
+  expect(switchFn('baz')).toEqual('it is baz')
 })
 
 test('works with functions as condition result', () => {
@@ -86,7 +73,5 @@ test('works with functions as condition result', () => {
     .is('foo', delay)
     .default(identity)
 
-  expect(
-    type(result())
-  ).toEqual('Promise')
+  expect(type(result())).toEqual('Promise')
 })

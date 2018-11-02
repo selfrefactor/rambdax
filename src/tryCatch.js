@@ -1,39 +1,37 @@
 import { isFunction } from './isFunction'
 import { isPromise } from './isPromise'
 
-// NODOCS
-export function tryCatch (fn,fallback){
-  if(!isFunction(fn)){
-    throw new Error(
-      `R.tryCatch | fn '${fn}'`
-    )
+//NODOCS
+export function tryCatch(fn, fallback) {
+  if (!isFunction(fn)) {
+    throw new Error(`R.tryCatch | fn '${fn}'`)
   }
   const passFallback = isFunction(fallback)
 
-  if(!isPromise(fn)){
+  if (!isPromise(fn)) {
     return (...inputs) => {
       try {
-         return fn(...inputs)
+        return fn(...inputs)
       } catch (e) {
-        return passFallback ?
-          fallback(...inputs) :
-          fallback
+        return passFallback ? fallback(...inputs) : fallback
       }
     }
   }
-  return (...inputs ) => new Promise(resolve => {
-    fn(...inputs)
-      .then(resolve)
-      .catch(() => {
-        if(!passFallback){
-          return resolve(fallback)
-        } 
-        
-        if(!isPromise(fallback)){
-          return resolve(fallback(...inputs)) 
-        }
 
-        fallback(...inputs).then(resolve)
-      })
-  })
+  return (...inputs) =>
+    new Promise(resolve => {
+      fn(...inputs)
+        .then(resolve)
+        .catch(() => {
+          if (!passFallback) {
+            return resolve(fallback)
+          }
+
+          if (!isPromise(fallback)) {
+            return resolve(fallback(...inputs))
+          }
+
+          fallback(...inputs).then(resolve)
+        })
+    })
 }

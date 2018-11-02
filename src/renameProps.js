@@ -8,15 +8,10 @@ export function renameProps(conditions, inputObject) {
   const renamed = {}
   Object.keys(conditions).map(renameConditionProp => {
     if (Object.keys(inputObject).includes(renameConditionProp)) {
-      renamed[ conditions[ renameConditionProp ] ] = inputObject[ renameConditionProp ]
+      renamed[conditions[renameConditionProp]] =
+        inputObject[renameConditionProp]
     }
   })
 
-  return merge(
-    renamed,
-    omit(
-      Object.keys(conditions),
-      inputObject
-    )
-  )
+  return merge(renamed, omit(Object.keys(conditions), inputObject))
 }

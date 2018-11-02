@@ -8,10 +8,13 @@ export function uniqWith(fn, arr) {
   const willReturn = []
 
   while (++index < arr.length) {
-    const value = arr[ index ]
-    const flag = any(willReturnInstance => fn(value, willReturnInstance), willReturn)
+    const value = arr[index]
+    const flag = any(
+      willReturnInstance => fn(value, willReturnInstance),
+      willReturn
+    )
 
-    if (!flag){
+    if (!flag) {
       willReturn.push(value)
     }
   }

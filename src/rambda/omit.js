@@ -6,15 +6,13 @@ export function omit(keys, obj) {
     return undefined
   }
 
-  const keysValue = typeof keys === 'string' ?
-    keys = keys.split(',') :
-    keys
+  const keysValue = typeof keys === 'string' ? (keys = keys.split(',')) : keys
 
   const willReturn = {}
 
   for (const key in obj) {
     if (!keysValue.includes(key)) {
-      willReturn[ key ] = obj[ key ]
+      willReturn[key] = obj[key]
     }
   }
 

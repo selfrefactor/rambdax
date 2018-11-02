@@ -1,13 +1,9 @@
 import { less } from './less'
 
 test('curry', () => {
-  expect(
-    less(1)(2)
-  ).toBeFalsy()
+  expect(less(1)(2)).toBeFalsy()
 })
 
 test('', () => {
-  expect(
-    less(3, 2)
-  ).toBeTruthy()
+  expect(less(3, 2)).toBeTruthy()
 })

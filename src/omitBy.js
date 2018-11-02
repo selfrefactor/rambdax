@@ -5,8 +5,8 @@ export function omitBy(fn, obj) {
 
   const willReturn = {}
   for (const prop in obj) {
-    if (!fn(prop, obj[ prop ])) {
-      willReturn[ prop ] = obj[ prop ]
+    if (!fn(prop, obj[prop])) {
+      willReturn[prop] = obj[prop]
     }
   }
 

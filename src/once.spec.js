@@ -18,8 +18,5 @@ it('', () => {
   const addOneOnce = once((a, b, c) => a + b + c)
 
   expect(addOneOnce(10, 20, 30)).toBe(60)
-  expect(
-    addOneOnce(40)
-  ).toEqual(60)
+  expect(addOneOnce(40)).toEqual(60)
 })
-

@@ -28,17 +28,9 @@ test('ok', async () => {
     return false
   }
 
-  const result = await ifElseAsync(
-    condition,
-    ifFn,
-    elseFn,
-  )(7)
+  const result = await ifElseAsync(condition, ifFn, elseFn)(7)
 
-  const resultFalse = await ifElseAsync(
-    conditionFalse,
-    ifFn,
-    elseFn,
-  )(7)
+  const resultFalse = await ifElseAsync(conditionFalse, ifFn, elseFn)(7)
 
   expect(result).toBe(true)
   expect(resultFalse).toBe(false)

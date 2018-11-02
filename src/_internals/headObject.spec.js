@@ -5,10 +5,12 @@ test('undefined throws', () => {
 })
 
 test('too many keys throws', () => {
-  expect(() => headObject({
-    a : 1,
-    b : 2,
-  })).toThrow()
+  expect(() =>
+    headObject({
+      a: 1,
+      b: 2,
+    })
+  ).toThrow()
 })
 
 test('empty object throws', () => {
@@ -16,12 +18,8 @@ test('empty object throws', () => {
 })
 
 test('ok', () => {
-  expect(
-    headObject({ a : 1 })
-  ).toEqual(
-    {
-      prop  : 'a',
-      value : 1,
-    }
-  )
+  expect(headObject({ a: 1 })).toEqual({
+    prop: 'a',
+    value: 1,
+  })
 })

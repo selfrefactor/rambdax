@@ -1,8 +1,9 @@
 import { promiseAllSecure } from './promiseAllSecure'
 
-const delay = ms => new Promise(res => {
-  setTimeout(() => res(ms), ms)
-})
+const delay = ms =>
+  new Promise(res => {
+    setTimeout(() => res(ms), ms)
+  })
 
 const fail = async ms => {
   try {
@@ -13,19 +14,18 @@ const fail = async ms => {
 }
 
 test('resolve', async () => {
-  const arr = [ delay(2000), fail(1000), delay(1000) ]
+  const arr = [delay(2000), fail(1000), delay(1000)]
   const result = await promiseAllSecure(arr)
 
-  expect(result[ 0 ]).toEqual({
-    payload : 2000,
-    type    : 'RESULT',
+  expect(result[0]).toEqual({
+    payload: 2000,
+    type: 'RESULT',
   })
 
-  expect(result[ 1 ].type).toBe('ERROR')
+  expect(result[1].type).toBe('ERROR')
 
-  expect(result[ 2 ]).toEqual({
-    payload : 1000,
-    type    : 'RESULT',
+  expect(result[2]).toEqual({
+    payload: 1000,
+    type: 'RESULT',
   })
 })
-

@@ -6,34 +6,36 @@ function createThenable(x) {
 
 export function whenAsync(condition, whenTrueFn) {
   if (whenTrueFn === undefined) {
-    return (condition, whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder)
+    return (condition, whenTrueFnHolder) =>
+      whenAsync(condition, whenTrueFnHolder)
   }
 
-  return input => new Promise((resolve, reject) => {
-    const whenTrueFnPromise = createThenable(whenTrueFn)
+  return input =>
+    new Promise((resolve, reject) => {
+      const whenTrueFnPromise = createThenable(whenTrueFn)
 
-    if (typeof condition === 'boolean') {
-      if (condition === false) {
-        return resolve(input)
+      if (typeof condition === 'boolean') {
+        if (condition === false) {
+          return resolve(input)
+        }
+
+        whenTrueFn(input)
+          .then(resolve)
+          .catch(reject)
+      } else {
+        const conditionPromise = createThenable(condition)
+
+        conditionPromise(input)
+          .then(conditionResult => {
+            if (conditionResult === false) {
+              return resolve(input)
+            }
+
+            whenTrueFn(input)
+              .then(resolve)
+              .catch(reject)
+          })
+          .catch(reject)
       }
-
-      whenTrueFn(input)
-        .then(resolve)
-        .catch(reject)
-    } else {
-      const conditionPromise = createThenable(condition)
-
-      conditionPromise(input)
-        .then(conditionResult => {
-          if (conditionResult === false) {
-            return resolve(input)
-          }
-
-          whenTrueFn(input)
-            .then(resolve)
-            .catch(reject)
-        })
-        .catch(reject)
-    }
-  })
+    })
 }

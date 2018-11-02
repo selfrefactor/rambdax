@@ -8,118 +8,118 @@ test('only one initialization', () => {
 isAttach()
 
 const schemaA = {
-  'a'  : 'number',
-  'b?' : 'string',
+  a: 'number',
+  'b?': 'string',
 }
 const schemaB = {
-  c : 'object',
-  d : [ schemaA ],
+  c: 'object',
+  d: [schemaA],
 }
 const schemaC = {
-  e : {
-    f  : schemaA,
-    f1 : 'boolean',
+  e: {
+    f: schemaA,
+    f1: 'boolean',
   },
-  h : { g : 'array' },
+  h: { g: 'array' },
 }
 
 const arrayArray = {
-  foo : [ [ 1 ], [ 2 ] ],
-  t   : [ 'array' ],
-  f   : [ 'number' ],
+  foo: [[1], [2]],
+  t: ['array'],
+  f: ['number'],
 }
 const number = {
-  foo : 'foo',
-  t   : 'string',
-  f   : [ 'string' ],
+  foo: 'foo',
+  t: 'string',
+  f: ['string'],
 }
 const numberArray = {
-  foo : [ 1, 2 ],
-  t   : [ 'number' ],
-  f   : [ 'string' ],
+  foo: [1, 2],
+  t: ['number'],
+  f: ['string'],
 }
 const string = {
-  foo : 'foo',
-  t   : 'string',
-  f   : [ 'string' ],
+  foo: 'foo',
+  t: 'string',
+  f: ['string'],
 }
 const stringArray = {
-  foo : [ 'foo', 'bar' ],
-  t   : [ 'string' ],
-  f   : [ 'number' ],
+  foo: ['foo', 'bar'],
+  t: ['string'],
+  f: ['number'],
 }
 const schemaA1 = {
-  foo : { a : 1 },
-  t   : schemaA,
-  f   : schemaB,
+  foo: { a: 1 },
+  t: schemaA,
+  f: schemaB,
 }
 const schemaA2 = {
-  foo : {
-    a : 1,
-    b : 'bar',
+  foo: {
+    a: 1,
+    b: 'bar',
   },
-  t : schemaA,
-  f : schemaB,
+  t: schemaA,
+  f: schemaB,
 }
 const schemaA3 = {
-  foo : {
-    a : 1,
-    b : 2,
+  foo: {
+    a: 1,
+    b: 2,
   },
-  t : 'object',
-  f : schemaA,
+  t: 'object',
+  f: schemaA,
 }
 const schemaB1 = {
-  foo : {
-    c : {},
-    d : [ schemaA1.foo, schemaA2.foo ],
+  foo: {
+    c: {},
+    d: [schemaA1.foo, schemaA2.foo],
   },
-  t : schemaB,
-  f : schemaA,
+  t: schemaB,
+  f: schemaA,
 }
 const schemaB2 = {
-  foo : {
-    c : {},
-    d : [ schemaA1.foo, schemaA2.foo, schemaA3.foo ],
+  foo: {
+    c: {},
+    d: [schemaA1.foo, schemaA2.foo, schemaA3.foo],
   },
-  t : 'object',
-  f : schemaB,
+  t: 'object',
+  f: schemaB,
 }
 const schemaC1 = {
-  foo : {
-    e : {
-      f  : { a : 1 },
-      f1 : true,
+  foo: {
+    e: {
+      f: { a: 1 },
+      f1: true,
     },
-    h : { g : [ 2 ] },
+    h: { g: [2] },
   },
-  t : schemaC,
-  f : schemaA,
+  t: schemaC,
+  f: schemaA,
 }
 const objectArray = {
-  foo : [ { a : 1 }, { b : 2 }, {} ],
-  t   : [ 'object' ],
-  f   : 'object',
+  foo: [{ a: 1 }, { b: 2 }, {}],
+  t: ['object'],
+  f: 'object',
 }
 const fn1 = {
-  foo : () => {},
-  t   : 'function',
-  f   : 'object',
+  foo: () => {},
+  t: 'function',
+  f: 'object',
 }
 const fn2 = {
-  foo : [ () => {}, () => {} ],
-  t   : [ 'function' ],
-  f   : 'object',
+  foo: [() => {}, () => {}],
+  t: ['function'],
+  f: 'object',
 }
 const conditional = {
-  foo : 5,
-  t   : x => x > 2,
-  f   : x => x > 10,
+  foo: 5,
+  t: x => x > 2,
+  f: x => x > 10,
 }
 const regex = {
-  foo : 'foo',
-  t   : /fo/,
-  f   : /ba/,
+  foo: 'foo',
+  t: /fo/,
+  f: /ba/,
 }
 
 export const testData = [
@@ -149,24 +149,24 @@ const falseEvaluation = x => {
 }
 
 runTests({
-  data        : testData,
-  evaluations : [
+  data: testData,
+  evaluations: [
     {
-      label : '{{tag}} - true',
+      label: '{{tag}} - true',
       trueEvaluation,
     },
     {
-      label : '{{tag}} - false',
+      label: '{{tag}} - false',
       falseEvaluation,
     },
   ],
-  testSuite : 'isAttach',
+  testSuite: 'isAttach',
 })
 
 test('null throws', () => {
   try {
     expect(null.is('string')).toBe(2)
-  } catch (err){
+  } catch (err) {
     expect(err).toBeInstanceOf(Error)
   }
 })
@@ -174,7 +174,7 @@ test('null throws', () => {
 test('undefined throws', () => {
   try {
     expect(undefined.is('string')).toBe(2)
-  } catch (err){
+  } catch (err) {
     expect(err).toBeInstanceOf(Error)
   }
 })

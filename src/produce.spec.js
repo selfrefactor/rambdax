@@ -8,29 +8,26 @@ import { take } from '../rambdax'
  * any(schemaA)
  * random
  */
-const delay = () => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(take(5, `${ Math.random() }`))
-  }, 333)
-})
+const delay = () =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve(take(5, `${Math.random()}`))
+    }, 333)
+  })
 
 test('produce', async () => {
   const fn = produce({
-    foo : async () => {
+    foo: async () => {
       const result = await delay()
 
       return result
     },
-    bar : inputArgument => inputArgument === 5,
+    bar: inputArgument => inputArgument === 5,
   })
 
   const result = await fn(5)
 
-  expect(
-    result.bar
-  ).toEqual(true)
+  expect(result.bar).toEqual(true)
 
-  expect(
-    typeof result.foo
-  ).toEqual('string')
+  expect(typeof result.foo).toEqual('string')
 })
