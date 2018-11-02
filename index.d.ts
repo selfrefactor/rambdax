@@ -296,7 +296,6 @@ declare namespace R {
 
     rangeBy(start: number, end: number, step: number): number[]
      
-    
     remove(
       inputs: string|RegExp|Array<string|RegExp>,
       text: string
@@ -328,6 +327,10 @@ declare namespace R {
     ): Async<T> | T
     
     where(conditions: object, input: object): boolean
+
+    wait<T>(fn: Async<T>): Promise<[T, Error]>
+
+    waitFor(condition: Function|Promise<any>, msHowLong: number): (input: any) => Promise<boolean>
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>

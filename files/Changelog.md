@@ -1,5 +1,7 @@
 # CHANGELOG
 
+0.19.0 Add `R.wait`, expose already complete `R.waitFor`
+
 0.18.0 `R.anyType` `R.allType`
 
 0.17.0 restore `R.is` original purpose. Rename `R.is` to `R.pass`
