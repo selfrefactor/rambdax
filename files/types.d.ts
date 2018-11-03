@@ -270,6 +270,9 @@ declare namespace R {
 
     once(fn: Function): Function
 
+    pathEq(path:string|string[], target: any, obj: object): boolean
+    pathEq(path:string|string[], target: any): (obj: object) => boolean
+
     pickBy(fn: Function, input: object): object
     pickBy(fn: Function): (input: object) => object
 
