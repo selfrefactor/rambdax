@@ -1,6 +1,6 @@
 export function groupBy(fn, list) {
   if (arguments.length === 1) {
-    return list => groupBy(fn, list)
+    return listHolder => groupBy(fn, listHolder)
   }
 
   const result = {}

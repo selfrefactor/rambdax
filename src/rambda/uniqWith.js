@@ -8,7 +8,7 @@ export function uniqWith(fn, arr) {
   const len = arr.length
   const willReturn = []
 
-  while (++index < arr.length) {
+  while (++index < len) {
     const value = arr[index]
     const flag = any(
       willReturnInstance => fn(value, willReturnInstance),
