@@ -22,7 +22,7 @@ async function mapAsyncFn(fn, arr) {
 
 export function mapAsync(fn, arr) {
   if (arguments.length === 1) {
-    return async holder => await mapAsyncFn(fn, holder)
+    return async holder => mapAsyncFn(fn, holder)
   }
 
   return new Promise((resolve, reject) => {

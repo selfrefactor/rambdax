@@ -19,10 +19,10 @@ export function rangeBy(startNum, endNum, distance) {
       0,
       Math.floor((endNum - startNum) / distance)
     )
-    for (const i of loopIndexes) {
+    loopIndexes.forEach(()=>{
       valueToPush += distance
       willReturn.push(valueToPush)
-    }
+    })
   } else {
     const decimalLength = compose(
       length,
@@ -33,10 +33,10 @@ export function rangeBy(startNum, endNum, distance) {
       0,
       Math.floor((endNum - startNum) / distance)
     )
-    for (const i of loopIndexes) {
+    loopIndexes.forEach(()=>{
       valueToPush += distance
       willReturn.push(Number(valueToPush.toFixed(decimalLength)))
-    }
+    })
   }
 
   return willReturn
