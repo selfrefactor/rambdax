@@ -3,7 +3,8 @@ import { omit } from './rambda/omit'
 
 export function renameProps(conditions, inputObject) {
   if (inputObject === undefined) {
-    return inputObjectHolder => renameProps(conditions, inputObjectHolder)
+    return inputObjectHolder =>
+      renameProps(conditions, inputObjectHolder)
   }
   const renamed = {}
   Object.keys(conditions).map(renameConditionProp => {

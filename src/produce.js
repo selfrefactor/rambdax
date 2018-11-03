@@ -23,11 +23,15 @@ function helper({ condition, inputArgument, prop }) {
 
 export function produce(conditions, inputArgument) {
   if (arguments.length === 1) {
-    return inputArgumentHolder => produce(conditions, inputArgumentHolder)
+    return inputArgumentHolder =>
+      produce(conditions, inputArgumentHolder)
   }
   let asyncConditionsFlag = false
   for (const prop in conditions) {
-    if (asyncConditionsFlag === false && type(conditions[prop]) === 'Async') {
+    if (
+      asyncConditionsFlag === false &&
+      type(conditions[prop]) === 'Async'
+    ) {
       asyncConditionsFlag = true
     }
   }
@@ -57,7 +61,10 @@ export function produce(conditions, inputArgument) {
       .then(results => {
         const willReturn = {}
 
-        map(result => (willReturn[result.type] = result.payload), results)
+        map(
+          result => (willReturn[result.type] = result.payload),
+          results
+        )
 
         resolve(willReturn)
       })

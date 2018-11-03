@@ -109,9 +109,12 @@ test('known issue - function returning promise', async () => {
       res(b)
     })
 
-  const result = await composeAsync(a => a, a => a + 1000, delay, a => a + 11)(
-    20
-  )
+  const result = await composeAsync(
+    a => a,
+    a => a + 1000,
+    delay,
+    a => a + 11
+  )(20)
 
   expect(result).toEqual('[object Promise]1000')
 })
@@ -165,7 +168,12 @@ test('throw error - case 3', done => {
       rej(new Error('foo'))
     })
 
-  const promise = composeAsync(a => a, a => a + 1000, delay, a => a + 11)(20)
+  const promise = composeAsync(
+    a => a,
+    a => a + 1000,
+    delay,
+    a => a + 11
+  )(20)
 
   promise
     .then(() => {

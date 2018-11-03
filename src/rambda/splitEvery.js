@@ -1,5 +1,6 @@
 export function splitEvery(num, x) {
-  if (arguments.length === 1) return xHolder => splitEvery(num, xHolder)
+  if (arguments.length === 1)
+    return xHolder => splitEvery(num, xHolder)
 
   const numValue = num > 1 ? num : 1
 

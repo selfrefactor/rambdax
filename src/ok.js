@@ -31,7 +31,8 @@ export function ok(...inputs) {
         return !checked
       }, inputs) === false
 
-    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`)
+    if (!pass)
+      throw new Error(`Failed R.ok with schema ${failedSchema}`)
 
     return true
   }

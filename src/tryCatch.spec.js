@@ -5,7 +5,9 @@ import { tryCatch } from './tryCatch'
 test('throws when fn is not function', () => {
   const fn = 'foo'
 
-  expect(() => tryCatch(fn, false)(null)).toThrow(`R.tryCatch | fn 'foo'`)
+  expect(() => tryCatch(fn, false)(null)).toThrow(
+    `R.tryCatch | fn 'foo'`
+  )
 })
 
 test('when fallback is used', () => {

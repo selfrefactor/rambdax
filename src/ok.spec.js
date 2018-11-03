@@ -6,7 +6,9 @@ test('ok', () => {
 })
 
 test('when validation fails', () => {
-  expect(() => ok(1, 'foo', {})('number', 'string', 'string')).toThrow()
+  expect(() =>
+    ok(1, 'foo', {})('number', 'string', 'string')
+  ).toThrow()
 })
 
 test('error contains schema', () => {
@@ -14,7 +16,9 @@ test('error contains schema', () => {
     ok(1, 'foo', {})('number', 'string', 'string')
     expect(false).toBe(true)
   } catch (e) {
-    expect(e.message.startsWith('Failed R.ok with schema')).toBeTruthy()
+    expect(
+      e.message.startsWith('Failed R.ok with schema')
+    ).toBeTruthy()
     expect(e).toBeInstanceOf(Error)
   }
 })

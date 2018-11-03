@@ -3,5 +3,8 @@ export function is(xPrototype, x) {
     return xHolder => is(xPrototype, xHolder)
   }
 
-  return (x != null && x.constructor === xPrototype) || x instanceof xPrototype
+  return (
+    (x != null && x.constructor === xPrototype) ||
+    x instanceof xPrototype
+  )
 }

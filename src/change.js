@@ -39,7 +39,11 @@ export function change(origin, pathRaw, rules) {
         const subrule = rule[subruleKey]
         Object.keys(subrule).map(deepKey => {
           const deep = rule[subruleKey][deepKey]
-          set(willReturn, `${path}${ruleKey}.${subruleKey}.${deepKey}`, deep)
+          set(
+            willReturn,
+            `${path}${ruleKey}.${subruleKey}.${deepKey}`,
+            deep
+          )
         })
       })
   }

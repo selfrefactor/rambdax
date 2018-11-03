@@ -19,13 +19,16 @@ export function isValid({ input, schema }) {
   for (const requirementRaw in schema) {
     if (flag) {
       const isOptional = requirementRaw.endsWith('?')
-      const requirement = isOptional ? init(requirementRaw) : requirementRaw
+      const requirement = isOptional
+        ? init(requirementRaw)
+        : requirementRaw
 
       const rule = schema[requirementRaw]
       const ruleType = type(rule)
       const inputProp = input[requirement]
       const inputPropType = type(input[requirement])
-      const ok = (isOptional && inputProp !== undefined) || !isOptional
+      const ok =
+        (isOptional && inputProp !== undefined) || !isOptional
 
       if (!ok || (rule === 'any' && inputProp != null)) continue
 
@@ -65,7 +68,9 @@ export function isValid({ input, schema }) {
         const currentRule = rule[0]
         const currentRuleType = type(rule[0])
         //Check if rule is invalid
-        boom(currentRuleType === 'String' || currentRuleType === 'Object')
+        boom(
+          currentRuleType === 'String' || currentRuleType === 'Object'
+        )
 
         if (currentRuleType === 'String') {
           /**
@@ -93,7 +98,10 @@ export function isValid({ input, schema }) {
           )
           boom(isValidResult)
         }
-      } else if (ruleType === 'RegExp' && inputPropType === 'String') {
+      } else if (
+        ruleType === 'RegExp' &&
+        inputPropType === 'String'
+      ) {
         boom(test(rule, inputProp))
       } else {
         boom(false)

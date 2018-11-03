@@ -1,5 +1,6 @@
 export function nth(index, list) {
-  if (arguments.length === 1) return listHolder => nth(index, listHolder)
+  if (arguments.length === 1)
+    return listHolder => nth(index, listHolder)
 
   const idx = index < 0 ? list.length + index : index
 

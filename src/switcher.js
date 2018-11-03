@@ -51,7 +51,11 @@ class Switchem {
   }
 
   default(defaultValue) {
-    const holder = new Switchem(defaultValue, this.cases, this.willMatch)
+    const holder = new Switchem(
+      defaultValue,
+      this.cases,
+      this.willMatch
+    )
 
     return holder.match(this.willMatch)
   }
@@ -65,7 +69,11 @@ class Switchem {
   }
 
   match(matchValue) {
-    return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue)
+    return getMatchingKeyValuePair(
+      this.cases,
+      matchValue,
+      this.defaultValue
+    )
   }
 }
 

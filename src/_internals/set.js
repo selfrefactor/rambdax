@@ -36,7 +36,10 @@ const reIsUint = /^(?:0|[1-9]\d*)$/
 
 /**Detect free variable `global` from Node.js. */
 const freeGlobal =
-  typeof global === 'object' && global && global.Object === Object && global
+  typeof global === 'object' &&
+  global &&
+  global.Object === Object &&
+  global
 
 /**Detect free variable `self`. */
 const freeSelf =
@@ -207,7 +210,9 @@ function hashGet(key) {
 function hashHas(key) {
   const data = this.__data__
 
-  return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key)
+  return nativeCreate
+    ? data[key] !== undefined
+    : hasOwnProperty.call(data, key)
 }
 
 /**
@@ -222,7 +227,8 @@ function hashHas(key) {
  */
 function hashSet(key, value) {
   const data = this.__data__
-  data[key] = nativeCreate && value === undefined ? HASH_UNDEFINED : value
+  data[key] =
+    nativeCreate && value === undefined ? HASH_UNDEFINED : value
 
   return this
 }
@@ -495,7 +501,9 @@ function baseIsNative(value) {
     return false
   }
   const pattern =
-    isFunction(value) || isHostObject(value) ? reIsNative : reIsHostCtor
+    isFunction(value) || isHostObject(value)
+      ? reIsNative
+      : reIsHostCtor
 
   return pattern.test(toSource(value))
 }
@@ -527,7 +535,9 @@ function baseSet(object, path, value, customizer) {
 
     if (index != lastIndex) {
       const objValue = nested[key]
-      newValue = customizer ? customizer(objValue, key, nested) : undefined
+      newValue = customizer
+        ? customizer(objValue, key, nested)
+        : undefined
       if (newValue === undefined) {
         newValue = isObject(objValue)
           ? objValue
@@ -697,7 +707,9 @@ var stringToPath = memoize(string => {
     result.push('')
   }
   string.replace(rePropName, (match, number, quote, string) => {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : number || match)
+    result.push(
+      quote ? string.replace(reEscapeChar, '$1') : number || match
+    )
   })
 
   return result
