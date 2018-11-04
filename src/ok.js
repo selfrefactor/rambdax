@@ -10,15 +10,13 @@ export function check(singleInput, schema) {
 
 export function ok(...inputs) {
   return (...schemas) => {
-    if (inputs.length !== schemas.length) {
-      throw new Error('inputs.length !== schemas.length')
-    }
-
     let failedSchema
 
     const pass =
       any((singleInput, i) => {
-        const schema = schemas[i]
+        const schema = schemas[i] === undefined ? 
+          schemas[0] :
+          schemas[i]
 
         const checked = check(singleInput, schema)
         if (!checked) {

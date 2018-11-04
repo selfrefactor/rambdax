@@ -23,6 +23,10 @@ test('error contains schema', () => {
   }
 })
 
-test('throw if both arguments list is not equal', () => {
-  expect(() => ok(1, 'foo', {})('number', 'string')).toThrow()
+test('when not throws with single schema', () => {
+  expect(() => ok(1, 2, 3)('number')).not.toThrow()
+})
+
+test('when throws with single schema', () => {
+  expect(() => ok(1, 2, '3')('number')).toThrow()
 })

@@ -1,5 +1,7 @@
 # CHANGELOG
 
+0.20.1 `R.pass` and `R.ok` work with single schema.
+
 0.20.0 Add `R.pathEq`
 
 0.19.0 Add `R.wait`, expose already complete `R.waitFor`

@@ -3,8 +3,15 @@ import { check } from './ok'
 
 export function pass(...inputs) {
   return (...schemas) => {
-    if (inputs.length !== schemas.length) return false
+    return any(
+      (x, i) => {
+        const schema = schemas[i] === undefined ? 
+          schemas[0] :
+          schemas[i]
 
-    return any((x, i) => !check(x, schemas[i]), inputs) === false
+        return !check(x, schema)
+      }, 
+      inputs
+    ) === false
   }
 }
