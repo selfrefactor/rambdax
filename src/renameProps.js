@@ -9,8 +9,8 @@ export function renameProps(conditions, inputObject) {
   const renamed = {}
   Object.keys(conditions).map(renameConditionProp => {
     if (Object.keys(inputObject).includes(renameConditionProp)) {
-      renamed[conditions[renameConditionProp]] =
-        inputObject[renameConditionProp]
+      renamed[ conditions[ renameConditionProp ] ] =
+        inputObject[ renameConditionProp ]
     }
   })
 

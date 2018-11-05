@@ -60,7 +60,9 @@ test('hits default of no matches', () => {
 })
 
 test('works with function as condition', () => {
-  expect(switchFn([0, 1, 2, 3, 4, 5, 6])).toEqual('has length of 7')
+  expect(switchFn([0, 1, 2, 3, 4, 5, 6])).toEqual(
+    'has length of 7'
+  )
 })
 
 test('works with string as condition', () => {

@@ -7,7 +7,9 @@ test('true on success', () => {
 })
 
 test('false on failure', () => {
-  expect(pass(1, 'foo', {})('number', 'string', 'string')).toBe(false)
+  expect(pass(1, 'foo', {})('number', 'string', 'string')).toBe(
+    false
+  )
 })
 
 test('true when single schema', () => {

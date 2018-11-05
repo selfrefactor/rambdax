@@ -5,16 +5,16 @@ function helper({ condition, inputArgument, prop }) {
   return new Promise((resolve, reject) => {
     if (!(type(condition) === 'Async')) {
       return resolve({
-        type: prop,
-        payload: condition(inputArgument),
+        type    : prop,
+        payload : condition(inputArgument),
       })
     }
 
     condition(inputArgument)
       .then(result => {
         resolve({
-          type: prop,
-          payload: result,
+          type    : prop,
+          payload : result,
         })
       })
       .catch(err => reject(err))
@@ -30,7 +30,7 @@ export function produce(conditions, inputArgument) {
   for (const prop in conditions) {
     if (
       asyncConditionsFlag === false &&
-      type(conditions[prop]) === 'Async'
+      type(conditions[ prop ]) === 'Async'
     ) {
       asyncConditionsFlag = true
     }
@@ -39,14 +39,14 @@ export function produce(conditions, inputArgument) {
   if (asyncConditionsFlag === false) {
     const willReturn = {}
     for (const prop in conditions) {
-      willReturn[prop] = conditions[prop](inputArgument)
+      willReturn[ prop ] = conditions[ prop ](inputArgument)
     }
 
     return willReturn
   }
   const promised = []
   for (const prop in conditions) {
-    const condition = conditions[prop]
+    const condition = conditions[ prop ]
     promised.push(
       helper({
         inputArgument,
@@ -62,7 +62,7 @@ export function produce(conditions, inputArgument) {
         const willReturn = {}
 
         map(
-          result => (willReturn[result.type] = result.payload),
+          result => willReturn[ result.type ] = result.payload,
           results
         )
 

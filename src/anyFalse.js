@@ -1,7 +1,7 @@
 export function anyFalse(...inputs) {
   let counter = 0
   while (counter < inputs.length) {
-    if (!inputs[counter]) {
+    if (!inputs[ counter ]) {
       return true
     }
     counter++

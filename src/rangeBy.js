@@ -11,7 +11,7 @@ export function rangeBy(startNum, endNum, distance) {
     startNum = endNum
     endNum = startNumHolder
   }
-  const willReturn = [startNum]
+  const willReturn = [ startNum ]
   let valueToPush = startNum
 
   if (isInteger) {
@@ -19,7 +19,7 @@ export function rangeBy(startNum, endNum, distance) {
       0,
       Math.floor((endNum - startNum) / distance)
     )
-    loopIndexes.forEach(()=>{
+    loopIndexes.forEach(() => {
       valueToPush += distance
       willReturn.push(valueToPush)
     })
@@ -33,7 +33,7 @@ export function rangeBy(startNum, endNum, distance) {
       0,
       Math.floor((endNum - startNum) / distance)
     )
-    loopIndexes.forEach(()=>{
+    loopIndexes.forEach(() => {
       valueToPush += distance
       willReturn.push(Number(valueToPush.toFixed(decimalLength)))
     })

@@ -6,7 +6,8 @@ function createThenable(x) {
 
 export function whenAsync(condition, whenTrueFn) {
   if (arguments.length === 1) {
-    return (whenTrueFnHolder) => whenAsync(condition, whenTrueFnHolder)
+    return whenTrueFnHolder =>
+      whenAsync(condition, whenTrueFnHolder)
   }
 
   return input =>

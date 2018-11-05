@@ -3,7 +3,8 @@
 import { set } from './_internals/set'
 
 const isObject = x => {
-  const ok = x !== null && !Array.isArray(x) && typeof x === 'object'
+  const ok =
+    x !== null && !Array.isArray(x) && typeof x === 'object'
   if (!ok) {
     return false
   }
@@ -19,29 +20,29 @@ export function change(origin, pathRaw, rules) {
 
     return willReturn
   }
-  const path = pathRaw === '' ? '' : `${pathRaw}.`
+  const path = pathRaw === '' ? '' : `${ pathRaw }.`
 
   for (const ruleKey of Object.keys(rules)) {
-    const rule = rules[ruleKey]
+    const rule = rules[ ruleKey ]
     if (!isObject(rule)) {
-      set(willReturn, `${path}${ruleKey}`, rule)
+      set(willReturn, `${ path }${ ruleKey }`, rule)
       continue
     }
     Object.keys(rule)
-      .filter(subruleKey => !isObject(rule[subruleKey]))
+      .filter(subruleKey => !isObject(rule[ subruleKey ]))
       .map(subruleKey => {
-        const subrule = rule[subruleKey]
-        set(willReturn, `${path}${ruleKey}.${subruleKey}`, subrule)
+        const subrule = rule[ subruleKey ]
+        set(willReturn, `${ path }${ ruleKey }.${ subruleKey }`, subrule)
       })
     Object.keys(rule)
-      .filter(subruleKey => isObject(rule[subruleKey]))
+      .filter(subruleKey => isObject(rule[ subruleKey ]))
       .map(subruleKey => {
-        const subrule = rule[subruleKey]
+        const subrule = rule[ subruleKey ]
         Object.keys(subrule).map(deepKey => {
-          const deep = rule[subruleKey][deepKey]
+          const deep = rule[ subruleKey ][ deepKey ]
           set(
             willReturn,
-            `${path}${ruleKey}.${subruleKey}.${deepKey}`,
+            `${ path }${ ruleKey }.${ subruleKey }.${ deepKey }`,
             deep
           )
         })

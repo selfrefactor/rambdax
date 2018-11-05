@@ -2,7 +2,7 @@ import { equals } from './rambda/equals'
 import { filter } from './rambda/filter'
 import { type } from './rambda/type'
 
-const types = ['Null', 'Undefined', 'RegExp']
+const types = [ 'Null', 'Undefined', 'RegExp' ]
 
 export function compact(arr) {
   return filter(a => {

@@ -5,14 +5,14 @@ const promiseAllSecureWrapper = promise =>
     promise
       .then(result => {
         res({
-          payload: result,
-          type: 'RESULT',
+          payload : result,
+          type    : 'RESULT',
         })
       })
       .catch(err => {
         res({
-          payload: err,
-          type: 'ERROR',
+          payload : err,
+          type    : 'ERROR',
         })
       })
   })

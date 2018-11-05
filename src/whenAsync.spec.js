@@ -13,10 +13,7 @@ const secondFn = async x => {
 }
 
 test('', async () => {
-  const fn = await whenAsync(
-    firstFn,
-    secondFn
-  )
+  const fn = await whenAsync(firstFn, secondFn)
 
   expect(await fn(1)).toEqual(1)
   expect(await fn(5)).toEqual(10)

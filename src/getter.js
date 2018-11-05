@@ -14,7 +14,7 @@ let holder = {}
 export function getter(key) {
   const typeKey = type(key)
 
-  if (typeKey === 'String') return holder[key]
+  if (typeKey === 'String') return holder[ key ]
 
   if (typeKey === 'Array') return pick(key, holder)
 
@@ -27,10 +27,10 @@ export function setter(maybeKey, maybeValue) {
 
   if (typeKey === 'String') {
     if (typeValue === 'Function') {
-      return (holder[maybeKey] = maybeValue(holder[maybeKey]))
+      return holder[ maybeKey ] = maybeValue(holder[ maybeKey ])
     }
 
-    return (holder[maybeKey] = maybeValue)
+    return holder[ maybeKey ] = maybeValue
   }
 
   if (typeKey !== 'Object') return

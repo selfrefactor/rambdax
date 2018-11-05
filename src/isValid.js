@@ -19,26 +19,26 @@ export function isValid({ input, schema }) {
   for (const requirementRaw in schema) {
     if (flag) {
       const isOptional = requirementRaw.endsWith('?')
-      const requirement = isOptional
-        ? init(requirementRaw)
-        : requirementRaw
+      const requirement = isOptional ?
+        init(requirementRaw) :
+        requirementRaw
 
-      const rule = schema[requirementRaw]
+      const rule = schema[ requirementRaw ]
       const ruleType = type(rule)
-      const inputProp = input[requirement]
-      const inputPropType = type(input[requirement])
+      const inputProp = input[ requirement ]
+      const inputPropType = type(input[ requirement ])
       const ok =
-        (isOptional && inputProp !== undefined) || !isOptional
+        isOptional && inputProp !== undefined || !isOptional
 
-      if (!ok || (rule === 'any' && inputProp != null)) continue
+      if (!ok || rule === 'any' && inputProp != null) continue
 
       if (ruleType === 'Object') {
         /**
          * This rule is standalone schema, so we recursevly call `isValid`
          */
         const isValidResult = isValid({
-          input: inputProp,
-          schema: rule,
+          input  : inputProp,
+          schema : rule,
         })
         boom(isValidResult)
       } else if (ruleType === 'String') {
@@ -51,7 +51,10 @@ export function isValid({ input, schema }) {
          * rule is function so we pass to it the input
          */
         boom(rule(inputProp))
-      } else if (ruleType === 'Array' && inputPropType === 'String') {
+      } else if (
+        ruleType === 'Array' &&
+        inputPropType === 'String'
+      ) {
         /**
          * enum case | rule is like a: ['foo', 'bar']
          */
@@ -65,11 +68,12 @@ export function isValid({ input, schema }) {
          * 1. array of type | rule is like a: ['number']
          * 2. rule is like a: [{from: 'string'}]
          */
-        const currentRule = rule[0]
-        const currentRuleType = type(rule[0])
+        const currentRule = rule[ 0 ]
+        const currentRuleType = type(rule[ 0 ])
         //Check if rule is invalid
         boom(
-          currentRuleType === 'String' || currentRuleType === 'Object'
+          currentRuleType === 'String' ||
+            currentRuleType === 'Object'
         )
 
         if (currentRuleType === 'String') {
@@ -78,7 +82,8 @@ export function isValid({ input, schema }) {
            */
           const isInvalidResult = any(
             inputPropInstance =>
-              type(inputPropInstance).toLowerCase() !== currentRule,
+              type(inputPropInstance).toLowerCase() !==
+              currentRule,
             inputProp
           )
           boom(!isInvalidResult)
@@ -91,8 +96,8 @@ export function isValid({ input, schema }) {
           const isValidResult = all(
             inputPropInstance =>
               isValid({
-                input: inputPropInstance,
-                schema: currentRule,
+                input  : inputPropInstance,
+                schema : currentRule,
               }),
             inputProp
           )

@@ -11,6 +11,6 @@ export function validate(input, schema) {
   return schemaHolder =>
     isValid({
       input,
-      schema: schemaHolder,
+      schema : schemaHolder,
     })
 }

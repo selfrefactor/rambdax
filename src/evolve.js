@@ -4,7 +4,7 @@ import { filter } from './rambda/filter'
 
 function evolveFn(rules, input) {
   const clone = Object.assign({}, input)
-  const propRules = filter(x => clone[x] !== undefined)(
+  const propRules = filter(x => clone[ x ] !== undefined)(
     Object.keys(rules)
   )
 
@@ -13,11 +13,11 @@ function evolveFn(rules, input) {
   }
 
   propRules.map(prop => {
-    const fn = rules[prop]
+    const fn = rules[ prop ]
     if (type(fn) === 'Function') {
-      clone[prop] = fn(clone[prop])
+      clone[ prop ] = fn(clone[ prop ])
     } else if (type(fn) === 'Object') {
-      clone[prop] = evolve(fn, clone[prop])
+      clone[ prop ] = evolve(fn, clone[ prop ])
     }
   })
 

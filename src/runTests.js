@@ -3,12 +3,12 @@ import { template } from './template'
 import { headObject } from './_internals/headObject'
 import { ok } from './ok'
 
-const evaluationsSchema = { label: 'string' }
+const evaluationsSchema = { label : 'string' }
 
 export function runTests(input) {
   const pass = ok(input)({
-    testSuite: 'string',
-    evaluations: [evaluationsSchema],
+    testSuite   : 'string',
+    evaluations : [ evaluationsSchema ],
   })
 
   if (describe === undefined || !pass) {

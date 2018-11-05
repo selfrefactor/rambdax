@@ -21,7 +21,8 @@ test('', async () => {
 
   const result = await composeAsync(
     map(prop('payload')),
-    async inputs => Promise.all(inputs.map(async input => fn(input))),
+    async inputs =>
+      Promise.all(inputs.map(async input => fn(input))),
     map(prop('payload'))
   )(await Promise.all(list))
 

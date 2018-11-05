@@ -6,7 +6,7 @@ export function zip(x, y) {
 
   return addIndex(reduce)(
     (accum, value, index) =>
-      y[index] ? accum.concat([[value, y[index]]]) : accum,
+      y[ index ] ? accum.concat([ [ value, y[ index ] ] ]) : accum,
     [],
     x
   )

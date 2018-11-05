@@ -24,7 +24,7 @@ const rejectDelay = a =>
   })
 
 test('happy path', async () => {
-  const result = await mapFastAsync(delay,[1, 2, 3])
+  const result = await mapFastAsync(delay, [1, 2, 3])
   expect(result).toEqual([21, 22, 23])
 })
 

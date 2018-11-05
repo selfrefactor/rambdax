@@ -1,12 +1,18 @@
 import { equals } from './rambda/equals'
 
-const NO_MATCH_FOUND = Symbol ? Symbol('NO_MATCH_FOUND') : undefined
+const NO_MATCH_FOUND = Symbol ?
+  Symbol('NO_MATCH_FOUND') :
+  undefined
 
-const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
+const getMatchingKeyValuePair = (
+  cases,
+  testValue,
+  defaultValue
+) => {
   let iterationValue
 
   for (let index = 0; index < cases.length; index++) {
-    iterationValue = cases[index].test(testValue)
+    iterationValue = cases[ index ].test(testValue)
 
     if (iterationValue !== NO_MATCH_FOUND) {
       return iterationValue
@@ -18,16 +24,16 @@ const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
 
 const isEqual = (testValue, matchValue) => {
   const willReturn =
-    typeof testValue === 'function'
-      ? testValue(matchValue)
-      : equals(testValue, matchValue)
+    typeof testValue === 'function' ?
+      testValue(matchValue) :
+      equals(testValue, matchValue)
 
   return willReturn
 }
 
 const is = (testValue, matchResult = true) => ({
-  key: testValue,
-  test: matchValue =>
+  key  : testValue,
+  test : matchValue =>
     isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND,
 })
 
@@ -63,7 +69,7 @@ class Switchem {
   is(testValue, matchResult) {
     return new Switchem(
       this.defaultValue,
-      [...this.cases, is(testValue, matchResult)],
+      [ ...this.cases, is(testValue, matchResult) ],
       this.willMatch
     )
   }

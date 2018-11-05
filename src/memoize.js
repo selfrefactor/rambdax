@@ -11,7 +11,7 @@ const normalizeObject = obj => {
   const sortFn = (a, b) => a > b
   const willReturn = {}
   compose(
-    map(prop => (willReturn[prop] = obj[prop])),
+    map(prop => willReturn[ prop ] = obj[ prop ]),
     sort(sortFn)
   )(Object.keys(obj))
 
@@ -21,7 +21,7 @@ const normalizeObject = obj => {
 const stringify = a => {
   if (type(a) === 'String') {
     return a
-  } else if (['Function', 'Async'].includes(type(a))) {
+  } else if ([ 'Function', 'Async' ].includes(type(a))) {
     const compacted = replace(/\s{1,}/g, ' ', a.toString())
 
     return replace(/\s/g, '_', take(15, compacted))
@@ -35,10 +35,10 @@ const stringify = a => {
 const generateProp = (fn, ...inputArguments) => {
   let propString = ''
   inputArguments.map(inputArgument => {
-    propString += `${stringify(inputArgument)}_`
+    propString += `${ stringify(inputArgument) }_`
   })
 
-  return `${propString}${stringify(fn)}`
+  return `${ propString }${ stringify(fn) }`
 }
 
 export function memoize(fn, ...inputArguments) {
@@ -48,18 +48,18 @@ export function memoize(fn, ...inputArguments) {
   }
   const prop = generateProp(fn, ...inputArguments)
   if (prop in cache) {
-    return cache[prop]
+    return cache[ prop ]
   }
   if (type(fn) === 'Async') {
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
-        cache[prop] = result
+        cache[ prop ] = result
         resolve(result)
       })
     })
   }
   const result = fn(...inputArguments)
-  cache[prop] = result
+  cache[ prop ] = result
 
   return result
 }

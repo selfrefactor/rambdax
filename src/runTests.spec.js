@@ -31,7 +31,9 @@ test('undefined throws', () => {
 })
 
 test('missing `testSuite`', () => {
-  expect(() => runTests(omit('testSuite', runTestsInput))).toThrow()
+  expect(() =>
+    runTests(omit('testSuite', runTestsInput))
+  ).toThrow()
 })
 
 runTests(runTestsInput)

@@ -4,7 +4,7 @@ import { isPromise } from './isPromise'
 //NODOCS
 export function tryCatch(fn, fallback) {
   if (!isFunction(fn)) {
-    throw new Error(`R.tryCatch | fn '${fn}'`)
+    throw new Error(`R.tryCatch | fn '${ fn }'`)
   }
   const passFallback = isFunction(fallback)
 

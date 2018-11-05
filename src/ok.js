@@ -3,8 +3,8 @@ import { any } from './rambda/any'
 
 export function check(singleInput, schema) {
   return isValid({
-    input: { singleInput },
-    schema: { singleInput: schema },
+    input  : { singleInput },
+    schema : { singleInput : schema },
   })
 }
 
@@ -14,14 +14,13 @@ export function ok(...inputs) {
 
     const pass =
       any((singleInput, i) => {
-        const schema = schemas[i] === undefined ? 
-          schemas[0] :
-          schemas[i]
+        const schema =
+          schemas[ i ] === undefined ? schemas[ 0 ] : schemas[ i ]
 
         const checked = check(singleInput, schema)
         if (!checked) {
           failedSchema = JSON.stringify({
-            input: singleInput,
+            input : singleInput,
             schema,
           })
         }
@@ -30,7 +29,7 @@ export function ok(...inputs) {
       }, inputs) === false
 
     if (!pass)
-      throw new Error(`Failed R.ok with schema ${failedSchema}`)
+      throw new Error(`Failed R.ok with schema ${ failedSchema }`)
 
     return true
   }
