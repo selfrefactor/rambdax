@@ -240,6 +240,14 @@ declare namespace R {
     isAttach() : boolean
     pass(...inputs: any[]): (...rules: any[]) => boolean
 
+    includesType(
+      targetType: RambdaTypes, 
+    ): (x: any[]) => boolean
+    includesType(
+      targetType: RambdaTypes, 
+      x: any[]
+    ): boolean
+
     isType(xType: RambdaTypes, x: any): boolean
     isArray(x: any): boolean
     isString(x: any): boolean
