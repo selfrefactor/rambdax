@@ -221,6 +221,21 @@ const result = R.composeAsync(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/composeAsync.js)
 
+#### composed
+
+> composed(...fnList: any[]): any
+
+It is basiclly `R.compose` but instead of passing the input argument as `(input)`, you pass it as the last argument. It is easier to understand with the following example:
+
+```
+const result = composed(
+  R.map(x => x*10),
+  R.filter(x => x > 1),
+  [1,2,3]
+)
+// => [20, 30]
+```
+
 #### debounce
 
 > debounce(fn: Function, ms: number): any
