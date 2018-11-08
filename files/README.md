@@ -67,6 +67,50 @@ const result = R.allTrue([1,2], x > 1, {})
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/allTrue.js)
 
+#### allType
+
+> allType(targetType: string): (...inputs: any[]) => boolean
+
+It returns a function, which will return `true` if all passed elements has the same type as the `targetType`. The example below explains it better:
+
+```
+const result = R.allType('String')('foo','bar','baz')
+//=> true
+```
+
+#### anyFalse
+
+> anyFalse(...inputs: any[]): boolean
+
+It returns `true` if any of the passed elements returns `false` when passed to `Boolean`.
+
+```
+R.anyFalse(1, {}, '')
+//=> true
+```
+
+#### anyTrue
+
+> anyTrue(...inputs: any[]): boolean
+
+It returns `true` if any of the passed elements returns `true` when passed to `Boolean`.
+
+```
+R.anyTrue(1, {}, '')
+//=> true
+```
+
+#### anyType
+
+> anyType(targetType: string): (...inputs: any[]) => boolean
+
+It returns a function, which will return `true` if at least one of the passed elements has the same type as the `targetType`. The example below explains it better:
+
+```
+R.anyType('String')(1, {},'baz')
+//=> true
+```
+
 #### change
 
 > change(origin: object, path: string, changeData: any): object

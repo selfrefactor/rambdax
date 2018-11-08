@@ -171,11 +171,12 @@ declare namespace R {
     // RAMBDAX_START
     allFalse(...input: Array<any>): boolean
     anyFalse(...input: Array<any>): boolean
-    anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
 
     allTrue(...input: Array<any>): boolean
     anyTrue(...input: Array<any>): boolean
+
     allType(targetType: RambdaTypes): (...input: Array<any>) => boolean
+    anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
 
     change(
       origin: object, 
