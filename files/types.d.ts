@@ -330,7 +330,6 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
-
     template(input: string, templateInput: object): string
 
     tryCatch<T>(
@@ -342,7 +341,10 @@ declare namespace R {
 
     wait<T>(fn: Async<T>): Promise<[T, Error]>
 
-    waitFor(condition: Function|Promise<any>, msHowLong: number): (input: any) => Promise<boolean>
+    waitFor(
+      condition: Function|Promise<any>, 
+      msHowLong: number): (input: any
+    ) => Promise<boolean>
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>

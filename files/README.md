@@ -427,6 +427,20 @@ R.greater(1,2) // => true
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/greater.js)
 
+#### includesType
+
+> includesType(targetType: string, list: any[]): boolean
+
+It returns `true` if any member of `list` array has the same type as the `targetType`.
+
+```
+const result = R.includesType(
+  'String',
+  [1,2,'foo']
+)
+// => true
+```
+
 #### inject
 
 > inject(injection: string, marker: string, str: string): string
@@ -447,7 +461,7 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 
 > isAttach(): boolean
 
-It attaches `is` method to object-like variables. This `is` method acts like `R.is`.
+It attaches `is` method to object-like variables. This `is` method acts like `R.pass`.
 
 It returns `true` when it is called initially and it returns `false` for sequential calls.
 
@@ -456,6 +470,19 @@ R.isAttach()
 const foo = [1,2,3]
 
 const result = foo.is(['number'])
+// => true
+```
+
+#### isFunction
+
+> isFunction(x: any): boolean
+
+It returns `true` if type of `x` is one among `Promise`, `Async` or `Function`.
+
+```
+const result = R.isFunction(
+  x => x
+)
 // => true
 ```
 
@@ -733,6 +760,21 @@ const result = R.pickBy(fn, input)
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/pickBy.js)
+
+#### piped
+
+> piped(...fnList: any[]): any
+
+It is basically `R.pipe` but instead of passing the input argument as `(input)`, you pass it as the first argument. It is easier to understand with the following example:
+
+```
+const result = piped(
+  [1,2,3],
+  R.filter(x => x > 1),
+  R.map(x => x*10),
+)
+// => [20, 30]
+```
 
 #### produce
 
