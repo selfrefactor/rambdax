@@ -4,8 +4,6 @@ import { merge } from './rambda/merge'
 
 let holder = {}
 
-//NODOCS
-
 /**
  * Pass string to get value
  * Pass array to get object of values

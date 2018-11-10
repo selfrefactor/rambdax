@@ -1,6 +1,5 @@
 import { type } from './rambda/type'
 
-//NODOCS
 export function anyType(targetType) {
   return (...inputs) => {
     let counter = 0

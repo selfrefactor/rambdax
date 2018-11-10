@@ -225,7 +225,7 @@ const result = R.composeAsync(
 
 > composed(...fnList: any[]): any
 
-It is basiclly `R.compose` but instead of passing the input argument as `(input)`, you pass it as the last argument. It is easier to understand with the following example:
+It is basically `R.compose` but instead of passing the input argument as `(input)`, you pass it as the last argument. It is easier to understand with the following example:
 
 ```
 const result = composed(
@@ -363,6 +363,55 @@ const result = R.findInObject(fn, obj)
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
+
+    setter(key: string|object, value?: any): void
+    reset(): void
+
+#### setter
+
+> setter(key: string|object, value?: any): void
+
+It provides access to the cache object.
+
+You either set individual key-value pairs with `R.setter(key, value)` or you pass directly object, which will be merged with the cache object
+
+```
+R.setter({a: 1,b: 'bar'})
+R.getter('b')
+// => 'bar'
+```
+
+#### getter
+
+> getter(key: undefined|string|string[]): any
+
+It provides access to the cache object.
+
+If `undefined` is used as a key, this method will return the whole cache object.
+
+If `string` is passed, then it will return cache value for this key.
+
+If array of `string` is passed, then it assume that this is array of keys and it will return the corresponding cache values for these keys.
+
+```
+R.setter('foo','bar')
+R.setter('a', 1)
+R.getter(['foo','a'])
+// => {foo:'baz', a:1}
+```
+
+#### reset
+
+> reset(): void
+
+It resets the cache object.
+
+```
+R.setter({a: 1,b: 'bar'})
+R.getter('b') // => 'bar'
+R.reset()
+R.getter('b') // => undefined
+```
 
 #### greater
 

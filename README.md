@@ -74,6 +74,54 @@ const result = R.allTrue([1,2], x > 1, {})
 <a href="https://rambda.now.sh?const%20x%20%3D%202%0A%0Aconst%20result%20%3D%20R.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
+#### allType
+
+> allType(targetType: string): (...inputs: any[]) => boolean
+
+It returns a function, which will return `true` if all passed elements has the same type as the `targetType`. The example below explains it better:
+
+```
+const result = R.allType('String')('foo','bar','baz')
+//=> true
+```
+
+---
+#### anyFalse
+
+> anyFalse(...inputs: any[]): boolean
+
+It returns `true` if any of the passed elements returns `false` when passed to `Boolean`.
+
+```
+R.anyFalse(1, {}, '')
+//=> true
+```
+
+---
+#### anyTrue
+
+> anyTrue(...inputs: any[]): boolean
+
+It returns `true` if any of the passed elements returns `true` when passed to `Boolean`.
+
+```
+R.anyTrue(1, {}, '')
+//=> true
+```
+
+---
+#### anyType
+
+> anyType(targetType: string): (...inputs: any[]) => boolean
+
+It returns a function, which will return `true` if at least one of the passed elements has the same type as the `targetType`. The example below explains it better:
+
+```
+R.anyType('String')(1, {},'baz')
+//=> true
+```
+
+---
 #### change
 
 > change(origin: object, path: string, changeData: any): object
@@ -189,6 +237,22 @@ const result = R.composeAsync(
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/composeAsync.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%2B1%0A%7D%0Aconst%20fnSecond%20%3D%20async%20x%20%3D%3E%20fn(x)%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20fn%2C%0A%20%20fnSecond%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%602%60">Try in REPL</a>
+
+---
+#### composed
+
+> composed(...fnList: any[]): any
+
+It is basically `R.compose` but instead of passing the input argument as `(input)`, you pass it as the last argument. It is easier to understand with the following example:
+
+```
+const result = composed(
+  R.map(x => x*10),
+  R.filter(x => x > 1),
+  [1,2,3]
+)
+// => [20, 30]
+```
 
 ---
 #### debounce
@@ -331,7 +395,59 @@ const result = R.findInObject(fn, obj)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
 
+    setter(key: string|object, value?: any): void
+    reset(): void
+
 <a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
+
+---
+#### setter
+
+> setter(key: string|object, value?: any): void
+
+It provides access to the cache object.
+
+You either set individual key-value pairs with `R.setter(key, value)` or you pass directly object, which will be merged with the cache object
+
+```
+R.setter({a: 1,b: 'bar'})
+R.getter('b')
+// => 'bar'
+```
+
+---
+#### getter
+
+> getter(key: undefined|string|string[]): any
+
+It provides access to the cache object.
+
+If `undefined` is used as a key, this method will return the whole cache object.
+
+If `string` is passed, then it will return cache value for this key.
+
+If array of `string` is passed, then it assume that this is array of keys and it will return the corresponding cache values for these keys.
+
+```
+R.setter('foo','bar')
+R.setter('a', 1)
+R.getter(['foo','a'])
+// => {foo:'baz', a:1}
+```
+
+---
+#### reset
+
+> reset(): void
+
+It resets the cache object.
+
+```
+R.setter({a: 1,b: 'bar'})
+R.getter('b') // => 'bar'
+R.reset()
+R.getter('b') // => undefined
+```
 
 ---
 #### greater
