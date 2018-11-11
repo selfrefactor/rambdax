@@ -16,7 +16,6 @@ function getCodeExample(input){
 
 function appendTestLink(input){
   const [method] = input.match(/.+/)
-  console.log({method})
   const link = multiline(`
     https://github.com
     selfrefactor
@@ -27,7 +26,7 @@ function appendTestLink(input){
     ${method}.spec.js
   `, '/')
 
-  const testLink = `\n\n[Go to '${method}' test](${link})\n\n`
+  const testLink = `\n\n[Test](${link})\n\n`
 
   return `${input.trim()}${testLink}`
 }
