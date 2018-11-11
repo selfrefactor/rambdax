@@ -53,6 +53,8 @@ R.allFalse(null, undefined, '')
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/allFalse.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/allFalse.spec.js)
+
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.allFalse(null%2C%20undefined%2C%20'')%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
@@ -71,6 +73,8 @@ const result = R.allTrue([1,2], x > 1, {})
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/allTrue.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/allTrue.spec.js)
+
 <a href="https://rambda.now.sh?const%20x%20%3D%202%0A%0Aconst%20result%20%3D%20R.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
@@ -85,6 +89,8 @@ const result = R.allType('String')('foo','bar','baz')
 //=> true
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/allType.spec.js)
+
 ---
 #### anyFalse
 
@@ -96,6 +102,8 @@ It returns `true` if any of the passed elements returns `false` when passed to `
 R.anyFalse(1, {}, '')
 //=> true
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/anyFalse.spec.js)
 
 ---
 #### anyTrue
@@ -109,6 +117,8 @@ R.anyTrue(1, {}, '')
 //=> true
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/anyTrue.spec.js)
+
 ---
 #### anyType
 
@@ -120,6 +130,8 @@ It returns a function, which will return `true` if at least one of the passed el
 R.anyType('String')(1, {},'baz')
 //=> true
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/anyType.spec.js)
 
 ---
 #### change
@@ -178,6 +190,8 @@ const expectedResult = {
 // result === expectedResult
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/change.spec.js)
+
 ---
 #### compact
 
@@ -206,6 +220,8 @@ const expectedResult = [1, false, " ", "foo", [1]]
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/compact.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/compact.spec.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%201%2C%0A%20%20null%2C%0A%20%20undefined%2C%0A%20%20false%2C%0A%20%20%22%22%2C%0A%20%20%22%20%22%2C%0A%20%20%22foo%22%2C%0A%20%20%7B%7D%2C%0A%20%20%5B%5D%2C%0A%20%20%5B1%5D%2C%0A%20%20%2F%5Cs%2Fg%0A%5D%0A%0Aconst%20result%20%3D%20R.compact(arr)%0Aconst%20expectedResult%20%3D%20%5B1%2C%20false%2C%20%22%20%22%2C%20%22foo%22%2C%20%5B1%5D%5D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
@@ -236,6 +252,8 @@ const result = R.composeAsync(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/composeAsync.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/composeAsync.spec.js)
+
 <a href="https://rambda.now.sh?const%20fn%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%2B1%0A%7D%0Aconst%20fnSecond%20%3D%20async%20x%20%3D%3E%20fn(x)%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20fn%2C%0A%20%20fnSecond%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%602%60">Try in REPL</a>
 
 ---
@@ -253,6 +271,8 @@ const result = composed(
 )
 // => [20, 30]
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/composed.spec.js)
 
 ---
 #### debounce
@@ -285,6 +305,8 @@ const result = async function(){
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/debounce.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/debounce.spec.js)
+
 <a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20R.debounce(inc%2C%20900)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20debouncedInc()%0A%20%20await%20R.delay(500)%0A%20%20debouncedInc()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
 
 ---
@@ -305,6 +327,8 @@ const result = R.defaultWhen(fn, fallback, 1)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultWhen.spec.js)
+
 <a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20R.defaultWhen(fn%2C%20fallback%2C%201)%0A%2F%2F%20%60result%60%20is%20%6010%60">Try in REPL</a>
 
 ---
@@ -322,6 +346,8 @@ const result = R.delay(1000)
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/delay.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/delay.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.delay(1000)%0A%2F%2F%20%60result%60%20resolves%20to%20%60'RAMBDAX_DELAY'%60">Try in REPL</a>
 
@@ -370,6 +396,8 @@ console.log(result === expectedResult)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/evolve.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/evolve.spec.js)
+
 <a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20firstName%20%3A%20'%20%20Tomato%20'%2C%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20100%2C%0A%20%20%20%20remaining%20%3A%201400%2C%0A%20%20%7D%2C%0A%20%20id%20%3A%20123%2C%0A%7D%0Aconst%20rules%20%3D%20%7B%0A%20%20firstName%20%3A%20R.trim%2C%0A%20%20lastName%20%20%3A%20R.trim%2C%20%2F%2FWill%20not%20get%20invoked.%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20R.add(1)%2C%0A%20%20%20%20remaining%20%3A%20R.add(-1)%2C%0A%20%20%7D%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.evolve(rules%2C%20input)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20firstName%3A%20'Tomato'%2C%0A%20%20data%3A%20%7B%0A%20%20%20%20elapsed%3A%20101%2C%0A%20%20%20%20remaining%3A%201399%2C%0A%20%20%7D%2C%0A%20%20id%3A%20123%2C%0A%7D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%0A%2F%2F%20true">Try in REPL</a>
 
 ---
@@ -398,6 +426,8 @@ const result = R.findInObject(fn, obj)
     setter(key: string|object, value?: any): void
     reset(): void
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/findInObject.spec.js)
+
 <a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
 
 ---
@@ -414,6 +444,8 @@ R.setter({a: 1,b: 'bar'})
 R.getter('b')
 // => 'bar'
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/setter.spec.js)
 
 ---
 #### getter
@@ -435,6 +467,8 @@ R.getter(['foo','a'])
 // => {foo:'baz', a:1}
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/getter.spec.js)
+
 ---
 #### reset
 
@@ -448,6 +482,8 @@ R.getter('b') // => 'bar'
 R.reset()
 R.getter('b') // => undefined
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/reset.spec.js)
 
 ---
 #### greater
@@ -463,6 +499,8 @@ R.greater(1,2) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/greater.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/greater.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -481,6 +519,8 @@ const result = R.includesType(
 // => true
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/includesType.spec.js)
+
 ---
 #### inject
 
@@ -497,6 +537,8 @@ const expectedResult = 'foo bar MARKER INJECTION baz'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/inject.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/inject.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
 
@@ -517,6 +559,8 @@ const result = foo.is(['number'])
 // => true
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isAttach.spec.js)
+
 ---
 #### isFunction
 
@@ -531,6 +575,8 @@ const result = R.isFunction(
 // => true
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isFunction.spec.js)
+
 ---
 #### isNil
 
@@ -544,6 +590,8 @@ R.isNil(1)  // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isNil.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -561,6 +609,8 @@ R.isPromise(R.delay)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isPromise.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isPromise.spec.js)
+
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isPromise(R.delay)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
@@ -576,6 +626,8 @@ R.isType('Async',async () => {})
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isType.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isType.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isType('Async'%2Casync%20()%20%3D%3E%20%7B%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -600,6 +652,8 @@ const result = R.isValid({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isValid.spec.js)
+
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%20%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
@@ -616,6 +670,8 @@ R.less(2,1) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/less.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/less.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.less(2%2C1)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -643,6 +699,8 @@ const result = R.composeAsync(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mapAsync.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/mapAsync.spec.js)
+
 <a href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20R.mapAsync(fn)%2C%0A%20%20R.map(x%20%3D%3E%20x*2)%0A)(%20%5B1%2C%202%2C%203%5D%20)%0A%0A%2F%2F%20%60result%60%20resolves%20after%203%20seconds%20to%20%60%5B3%2C%205%2C%207%5D%60">Try in REPL</a>
 
 ---
@@ -669,6 +727,8 @@ const result = R.composeAsync(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mapFastAsync.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/mapFastAsync.spec.js)
+
 <a href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20R.mapAsync(fn)%2C%0A%20%20R.map(x%20%3D%3E%20x*2)%0A)(%20%5B1%2C%202%2C%203%5D%20)%0A%0A%2F%2F%20%60result%60%20resolves%20after%201%20second%20to%20%60%5B3%2C%205%2C%207%5D%60">Try in REPL</a>
 
 ---
@@ -690,6 +750,8 @@ memoized(1,2)
 memoized(1,2)
 console.log(counter) //=> 1
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/memoize.spec.js)
 
 ---
 #### mergeAll
@@ -715,6 +777,8 @@ const result = R.mergeAll(arr)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mergeAll.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/mergeAll.spec.js)
+
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -737,6 +801,8 @@ const expectedResult = 'foo bar baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/multiline.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/multiline.spec.js)
+
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.multiline(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -758,6 +824,8 @@ const result = R.ok(
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/ok.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(%0A%20%201%2C%20%5B%20'foo'%2C%20'bar'%20%5D%0A)('number'%2C%20%5B%20'string'%20%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -786,6 +854,8 @@ const result = R.omitBy(fn, input)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/omitBy.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/omitBy.spec.js)
+
 <a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2C%20val)%20%3D%3E%20val%20%3C%203%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.omitBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -802,6 +872,24 @@ console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/once.spec.js)
+
+---
+#### pathEq
+
+> pathEq(path:string|string[], target: any, obj: object): boolean
+
+```
+const result = R.pathEq(
+  'a.b',
+  1,
+  {a: {b:1} }
+)
+// => true
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/pathEq.spec.js)
+
 ---
 #### pass
 
@@ -817,6 +905,8 @@ If validation fails, it returns `false`.
 const result = R.pass(1,['foo','bar'])('number',['string'])
 // => true
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/pass.spec.js)
 
 ---
 #### pickBy
@@ -843,6 +933,8 @@ const result = R.pickBy(fn, input)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/pickBy.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/pickBy.spec.js)
+
 <a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2Cval)%20%3D%3E%20val%20%3E%203%20%7C%7C%20prop%20%3D%3D%3D%20'a'%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.pickBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -860,6 +952,8 @@ const result = piped(
 )
 // => [20, 30]
 ```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/piped.spec.js)
 
 ---
 #### produce
@@ -890,6 +984,8 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/produce.spec.js)
+
 <a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -917,6 +1013,8 @@ const expectedResult = { a:1, b:2 }
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/promiseAllObject.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.promiseAllObject(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
 
@@ -958,12 +1056,16 @@ const expectedResult = [
 // `result` resolves to `expectedResult`
 ```
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/promiseAllSecure.spec.js)
+
 ---
 #### random
 
 > random(min: number, max: number): number
 
 It returns a random number between `min` inclusive and `max` inclusive.
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/random.spec.js)
 
 ---
 #### rangeBy
@@ -981,6 +1083,8 @@ console.log(R.rangeBy(0, 2, 0.3))
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/rangeBy.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.rangeBy(0%2C%2010%2C%202)%0A%2F%2F%20%3D%3E%20%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0A%0Aconsole.log(R.rangeBy(0%2C%202%2C%200.3))%0A%2F%2F%20%3D%3E%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D">Try in REPL</a>
 
@@ -1000,6 +1104,8 @@ const result = remove(
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/remove.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/remove.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20remove(%0A%20%20%5B'foo'%2C'bar'%5D%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try in REPL</a>
 
@@ -1029,6 +1135,8 @@ const expectedResult = {
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/renameProps.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/renameProps.spec.js)
+
 <a href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20f%3A%20%22foo%22%2C%0A%20%20b%3A%20%22bar%22%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20f%3A1%2C%0A%20%20b%3A2%0A%7D%0Aconst%20result%20%3D%20R.renameProps(rules%2C%20input)%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A1%2C%0A%20%20bar%3A2%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -1055,6 +1163,8 @@ const expectedResult = 'barFO'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllSecure.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/s.spec.js)
+
 <a href="https://rambda.now.sh?%2F%2F%20To%20turn%20it%20on%0AR.s()%0A%0A%2F%2F%20Then%0Aconst%20result%20%3D%20'foo'%0A%20%20.s(R.toUpper)%0A%20%20.s(R.take(2))%0A%20%20.s(R.add('bar'))%0A%0Aconst%20expectedResult%20%3D%20'barFO'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
@@ -1063,6 +1173,8 @@ const expectedResult = 'barFO'
 > shuffle(arr: T[]): T[]
 
 It returns randomized copy of array.
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/shuffle.spec.js)
 
 ---
 #### switcher
@@ -1091,6 +1203,8 @@ Note that `default` must be the last condition and it is mandatory.
 Rambda's `equals` is used as part of the comparison process.
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/switcher.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/switcher.spec.js)
 
 <a href="https://rambda.now.sh?const%20valueToMatch%20%3D%20%7Bfoo%3A%201%7D%0A%0Aconst%20result%20%3D%20R.switcher(valueToMatch)%0A%20%20.is('baz'%2C%20'is%20baz')%0A%20%20.is(%20x%20%3D%3E%20typeof%20x%20%3D%3D%3D%20'boolean'%2C%20'is%20boolean')%0A%20%20.is(%7Bfoo%3A%201%7D%2C%20'Property%20foo%20is%201')%0A%20%20.default('is%20bar')%0A%0Aconsole.log(result)%20%2F%2F%20%3D%3E%20'Property%20foo%20is%201'">Try in REPL</a>
 
@@ -1125,6 +1239,8 @@ const result = R.tapAsync(replWrap, "foo")
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/tapAsync.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/tapAsync.spec.js)
+
 <a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20R.throttle(inc%2C%20800)%0A%0Aconst%20replWrap%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20const%20a%20%3D%20await%20R.delay(1000)%0A%20%20console.log(counter)%0A%7D%0A%0Aconst%20result%20%3D%20R.tapAsync(replWrap%2C%20%22foo%22)%0A%2F%2F%20the%20console%20logs%20%60foo%60%0A%2F%2F%20%60result%60%20is%20equal%20to%20'foo'">Try in REPL</a>
 
 ---
@@ -1144,6 +1260,8 @@ const expectedResult = 'foo is BAR even 1 more'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/template.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/template.spec.js)
 
 <a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
@@ -1174,7 +1292,196 @@ const result = async () => {
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/throttle.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/throttle.spec.js)
+
 <a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20throttledInc%20%3D%20R.throttle(inc%2C%20800)%0A%0Aconst%20result%20%3D%20async%20()%20%3D%3E%20%7B%0A%20%20throttledInc()%0A%20%20await%20R.delay(500)%0A%20%20throttledInc()%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
+
+---
+#### tryCatch
+
+> tryCatch(fn: Async|Function, fallback: any): Function
+
+It returns function that runs `fn` in `try/catch` block. If there was an error, then `fallback` is used to return the result. Note that `fn` can be value, function or promise-like.
+
+Please check the tests below in order to fully understand this method, as it doesn't match the behaviour of the same method in `Ramda`.
+
+```
+import { delay } from './delay'
+import { prop } from './rambda/prop'
+import { tryCatch } from './tryCatch'
+
+test('throws when fn is not function', () => {
+  const fn = 'foo'
+
+  expect(
+    () => tryCatch(fn, false)(null)
+  ).toThrow(`R.tryCatch | fn 'foo'`)
+})
+
+test('when fallback is used', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, false)(null)).toBe(false)
+})
+
+test('when fallback is function', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, x => x)(null)).toBe(null)
+})
+
+test('when fn is used', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, false)({})).toBe(undefined)
+
+  expect(tryCatch(fn, false)({ x: 1 })).toBe(1)
+})
+
+test('when async + fallback', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+
+  expect(await tryCatch(fn, 'fallback')(100)).toBe('fallback')
+  expect(called).toBe(true)
+})
+
+test('when async + fallback is function', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+
+  expect(await tryCatch(fn, x => x + 1)(100)).toBe(101)
+  expect(called).toBe(true)
+})
+
+test('when async + fallback is async', async () => {
+  let called = false
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+  const fallback = async input => {
+    return input + 1
+  }
+
+  expect(await tryCatch(fn, fallback)(100)).toBe(101)
+  expect(called).toBe(true)
+})
+
+test('when async + fn', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return input + 1
+  }
+
+  expect(await tryCatch(fn, 'fallback')(100)).toBe(101)
+  expect(called).toBe(true)
+})
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
+
+---
+#### wait
+
+> wait(fn: Async): Promise<[any, Error]>
+
+It provides `Golang`-like interface for handling promises.
+
+```
+void async function wait(){
+  const [err, ok] = await R.wait(R.delay(1000))
+  // => err is undefined
+  // => ok is `RAMBDAX_DELAY`
+}()
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/wait.spec.js)
+
+---
+#### waitFor
+
+> waitFor(condition: any, ms: number): Promise
+
+It returns `true`, if `condition` returns `true` within `ms` milisececonds time period.
+
+Best description of this method are the actual tests:
+
+```
+import { waitFor } from './waitFor'
+
+const howLong = 1000
+
+test('true', async () => {
+  let counter = 0
+  const condition = x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(6)
+  expect(result).toEqual(true)
+})
+
+test('false', async () => {
+  let counter = 0
+  const condition = x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(12)
+  expect(result).toEqual(false)
+})
+
+test('async condition | true', async () => {
+  let counter = 0
+  const condition = async x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(6)
+  expect(result).toEqual(true)
+})
+
+test('async condition | false', async () => {
+  let counter = 0
+  const condition = async x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(12)
+  expect(result).toEqual(false)
+})
+
+test('throws when fn is not function', () => {
+  const fn = 'foo'
+
+  expect(() => waitFor(fn, howLong)()).toThrow('R.waitFor')
+})
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/waitFor.spec.js)
 
 ---
 #### where
@@ -1200,6 +1507,8 @@ const result = condition({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/where.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/where.spec.js)
+
 <a href="https://rambda.now.sh?const%20condition%20%3D%20R.where(%7B%0A%20%20a%20%3A%20aProp%20%3D%3E%20typeof%20aProp%20%3D%3D%3D%20%22string%22%2C%0A%20%20b%20%3A%20bProp%20%3D%3E%20bProp%20%3D%3D%3D%204%0A%7D)%0A%0Aconst%20result%20%3D%20condition(%7B%0A%20%20a%20%3A%20%22foo%22%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
@@ -1218,6 +1527,8 @@ const result = truncate('12345678')
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/when.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/when.spec.js)
 
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
 
@@ -1249,6 +1560,8 @@ const result = replWrap(5)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/whenAsync.js)
 
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/whenAsync.spec.js)
+
 <a href="https://rambda.now.sh?const%20replWrap%20%3D%20async%20input%20%3D%3E%20%7B%0A%0A%20%20const%20wrapResult%20%3D%20await%20R.whenAsync(%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20%3E%202%0A%20%20%20%20%7D%2C%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20*%205%0A%20%20%20%20%7D%0A%20%20)(input)%0A%20%20%0A%20%20return%20wrapResult%0A%7D%0A%0Aconst%20result%20%3D%20replWrap(5)%0A%2F%2F%20%3D%3E%2025">Try in REPL</a>
 
 ---
@@ -1260,7 +1573,9 @@ const result = replWrap(5)
 R.add(2, 3) // =>  5
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/add.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/add.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/add.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.add(2%2C%203)%20%2F%2F%20%3D%3E%20%205">Try in REPL</a>
 
@@ -1277,6 +1592,8 @@ const result = mapWithIndex(
 ) // => ['A - 0', 'B - 1', 'C - 2']
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/addIndex.spec.js)
+
 ---
 #### adjust
 
@@ -1292,7 +1609,9 @@ R.adjust(
 ) // => [1, 100]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/adjust.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/adjust.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/adjust.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.adjust(%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%200%2C%0A%20%20%5B0%2C%20100%5D%0A)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try in REPL</a>
 
@@ -1311,7 +1630,9 @@ const result = R.all(fn, arr)
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/all.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/all.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/all.spec.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%200%2C%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20fn%20%3D%20x%20%3D%3E%20x%20%3E%20-1%0A%0Aconst%20result%20%3D%20R.all(fn%2C%20arr)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -1334,7 +1655,9 @@ const rules = [
 const result = R.allPass(rules, input) // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/allPass.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/allPass.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/allPass.spec.js)
 
 <a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%202%2C%0A%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20x%20%3D%3E%20x.a%20%3D%3D%3D%201%2C%0A%20%20x%20%3D%3E%20x.b%20%3D%3D%3D%202%2C%0A%5D%0Aconst%20result%20%3D%20R.allPass(rules%2C%20input)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -1350,6 +1673,8 @@ const fn = R.always(7)
 console.log(fn())// => 7
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/always.spec.js)
+
 ---
 #### any
 
@@ -1362,7 +1687,9 @@ R.any(a => a * a > 8)([1, 2, 3])
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/any.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/any.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/any.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.any(a%20%3D%3E%20a%20*%20a%20%3E%208)(%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -1381,7 +1708,9 @@ const result = R.anyPass(
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/anyPass.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/anyPass.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/anyPass.spec.js)
 
 <a href="https://rambda.now.sh?const%20isBig%20%3D%20a%20%3D%3E%20a%20%3E%2020%0Aconst%20isOdd%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.anyPass(%0A%20%20%5BisBig%2C%20isOdd%5D%0A)(11)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -1397,7 +1726,9 @@ R.append(
 ) // => ['bar', 'baz', 'foo']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/append.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/append.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/append.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.append(%0A%20%20'foo'%2C%0A%20%20%5B'bar'%2C%20'baz'%5D%0A)%20%2F%2F%20%3D%3E%20%5B'bar'%2C%20'baz'%2C%20'foo'%5D">Try in REPL</a>
 
@@ -1416,6 +1747,8 @@ R.assoc('c', 3, {a: 1, b: 2})
 //=> {a: 1, b: 2, c: 3}
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/assoc.spec.js)
+
 ---
 #### both
 
@@ -1431,6 +1764,8 @@ const fn = R.both(
 console.log(fn(15)) //=> true
 console.log(fn(30)) //=> false
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/both.spec.js)
 
 ---
 #### compose
@@ -1448,7 +1783,9 @@ const result = R.compose(
 // => [6, 8]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/compose.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/compose.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/compose.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.compose(%0A%20%20R.map(x%20%3D%3E%20x%20*%202)%2C%0A%20%20R.filter(x%20%3D%3E%20x%20%3E%202)%0A)(%5B1%2C%202%2C%203%2C%204%5D)%0A%0A%2F%2F%20%3D%3E%20%5B6%2C%208%5D">Try in REPL</a>
 
@@ -1467,7 +1804,9 @@ const fn = R.complement(x => !x)
 const result = fn(false) // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/complement.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/complement.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/complement.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20R.complement(x%20%3D%3E%20!x)%0A%0Aconst%20result%20%3D%20fn(false)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -1483,6 +1822,8 @@ R.concat([1, 2])([3, 4]) // => [1, 2, 3, 4]
 R.concat('foo')('bar') // => 'foobar'
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/concat.spec.js)
+
 ---
 #### contains
 
@@ -1495,7 +1836,9 @@ R.contains(2, [1, 2]) // => true
 R.contains(3, [1, 2]) // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/contains.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/contains.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/contains.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.contains(2%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20true%0AR.contains(3%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -1514,7 +1857,9 @@ const g = f(3)
 const result = g(4) // => 10
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/curry.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/curry.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/curry.spec.js)
 
 <a href="https://rambda.now.sh?const%20addFourNumbers%20%3D%20(a%2C%20b%2C%20c%2C%20d)%20%3D%3E%20a%20%2B%20b%20%2B%20c%20%2B%20d%0Aconst%20curriedAddFourNumbers%20%3D%20R.curry(addFourNumbers)%0Aconst%20f%20%3D%20curriedAddFourNumbers(1%2C%202)%0Aconst%20g%20%3D%20f(3)%0Aconst%20result%20%3D%20g(4)%20%2F%2F%20%3D%3E%2010">Try in REPL</a>
 
@@ -1527,6 +1872,8 @@ It decrements a number.
 ```
 R.dec(2) // => 1
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/dec.spec.js)
 
 ---
 #### defaultTo
@@ -1542,7 +1889,9 @@ R.defaultTo('foo', undefined) // => 'foo'
 R.defaultTo('foo', 'bar') // => 'bar'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/defaultTo.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/defaultTo.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/defaultTo.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.defaultTo('foo'%2C%20undefined)%20%2F%2F%20%3D%3E%20'foo'%0AR.defaultTo('foo'%2C%20'bar')%20%2F%2F%20%3D%3E%20'bar'">Try in REPL</a>
 
@@ -1558,7 +1907,9 @@ R.dissoc('b', {a: 1, b: 2, c: 3})
 //=> {a: 1, c: 3}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/dissoc.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/dissoc.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/dissoc.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.dissoc('b'%2C%20%7Ba%3A%201%2C%20b%3A%202%2C%20c%3A%203%7D)%0A%2F%2F%3D%3E%20%7Ba%3A%201%2C%20c%3A%203%7D">Try in REPL</a>
 
@@ -1568,6 +1919,8 @@ R.dissoc('b', {a: 1, b: 2, c: 3})
 ```
 R.divide(71, 100) // => 0.71
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/divide.spec.js)
 
 ---
 #### drop
@@ -1581,7 +1934,9 @@ R.drop(1, ['foo', 'bar', 'baz']) // => ['bar', 'baz']
 R.drop(1, 'foo')  // => 'oo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/drop.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/drop.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/drop.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.drop(1%2C%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%2C%20'baz'%5D%0AR.drop(1%2C%20'foo')%20%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
 
@@ -1597,7 +1952,9 @@ R.dropLast(1, ['foo', 'bar', 'baz']) // => ['foo', 'bar']
 R.dropLast(1, 'foo')  // => 'fo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/dropLast.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/dropLast.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/dropLast.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.dropLast(1%2C%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%5D%0AR.dropLast(1%2C%20'foo')%20%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
 
@@ -1618,7 +1975,9 @@ R.endsWith(
 ) // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/endsWith.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/endsWith.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/endsWith.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.endsWith(%0A%20%20'bar'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20true%0A%0AR.endsWith(%0A%20%20'foo'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -1634,7 +1993,9 @@ R.either(
 )(15) //=> true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/either.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/either.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/either.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.either(%0A%20%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A)(15)%20%2F%2F%3D%3E%20true">Try in REPL</a>
 
@@ -1654,7 +2015,9 @@ R.equals(
 ) // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/equals.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/equals.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/equals.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.equals(%0A%20%20%5B1%2C%20%7Ba%3A2%7D%2C%20%5B%7Bb%3A3%7D%5D%5D%2C%0A%20%20%5B1%2C%20%7Ba%3A2%7D%2C%20%5B%7Bb%3A3%7D%5D%5D%0A)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -1662,6 +2025,8 @@ R.equals(
 #### F
 
 `R.F() // => false`
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/F.spec.js)
 
 ---
 #### filter
@@ -1689,7 +2054,9 @@ const result = R.filter((val, prop)=>{
 // => {a: 1, b: 2}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/filter.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/filter.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/filter.spec.js)
 
 <a href="https://rambda.now.sh?const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0Aconst%20result%20%3D%20R.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
 
@@ -1708,7 +2075,9 @@ const result = R.find(findFn, arr)
 // => {foo: 1}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/find.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/find.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/find.spec.js)
 
 <a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%20%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%201%7D">Try in REPL</a>
 
@@ -1727,7 +2096,9 @@ const result = R.findIndex(findFn, arr)
 // => 1
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/findIndex.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/findIndex.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/findIndex.spec.js)
 
 <a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.findIndex(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
 
@@ -1741,7 +2112,9 @@ R.flatten([ 1, [ 2, [ 3 ] ] ])
 // => [ 1, 2, 3 ]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/flatten.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/flatten.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/flatten.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.flatten(%5B%201%2C%20%5B%202%2C%20%5B%203%20%5D%20%5D%20%5D)%0A%2F%2F%20%3D%3E%20%5B%201%2C%202%2C%203%20%5D">Try in REPL</a>
 
@@ -1759,7 +2132,9 @@ const result = subtractFlip(1,7)
 // => 6
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/flip.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/flip.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/flip.spec.js)
 
 <a href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20subtractFlip(1%2C7)%0A%2F%2F%20%3D%3E%206">Try in REPL</a>
 
@@ -1782,7 +2157,9 @@ console.log(result) //=> [1, 2]
 
 Note, that unlike `Ramda`'s **forEach**, Rambda's one doesn't dispatch to `forEach` method of `arr` if `arr` has such method.
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/forEach.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/forEach.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/forEach.spec.js)
 
 <a href="https://rambda.now.sh?const%20sideEffect%20%3D%20%7B%7D%0Aconst%20result%20%3D%20R.forEach(%0A%20%20x%20%3D%3E%20sideEffect%5B%60foo%24%7Bx%7D%60%5D%20%3D%20x%0A)(%5B1%2C%202%5D)%0A%0Aconsole.log(sideEffect)%20%2F%2F%3D%3E%20%7Bfoo1%20%3A%201%2C%20foo2%20%3A%202%7D%0Aconsole.log(result)%20%2F%2F%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
 
@@ -1801,7 +2178,9 @@ R.groupBy(
 // => { '1': ['a', 'b'], '2': ['aa', 'bb'] }
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/groupBy.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/groupBy.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/groupBy.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.groupBy(%0A%20%20x%20%3D%3E%20x.length%2C%0A%20%20%5B%20'a'%2C%20'b'%2C%20'aa'%2C%20'bb'%20%5D%0A)%0A%2F%2F%20%3D%3E%20%7B%20'1'%3A%20%5B'a'%2C%20'b'%5D%2C%20'2'%3A%20%5B'aa'%2C%20'bb'%5D%20%7D">Try in REPL</a>
 
@@ -1817,7 +2196,9 @@ R.has('a', {a: 1}) // => true
 R.has('b', {a: 1}) // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/has.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/has.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/has.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.has('a'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20true%0AR.has('b'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -1833,7 +2214,9 @@ R.head([1, 2, 3]) // => 1
 R.head('foo') // => 'f'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/head.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/head.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/head.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.head(%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%201%0AR.head('foo')%20%2F%2F%20%3D%3E%20'f'">Try in REPL</a>
 
@@ -1847,6 +2230,8 @@ It just passes back the supplied arguments.
 ```
 R.identity(7) // => 7
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/identity.spec.js)
 
 ---
 #### ifElse
@@ -1871,7 +2256,9 @@ const result = fn(8)
 // => 80
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/ifElse.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/ifElse.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/ifElse.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20R.ifElse(%0A%20x%20%3D%3E%20x%20%3E%2010%2C%0A%20x%20%3D%3E%20x*2%2C%0A%20x%20%3D%3E%20x*10%0A)%0A%0Aconst%20result%20%3D%20fn(8)%0A%2F%2F%20%3D%3E%2080">Try in REPL</a>
 
@@ -1886,6 +2273,8 @@ It increments a number.
 R.inc(1) // => 2
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/inc.spec.js)
+
 ---
 #### includes
 
@@ -1899,7 +2288,9 @@ R.includes('z', 'foo') // => false
 
 !! Note that this method is not part of `Ramda` API.
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/includes.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/includes.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/includes.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.includes(1%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20true%0AR.includes('oo'%2C%20'foo')%20%2F%2F%20%3D%3E%20true%0AR.includes('z'%2C%20'foo')%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -1918,7 +2309,9 @@ R.indexBy(
 // => { 1: {id: 1}, 2: {id: 2} }
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/indexBy.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/indexBy.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/indexBy.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.indexBy(%0A%20%20x%20%3D%3E%20x.id%2C%0A%20%20%5B%20%7Bid%3A%201%7D%2C%20%7Bid%3A%202%7D%20%5D%0A)%0A%2F%2F%20%3D%3E%20%7B%201%3A%20%7Bid%3A%201%7D%2C%202%3A%20%7Bid%3A%202%7D%20%7D">Try in REPL</a>
 
@@ -1934,7 +2327,9 @@ R.indexOf(1, [1, 2]) // => 0
 R.indexOf(0, [1, 2]) // => -1
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/indexOf.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/indexOf.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/indexOf.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.indexOf(1%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%200%0AR.indexOf(0%2C%20%5B1%2C%202%5D)%20%2F%2F%20%3D%3E%20-1">Try in REPL</a>
 
@@ -1950,7 +2345,9 @@ R.init([1, 2, 3])  // => [1, 2]
 R.init('foo')  // => 'fo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/init.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/init.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/init.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.init(%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20%5B1%2C%202%5D%0AR.init('foo')%20%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
 
@@ -1963,7 +2360,9 @@ R.init('foo')  // => 'fo'
 R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/join.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/join.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/join.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.join('-'%2C%20%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20'1-2-3'">Try in REPL</a>
 
@@ -1975,6 +2374,8 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 ```
 R.keys({a:1, b:2})  // => ['a', 'b']
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/keys.spec.js)
 
 ---
 #### isNil
@@ -1988,7 +2389,9 @@ R.isNil(null)  // => true
 R.isNil(1)  // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/isNil.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/isNil.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/isNil.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isNil(null)%20%20%2F%2F%20%3D%3E%20true%0AR.isNil(1)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -2004,7 +2407,9 @@ R.last(['foo', 'bar', 'baz']) // => 'baz'
 R.last('foo') // => 'o'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/last.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/last.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/last.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.last(%5B'foo'%2C%20'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20'baz'%0AR.last('foo')%20%2F%2F%20%3D%3E%20'o'">Try in REPL</a>
 
@@ -2024,7 +2429,9 @@ R.lastIndexOf(1, [1, 2, 3, 1, 2]) // => 3
 R.lastIndexOf(10, [1, 2, 3, 1, 2]) // => -1
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/lastIndexOf.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/lastIndexOf.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/lastIndexOf.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.lastIndexOf(1%2C%20%5B1%2C%202%2C%203%2C%201%2C%202%5D)%20%2F%2F%20%3D%3E%203%0AR.lastIndexOf(10%2C%20%5B1%2C%202%2C%203%2C%201%2C%202%5D)%20%2F%2F%20%3D%3E%20-1">Try in REPL</a>
 
@@ -2036,6 +2443,8 @@ R.lastIndexOf(10, [1, 2, 3, 1, 2]) // => -1
 ```
 R.length([1, 2, 3]) // => 3
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/length.spec.js)
 
 ---
 #### map
@@ -2059,7 +2468,9 @@ const result = R.map((val, prop)=>{
 // => {a: 'a-1', b: 'b-2'}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/map.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/map.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/map.spec.js)
 
 <a href="https://rambda.now.sh?const%20mapFn%20%3D%20x%20%3D%3E%20x%20*%202%0Aconst%20resultWithArray%20%3D%20R.map(mapFn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%2C%206%5D%0A%0Aconst%20result%20%3D%20R.map((val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%2C%20%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D">Try in REPL</a>
 
@@ -2072,7 +2483,9 @@ const result = R.map((val, prop)=>{
 R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/match.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/match.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/match.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.match(%2F(%5Ba-z%5Da)%2Fg%2C%20'bananas')%20%2F%2F%20%3D%3E%20%5B'ba'%2C%20'na'%2C%20'na'%5D">Try in REPL</a>
 
@@ -2085,6 +2498,8 @@ R.match(/([a-z]a)/g, 'bananas') // => ['ba', 'na', 'na']
 R.max(5,7) // => 7
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/max.spec.js)
+
 ---
 #### maxBy
 
@@ -2093,6 +2508,8 @@ R.max(5,7) // => 7
 ```
 R.maxBy(Math.abs, 5, -7) // => -7
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/maxBy.spec.js)
 
 ---
 #### merge
@@ -2106,7 +2523,9 @@ R.merge({ 'foo': 0, 'bar': 1 }, { 'foo': 7 })
 // => { 'foo': 7, 'bar': 1 }
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/merge.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/merge.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/merge.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.merge(%7B%20'foo'%3A%200%2C%20'bar'%3A%201%20%7D%2C%20%7B%20'foo'%3A%207%20%7D)%0A%2F%2F%20%3D%3E%20%7B%20'foo'%3A%207%2C%20'bar'%3A%201%20%7D">Try in REPL</a>
 
@@ -2119,6 +2538,8 @@ R.merge({ 'foo': 0, 'bar': 1 }, { 'foo': 7 })
 R.max(5,7) // => 5
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/min.spec.js)
+
 ---
 #### minBy
 
@@ -2127,6 +2548,8 @@ R.max(5,7) // => 5
 ```
 R.minBy(Math.abs, -5, -7) // => -5
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/minBy.spec.js)
 
 ---
 #### modulo
@@ -2139,6 +2562,8 @@ It returns the remainder of operation `a/b`.
 R.module(14, 3) // => 2
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/modulo.spec.js)
+
 ---
 #### multiply
 
@@ -2149,6 +2574,8 @@ It returns the result of operation `a*b`.
 ```
 R.multiply(4, 3) // => 12
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/multiply.spec.js)
 
 ---
 #### not
@@ -2164,6 +2591,8 @@ R.not(0) //=> true
 R.not(1) //=> false
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/not.spec.js)
+
 ---
 #### omit
 
@@ -2175,7 +2604,9 @@ It returns a partial copy of an `obj` with omitting `propsToOmit`
 R.omit('a,c,d', {a: 1, b: 2, c: 3}) // => {b: 2}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/omit.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/omit.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/omit.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.omit('a%2Cc%2Cd'%2C%20%7Ba%3A%201%2C%20b%3A%202%2C%20c%3A%203%7D)%20%2F%2F%20%3D%3E%20%7Bb%3A%202%7D">Try in REPL</a>
 
@@ -2192,7 +2623,9 @@ It will return `undefined`, if such path is not found.
 R.path('a.b', {a: {b: 1}}) // => 1
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/path.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/path.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/path.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.path('a.b'%2C%20%7Ba%3A%20%7Bb%3A%201%7D%7D)%20%2F%2F%20%3D%3E%201">Try in REPL</a>
 
@@ -2213,7 +2646,9 @@ R.pathOr(1, ['a', 'b'], {a: {b: 2}}) // => 2
 R.pathOr(1, ['a', 'c'], {a: {b: 2}}) // => 1
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pathOr.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/pathOr.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/pathOr.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.pathOr(1%2C%20'a.b'%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%202%0AR.pathOr(1%2C%20%5B'a'%2C%20'b'%5D%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%202%0AR.pathOr(1%2C%20%5B'a'%2C%20'c'%5D%2C%20%7Ba%3A%20%7Bb%3A%202%7D%7D)%20%2F%2F%20%3D%3E%201">Try in REPL</a>
 
@@ -2243,7 +2678,9 @@ const result = curried({b: 3, c: 10})
 
 - You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/partialCurry.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/partialCurry.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/partialCurry.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20(%7Ba%2C%20b%2C%20c%7D)%20%3D%3E%20%7B%0A%20%20return%20(a%20*%20b)%20%2B%20c%0A%7D%0Aconst%20curried%20%3D%20R.partialCurry(fn%2C%20%7Ba%3A%202%7D)%0Aconst%20result%20%3D%20curried(%7Bb%3A%203%2C%20c%3A%2010%7D)%0A%2F%2F%20%3D%3E%2016">Try in REPL</a>
 
@@ -2258,7 +2695,9 @@ It returns a partial copy of an `obj` containing only `propsToPick` properties.
 R.pick(['a', 'c'], {a: 1, b: 2}) // => {a: 1}
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pick.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/pick.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/pick.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.pick(%5B'a'%2C%20'c'%5D%2C%20%7Ba%3A%201%2C%20b%3A%202%7D)%20%2F%2F%20%3D%3E%20%7Ba%3A%201%7D">Try in REPL</a>
 
@@ -2278,7 +2717,9 @@ const result = R.pipe(
 // => [6, 8]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pipe.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/pipe.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/pipe.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.pipe(%0A%20%20R.filter(val%20%3D%3E%20val%20%3E%202)%2C%0A%20%20R.map(a%20%3D%3E%20a%20*%202)%0A)(%5B1%2C%202%2C%203%2C%204%5D)%0A%0A%2F%2F%20%3D%3E%20%5B6%2C%208%5D">Try in REPL</a>
 
@@ -2293,7 +2734,9 @@ It returns list of the values of `property` taken from the objects in array of o
 R.pluck('a')([{a: 1}, {a: 2}, {b: 3}]) // => [1, 2]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/pluck.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/pluck.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/pluck.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.pluck('a')(%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D)%20%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
 
@@ -2308,7 +2751,9 @@ It adds `x` to the start of the array `arr`.
 R.prepend('foo', ['bar', 'baz']) // => ['foo', 'bar', 'baz']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/prepend.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/prepend.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/prepend.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.prepend('foo'%2C%20%5B'bar'%2C%20'baz'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%2C%20'baz'%5D">Try in REPL</a>
 
@@ -2324,7 +2769,9 @@ R.prop('x', {x: 100}) // => 100
 R.prop('x', {a: 1}) // => undefined
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/prop.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/prop.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/prop.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.prop('x'%2C%20%7Bx%3A%20100%7D)%20%2F%2F%20%3D%3E%20100%0AR.prop('x'%2C%20%7Ba%3A%201%7D)%20%2F%2F%20%3D%3E%20undefined">Try in REPL</a>
 
@@ -2343,7 +2790,9 @@ const result = R.propEq(propToFind, valueToMatch)({foo: 0})
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/propEq.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/propEq.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/propEq.spec.js)
 
 <a href="https://rambda.now.sh?const%20propToFind%20%3D%20'foo'%0Aconst%20valueToMatch%20%3D%200%0A%0Aconst%20result%20%3D%20R.propEq(propToFind%2C%20valueToMatch)(%7Bfoo%3A%200%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -2358,7 +2807,9 @@ It returns a array of numbers from `start`(inclusive) to `end`(exclusive).
 R.range(0, 3)   // => [0, 1, 2]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/range.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/range.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/range.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.range(0%2C%203)%20%20%20%2F%2F%20%3D%3E%20%5B0%2C%201%2C%202%5D">Try in REPL</a>
 
@@ -2373,7 +2824,9 @@ const result = R.reduce(iteratorFn, 1, [1, 2, 3])
 // => 7
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/reduce.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/reduce.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/reduce.spec.js)
 
 <a href="https://rambda.now.sh?const%20iteratorFn%20%3D%20(acc%2C%20val)%20%3D%3E%20acc%20%2B%20val%0Aconst%20result%20%3D%20R.reduce(iteratorFn%2C%201%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%207">Try in REPL</a>
 
@@ -2393,7 +2846,9 @@ const result = R.reject(fn, [1, 2, 3, 4])
 // => [2, 4]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/reject.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/reject.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/reject.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(fn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%20%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
 
@@ -2406,7 +2861,9 @@ const result = R.reject(fn, [1, 2, 3, 4])
 R.repeat('foo', 2) // => ['foo', 'foo']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/repeat.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/repeat.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/repeat.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.repeat('foo'%2C%202)%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'foo'%5D">Try in REPL</a>
 
@@ -2423,7 +2880,9 @@ R.replace(/foo/, 'bar', 'foo foo') // => 'bar foo'
 R.replace(/foo/g, 'bar', 'foo foo') // => 'bar bar'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/replace.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/replace.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/replace.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.replace('foo'%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20foo'%0AR.replace(%2Ffoo%2F%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20foo'%0AR.replace(%2Ffoo%2Fg%2C%20'bar'%2C%20'foo%20foo')%20%2F%2F%20%3D%3E%20'bar%20bar'">Try in REPL</a>
 
@@ -2439,7 +2898,9 @@ const result = R.reverse(arr)
 // => [2, 1]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/reverse.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/reverse.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/reverse.spec.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B1%2C%202%5D%0A%0Aconst%20result%20%3D%20R.reverse(arr)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%5D">Try in REPL</a>
 
@@ -2459,7 +2920,9 @@ const result = R.sort(sortFn, [3, 1, 2])
 // => [1, 2, 3]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/sort.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/sort.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/sort.spec.js)
 
 <a href="https://rambda.now.sh?const%20sortFn%20%3D%20(a%2C%20b)%20%3D%3E%20a%20-%20b%0A%0Aconst%20result%20%3D%20R.sort(sortFn%2C%20%5B3%2C%201%2C%202%5D)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try in REPL</a>
 
@@ -2484,7 +2947,9 @@ const expectedResult = [ {foo: 0}, {foo: 1} ]
 console.log(result === expectedResult) // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/sortBy.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/sortBy.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/sortBy.spec.js)
 
 <a href="https://rambda.now.sh?const%20sortFn%20%3D%20obj%20%3D%3E%20obj.foo%0A%0Aconst%20result%20%3D%20R.sortBy(sortFn%2C%20%5B%0A%20%20%7Bfoo%3A%201%7D%2C%0A%20%20%7Bfoo%3A%200%7D%0A%5D)%0A%0Aconst%20expectedResult%20%3D%20%5B%20%7Bfoo%3A%200%7D%2C%20%7Bfoo%3A%201%7D%20%5D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -2497,7 +2962,9 @@ console.log(result === expectedResult) // => true
 R.split('-', 'a-b-c') // => ['a', 'b', 'c']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/split.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/split.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/split.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.split('-'%2C%20'a-b-c')%20%2F%2F%20%3D%3E%20%5B'a'%2C%20'b'%2C%20'c'%5D">Try in REPL</a>
 
@@ -2513,7 +2980,9 @@ R.splitEvery(2, [1, 2, 3]) // => [[1, 2], [3]]
 R.splitEvery(3, 'foobar') // => ['foo', 'bar']
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/splitEvery.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/splitEvery.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/splitEvery.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.splitEvery(2%2C%20%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%20%5B%5B1%2C%202%5D%2C%20%5B3%5D%5D%0AR.splitEvery(3%2C%20'foobar')%20%2F%2F%20%3D%3E%20%5B'foo'%2C%20'bar'%5D">Try in REPL</a>
 
@@ -2534,7 +3003,9 @@ R.startsWith(
 ) // => false
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/startsWith.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/startsWith.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/startsWith.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.startsWith(%0A%20%20'foo'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20true%0A%0AR.startsWith(%0A%20%20'bar'%2C%0A%20%20'foo-bar'%0A)%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
@@ -2547,10 +3018,14 @@ R.startsWith(
 R.subtract(3, 1) // => 2
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/subtract.spec.js)
+
 ---
 #### T
 
 `R.T() // => true`
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/T.spec.js)
 
 ---
 #### tail
@@ -2564,7 +3039,9 @@ R.tail([1, 2, 3])  // => [2, 3]
 R.tail('foo')  // => 'oo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/tail.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/tail.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/tail.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.tail(%5B1%2C%202%2C%203%5D)%20%20%2F%2F%20%3D%3E%20%5B2%2C%203%5D%0AR.tail('foo')%20%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
 
@@ -2580,7 +3057,9 @@ R.take(1, ['foo', 'bar']) // => ['foo']
 R.take(2, ['foo']) // => 'fo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/take.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/take.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/take.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.take(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%5D%0AR.take(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
 
@@ -2596,7 +3075,9 @@ R.takeLast(1, ['foo', 'bar']) // => ['bar']
 R.takeLast(2, ['foo']) // => 'oo'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/takeLast.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/takeLast.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/takeLast.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.takeLast(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%5D%0AR.takeLast(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
 
@@ -2612,7 +3093,9 @@ R.test(/^f/, 'foo')
 // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/test.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/test.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/test.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.test(%2F%5Ef%2F%2C%20'foo')%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -2629,7 +3112,9 @@ R.times(R.identity, 5)
 //=> [0, 1, 2, 3, 4]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/times.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/times.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/times.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.times(R.identity%2C%205)%0A%2F%2F%3D%3E%20%5B0%2C%201%2C%202%2C%203%2C%204%5D">Try in REPL</a>
 
@@ -2642,6 +3127,8 @@ R.times(R.identity, 5)
 R.toLower('FOO') // => 'foo'
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/toLower.spec.js)
+
 ---
 #### toString
 
@@ -2650,6 +3137,8 @@ R.toLower('FOO') // => 'foo'
 ```
 R.toString([1, 2]) // => '1,2'
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/toString.spec.js)
 
 ---
 #### toUpper
@@ -2660,6 +3149,8 @@ R.toString([1, 2]) // => '1,2'
 R.toUpper('foo') // => 'FOO'
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/toUpper.spec.js)
+
 ---
 #### trim
 
@@ -2668,6 +3159,8 @@ R.toUpper('foo') // => 'FOO'
 ```
 R.trim('  foo  ') // => 'foo'
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/trim.spec.js)
 
 ---
 #### type
@@ -2693,7 +3186,9 @@ const delay = ms => new Promise(resolve => {
 R.type(delay) // => 'Promise'
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/type.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/type.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/type.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.type(()%20%3D%3E%20%7B%7D)%20%2F%2F%20%3D%3E%20'Function'%0AR.type(async%20()%20%3D%3E%20%7B%7D)%20%2F%2F%20%3D%3E%20'Async'%0AR.type(%5B%5D)%20%2F%2F%20%3D%3E%20'Array'%0AR.type(%7B%7D)%20%2F%2F%20%3D%3E%20'Object'%0AR.type('foo')%20%2F%2F%20%3D%3E%20'String'%0AR.type(1)%20%2F%2F%20%3D%3E%20'Number'%0AR.type(true)%20%2F%2F%20%3D%3E%20'Boolean'%0AR.type(null)%20%2F%2F%20%3D%3E%20'Null'%0AR.type(%2F%5BA-z%5D%2F)%20%2F%2F%20%3D%3E%20'RegExp'%0A%0Aconst%20delay%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(function%20()%20%7B%0A%20%20%20%20resolve()%0A%20%20%7D%2C%20ms)%0A%7D)%0AR.type(delay)%20%2F%2F%20%3D%3E%20'Promise'">Try in REPL</a>
 
@@ -2709,7 +3204,9 @@ R.uniq([1, 1, 2, 1])
 // => [1, 2]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/uniq.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/uniq.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/uniq.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.uniq(%5B1%2C%201%2C%202%2C%201%5D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
 
@@ -2742,7 +3239,9 @@ const result = R.uniqWith(fn, arr)
 console.log(result === expectedResult) // => true
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/uniqWith.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/uniqWith.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/uniqWith.spec.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Bid%3A%200%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%201%2C%20title%3A'bar'%7D%2C%0A%20%20%7Bid%3A%202%2C%20title%3A'baz'%7D%2C%0A%20%20%7Bid%3A%203%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%204%2C%20title%3A'bar'%7D%2C%0A%5D%0A%0Aconst%20expectedResult%20%3D%20%5B%0A%20%20%7Bid%3A%200%2C%20title%3A'foo'%7D%2C%0A%20%20%7Bid%3A%201%2C%20title%3A'bar'%7D%2C%0A%20%20%7Bid%3A%202%2C%20title%3A'baz'%7D%2C%0A%5D%0A%0Aconst%20fn%20%3D%20(x%2Cy)%20%3D%3E%20x.title%20%3D%3D%3D%20y.title%0A%0Aconst%20result%20%3D%20R.uniqWith(fn%2C%20arr)%0A%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
@@ -2759,7 +3258,9 @@ R.update(0, 'foo', ['bar', 'baz'])
 // => ['foo', baz]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/update.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/update.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/update.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.update(0%2C%20'foo'%2C%20%5B'bar'%2C%20'baz'%5D)%0A%2F%2F%20%3D%3E%20%5B'foo'%2C%20baz%5D">Try in REPL</a>
 
@@ -2775,7 +3276,9 @@ R.values({a: 1, b: 2})
 // => [1, 2]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/values.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/values.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/values.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.values(%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
 
@@ -2795,7 +3298,9 @@ R.without([1, 2], [1, 2, 3, 4])
 // => [3, 4]
 ```
 
-[Source](https://github.com/selfrefactor/rambda/tree/master/modules/without.js)
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/without.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/without.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.without(%5B1%2C%202%5D%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Try in REPL</a>
 
@@ -2815,6 +3320,8 @@ R.zip([1, 2, 3, 4], ['A', 'B'])
 // => [[1, 'A'], [2, 'B']]
 ```
 
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/zip.spec.js)
+
 ---
 #### zipObj
 
@@ -2830,3 +3337,6 @@ R.zipObj(['a', 'b', 'c'], [1, 2, 3])
 R.zipObj(['a', 'b', 'c'], [1, 2])
 //=> {a: 1, b: 2}
 ```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/zipObj.spec.js)
+
