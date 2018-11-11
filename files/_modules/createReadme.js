@@ -15,7 +15,8 @@ function getCodeExample(input){
 }
 
 function appendTestLink(input){
-  const [method] = input.match(/####.+/)
+  const [method] = input.match(/.+/)
+  console.log({method})
   const link = multiline(`
     https://github.com
     selfrefactor
@@ -26,12 +27,7 @@ function appendTestLink(input){
     ${method}.spec.js
   `, '/')
 
-  const testLink = multiline(`
-    \n\n
-    [Go to '${method}' test]
-    (${link})
-    \n\n
-  `,'')
+  const testLink = `\n\n[Go to '${method}' test](${link})\n\n`
 
   return `${input.trim()}${testLink}`
 }
@@ -41,7 +37,7 @@ function getContentWithREPL(input){
   const replLink = rambdaREPL(codeExample)
   const markdownLink = `<a href="${ replLink }">Try in REPL</a>`
 
-  return `${ appendTestLink(input) }\n\n${ markdownLink }\n\n`
+  return `${ appendTestLink(input) }${ markdownLink }\n\n`
 }
 
 void function createReadme() {
@@ -53,10 +49,12 @@ void function createReadme() {
 
   const contentWithREPL = content
     .split(MARKER_METHOD)
-    .map(singleMethod => {
+    .map((singleMethod, i) => {
       const flag = all(
         marker => singleMethod.includes(marker)
       )([ MARKER_CODE, MARKER_SOURCE ])
+
+      if(i === 0) return singleMethod
 
       if (flag){
         return getContentWithREPL(singleMethod)
