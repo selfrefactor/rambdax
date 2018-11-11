@@ -1077,14 +1077,98 @@ const result = async () => {
 
 It returns function that runs `fn` in `try/catch` block. If there was an error, then `fallback` is used to return the result. Note that `fn` can be value, function or promise-like.
 
-It is best to check with the [tests](./src/tryCatch.spec.js) of this method in order to fully understand it, as it doesn't match the behaviour of the same method in `Ramda`.
+Please check the tests below in order to fully understand this method, as it doesn't match the behaviour of the same method in `Ramda`.
 
 ```
-const result = R.tryCatch(
-  R.prop('x'),
-  false
-)(null))
-// => false
+import { delay } from './delay'
+import { prop } from './rambda/prop'
+import { tryCatch } from './tryCatch'
+
+test('throws when fn is not function', () => {
+  const fn = 'foo'
+
+  expect(
+    () => tryCatch(fn, false)(null)
+  ).toThrow(`R.tryCatch | fn 'foo'`)
+})
+
+test('when fallback is used', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, false)(null)).toBe(false)
+})
+
+test('when fallback is function', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, x => x)(null)).toBe(null)
+})
+
+test('when fn is used', () => {
+  const fn = prop('x')
+
+  expect(tryCatch(fn, false)({})).toBe(undefined)
+
+  expect(tryCatch(fn, false)({ x: 1 })).toBe(1)
+})
+
+test('when async + fallback', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+
+  expect(await tryCatch(fn, 'fallback')(100)).toBe('fallback')
+  expect(called).toBe(true)
+})
+
+test('when async + fallback is function', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+
+  expect(await tryCatch(fn, x => x + 1)(100)).toBe(101)
+  expect(called).toBe(true)
+})
+
+test('when async + fallback is async', async () => {
+  let called = false
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return JSON.parse('{a:')
+  }
+  const fallback = async input => {
+    return input + 1
+  }
+
+  expect(await tryCatch(fn, fallback)(100)).toBe(101)
+  expect(called).toBe(true)
+})
+
+test('when async + fn', async () => {
+  let called = false
+
+  const fn = async input => {
+    await delay(input)
+    called = true
+
+    return input + 1
+  }
+
+  expect(await tryCatch(fn, 'fallback')(100)).toBe(101)
+  expect(called).toBe(true)
+})
 ```
 
 #### wait
@@ -1107,7 +1191,63 @@ void async function wait(){
 
 It returns `true`, if `condition` returns `true` within `ms` milisececonds time period.
 
-[test]
+Best description of this method are the actual tests:
+
+```
+import { waitFor } from './waitFor'
+
+const howLong = 1000
+
+test('true', async () => {
+  let counter = 0
+  const condition = x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(6)
+  expect(result).toEqual(true)
+})
+
+test('false', async () => {
+  let counter = 0
+  const condition = x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(12)
+  expect(result).toEqual(false)
+})
+
+test('async condition | true', async () => {
+  let counter = 0
+  const condition = async x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(6)
+  expect(result).toEqual(true)
+})
+
+test('async condition | false', async () => {
+  let counter = 0
+  const condition = async x => {
+    counter++
+    return counter > x
+  }
+
+  const result = await waitFor(condition, howLong)(12)
+  expect(result).toEqual(false)
+})
+
+test('throws when fn is not function', () => {
+  const fn = 'foo'
+
+  expect(() => waitFor(fn, howLong)()).toThrow('R.waitFor')
+})
+```
 
 #### where
 
