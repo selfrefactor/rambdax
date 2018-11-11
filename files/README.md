@@ -1087,6 +1087,28 @@ const result = R.tryCatch(
 // => false
 ```
 
+#### wait
+
+> wait(fn: Async): Promise<[any, Error]>
+
+It provides `Golang`-like interface for handling promises.
+
+```
+void async function wait(){
+  const [err, ok] = await R.wait(R.delay(1000))
+  // => err is undefined
+  // => ok is `RAMBDAX_DELAY`
+}()
+```
+
+#### waitFor
+
+> waitFor(condition: any, ms: number): Promise
+
+It returns `true`, if `condition` returns `true` within `ms` milisececonds time period.
+
+[test]
+
 #### where
 
 > where(conditions: object, input: object): boolean
