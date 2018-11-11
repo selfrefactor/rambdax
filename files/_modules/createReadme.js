@@ -8,6 +8,8 @@ const MARKER_METHOD = '#### '
 const MARKER_METHOD_LINE = `---
 #### `
 
+let rambdaFlag = false
+
 function getCodeExample(input){
   const [ , code, ..._ ] = input.split(MARKER_CODE)
 
@@ -16,10 +18,15 @@ function getCodeExample(input){
 
 function appendTestLink(input){
   const [method] = input.match(/.+/)
+  
+  if(method.trim() === 'add'){
+    rambdaFlag = true
+  } 
+
   const link = multiline(`
     https://github.com
     selfrefactor
-    rambdax
+    ${rambdaFlag? 'rambda' : 'rambdax'}
     blob
     master
     src
