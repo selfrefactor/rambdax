@@ -69,8 +69,6 @@ test('when async + fallback is async', async () => {
     return JSON.parse('{a:')
   }
   const fallback = async input => {
-    // await delay(input)
-
     return input + 1
   }
 

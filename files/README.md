@@ -722,6 +722,19 @@ console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
+#### pathEq
+
+> pathEq(path:string|string[], target: any, obj: object): boolean
+
+```
+const result = R.pathEq(
+  'a.b',
+  1,
+  {a: {b:1} }
+)
+// => true
+```
+
 #### pass
 
 > pass(...inputs: any[]): (schemas: any[]) => boolean
@@ -1057,6 +1070,22 @@ const result = async () => {
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/throttle.js)
+
+#### tryCatch
+
+> tryCatch(fn: Async|Function, fallback: any): Function
+
+It returns function that runs `fn` in `try/catch` block. If there was an error, then `fallback` is used to return the result. Note that `fn` can be value, function or promise-like.
+
+It is best to check with the [tests](./src/tryCatch.spec.js) of this method in order to fully understand it, as it doesn't match the behaviour of the same method in `Ramda`.
+
+```
+const result = R.tryCatch(
+  R.prop('x'),
+  false
+)(null))
+// => false
+```
 
 #### where
 
