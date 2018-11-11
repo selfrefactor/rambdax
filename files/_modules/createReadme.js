@@ -1,4 +1,4 @@
-const {all} = require('rambda')
+const {all, multiline} = require('../../dist/rambdax')
 const { rambdaREPL } = require('rambda-repl')
 const { readFileSync, writeFileSync } = require('fs')
 
@@ -14,12 +14,34 @@ function getCodeExample(input){
   return code.trim()
 }
 
+function appendTestLink(input){
+  const [method] = input.match(/####.+/)
+  const link = multiline(`
+    https://github.com
+    selfrefactor
+    rambdax
+    blob
+    master
+    src
+    ${method}.spec.js
+  `, '/')
+
+  const testLink = multiline(`
+    \n\n
+    [Go to '${method}' test]
+    (${link})
+    \n\n
+  `,'')
+
+  return `${input.trim()}${testLink}`
+}
+
 function getContentWithREPL(input){
   const codeExample = getCodeExample(input)
   const replLink = rambdaREPL(codeExample)
   const markdownLink = `<a href="${ replLink }">Try in REPL</a>`
 
-  return `${ input.trim() }\n\n${ markdownLink }\n\n`
+  return `${ appendTestLink(input) }\n\n${ markdownLink }\n\n`
 }
 
 void function createReadme() {
@@ -40,7 +62,7 @@ void function createReadme() {
         return getContentWithREPL(singleMethod)
       }
 
-      return singleMethod
+      return appendTestLink(singleMethod)
     })
 
   const newReadme = contentWithREPL.join(MARKER_METHOD_LINE)
