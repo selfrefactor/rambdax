@@ -55,7 +55,7 @@ test('type can be `"async"`', () => {
   ).toBeTruthy()
 })
 
-test('function is not schema', () => {
+test('function as schema - false', () => {
   const input = {
     a: {
       ab: () => true,
@@ -448,6 +448,24 @@ test('should allow additional properties', () => {
     isValid({
       input,
       schema: { title: 'string' },
+    })
+  ).toBeTruthy()
+})
+
+test('accepts values as schemas', () => {
+  const input = {
+    title: 'You shook me',
+    genre: 'Blues',
+    year: 1969,
+  }
+  const schema = {
+    title: 'You shook me',
+    year: 1969,
+  }
+  expect(
+    isValid({
+      input,
+      schema,
     })
   ).toBeTruthy()
 })

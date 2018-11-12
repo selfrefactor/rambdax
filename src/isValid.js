@@ -16,7 +16,7 @@ export function isValid({ input, schema }) {
     }
   }
 
-  for (const requirementRaw in schema) {
+  for (const requirementRaw in schema) {    
     if (flag) {
       const isOptional = requirementRaw.endsWith('?')
       const requirement = isOptional ?
@@ -30,7 +30,10 @@ export function isValid({ input, schema }) {
       const ok =
         isOptional && inputProp !== undefined || !isOptional
 
-      if (!ok || rule === 'any' && inputProp != null) continue
+      if (
+        (!ok || (rule === 'any' && inputProp != null)) ||
+        rule === inputProp
+      ) continue
 
       if (ruleType === 'Object') {
         /**

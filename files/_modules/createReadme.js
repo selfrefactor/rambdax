@@ -1,4 +1,4 @@
-const {all, multiline} = require('../../dist/rambdax')
+const { all, multiline } = require('../../dist/rambdax')
 const { rambdaREPL } = require('rambda-repl')
 const { readFileSync, writeFileSync } = require('fs')
 
@@ -17,25 +17,25 @@ function getCodeExample(input){
 }
 
 function appendTestLink(input){
-  const [method] = input.match(/.+/)
-  
-  if(method.trim() === 'add'){
+  const [ method ] = input.match(/.+/)
+
+  if (method.trim() === 'add'){
     rambdaFlag = true
-  } 
+  }
 
   const link = multiline(`
     https://github.com
     selfrefactor
-    ${rambdaFlag? 'rambda' : 'rambdax'}
+    ${ rambdaFlag ? 'rambda' : 'rambdax' }
     blob
     master
     src
-    ${method}.spec.js
+    ${ method }.spec.js
   `, '/')
 
-  const testLink = `\n\n[Test](${link})\n\n`
+  const testLink = `\n\n[Test](${ link })\n\n`
 
-  return `${input.trim()}${testLink}`
+  return `${ input.trim() }${ testLink }`
 }
 
 function getContentWithREPL(input){
@@ -47,7 +47,7 @@ function getContentWithREPL(input){
 }
 
 void function createReadme() {
-  const outputPath = `${process.cwd()}/README.md`
+  const outputPath = `${ process.cwd() }/README.md`
 
   const content = readFileSync(
     `${ process.cwd() }/files/README.md`
@@ -60,7 +60,7 @@ void function createReadme() {
         marker => singleMethod.includes(marker)
       )([ MARKER_CODE, MARKER_SOURCE ])
 
-      if(i === 0) return singleMethod
+      if (i === 0) return singleMethod
 
       if (flag){
         return getContentWithREPL(singleMethod)
