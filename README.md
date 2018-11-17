@@ -423,9 +423,6 @@ const result = R.findInObject(fn, obj)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
 
-    setter(key: string|object, value?: any): void
-    reset(): void
-
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/findInObject.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20key)%20%3D%3E%20x%20%3E%201%20%26%26%20key.length%20%3E%201%0Aconst%20obj%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20b%20%20%20%3A%202%2C%0A%20%20foo%20%3A%203%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.findInObject(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20prop%20%20%3A%20'foo'%2Cvalue%20%3A%203%7D">Try in REPL</a>
@@ -503,6 +500,20 @@ R.greater(1,2) // => true
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/greater.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+
+---
+#### includesAny(targets:any[], source: string|any[]): boolean
+
+It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
+
+```
+R.includesAny(
+  ['foo','baz', {a:1}]
+)([1,2,{a:1}])
+// => true
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/includesAny(targets:any[], source: string|any[]): boolean.spec.js)
 
 ---
 #### includesType

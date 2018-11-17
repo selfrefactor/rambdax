@@ -7,6 +7,12 @@ const replace = ({ inputHolder, prop, replacer }) =>
   inputHolder.replace(`{{${ prop }}}`, replacer)
 
 export function template(input, templateInput) {
+  if(arguments.length === 1){
+    return templateInputHolder => template(
+      input, 
+      templateInputHolder
+    )
+  }
   const occurances = getOccurances(input)
   if (occurances === null) return input
 

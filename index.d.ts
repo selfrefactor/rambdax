@@ -171,11 +171,12 @@ declare namespace R {
     // RAMBDAX_START
     allFalse(...input: Array<any>): boolean
     anyFalse(...input: Array<any>): boolean
-    anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
 
     allTrue(...input: Array<any>): boolean
     anyTrue(...input: Array<any>): boolean
+
     allType(targetType: RambdaTypes): (...input: Array<any>) => boolean
+    anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
 
     change(
       origin: object, 
@@ -203,7 +204,9 @@ declare namespace R {
     DELAY: string
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
-    evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
+    evolve<V>(
+      transformations: Evolver<V>
+    ): <W extends V>(obj: W) => W
 
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
@@ -239,6 +242,14 @@ declare namespace R {
 
     isAttach() : boolean
     pass(...inputs: any[]): (...rules: any[]) => boolean
+
+    includesAny(
+      targets:any[], 
+      source: string|any[]
+    ): boolean
+    includesAny(
+      targets:any[]
+    ): (source: string|any[]) => boolean
 
     includesType(
       targetType: RambdaTypes, 
@@ -329,8 +340,8 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
-
     template(input: string, templateInput: object): string
+    template(input: string): (templateInput: object) => string
 
     tryCatch<T>(
       fn:  any, 
@@ -341,7 +352,10 @@ declare namespace R {
 
     wait<T>(fn: Async<T>): Promise<[T, Error]>
 
-    waitFor(condition: Function|Promise<any>, msHowLong: number): (input: any) => Promise<boolean>
+    waitFor(
+      condition: Function|Promise<any>, 
+      msHowLong: number): (input: any
+    ) => Promise<boolean>
 
     when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
     when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>

@@ -26,11 +26,11 @@ test('ok', () => {
   expect(result).toEqual(expectedResult)
 })
 
-test('no interpolation', () => {
+test('no interpolation + curry', () => {
   const input = 'foo is bar even more'
   const templateInput = { bar: 'BAR' }
 
-  const result = template(input, templateInput)
+  const result = template(input)(templateInput)
   const expectedResult = 'foo is bar even more'
 
   expect(result).toEqual(expectedResult)

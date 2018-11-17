@@ -364,9 +364,6 @@ const result = R.findInObject(fn, obj)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/findInObject.js)
 
-    setter(key: string|object, value?: any): void
-    reset(): void
-
 #### setter
 
 > setter(key: string|object, value?: any): void
@@ -426,6 +423,17 @@ R.greater(1,2) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/greater.js)
+
+#### includesAny(targets:any[], source: string|any[]): boolean
+
+It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
+
+```
+R.includesAny(
+  ['foo','baz', {a:1}]
+)([1,2,{a:1}])
+// => true
+```
 
 #### includesType
 

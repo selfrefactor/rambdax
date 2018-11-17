@@ -1,5 +1,7 @@
 # CHANGELOG
 
+0.22.0 Add `R.includesAny`
+
 0.21.0 Add `R.includesType`
 
 0.20.1 `R.pass` and `R.ok` work with single schema.

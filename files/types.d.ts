@@ -204,7 +204,9 @@ declare namespace R {
     DELAY: string
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
-    evolve<V>(transformations: Evolver<V>): <W extends V>(obj: W) => W
+    evolve<V>(
+      transformations: Evolver<V>
+    ): <W extends V>(obj: W) => W
 
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
@@ -240,6 +242,14 @@ declare namespace R {
 
     isAttach() : boolean
     pass(...inputs: any[]): (...rules: any[]) => boolean
+
+    includesAny(
+      targets:any[], 
+      source: string|any[]
+    ): boolean
+    includesAny(
+      targets:any[]
+    ): (source: string|any[]) => boolean
 
     includesType(
       targetType: RambdaTypes, 
@@ -331,6 +341,7 @@ declare namespace R {
 
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
     template(input: string, templateInput: object): string
+    template(input: string): (templateInput: object) => string
 
     tryCatch<T>(
       fn:  any, 
