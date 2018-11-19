@@ -191,6 +191,10 @@ declare namespace R {
     ): (input: any) => Promise<any>
 
     composed<T>(...fnList: any[]): T
+
+    count<T>(target: T, list: any[]): number
+    count<T>(target: T) : (list: any[]) => number
+    
     debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>;
 
     defaultWhen<T>(

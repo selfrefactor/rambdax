@@ -1,5 +1,7 @@
 # CHANGELOG
 
+0.23.0 Add `R.count`
+
 0.22.0 Add `R.includesAny`
 
 0.21.0 Add `R.includesType`
