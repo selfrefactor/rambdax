@@ -1,7 +1,7 @@
-import { allFalse } from './allFalse'
-import { runTests } from './runTests'
+import {allFalse} from './allFalse'
+import {runTests} from './runTests'
 
-const OBJ = { c: 1 }
+const OBJ = {c: 1}
 
 const case1 = {
   foo: false,
@@ -23,7 +23,7 @@ const falseEvaluation = x => {
 }
 
 runTests({
-  data: [{ case1 }, { case2 }],
+  data: [{case1}, {case2}],
   evaluations: [
     {
       label: '{{tag}} - true',

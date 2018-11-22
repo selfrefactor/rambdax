@@ -18,3 +18,5 @@ export function remove(inputs, text) {
 
   return textCopy
 }
+
+

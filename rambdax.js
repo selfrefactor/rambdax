@@ -64,7 +64,7 @@ export * from './src/when'
 export * from './src/whenAsync'
 export * from './src/where'
 
-// RAMBDA
+//RAMBDA
 export * from './src/rambda/add'
 export * from './src/rambda/addIndex'
 export * from './src/rambda/adjust'
