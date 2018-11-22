@@ -1,7 +1,7 @@
-import { multiline } from './multiline'
+import { glue } from './glue'
 
 test('empty string as a glue', () => {
-  const result = multiline(
+  const result = glue(
     `
     foo
     bar
@@ -20,7 +20,7 @@ test('case 0', () => {
   const first = '--runInBand'
   const last = '-- src/a.spec.js'
   const flag = false
-  const result = multiline(`
+  const result = glue(`
     ${zero}
     ${first}
     ${flag ? '--env=node' : ''}
@@ -37,7 +37,7 @@ test('case 1', () => {
   const first = '--runInBand'
   const last = '-- src/a.spec.js'
   const flag = true
-  const result = multiline(`
+  const result = glue(`
     ${zero}
     ${first}
     ${flag ? '--env=node' : ''}
@@ -51,7 +51,7 @@ test('case 1', () => {
 
 test('case 2', () => {
   const first = '--runInBand'
-  const result = multiline(`
+  const result = glue(`
     zero
     ${first}
     last
@@ -62,7 +62,7 @@ test('case 2', () => {
 })
 
 test('case 3', () => {
-  const result = multiline(`
+  const result = glue(`
     foo
     bar
     baz
@@ -74,7 +74,7 @@ test('case 3', () => {
 })
 
 test('with glue', () => {
-  const result = multiline(
+  const result = glue(
     `
     foo
     bar

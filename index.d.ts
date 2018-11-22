@@ -218,6 +218,7 @@ declare namespace R {
     flatMap<T>(fn: Function, input: any[]): T[]
     flatMap<T>(fn: Function) : (input: any[]) => T[]
 
+    glue(input: string, glueString?: string): string
     greater(x: number, y: number): boolean
     greater(x: number): (y: number) => boolean
 
@@ -284,8 +285,6 @@ declare namespace R {
     mergeRight(x: object): (y: object) => object
     
     mergeAll(input: object[]): object
-
-    multiline(input: string, glue?: string): string
 
     ok(...inputs: any[]): (...rules: any[]) => true | never 
 

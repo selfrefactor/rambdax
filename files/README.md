@@ -655,14 +655,14 @@ const result = R.mergeAll(arr)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mergeAll.js)
 
-#### multiline
+#### glue
 
-> multiline(input: string, glue?: string): string
+> glue(input: string, glueString?: string): string
 
-It transforms multiline strings to single line.
+It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
 
 ```
-const result = R.multiline(`
+const result = R.glue(`
   foo
   bar
   baz
@@ -672,7 +672,7 @@ const expectedResult = 'foo bar baz'
 // result === expectedResult
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/multiline.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
 
 #### ok
 

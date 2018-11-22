@@ -1,7 +1,6 @@
 import { findModify } from './findModify'
 
 const fn = (x,i) => {
-  console.log({x,i})
   return x + 1 > 10 ?
     { a:8, x} :
     false
