@@ -1,3 +1,4 @@
+import { delay } from './delay'
 import { isValid } from './isValid'
 
 test('`any` safeguard against `null`', () => {
@@ -44,9 +45,31 @@ test('type can be `"function"`', () => {
   ).toBeTruthy()
 })
 
-test('type can be `"async"`', () => {
+test('type can be `async`', () => {
   const input = { a: async () => {} }
   const schema = { a: 'async' }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('type can be `promise`', () => {
+  const input = { a: delay(1999) }
+  const schema = { a: 'promise' }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('type can be `promise` list', () => {
+  const input = { a: [delay(1999)] }
+  const schema = { a: ['promise'] }
   expect(
     isValid({
       input,
