@@ -1,6 +1,6 @@
 # CHANGELOG
 
-0.24.0 `R.glue` replaces `R.multiline`
+0.24.0 `R.glue` replaces `R.multiline`, remove `R.validate`
 
 0.23.0 Add `R.count`
 
