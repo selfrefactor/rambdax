@@ -16,8 +16,7 @@ test('', () => {
 })
 
 test('use boolean', () => {
-  const truncateTrue = when(
-    true,
+  const truncateTrue = when(true)(
     compose(
       x => `${x}...`,
       take(5)

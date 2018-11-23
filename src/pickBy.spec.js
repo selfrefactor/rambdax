@@ -13,4 +13,5 @@ test('pickBy', () => {
     c: 3,
   }
   expect(pickBy(fn, input)).toEqual(expectedResult)
+  expect(pickBy(fn)(input)).toEqual(expectedResult)
 })

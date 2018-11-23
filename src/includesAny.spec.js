@@ -79,3 +79,13 @@ test('strings as target, string as source - false', () =>{
     result
   ).toBeFalsy()
 })
+
+test('incorrect inputs', () =>{
+  const targets = ["foo","zeppelin"]
+  const source = null
+
+  const result = includesAny(targets, source)
+  expect(
+    result
+  ).toBeFalsy()
+})
