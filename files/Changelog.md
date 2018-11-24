@@ -1,6 +1,6 @@
 # CHANGELOG
 
-0.24.0 `R.glue` replaces `R.multiline`, remove `R.validate`
+0.24.0 add `R.pipedAsync`, replace `R.multiline` with `R.glue`, remove `R.validate`
 
 0.23.0 Add `R.count`
 

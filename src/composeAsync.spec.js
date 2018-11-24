@@ -120,30 +120,7 @@ test('known issue - function returning promise', async () => {
   expect(result).toEqual('[object Promise]1000')
 })
 
-test('throw error - case 1', async () => {
-  const delay = ms =>
-    new Promise((res, rej) => {
-      const b = ms + 7
-
-      rej(new Error('foo'))
-    })
-
-  let flag = true
-  try {
-    const result = await composeAsync(
-      a => a,
-      a => a + 1000,
-      async a => delay(a),
-      a => a + 11
-    )(20)
-  } catch (e) {
-    flag = false
-  }
-
-  expect(flag).toBe(false)
-})
-
-test('throw error - case 2', async () => {
+test('throw error', async () => {
   const delay = async ms => JSON.parse('{foo')
 
   let flag = true
@@ -161,28 +138,3 @@ test('throw error - case 2', async () => {
   expect(flag).toBe(false)
 })
 
-test('throw error - case 3', done => {
-  const delay = ms =>
-    new Promise((res, rej) => {
-      const b = ms + 7
-
-      rej(new Error('foo'))
-    })
-
-  const promise = composeAsync(
-    a => a,
-    a => a + 1000,
-    delay,
-    a => a + 11
-  )(20)
-
-  promise
-    .then(() => {
-      expect(true).toBe(false)
-      done()
-    })
-    .catch(err => {
-      expect(err).toBeInstanceOf(Error)
-      done()
-    })
-})

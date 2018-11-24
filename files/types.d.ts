@@ -186,9 +186,9 @@ declare namespace R {
 
     compact<T>(x: T[]): T[]
 
-    composeAsync(
-      ...fns: Array<Promise<any> | Function>
-    ): (input: any) => Promise<any>
+    composeAsync<T>(
+      ...fns: Array<Async | Function>
+    ): (input: any) => Promise<T>
 
     composed<T>(...fnList: any[]): T
 
@@ -203,9 +203,9 @@ declare namespace R {
       input: any
     ): T  
 
-    delay(ms: Number): Promise<string>
+    delay(ms: Number): Promise<'RAMBDAX_DELAY'>
 
-    DELAY: string
+    DELAY: 'RAMBDAX_DELAY'
 
     evolve<V>(transformations: Evolver<V>, obj: V): V
     evolve<V>(
@@ -299,6 +299,11 @@ declare namespace R {
     pickBy(fn: Function): (input: object) => object
 
     piped<T>(input: any, ...fnList: Function[]): T
+
+    pipedAsync<T>(
+      input: any, 
+      ...fns: Array< Function | Async >
+    ): Promise<T>  
 
     produce<Out>(
       conditions: any,

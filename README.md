@@ -230,11 +230,9 @@ const expectedResult = [1, false, " ", "foo", [1]]
 
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
 
-Asyncronous version of `R.compose`.
+It is same as `R.compose` but with support for asynchronous functions.
 
-Note that you should wrap the block with this function with `try/catch` in order to handle possible errors.
-
-Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+Note that it doesn't work with promises or function retunring promises such as `const foo = input => new Promise(...)`.
 
 ```
 const fn = async x => {
@@ -793,14 +791,14 @@ const result = R.mergeAll(arr)
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
-#### multiline
+#### glue
 
-> multiline(input: string, glue?: string): string
+> glue(input: string, glueString?: string): string
 
-It transforms multiline strings to single line.
+It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
 
 ```
-const result = R.multiline(`
+const result = R.glue(`
   foo
   bar
   baz
@@ -810,11 +808,11 @@ const expectedResult = 'foo bar baz'
 // result === expectedResult
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/multiline.js)
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
 
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/multiline.spec.js)
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/glue.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.multiline(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.glue(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
 #### ok
@@ -965,6 +963,33 @@ const result = piped(
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/piped.spec.js)
+
+---
+#### pipedAsync
+
+> pipedAsync(input: any, ...fns: Array<Function|Async>): Promise
+
+It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
+Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+
+```
+const result = await pipedAsync(
+  100, 
+  async x => {
+    await delay(100)
+    return x + 2
+  },
+  add(2),
+  async x => {
+    const delayed = await delay(100)
+    return delayed + x
+  }
+)
+const expected = 'RAMBDAX_DELAY104'
+// result === expected
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/pipedAsync.spec.js)
 
 ---
 #### produce

@@ -199,11 +199,9 @@ const expectedResult = [1, false, " ", "foo", [1]]
 
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
 
-Asyncronous version of `R.compose`.
+It is same as `R.compose` but with support for asynchronous functions.
 
-Note that you should wrap the block with this function with `try/catch` in order to handle possible errors.
-
-Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+Note that it doesn't work with promises or function retunring promises such as `const foo = input => new Promise(...)`.
 
 ```
 const fn = async x => {
@@ -795,6 +793,30 @@ const result = piped(
   R.map(x => x*10),
 )
 // => [20, 30]
+```
+
+#### pipedAsync
+
+> pipedAsync(input: any, ...fns: Array<Function|Async>): Promise
+
+It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
+Also functions that returns `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
+
+```
+const result = await pipedAsync(
+  100, 
+  async x => {
+    await delay(100)
+    return x + 2
+  },
+  add(2),
+  async x => {
+    const delayed = await delay(100)
+    return delayed + x
+  }
+)
+const expected = 'RAMBDAX_DELAY104'
+// result === expected
 ```
 
 #### produce
