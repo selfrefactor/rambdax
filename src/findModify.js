@@ -1,11 +1,11 @@
-// WAIT
-export function findModify (fn,list){ 
-  if(arguments.length === 1){
+//WAIT
+export function findModify(fn, list) {
+  if (arguments.length === 1) {
     return listHolder => findModify(fn, listHolder)
   }
 
   const len = list.length
-  if(len === 0) return false
+  if (len === 0) return false
 
   let index = -1
 
