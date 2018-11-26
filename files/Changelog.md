@@ -14,7 +14,6 @@
 - promiseAllObject
 - promiseAllSecure
 - rangeBy
-- where
 
   0.24.0 add `R.pipedAsync`, replace `R.multiline` with `R.glue`, remove `R.validate`
 

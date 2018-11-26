@@ -1,4 +1,4 @@
-const { all, multiline } = require('../../dist/rambdax')
+const { all, glue } = require('../../dist/rambdax')
 const { rambdaREPL } = require('rambda-repl')
 const { readFileSync, writeFileSync } = require('fs')
 
@@ -23,7 +23,7 @@ function appendTestLink(input){
     rambdaFlag = true
   }
 
-  const link = multiline(`
+  const link = glue(`
     https://github.com
     selfrefactor
     ${ rambdaFlag ? 'rambda' : 'rambdax' }

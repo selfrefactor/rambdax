@@ -39,6 +39,8 @@ You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
+Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located (/files/deprecated/README.md)[here.]
+
 ---
 #### allFalse
 
@@ -193,39 +195,6 @@ const expectedResult = {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/change.spec.js)
 
 ---
-#### compact
-
-> compact(arr: any[]): any[]
-
-It removes the empty values from an array.
-
-```
-const arr = [
-  1,
-  null,
-  undefined,
-  false,
-  "",
-  " ",
-  "foo",
-  {},
-  [],
-  [1],
-  /\s/g
-]
-
-const result = R.compact(arr)
-const expectedResult = [1, false, " ", "foo", [1]]
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/compact.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/compact.spec.js)
-
-<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%201%2C%0A%20%20null%2C%0A%20%20undefined%2C%0A%20%20false%2C%0A%20%20%22%22%2C%0A%20%20%22%20%22%2C%0A%20%20%22foo%22%2C%0A%20%20%7B%7D%2C%0A%20%20%5B%5D%2C%0A%20%20%5B1%5D%2C%0A%20%20%2F%5Cs%2Fg%0A%5D%0A%0Aconst%20result%20%3D%20R.compact(arr)%0Aconst%20expectedResult%20%3D%20%5B1%2C%20false%2C%20%22%20%22%2C%20%22foo%22%2C%20%5B1%5D%5D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
-
----
 #### composeAsync
 
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
@@ -350,55 +319,6 @@ const result = R.delay(1000)
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.delay(1000)%0A%2F%2F%20%60result%60%20resolves%20to%20%60'RAMBDAX_DELAY'%60">Try in REPL</a>
 
 ---
-#### evolve
-
-> evolve (rules: Object, input: Object): Object
-
-Properties of `input` object are transformed according to `rules` object that contains functions as values.
-
-If property `prop` of `rules` is a function and also a property of `input`, then `input[prop]` will be equal to the result of `rules[prop](input[prop])`.
-
-`rules[prop]` can be also a object that contains functions, as you can see in the example below:
-
-```
-const input = {
-  firstName : '  Tomato ',
-  data      : {
-    elapsed   : 100,
-    remaining : 1400,
-  },
-  id : 123,
-}
-const rules = {
-  firstName : R.trim,
-  lastName  : R.trim, //Will not get invoked.
-  data      : {
-    elapsed   : R.add(1),
-    remaining : R.add(-1),
-  },
-}
-
-const result = R.evolve(rules, input)
-
-const expectedResult = {
-  firstName: 'Tomato',
-  data: {
-    elapsed: 101,
-    remaining: 1399,
-  },
-  id: 123,
-}
-console.log(result === expectedResult)
-// true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/evolve.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/evolve.spec.js)
-
-<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20firstName%20%3A%20'%20%20Tomato%20'%2C%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20100%2C%0A%20%20%20%20remaining%20%3A%201400%2C%0A%20%20%7D%2C%0A%20%20id%20%3A%20123%2C%0A%7D%0Aconst%20rules%20%3D%20%7B%0A%20%20firstName%20%3A%20R.trim%2C%0A%20%20lastName%20%20%3A%20R.trim%2C%20%2F%2FWill%20not%20get%20invoked.%0A%20%20data%20%20%20%20%20%20%3A%20%7B%0A%20%20%20%20elapsed%20%20%20%3A%20R.add(1)%2C%0A%20%20%20%20remaining%20%3A%20R.add(-1)%2C%0A%20%20%7D%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.evolve(rules%2C%20input)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20firstName%3A%20'Tomato'%2C%0A%20%20data%3A%20%7B%0A%20%20%20%20elapsed%3A%20101%2C%0A%20%20%20%20remaining%3A%201399%2C%0A%20%20%7D%2C%0A%20%20id%3A%20123%2C%0A%7D%0Aconsole.log(result%20%3D%3D%3D%20expectedResult)%0A%2F%2F%20true">Try in REPL</a>
-
----
 #### findInObject
 
 > findInObject(fn: Function, obj: object): object
@@ -479,25 +399,6 @@ R.getter('b') // => undefined
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/reset.spec.js)
-
----
-#### greater
-
-> greater(x: number, y: number): boolean
-
-It return true if the second argument is greater than the first argument.
-
-Note that this is opposite direction compared to Rambda's `gt` method, because it makes more sense in `R.compose` context.
-
-```
-R.greater(1,2) // => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/greater.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/greater.spec.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.greater(1%2C2)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### includesAny(targets:any[], source: string|any[]): boolean
@@ -666,25 +567,6 @@ const result = R.isValid({
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%20%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
-#### less
-
-> less(x: number, y: number): boolean
-
-It return true if the second argument is less than the first argument.
-
-Note that this is opposite direction compared to Rambda's `lt` method, because it makes more sense in `R.compose` context.
-
-```
-R.less(2,1) // => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/less.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/less.spec.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.less(2%2C1)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
-
----
 #### mapAsync
 
 > mapAsync(fn: Async|Promise, arr: Array): Promise
@@ -839,35 +721,6 @@ const result = R.ok(
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.ok(%0A%20%201%2C%20%5B%20'foo'%2C%20'bar'%20%5D%0A)('number'%2C%20%5B%20'string'%20%5D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
-#### omitBy
-
-> omitBy(fn: function, input: Object): Object
-
-It returns only those properties of `input` that return `false` when passed to `fn`.
-
-```
-const input = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-}
-const fn = (prop, val) => val < 3
-const expectedResult = {
-  c: 3,
-  d: 4,
-}
-const result = R.omitBy(fn, input)
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/omitBy.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/omitBy.spec.js)
-
-<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2C%20val)%20%3D%3E%20val%20%3C%203%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.omitBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
-
----
 #### once
 
 > once(fn: Function): Function
@@ -918,35 +771,6 @@ const result = R.pass(1,['foo','bar'])('number',['string'])
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/pass.spec.js)
 
 ---
-#### pickBy
-
-> pickBy(fn: Function, input: Object): Object
-
-It returns only those properties of `input` that return `true` when passed to `fn`.
-
-```
-const input = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-}
-const fn = (prop,val) => val > 3 || prop === 'a'
-const expectedResult = {
-  a: 1,
-  d: 4,
-}
-const result = R.pickBy(fn, input)
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/pickBy.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/pickBy.spec.js)
-
-<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%202%2C%0A%20%20c%3A%203%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20fn%20%3D%20(prop%2Cval)%20%3D%3E%20val%20%3E%203%20%7C%7C%20prop%20%3D%3D%3D%20'a'%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20d%3A%204%2C%0A%7D%0Aconst%20result%20%3D%20R.pickBy(fn%2C%20input)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
-
----
 #### piped
 
 > piped(...fnList: any[]): any
@@ -992,109 +816,6 @@ const expected = 'RAMBDAX_DELAY104'
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/pipedAsync.spec.js)
 
 ---
-#### produce
-
-> produce(conditions: Object, input: any): Promise|Object
-
-```
-const conditions = {
-  foo: a => a > 10,
-  bar: a => ({baz:a})
-}
-
-const result = R.produce(conditions, 7)
-
-const expectedResult = {
-  foo: false,
-  bar: {baz: 7}
-}
-// result === expectedResult
-```
-
-`conditions` is an object with sync or async functions as values.
-
-The values of the returned object `returnValue` are the results of those functions when `input` is passed.
-The properties of the returned object are equal to `input`.
-
-If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/produce.spec.js)
-
-<a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
-
----
-#### promiseAllObject
-
-> promiseAllObject(promises: Object): Promise
-
-It acts as `Promise.all` for object with Promises.
-It returns a promise that resolve to object.
-
-```
-const fn = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : fn(1),
-  b : fn(2),
-}
-
-const result = R.promiseAllObject(promises)
-const expectedResult = { a:1, b:2 }
-// `result` resolves to `expectedResult`
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/promiseAllObject.spec.js)
-
-<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.promiseAllObject(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
-
----
-#### promiseAllSecure
-
-> promiseAllSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
-
-It acts as `Promise.all` with fault tollerance.
-
-Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
-Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
-
-```
-const fn = async () => {
-  try {
-    JSON.parse("{:a")
-  }
-  catch (err) {
-    throw new Error(err)
-  }
-}
-
-const result = R.promiseAllSecure([
-  R.delay(2000),
-  fn(1000)
-])
-
-const expectedResult = [
-  {
-    "payload": 'RAMBDAX_DELAY',
-    "type": "RESULT"
-  },
-  {
-    payload:"Unexpected token : in JSON at position 1",
-    type: "ERROR"
-  }
-]
-// `result` resolves to `expectedResult`
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/promiseAllSecure.spec.js)
-
----
 #### random
 
 > random(min: number, max: number): number
@@ -1102,27 +823,6 @@ const expectedResult = [
 It returns a random number between `min` inclusive and `max` inclusive.
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/random.spec.js)
-
----
-#### rangeBy
-
-> rangeBy(start: number, end: number, step: number): number[]
-
-It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
-
-```
-const result = R.rangeBy(0, 10, 2)
-// => [0, 2, 4, 6, 8, 10])
-
-console.log(R.rangeBy(0, 2, 0.3))
-// =>[0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/rangeBy.spec.js)
-
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.rangeBy(0%2C%2010%2C%202)%0A%2F%2F%20%3D%3E%20%5B0%2C%202%2C%204%2C%206%2C%208%2C%2010%5D)%0A%0Aconsole.log(R.rangeBy(0%2C%202%2C%200.3))%0A%2F%2F%20%3D%3E%5B0%2C%200.3%2C%200.6%2C%200.9%2C%201.2%2C%201.5%2C%201.8%5D">Try in REPL</a>
 
 ---
 #### remove

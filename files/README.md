@@ -39,6 +39,8 @@ You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
+Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located (/files/deprecated/README.md)[here.]
+
 #### allFalse
 
 > allFalse(...inputs: any[]): boolean
@@ -167,34 +169,6 @@ const expectedResult = {
 // result === expectedResult
 ```
 
-#### compact
-
-> compact(arr: any[]): any[]
-
-It removes the empty values from an array.
-
-```
-const arr = [
-  1,
-  null,
-  undefined,
-  false,
-  "",
-  " ",
-  "foo",
-  {},
-  [],
-  [1],
-  /\s/g
-]
-
-const result = R.compact(arr)
-const expectedResult = [1, false, " ", "foo", [1]]
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/compact.js)
-
 #### composeAsync
 
 > composeAsync(...fns: Array<Function|Async>)(startValue: any): Promise
@@ -296,50 +270,6 @@ const result = R.delay(1000)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/delay.js)
 
-#### evolve
-
-> evolve (rules: Object, input: Object): Object
-
-Properties of `input` object are transformed according to `rules` object that contains functions as values.
-
-If property `prop` of `rules` is a function and also a property of `input`, then `input[prop]` will be equal to the result of `rules[prop](input[prop])`.
-
-`rules[prop]` can be also a object that contains functions, as you can see in the example below:
-
-```
-const input = {
-  firstName : '  Tomato ',
-  data      : {
-    elapsed   : 100,
-    remaining : 1400,
-  },
-  id : 123,
-}
-const rules = {
-  firstName : R.trim,
-  lastName  : R.trim, //Will not get invoked.
-  data      : {
-    elapsed   : R.add(1),
-    remaining : R.add(-1),
-  },
-}
-
-const result = R.evolve(rules, input)
-
-const expectedResult = {
-  firstName: 'Tomato',
-  data: {
-    elapsed: 101,
-    remaining: 1399,
-  },
-  id: 123,
-}
-console.log(result === expectedResult)
-// true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/evolve.js)
-
 #### findInObject
 
 > findInObject(fn: Function, obj: object): object
@@ -407,20 +337,6 @@ R.getter('b') // => 'bar'
 R.reset()
 R.getter('b') // => undefined
 ```
-
-#### greater
-
-> greater(x: number, y: number): boolean
-
-It return true if the second argument is greater than the first argument.
-
-Note that this is opposite direction compared to Rambda's `gt` method, because it makes more sense in `R.compose` context.
-
-```
-R.greater(1,2) // => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/greater.js)
 
 #### includesAny(targets:any[], source: string|any[]): boolean
 
@@ -551,20 +467,6 @@ const result = R.isValid({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
 
-#### less
-
-> less(x: number, y: number): boolean
-
-It return true if the second argument is less than the first argument.
-
-Note that this is opposite direction compared to Rambda's `lt` method, because it makes more sense in `R.compose` context.
-
-```
-R.less(2,1) // => true
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/less.js)
-
 #### mapAsync
 
 > mapAsync(fn: Async|Promise, arr: Array): Promise
@@ -691,30 +593,6 @@ const result = R.ok(
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/ok.js)
 
-#### omitBy
-
-> omitBy(fn: function, input: Object): Object
-
-It returns only those properties of `input` that return `false` when passed to `fn`.
-
-```
-const input = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-}
-const fn = (prop, val) => val < 3
-const expectedResult = {
-  c: 3,
-  d: 4,
-}
-const result = R.omitBy(fn, input)
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/omitBy.js)
-
 #### once
 
 > once(fn: Function): Function
@@ -756,30 +634,6 @@ const result = R.pass(1,['foo','bar'])('number',['string'])
 // => true
 ```
 
-#### pickBy
-
-> pickBy(fn: Function, input: Object): Object
-
-It returns only those properties of `input` that return `true` when passed to `fn`.
-
-```
-const input = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-}
-const fn = (prop,val) => val > 3 || prop === 'a'
-const expectedResult = {
-  a: 1,
-  d: 4,
-}
-const result = R.pickBy(fn, input)
-// result === expectedResult
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/pickBy.js)
-
 #### piped
 
 > piped(...fnList: any[]): any
@@ -819,117 +673,11 @@ const expected = 'RAMBDAX_DELAY104'
 // result === expected
 ```
 
-#### produce
-
-> produce(conditions: Object, input: any): Promise|Object
-
-```
-const conditions = {
-  foo: a => a > 10,
-  bar: a => ({baz:a})
-}
-
-const result = R.produce(conditions, 7)
-
-const expectedResult = {
-  foo: false,
-  bar: {baz: 7}
-}
-// result === expectedResult
-```
-
-`conditions` is an object with sync or async functions as values.
-
-The values of the returned object `returnValue` are the results of those functions when `input` is passed.
-The properties of the returned object are equal to `input`.
-
-If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
-
-#### promiseAllObject
-
-> promiseAllObject(promises: Object): Promise
-
-It acts as `Promise.all` for object with Promises.
-It returns a promise that resolve to object.
-
-```
-const fn = ms => new Promise(resolve => {
-  setTimeout(() => {
-    resolve(ms)
-  }, ms)
-})
-const promises = {
-  a : fn(1),
-  b : fn(2),
-}
-
-const result = R.promiseAllObject(promises)
-const expectedResult = { a:1, b:2 }
-// `result` resolves to `expectedResult`
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
-
-#### promiseAllSecure
-
-> promiseAllSecure(promises: Array): Array<{type: 'RESULT'|'ERROR', payload:any}>
-
-It acts as `Promise.all` with fault tollerance.
-
-Occurence of error `err` in any of the `promises` adds `{type: 'ERROR', payload: err}` to the final result.
-Result `result` in any of the `promises` adds `{type: 'RESULT', payload: result}` to the final result.
-
-```
-const fn = async () => {
-  try {
-    JSON.parse("{:a")
-  }
-  catch (err) {
-    throw new Error(err)
-  }
-}
-
-const result = R.promiseAllSecure([
-  R.delay(2000),
-  fn(1000)
-])
-
-const expectedResult = [
-  {
-    "payload": 'RAMBDAX_DELAY',
-    "type": "RESULT"
-  },
-  {
-    payload:"Unexpected token : in JSON at position 1",
-    type: "ERROR"
-  }
-]
-// `result` resolves to `expectedResult`
-```
-
 #### random
 
 > random(min: number, max: number): number
 
 It returns a random number between `min` inclusive and `max` inclusive.
-
-#### rangeBy
-
-> rangeBy(start: number, end: number, step: number): number[]
-
-It returns array of all numbers between `start` and `end`, when the step of increase is `step`.
-
-```
-const result = R.rangeBy(0, 10, 2)
-// => [0, 2, 4, 6, 8, 10])
-
-console.log(R.rangeBy(0, 2, 0.3))
-// =>[0, 0.3, 0.6, 0.9, 1.2, 1.5, 1.8]
-```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/rangeBy.js)
 
 #### remove
 

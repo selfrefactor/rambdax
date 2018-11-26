@@ -50,6 +50,7 @@ export * from './src/wait'
 export * from './src/waitFor'
 export * from './src/when'
 export * from './src/whenAsync'
+export * from './src/where'
 
 //RAMBDA
 export * from './src/rambda/add'
