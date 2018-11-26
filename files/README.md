@@ -673,6 +673,35 @@ const expected = 'RAMBDAX_DELAY104'
 // result === expected
 ```
 
+#### produce
+
+> produce(conditions: Object, input: any): Promise|Object
+
+```
+const conditions = {
+  foo: a => a > 10,
+  bar: a => ({baz:a})
+}
+
+const result = R.produce(conditions, 7)
+
+const expectedResult = {
+  foo: false,
+  bar: {baz: 7}
+}
+// result === expectedResult
+```
+
+`conditions` is an object with sync or async functions as values.
+
+The values of the returned object `returnValue` are the results of those functions when `input` is passed.
+The properties of the returned object are equal to `input`.
+
+If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
+
+
 #### random
 
 > random(min: number, max: number): number

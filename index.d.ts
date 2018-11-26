@@ -12,6 +12,8 @@ declare namespace R {
     | "RegExp"
     | "Function"
 
+  type Fn<T> = (input: any) => T  
+
   type FilterFunction<T> = (x: T, prop?: string) => boolean
   type MapFunction<In, Out> = (x: In, prop?: string) => Out
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
@@ -56,8 +58,6 @@ declare namespace R {
   type Arity1Fn = (a: any) => any
 
   type Pred = (...a: any[]) => boolean
-
-  type Evolver<T> = ((x: T) => T) | { [K in keyof T]?: Evolver<T[K]> }
 
   interface CurriedTypeGuard2<T1, T2, R extends T2> {
     (t1: T1): (t2: T2) => t2 is R
@@ -138,11 +138,6 @@ declare namespace R {
     [key: string]: Promise<any>
   }
 
-  interface PromiseAllSecureResult {
-    type: "RESULT" | "ERROR"
-    payload: any
-  }
-
   type SchemaStringTypes =
     | "array"
     | "string"
@@ -184,10 +179,8 @@ declare namespace R {
       changeData: any
     ): object
 
-    compact<T>(x: T[]): T[]
-
     composeAsync<T>(
-      ...fns: Array<Async | Function>
+      ...fns: Array<Async<T> | Function>
     ): (input: any) => Promise<T>
 
     composed<T>(...fnList: any[]): T
@@ -195,7 +188,7 @@ declare namespace R {
     count<T>(target: T, list: any[]): number
     count<T>(target: T) : (list: any[]) => number
     
-    debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>;
+    debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>
 
     defaultWhen<T>(
       fn: (x: T) => boolean, 
@@ -207,77 +200,66 @@ declare namespace R {
 
     DELAY: 'RAMBDAX_DELAY'
 
-    evolve<V>(transformations: Evolver<V>, obj: V): V
-    evolve<V>(
-      transformations: Evolver<V>
-    ): <W extends V>(obj: W) => W
-
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
 
-    flatMap<T>(fn: Function, input: any[]): T[]
-    flatMap<T>(fn: Function) : (input: any[]) => T[]
-
     glue(input: string, glueString?: string): string
-    greater(x: number, y: number): boolean
-    greater(x: number): (y: number) => boolean
 
-    getter<T>(key: string|string[]|undefined): T
-    setter(key: string|object, value?: any): void
+    getter<T>(keyOrKeys: string|string[]|undefined): T
+    setter(keyOrObject: string|object, value?: any): void
     reset(): void
     
-    less(x: number, y: number): boolean
-    less(x: number): (y: number) => boolean
-
     ifElseAsync<T>(
       condition: Async<any> | Function,
       ifFn: Async<any> | Function,
       elseFn: Async<any> | Function
     ): Async<T>
 
-    whenAsync<T>(
-      condition: Async<any> | Function | boolean,
-      whenFn: Async<any> | Function
-    ): Async<T>
-
-    inject(injection: string, marker: string, str: string): string
-
-    intersection<T>(list1: T[], list2: T[]): T[]
-    intersection<T>(list1: T[]): (list2: T[]) => T[]
+    inject(
+      toInjectAfterMarker: string, 
+      marker: string, 
+      input: string
+    ): string
 
     isAttach() : boolean
     pass(...inputs: any[]): (...rules: any[]) => boolean
 
     includesAny(
       targets:any[], 
-      source: string|any[]
+      stringOrList: string|any[]
     ): boolean
     includesAny(
       targets:any[]
-    ): (source: string|any[]) => boolean
+    ): (stringOrList: string|any[]) => boolean
 
     includesType(
       targetType: RambdaTypes, 
-    ): (x: any[]) => boolean
+    ): (list: any[]) => boolean
     includesType(
       targetType: RambdaTypes, 
-      x: any[]
+      list: any[]
     ): boolean
 
-    isType(xType: RambdaTypes, x: any): boolean
-    isArray(x: any): boolean
-    isString(x: any): boolean
-    isObject(x: any): boolean
-    isPromise(x: any): boolean
-    isFunction(x: any): boolean
+    isType(targetType: RambdaTypes, input: any): boolean
+    isArray(input: any): boolean
+    isString(input: any): boolean
+    isObject(input: any): boolean
 
-    mapAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
-    mapAsync<T>(fn: AsyncWithProp<any>, x: object): Promise<Array<T>>
-    mapAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
-    mapAsync<T>(fn: AsyncWithProp<any>): (x: object) => Promise<Array<T>>
+    isPromise(
+      maybePromiseOrAsync: any
+    ): boolean
 
-    mapFastAsync<T>(fn: Async<any>, x: any[]): Promise<Array<T>>
-    mapFastAsync<T>(fn: Async<any>): (x: any[]) => Promise<Array<T>>
+    isFunction(
+      maybePromiseFunctionOrAsync: any
+    ): boolean
+
+    mapAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithProp<any>, obj: object): Promise<Array<T>>
+    mapAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithProp<any>): (obj: object) => Promise<Array<T>>
+
+    mapFastAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
+    mapFastAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
 
     memoize<T>(fn: Function | Async<any>): T
 
@@ -288,44 +270,29 @@ declare namespace R {
 
     ok(...inputs: any[]): (...rules: any[]) => true | never 
 
-    omitBy<T,OT>(fn: Function, input: T): OT
-
     once(fn: Function): Function
 
     pathEq(path:string|string[], target: any, obj: object): boolean
     pathEq(path:string|string[], target: any): (obj: object) => boolean
 
-    pickBy(fn: Function, input: object): object
-    pickBy(fn: Function): (input: object) => object
-
     piped<T>(input: any, ...fnList: Function[]): T
 
     pipedAsync<T>(
       input: any, 
-      ...fns: Array< Function | Async >
+      ...fns: Array< Function | Async<any> >
     ): Promise<T>  
 
-    produce<Out>(
+    produce<T>(
       conditions: any,
       input: any
-    ): Out
+    ): T
 
-    produce<Out>(
+    produce<T>(
       conditions: any,
-    ): (input: any) => Out
-    
-    promiseAllObject(
-      input: ObjectWithPromises
-    ): Promise<object>
+    ): (input: any) => T
 
-    promiseAllSecure(
-      input: Array<Promise<any>>
-    ): Array<PromiseAllSecureResult>  
+    random(minInclusive: number, maxInclusive: number): number
 
-    random(min: number, max: number): number
-
-    rangeBy(start: number, end: number, step: number): number[]
-     
     remove(
       inputs: string|RegExp|Array<string|RegExp>,
       text: string
@@ -335,8 +302,8 @@ declare namespace R {
       inputs: string|RegExp|Array<string|RegExp>
     ): (text: string) => string
 
-    renameProps(rules: object, input: object): object
-    renameProps(rules: object): (input: object) => object
+    renameProps(fromKeyToProp: object, input: object): object
+    renameProps(fromKeyToProp: object): (input: object) => object
 
     s(): boolean
 
@@ -348,8 +315,9 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
-    template(input: string, templateInput: object): string
-    template(input: string): (templateInput: object) => string
+    
+    template(inputWithTags: string, templateArguments: object): string
+    template(inputWithTags: string): (templateArguments: object) => string
 
     tryCatch<T>(
       fn:  any, 
@@ -361,12 +329,21 @@ declare namespace R {
     wait<T>(fn: Async<T>): Promise<[T, Error]>
 
     waitFor(
-      condition: Function|Promise<any>, 
-      msHowLong: number): (input: any
-    ) => Promise<boolean>
+      waitForTrueCondition: Function|Promise<any>, 
+      msHowLong: number
+    ): (input: any) => Promise<boolean>
 
-    when<T>(rule: Function | boolean, fn: Function): IdentityFunction<T>
-    when<T>(rule: Function | boolean): (fn: Function) => IdentityFunction<T>
+    when<T>(
+      rule: Fn<boolean> | boolean, ruleTrueFn: Function
+    ): IdentityFunction<T>
+    when<T>(
+      rule: Fn<boolean> | boolean
+    ): (ruleTrueFn: Function) => IdentityFunction<T>
+
+    whenAsync<T>(
+      rule: Async<boolean> | Fn<boolean> | boolean,
+      ruleTrueFn: Async<any> | Function
+    ): Async<T>
     // RAMBDAX_END
     // RAMBDA_MARKER
 add(a: number, b: number): number

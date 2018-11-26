@@ -187,7 +187,7 @@ declare namespace R {
     compact<T>(x: T[]): T[]
 
     composeAsync<T>(
-      ...fns: Array<Async | Function>
+      ...fns: Array<Async<any> | Function>
     ): (input: any) => Promise<T>
 
     composed<T>(...fnList: any[]): T
