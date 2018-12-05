@@ -347,41 +347,48 @@ declare namespace R {
     // RAMBDAX_END
     // RAMBDA_MARKER
 add(a: number, b: number): number
-    add(a: string, b: string): string
+    add(first: string, second: string): string
     add(a: number): (b: number) => number
-    add(a: string): (b: string) => string
+    add(first: string): (second: string) => string
 
-    addIndex<T, U>(fn: (f: (item: T) => U, list: T[]) => U[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => U, T[], U[]>
-    addIndex<T>(fn: (f: (item: T) => void, list: T[]) => T[]): CurriedFunction2<(item: T, idx: number, list?: T[]) => void, T[], T[]>
-    addIndex<T, U>(fn: (f: (acc: U, item: T) => U, aci: U, list: T[]) => U): CurriedFunction3<(acc: U, item: T, idx: number, list?: T[]) => U, U, T[], U>
+    adjust<T>(fn: Fn<T, T>, index: number, list: T[]): T[]
+    adjust<T>(fn: Fn<T, T>, index: number): (list: T[]) => T[]
 
+    all<T>(predicate: Predicate<T>, list: T[]): boolean
+    all<T>(predicate: Predicate<T>): (list: T[]) => boolean
 
-    adjust<T>(fn: (a: T) => T, index: number, list: T[]): T[]
-    adjust<T>(fn: (a: T) => T, index: number): (list: T[]) => T[]
-
-    all<T>(fn: (a: T) => boolean, list: T[]): boolean
-    all<T>(fn: (a: T) => boolean): (list: T[]) => boolean
-
-    allPass(preds: Pred[]): Pred
+    allPass<T>(
+      predicates: Predicate<T>[],
+      input: any
+    ): boolean
+    allPass<T>(
+      predicates: Predicate<T>[]
+    ): (input: any) => boolean
 
     always<T>(x: T): () => T
 
-    any<T>(fn: (a: T) => boolean, list: T[]): boolean
-    any<T>(fn: (a: T) => boolean): (list: T[]) => boolean
+    any<T>(predicate: Predicate<T>, list: T[]): boolean
+    any<T>(predicate: Predicate<T>): (list: T[]) => boolean
 
-    anyPass(preds: Pred[]): Pred
+    anyPass<T>(
+      predicates: Predicate<T>[],
+      input: any
+    ): boolean
+    anyPass<T>(
+      predicates: Predicate<T>[]
+    ): (input: any) => boolean
 
-    append<T>(el: T, list: T[]): T[]
-    append<T>(el: T): <T>(list: T[]) => T[]
+    append<T>(lastToBe: T, list: T[]): T[]
+    append<T>(lastToBe: T): <T>(list: T[]) => T[]
 
     assoc<T, U, K extends string>(prop: K, val: T, obj: U): Record<K, T> & U;
     assoc<K extends string>(prop: K): <T, U>(val: T, obj: U) => Record<K, T> & U;
     assoc<T, K extends string>(prop: K, val: T): <U>(obj: U) => Record<K, T> & U;
 
-    both(pred1: Pred, pred2: Pred): Pred
-    both(pred1: Pred): (pred2: Pred) => Pred
+    both<T>(firstRule: Pred<T>, secondRule: Pred<T>): Pred<T>
+    both<T>(firstRule: Pred<T>): (secondRule: Pred<T>) => Pred<T>
 
-    complement(pred: (...args: any[]) => boolean): (...args: any[]) => boolean
+    complement<Out>(fn: Fn<any, Out>): Fn<any, Out>
 
     compose<V0, T1>(fn0: (x0: V0) => T1): (x0: V0) => T1
     compose<V0, V1, T1>(fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T1
@@ -419,15 +426,15 @@ add(a: number, b: number): number
       fn1: (x: T1) => T2,
       fn0: (x0: V0, x1: V1, x2: V2) => T1): (x0: V0, x1: V1, x2: V2) => T6
 
-    concat<T>(list1: T[], list2: T[]): T[]
-    concat<T>(list1: T[]): (list2: T[]) => T[]
-    concat(list1: string, list2: string): string
-    concat(list1: string): (list2: string) => string
+    concat<T>(first: T[], second: T[]): T[]
+    concat<T>(first: T[]): (second: T[]) => T[]
+    concat(first: string, second: string): string
+    concat(first: string): (second: string) => string
 
-    contains(a: string, list: string): boolean
-    contains<T>(a: T, list: T[]): boolean
-    contains(a: string): (list: string) => boolean
-    contains<T>(a: T): (list: T[]) => boolean
+    contains(target: string, list: string): boolean
+    contains<T>(target: T, list: T[]): boolean
+    contains(target: string): (list: string) => boolean
+    contains<T>(target: T): (list: T[]) => boolean
 
     curry<T1, T2, TResult extends T2>(fn: (a: T1, b: T2) => b is TResult): CurriedTypeGuard2<T1, T2, TResult>
     curry<T1, T2, T3, TResult extends T3>(fn: (a: T1, b: T2, c: T3) => c is TResult): CurriedTypeGuard3<T1, T2, T3, TResult>
@@ -443,8 +450,8 @@ add(a: number, b: number): number
 
     dec(n: number): number
 
-    defaultTo<T>(a: T, b: null | undefined | T): T
-    defaultTo<T>(a: T): (b: null | undefined | T) => T
+    defaultTo<T>(fallback: T, actualInput: null | undefined | T): T
+    defaultTo<T>(fallback: T): (actualInput: null | undefined | T) => T
 
     dissoc<T>(prop: string, obj: any): T
     dissoc(prop: string): <U>(obj: any) => U
@@ -466,11 +473,11 @@ add(a: number, b: number): number
       (input: string): string
     }
 
-    either(pred1: Pred, pred2: Pred): Pred
-    either(pred1: Pred): (pred2: Pred) => Pred
+    either<T>(firstRule: Pred<T>, secondRule: Pred<T>): Pred<T>
+    either<T>(firstRule: Pred<T>): (secondRule: Pred<T>) => Pred<T>
 
-    endsWith(x: string, str: string): boolean
-    endsWith(x: string): (str: string) => boolean
+    endsWith(target: string, input: string): boolean
+    endsWith(target: string): (input: string) => boolean
 
     equals<T>(a: T, b: T): boolean
     equals<T>(a: T): (b: T) => boolean
@@ -481,51 +488,53 @@ add(a: number, b: number): number
     filter<T>(fn: FilterFunction<T>, list: T[]): T[]
     filter<T>(fn: FilterFunction<T>, obj: Dictionary<T>): Dictionary<T>
 
-    find<T>(fn: (a: T) => boolean, list: T[]): T | undefined
-    find<T>(fn: (a: T) => boolean): (list: T[]) => T | undefined
+    find<T>(predicate: Pred<T>, list: T[]): T | undefined
+    find<T>(predicate: Pred<T>): (list: T[]) => T | undefined
 
-    findIndex<T>(fn: (a: T) => boolean, list: T[]): number
-    findIndex<T>(fn: (a: T) => boolean): (list: T[]) => number
+    findIndex<T>(predicate: Predicate<T>, list: T[]): number
+    findIndex<T>(predicate: Predicate<T>): (list: T[]) => number
 
     flatten<T>(x: Array<T[]|T>): T[]
 
     flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult
     flip<T, U, TResult>(fn: (arg0: T, arg1: U, ...args: any[]) => TResult): (arg1: U, arg0?: T, ...args: any[]) => TResult
 
-    forEach<T>(fn: (x: T) => void, list: T[]): T[]
-    forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
-    forEach<T>(fn: (x: T) => void, list: T[]): T[]
-    forEach<T>(fn: (x: T) => void): (list: T[]) => T[]
+    forEach<T>(fn: MapFn<T, any>, list: T[]): T[]
+    forEach<T>(fn: MapFn<T, any>): (list: T[]) => T[]
 
     groupBy<T>(fn: (x: T) => string, list: T[]): { [index: string]: T[] }
     groupBy<T>(fn: (x: T) => string): (list: T[]) => { [index: string]: T[] }
 
-    has<T>(s: string, obj: T): boolean
-    has(s: string): <T>(obj: T) => boolean
+    has<T>(prop: string, obj: T): boolean
+    has(prop: string): <T>(obj: T) => boolean
 
     head<T>(list: T[]): T | undefined
     head(list: string): string
 
     identity<T>(x: T): T
 
-    ifElse(fn: Pred | boolean, onTrue: Arity1Fn, onFalse: Arity1Fn): Arity1Fn
+    ifElse(
+      fn: Pred<any> | boolean, 
+      onTrue: Arity1Fn, 
+      onFalse: Arity1Fn
+    ): Arity1Fn
 
     inc(n: number): number
 
-    includes(input: any, arrOrStr: any[]|string): boolean
-    includes(input: any) : (arrOrStr: any[]|string) => boolean
+    includes(target: any, input: string|Array): boolean
+    includes(target: any) : (input: string|Array) => boolean
 
     indexBy<T>(fn: (x: T) => string, list: T[]): { [key: string]: T }
     indexBy<T>(fn: (x: T) => string): (list: T[]) => { [key: string]: T }
 
-    indexOf<T>(x: T, arr: T[]): number;
-    indexOf<T>(x: T): (arr: T[]) => number;
+    indexOf<T>(target: T, arr: T[]): number;
+    indexOf<T>(target: T): (arr: T[]) => number;
 
     init<T>(list: T[]): T[]
     init(list: string): string
 
-    is(xPrototype: any, x: any): boolean
-    is(xPrototype: any): (x: any) => boolean
+    is(inputPrototype: any, input: any): boolean
+    is(inputPrototype: any): (input: any) => boolean
 
     isNil(value: any): value is null | undefined
 
@@ -551,11 +560,11 @@ add(a: number, b: number): number
       obj: Dictionary<In>
     ): Dictionary<Out>
 
-    match(regexp: RegExp, str: string): any[]
-    match(regexp: RegExp): (str: string) => any[]
+    match(regexp: RegExp, input: string): any[]
+    match(regexp: RegExp): (input: string) => any[]
 
-    merge<T1, T2>(a: T1, b: T2): T1 & T2
-    merge<T1>(a: T1): <T2>(b: T2) => T1 & T2
+    merge<T1, T2>(obj: T1, higher: T2): T1 & T2
+    merge<T1>(obj: T1): <T2>(higher: T2) => T1 & T2
 
     modulo(a: number, b: number): number
     modulo(a: number): (b: number) => number
@@ -577,18 +586,18 @@ add(a: number, b: number): number
     minBy<T>(keyFn: Function, a: T): (b: T) => T
     minBy<T>(keyFn: Function): CurriedFunction2<T, T, T>
 
-    none<T>(fn: (x: T) => boolean, list: T[]): boolean
-    none<T>(fn: (x: T) => boolean): (list: T[]) => boolean
+    none<T>(predicate: Pred<T>, list: T[]): boolean
+    none<T>(predicate: Pred<T>): (list: T[]) => boolean
 
-    not(value: any): boolean
+    not<T>(value: T): boolean
     nth<T>(n: number, list: Array<T>): T | undefined;
     nth(n: number): <T>(list: Array<T>) => T | undefined;
 
     omit<T, K extends Array<keyof T>>(names: K, obj: T): Omit<T, K[number]>
-
     omit<T, K extends keyof T>(name: K, obj: T): Omit<T, K>
-    
-    omit<T, K extends Array<keyof T>>(names: K): (obj: T) => Omit<T, K[number]>
+    omit<T, K extends Array<keyof T>>(
+      names: K
+    ): (obj: T) => Omit<T, K[number]>
     
     omit<T, K extends keyof T>(name: K): (obj: T) => Omit<T, K>
     
@@ -605,14 +614,13 @@ add(a: number, b: number): number
     pathOr<T>(d: T): CurriedFunction2<Path, any, T | any>
 
     pick<T, K extends keyof T>(
-      names: Array<K | string> | string,
-      obj: T
+      props: Array<K | string> | string,
+      input: T
     ): Pick<T, K>
+    pick(props: string[] | string): <T, U>(obj: T) => U
 
-    pick(names: string[] | string): <T, U>(obj: T) => U
-
-    pickAll<T, U>(names: string[], obj: T): U
-    pickAll(names: string[]): <T, U>(obj: T) => U
+    pickAll<T, U>(props: string[], obj: T): U
+    pickAll(props: string[]): <T, U>(obj: T) => U
 
     pipe<V0, T1>(fn0: (x0: V0) => T1): (x0: V0) => T1;
     pipe<V0, V1, T1>(fn0: (x0: V0, x1: V1) => T1): (x0: V0, x1: V1) => T1;
@@ -644,13 +652,13 @@ add(a: number, b: number): number
       fn4: (x: T4) => T5,
       fn5: (x: T5) => T6): (x0: V0, x1: V1, x2: V2) => T6;
 
-    pluck<T>(prop: string, input: any[]): T[]
-    pluck<T>(prop: number, input: T[][]): T[]
-    pluck<T>(prop: string): (input: any[]) => T[]
-    pluck<T>(prop: number): (input: T[][]) => T[]
+    pluck<T>(propOrIndex: string, input: any[]): T[]
+    pluck<T>(propOrIndex: number, input: T[][]): T[]
+    pluck<T>(propOrIndex: string): (input: any[]) => T[]
+    pluck<T>(propOrIndex: number): (input: T[][]) => T[]
 
-    prepend<T>(el: T, list: T[]): T[]
-    prepend<T>(el: T): (list: T[]) => T[]
+    prepend<T>(firstToBe: T, list: T[]): T[]
+    prepend<T>(firstToBe: T): (list: T[]) => T[]
 
     prop<P extends keyof T, T>(p: P, obj: T): T[P]
     prop<P extends string>(p: P): <T>(obj: Record<P, T>) => T
@@ -659,16 +667,16 @@ add(a: number, b: number): number
     propEq<T>(name: string, val: T): (obj: any) => boolean
     propEq(name: string): <T>(val: T, obj: any) => boolean
 
-    range(from: number, to: number): number[]
-    range(from: number): (to: number) => number[]
+    range(fromInclusive: number, toExclusive: number): number[]
+    range(fromInclusive: number): (toExclusive: number) => number[]
 
     reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced, acc: TResult, list: T[]): TResult
     reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced): (acc: TResult, list: T[]) => TResult
     reduce<T, TResult>(fn: (acc: TResult, elem: T) => TResult | Reduced, acc: TResult): (list: T[]) => TResult
 
-    reject<T>(fn: (value: T) => boolean): Filter<T>
-    reject<T>(fn: (value: T) => boolean, list: T[]): T[]
-    reject<T>(fn: (value: T) => boolean, obj: Dictionary<T>): Dictionary<T>
+    reject<T>(predicate: Predicate<T>): Filter<T>
+    reject<T>(predicate: Predicate<T>, list: T[]): T[]
+    reject<T>(predicate: Predicate<T>, obj: Dictionary<T>): Dictionary<T>
 
     repeat<T>(a: T, n: number): T[]
     repeat<T>(a: T): (n: number) => T[]
@@ -679,8 +687,8 @@ add(a: number, b: number): number
 
     reverse<T>(list: T[]): T[]
 
-    sort<T>(fn: (a: T, b: T) => number, list: T[]): T[]
-    sort<T>(fn: (a: T, b: T) => number): (list: T[]) => T[]
+    sort<T>(sortingRule: FnTwo<T,number>, list: T[]): T[]
+    sort<T>(sortingRule: FnTwo<T,number>): (list: T[]) => T[]
 
     sortBy<T>(fn: (a: T) => Ord, list: T[]): T[]
     sortBy(fn: (a: any) => Ord): <T>(list: T[]) => T[]
@@ -719,37 +727,31 @@ add(a: number, b: number): number
     tap<T>(fn: (a: T) => any, value: T): T
     tap<T>(fn: (a: T) => any): (value: T) => T
 
-    test(regexp: RegExp, str: string): boolean
-    test(regexp: RegExp): (str: string) => boolean
+    test(regexp: RegExp, input: string): boolean
+    test(regexp: RegExp): (input: string) => boolean
 
     times<T>(fn: (i: number) => T, n: number): T[]
     times<T>(fn: (i: number) => T): (n: number) => T[]
 
-    toLower(str: string): string
+    toLower(input: string): string
+    toString<T>(input: T): string
+    toUpper(input: string): string
+    trim(input: string): string
 
-    toString<T>(val: T): string
-
-    toUpper(str: string): string
-
-    trim(str: string): string
-
-    type(val: any): RambdaTypes
+    type(input: any): RambdaTypes
 
     uniq<T>(list: T[]): T[]
 
-    uniqWith<T>(pred: (x: T, y: T) => boolean, list: T[]): T[];
-    uniqWith<T>(pred: (x: T, y: T) => boolean): (list: T[]) => T[];
+    uniqWith<T>(predicate:FnTwo<T, boolean>, list: T[]): T[];
+    uniqWith<T>(predicate:FnTwo<T, boolean>): (list: T[]) => T[];
 
-    update<T>(index: number, value: T, list: T[]): T[]
-    update<T>(index: number, value: T): (list: T[]) => T[]
+    update<T>(index: number, newValue: T, list: T[]): T[]
+    update<T>(index: number, newValue: T): (list: T[]) => T[]
 
     values<T extends object, K extends keyof T>(obj: T): Array<T[K]>
 
-    without<T>(list1: T[], list2: T[]): T[]
-    without<T>(list1: T[]): (list2: T[]) => T[]
-
-    zip<K, V>(list1: ReadonlyArray<K>, list2: ReadonlyArray<V>): Array<KeyValuePair<K, V>>
-    zip<K>(list1: ReadonlyArray<K>): <V>(list2: ReadonlyArray<V>) => Array<KeyValuePair<K, V>>
+    without<T>(listOfWithouts: T[], input: T[]): T[]
+    without<T>(listOfWithouts: T[]): (input: T[]) => T[]
 
     zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T }
     zipObj(keys: ReadonlyArray<string>): <T>(values: ReadonlyArray<T>) => { [index: string]: T }  }
