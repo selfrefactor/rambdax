@@ -12,7 +12,12 @@ declare namespace R {
     | "RegExp"
     | "Function"
 
-  type Fn<T> = (input: any) => T  
+  type Func<T> = (input: any) => T  
+  type Pred<T> = (input: T) => boolean
+  type Predicate<T> = (input: T, index: number) => boolean
+  type Fn<In, Out> = (x: In) => Out
+  type FnTwo<In, Out> = (x: In, y: In) => Out
+  type MapFn<In, Out> = (x: In, index: number) => Out  
 
   type FilterFunction<T> = (x: T, prop?: string) => boolean
   type MapFunction<In, Out> = (x: In, prop?: string) => Out
@@ -56,8 +61,6 @@ declare namespace R {
   }
 
   type Arity1Fn = (a: any) => any
-
-  type Pred = (...a: any[]) => boolean
 
   interface CurriedTypeGuard2<T1, T2, R extends T2> {
     (t1: T1): (t2: T2) => t2 is R
@@ -334,14 +337,14 @@ declare namespace R {
     ): (input: any) => Promise<boolean>
 
     when<T>(
-      rule: Fn<boolean> | boolean, ruleTrueFn: Function
+      rule: Func<boolean> | boolean, ruleTrueFn: Function
     ): IdentityFunction<T>
     when<T>(
-      rule: Fn<boolean> | boolean
+      rule: Func<boolean> | boolean
     ): (ruleTrueFn: Function) => IdentityFunction<T>
 
     whenAsync<T>(
-      rule: Async<boolean> | Fn<boolean> | boolean,
+      rule: Async<boolean> | Func<boolean> | boolean,
       ruleTrueFn: Async<any> | Function
     ): Async<T>
     // RAMBDAX_END

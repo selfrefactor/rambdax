@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.0.1 Fix typings
+
 1.0.0 Deprecate the following methods:
 
 - compact
