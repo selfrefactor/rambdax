@@ -1132,18 +1132,6 @@ R.add(2, 3) // =>  5
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/add.js)
 
-#### addIndex
-
-> addIndex(fn: Function): Function
-
-```
-const mapWithIndex = R.addIndex(R.map)
-const result = mapWithIndex(
-  (val, index) => `${val} - ${index}`,
-  ['A', 'B', 'C']
-) // => ['A - 0', 'B - 1', 'C - 2']
-```
-
 #### adjust
 
 > adjust(replaceFn: Function, i: number, arr: T[]): T[]
@@ -2431,21 +2419,6 @@ R.without([1, 2], [1, 2, 3, 4])
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/without.js)
-
-#### zip
-
-> zip(a: K[], b: V[]): Array<KeyValuePair<K, V>>
-
-It will return a new array containing tuples of equally positions items from both lists. The returned list will be truncated to match the length of the shortest supplied list.
-
-```
-R.zip([1, 2], ['A', 'B'])
-// => [[1, 'A'], [2, 'B']]
-
-// truncates to shortest list
-R.zip([1, 2, 3, 4], ['A', 'B'])
-// => [[1, 'A'], [2, 'B']]
-```
 
 #### zipObj
 
