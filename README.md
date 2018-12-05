@@ -816,6 +816,39 @@ const expected = 'RAMBDAX_DELAY104'
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/pipedAsync.spec.js)
 
 ---
+#### produce
+
+> produce(conditions: Object, input: any): Promise|Object
+
+```
+const conditions = {
+  foo: a => a > 10,
+  bar: a => ({baz:a})
+}
+
+const result = R.produce(conditions, 7)
+
+const expectedResult = {
+  foo: false,
+  bar: {baz: 7}
+}
+// result === expectedResult
+```
+
+`conditions` is an object with sync or async functions as values.
+
+The values of the returned object `returnValue` are the results of those functions when `input` is passed.
+The properties of the returned object are equal to `input`.
+
+If any of the `conditions` is a `Promise`, then the returned value is a `Promise` that resolves to `returnValue`.
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/produce.spec.js)
+
+<a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### random
 
 > random(min: number, max: number): number
@@ -1314,21 +1347,6 @@ R.add(2, 3) // =>  5
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/add.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.add(2%2C%203)%20%2F%2F%20%3D%3E%20%205">Try in REPL</a>
-
----
-#### addIndex
-
-> addIndex(fn: Function): Function
-
-```
-const mapWithIndex = R.addIndex(R.map)
-const result = mapWithIndex(
-  (val, index) => `${val} - ${index}`,
-  ['A', 'B', 'C']
-) // => ['A - 0', 'B - 1', 'C - 2']
-```
-
-[Test](https://github.com/selfrefactor/rambda/blob/master/src/addIndex.spec.js)
 
 ---
 #### adjust
@@ -3043,7 +3061,7 @@ R.without([1, 2], [1, 2, 3, 4])
 ---
 #### zip
 
-> zip(a: K[], b: V[]): Array<KeyValuePair<K, V>>
+> zip(a: K[], b: V[]): Array
 
 It will return a new array containing tuples of equally positions items from both lists. The returned list will be truncated to match the length of the shortest supplied list.
 
