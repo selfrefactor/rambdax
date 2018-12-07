@@ -66,6 +66,7 @@
   },
   "files": [
     "dist",
+    "src",
     "index.d.ts"
   ],
   "commitMessage": {
