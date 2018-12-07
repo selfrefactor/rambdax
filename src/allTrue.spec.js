@@ -24,6 +24,7 @@ test('usage with boolean', () => {
   expect(result).toBe(true)
 })
 
+
 test('escapes early - case 0', () => {
   const foo = undefined
   const result = allTrue(foo, () => foo.a)

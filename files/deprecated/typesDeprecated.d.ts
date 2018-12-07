@@ -302,7 +302,7 @@ declare namespace R {
 
     pipedAsync<T>(
       input: any, 
-      ...fns: Array< Function | Async >
+      ...fns: Array< Function | Async<T> >
     ): Promise<T>  
 
     produce<Out>(

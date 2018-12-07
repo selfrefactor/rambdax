@@ -19,4 +19,3 @@ export function allFalse(...inputs) {
 
   return true
 }
-

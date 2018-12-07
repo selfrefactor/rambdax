@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.1.0 Restore `promiseAllObject` and `flatMap`
+
 1.0.1 Fix typings
 
 1.0.0 Deprecate the following methods:

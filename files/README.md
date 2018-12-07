@@ -701,6 +701,30 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/produce.js)
 
+#### promiseAllObject
+
+> promiseAllObject(promises: Object): Promise
+
+It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
+
+```
+const fn = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : fn(1),
+  b : fn(2),
+}
+
+const result = R.promiseAllObject(promises)
+const expectedResult = { a:1, b:2 }
+// `result` resolves to `expectedResult`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
 
 #### random
 

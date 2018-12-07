@@ -849,6 +849,36 @@ If any of the `conditions` is a `Promise`, then the returned value is a `Promise
 <a href="https://rambda.now.sh?const%20conditions%20%3D%20%7B%0A%20%20foo%3A%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20bar%3A%20a%20%3D%3E%20(%7Bbaz%3Aa%7D)%0A%7D%0A%0Aconst%20result%20%3D%20R.produce(conditions%2C%207)%0A%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### promiseAllObject
+
+> promiseAllObject(promises: Object): Promise
+
+It acts as `Promise.all` for object with Promises.
+It returns a promise that resolve to object.
+
+```
+const fn = ms => new Promise(resolve => {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms)
+})
+const promises = {
+  a : fn(1),
+  b : fn(2),
+}
+
+const result = R.promiseAllObject(promises)
+const expectedResult = { a:1, b:2 }
+// `result` resolves to `expectedResult`
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllObject.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/promiseAllObject.spec.js)
+
+<a href="https://rambda.now.sh?const%20fn%20%3D%20ms%20%3D%3E%20new%20Promise(resolve%20%3D%3E%20%7B%0A%20%20setTimeout(()%20%3D%3E%20%7B%0A%20%20%20%20resolve(ms)%0A%20%20%7D%2C%20ms)%0A%7D)%0Aconst%20promises%20%3D%20%7B%0A%20%20a%20%3A%20fn(1)%2C%0A%20%20b%20%3A%20fn(2)%2C%0A%7D%0A%0Aconst%20result%20%3D%20R.promiseAllObject(promises)%0Aconst%20expectedResult%20%3D%20%7B%20a%3A1%2C%20b%3A2%20%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%60expectedResult%60">Try in REPL</a>
+
+---
 #### random
 
 > random(min: number, max: number): number

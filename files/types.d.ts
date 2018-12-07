@@ -206,6 +206,9 @@ declare namespace R {
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
 
+    flatMap<T>(fn: Function, input: any[]): T[]
+    flatMap<T>(fn: Function) : (input: any[]) => T[]  
+
     glue(input: string, glueString?: string): string
 
     getter<T>(keyOrKeys: string|string[]|undefined): T
@@ -289,10 +292,13 @@ declare namespace R {
       conditions: any,
       input: any
     ): T
-
     produce<T>(
       conditions: any,
     ): (input: any) => T
+
+    promiseAllObject<T>(
+      input: ObjectWithPromises
+    ): Promise<T>
 
     random(minInclusive: number, maxInclusive: number): number
 
