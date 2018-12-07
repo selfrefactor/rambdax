@@ -1,13 +1,6 @@
 import { produce } from './produce'
-import { take } from '../rambdax'
+import { take } from './rambda/take'
 
-/**
- * TODO
- * any('string')
- * any(['string'])
- * any(schemaA)
- * random
- */
 const delay = () =>
   new Promise(resolve => {
     setTimeout(() => {
