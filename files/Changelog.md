@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.2.0 Export `src` folder
+
 1.1.0 Restore `promiseAllObject` and `flatMap`
 
 1.0.1 Fix typings
