@@ -20,7 +20,7 @@
 - promiseAllSecure
 - rangeBy
 
-> Also pass depracation of `addIndex` from `Rambda@2.0.0`
+> Also pass deprecation of `addIndex` from `Rambda@2.0.0`
 
 0.24.0 add `R.pipedAsync`, replace `R.multiline` with `R.glue`, remove `R.validate`
 
