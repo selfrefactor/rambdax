@@ -6,6 +6,11 @@ export function remove(inputs, text) {
     return textHolder => remove(inputs, textHolder)
   }
 
+  if (type(text) !== 'String') {
+    console.log('RAMBDAX_REMOVE_WARN', text)
+    return ''
+  }
+
   if (type(inputs) !== 'Array') {
     return replace(inputs, '', text).trim()
   }

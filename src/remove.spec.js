@@ -20,6 +20,16 @@ test('with strings and regex', () => {
   expect(result).toEqual(expectedResult)
 })
 
+test('text is not string', () => {
+  const inputs = [/foo/g, 'bar']
+  const text = null
+
+  const result = remove(inputs, text)
+  const expectedResult = ''
+
+  expect(result).toEqual(expectedResult)
+})
+
 test('with regexes', () => {
   const inputs = [/foo/g, /bar/]
   const text = 'foo bar baz foo'
