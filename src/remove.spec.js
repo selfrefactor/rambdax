@@ -24,10 +24,9 @@ test('text is not string', () => {
   const inputs = [/foo/g, 'bar']
   const text = null
 
-  const result = remove(inputs, text)
-  const expectedResult = ''
-
-  expect(result).toEqual(expectedResult)
+  expect(
+    () => remove(inputs, text)
+  ).toThrow()
 })
 
 test('with regexes', () => {

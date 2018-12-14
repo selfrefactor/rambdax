@@ -7,8 +7,7 @@ export function remove(inputs, text) {
   }
 
   if (type(text) !== 'String') {
-    console.log('RAMBDAX_REMOVE_WARN', text)
-    return ''
+    throw new Error(`R.remove requires string not ${type(text)}`)
   }
 
   if (type(inputs) !== 'Array') {
