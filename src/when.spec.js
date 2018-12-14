@@ -2,6 +2,17 @@ import { when } from './when'
 import { compose } from './rambda/compose'
 import { take } from './rambda/take'
 
+test('whenTrue can be other than function', () => {
+  const result = when(
+    Boolean,
+    2
+  )(true)
+  
+  expect(
+    result
+  ).toBe(2)
+})
+
 test('', () => {
   const truncate = when(
     x => x.length > 5,
