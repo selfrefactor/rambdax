@@ -1,5 +1,9 @@
 # CHANGELOG
 
+1.2.0 Add `R.unless`
+
+`R.when` accepts both function and value for `whenTrue` argument
+
 1.2.0 Export `src` folder
 
 1.1.0 Restore `promiseAllObject` and `flatMap`
