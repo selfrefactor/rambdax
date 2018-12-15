@@ -1,8 +1,10 @@
 # CHANGELOG
 
-1.2.0 Add `R.unless`
+1.3.0 Add `R.unless`
 
-`R.when` accepts both function and value for `whenTrue` argument
+- `R.when` accepts both function and value for `whenTrue` argument. The same is valid for `R.unless`
+
+- export `R.negate` which is the same as `R.complement`
 
 1.2.0 Export `src` folder
 

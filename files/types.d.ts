@@ -343,11 +343,18 @@ declare namespace R {
     ): (input: any) => Promise<boolean>
 
     when<T>(
-      rule: Func<boolean> | boolean, ruleTrueFn: Function
+      rule: Func<boolean> | boolean, ruleTrue: any
     ): IdentityFunction<T>
     when<T>(
       rule: Func<boolean> | boolean
-    ): (ruleTrueFn: Function) => IdentityFunction<T>
+    ): (ruleTrue: any) => IdentityFunction<T>
+    
+    unless<T>(
+      rule: Func<boolean> | boolean, ruleFalse: any
+    ): IdentityFunction<T>
+    unless<T>(
+      ruleFalse: Func<boolean> | boolean
+    ): (ruleTrue: any) => IdentityFunction<T>
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,

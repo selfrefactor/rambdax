@@ -1199,6 +1199,23 @@ test('when async + fn', async () => {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
 
 ---
+#### unless
+
+> unless(rule: Function|boolean, whenFalse: Function|any): Function
+
+Note that unlike **Ramda**'s `unless`, this method accept values as `whenFalse` argument.
+
+```
+const result = R.unless(
+  R.isNil,
+  2
+)('foo')
+// => 2  
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/unless.spec.js)
+
+---
 #### wait
 
 > wait(fn: Async): Promise<[any, Error]>
@@ -1313,7 +1330,9 @@ const result = condition({
 ---
 #### when
 
-> when(rule: Function|boolean, fn: Function): Function
+> when(rule: Function|boolean, whenTrue: Function|any): Function
+
+Note that unlike **Ramda**'s `when`, this method accept values as `whenTrue` argument.
 
 ```
 const truncate = R.when(
