@@ -1227,15 +1227,6 @@ commander@~2.17.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
-"commit-message@https://github.com/selfrefactor/commit-message#3.0.1":
-  version "2.2.0"
-  resolved "https://github.com/selfrefactor/commit-message#1982f0be605046a725883b6fafa6182a13f34244"
-  dependencies:
-    inquirer "^5.2.0"
-    log "https://github.com/selfrefactor/log#0.9.0"
-    package-storage "https://github.com/selfrefactor/package-storage#0.3.0"
-    string-fn "^1.6.0"
-
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
@@ -3520,10 +3511,6 @@ p-try@^1.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-1.0.0.tgz#cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
   integrity sha1-y8ec26+P1CKOE/Yh8rGiN8GyB7M=
 
-"package-storage@https://github.com/selfrefactor/package-storage#0.3.0":
-  version "1.0.0"
-  resolved "https://github.com/selfrefactor/package-storage#1e8f20906b3cfca638d1203c86accef9d1092784"
-
 parse-glob@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/parse-glob/-/parse-glob-3.0.4.tgz#b2c376cfb11f35513badd173ef0bb6e3a388391c"
@@ -4331,7 +4318,7 @@ stealthy-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-string-fn@^1.6.0, string-fn@^1.7.0:
+string-fn@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/string-fn/-/string-fn-1.7.0.tgz#ba3133c99812b56d2954baf7cbb83c3ab3647dac"
   integrity sha512-eJhG9Wp/eXEoY2XFjqqOP7ivZ7KdDCuFNxkW9QqEhvV/7khsiBW7q5omQbL/e3q49sT4vaXpgsAKFsyPKf3J/Q==

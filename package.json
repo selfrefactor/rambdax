@@ -11,7 +11,6 @@
     "sync": "yarn sync:work&&yarn sync:after",
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
-    "de": "commit",
     "do": "node files/_modules/do",
     "minify": "node files/_modules/minify",
     "readme": "node files/_modules/createReadme",
@@ -45,7 +44,6 @@
     "babel-plugin-annotate-pure-calls": "^0.2.2",
     "babel-plugin-external-helpers": "^7.0.0-beta.3",
     "babel-preset-env": "^1.6.1",
-    "commit-message": "https://github.com/selfrefactor/commit-message#3.0.1",
     "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
@@ -68,28 +66,5 @@
     "dist",
     "src",
     "index.d.ts"
-  ],
-  "commitMessage": {
-    "feature": [
-      "method"
-    ],
-    "support": [
-      "build",
-      "lint",
-      "codestyle",
-      "clean"
-    ],
-    "workInProgress": "",
-    "docs": [
-      "method",
-      "build",
-      "docsify"
-    ],
-    "test": [
-      "method"
-    ],
-    "typings": [
-      "rambda"
-    ]
-  }
+  ]
 }
