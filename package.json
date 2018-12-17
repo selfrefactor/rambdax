@@ -8,8 +8,6 @@
   "typings": "./index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "record": "asciinema rec -i=0.3 --stdin --command='yarn do' --title='rambdax'",
-    "recordx": "asciinema rec demo.json -i=0.3 --overwrite --command='yarn build' --title='rambdax'",
     "sync": "yarn sync:work&&yarn sync:after",
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
