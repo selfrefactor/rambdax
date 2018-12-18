@@ -66,5 +66,28 @@
     "dist",
     "src",
     "index.d.ts"
-  ]
+  ],
+  "commitMessage": {
+    "feature": [
+      "method"
+    ],
+    "support": [
+      "build",
+      "lint",
+      "codestyle",
+      "clean"
+    ],
+    "docs": [
+      "method",
+      "build",
+      "docsify"
+    ],
+    "test": [
+      "method"
+    ],
+    "typings": [
+      "rambda"
+    ],
+    "workInProgress": ""
+  }
 }
