@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.4.0 `R.defaultToStrict` accepts indefinite number of arguments
+
 1.3.0 Add `R.unless`
 
 - `R.when` accepts both function and value for `whenTrue` argument. The same is valid for `R.unless`
