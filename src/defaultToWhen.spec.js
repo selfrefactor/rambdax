@@ -22,11 +22,3 @@ test('three input argument + no fallback', () => {
 test('curry', () => {
   expect(defaultToWhen(fallback, fn)(0,1,2,3)).toBe(3)
 })
-
-
-// test('with curry', () => {
-//   const validationFn = defaultToWhen(x => x > 2, 10)
-
-//   expect(validationFn(1)).toBe(10)
-//   expect(validationFn(3)).toBe(3)
-// })
