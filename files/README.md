@@ -238,19 +238,44 @@ const result = async function(){
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/debounce.js)
 
-#### defaultWhen
+#### defaultToStrict
 
-> defaultWhen(fn: Function, fallback: T, input: any): T
+> defaultToStrict(defaultValue: T, ...inputArguments: any[]): T
 
-It returns `fallback`, if `input` returns `false` when applied to `fn`.
+It either returns `defaultValue`, if all of `inputArguments` are considered falsy.
 
-It returns `input` in the other case.
+Or it returns the first truthy `inputArguments` instance(from left to right).
 
+It is similar to `R.defaultTo`, but its definition for truthy value is different. The requirement in `R.defaultTo` in any value different than `undefined`, `null` or `NaN`. With `R.defaultToStrict` the conditions are:
+
+- Truthy with `Boolean`
+- Has the same type as `defaultValue`(according to `R.type`)
+- It is neigher empty object or empty array
+
+#### defaultTo
+
+
+```
+R.defaultTo('foo', undefined) // => 'foo'
+R.defaultTo('foo', undefined, null, NaN) // => 'foo'
+R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
+R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
+R.defaultTo('foo', 'bar') // => 'bar'
+```
+
+#### defaultToWhen
+
+> defaultToWhen(fallback: any, fn: Function, ...inputArguments: any[]): any
+
+It returns `fallback`, if there is none instance of `inputArguments` that satisfies the predicate `fn`.
+
+If there is such instance, then it will be the end result of `R.defaultToWhen`
+.
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = R.defaultWhen(fn, fallback, 1)
-// `result` is `10`
+const result = R.defaultWhen(fallback, fn, 1,6,8,0 )
+// `result` is `6`
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
@@ -1390,14 +1415,17 @@ R.dec(2) // => 1
 
 #### defaultTo
 
-> defaultTo(defaultValue: T, inputArgument: any): T
+> defaultTo(defaultValue: T, ...inputArguments: any[]): T
 
-It returns `defaultValue`, if `inputArgument` is `undefined`, `null` or `NaN`.
+It either returns `defaultValue`, if all of `inputArguments` are `undefined`, `null` or `NaN`.
 
-It returns `inputArgument` in any other case.
+Or it returns the first truthy `inputArguments` instance(from left to right).
 
 ```
 R.defaultTo('foo', undefined) // => 'foo'
+R.defaultTo('foo', undefined, null, NaN) // => 'foo'
+R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
+R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
 R.defaultTo('foo', 'bar') // => 'bar'
 ```
 

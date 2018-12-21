@@ -277,26 +277,57 @@ const result = async function(){
 <a href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20inc%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0Aconst%20debouncedInc%20%3D%20R.debounce(inc%2C%20900)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20debouncedInc()%0A%20%20await%20R.delay(500)%0A%20%20debouncedInc()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%200%0A%0A%20%20await%20R.delay(1000)%0A%20%20console.log(counter)%20%2F%2F%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try in REPL</a>
 
 ---
-#### defaultWhen
+#### defaultToStrict
 
-> defaultWhen(fn: Function, fallback: T, input: any): T
+> defaultToStrict(defaultValue: T, ...inputArguments: any[]): T
 
-It returns `fallback`, if `input` returns `false` when applied to `fn`.
+It either returns `defaultValue`, if all of `inputArguments` are considered falsy.
 
-It returns `input` in the other case.
+Or it returns the first truthy `inputArguments` instance(from left to right).
 
+It is similar to `R.defaultTo`, but its definition for truthy value is different. The requirement in `R.defaultTo` in any value different than `undefined`, `null` or `NaN`. With `R.defaultToStrict` the conditions are:
+
+- Truthy with `Boolean`
+- Has the same type as `defaultValue`(according to `R.type`)
+- It is neigher empty object or empty array
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultToStrict.spec.js)
+
+---
+#### defaultTo
+
+
+```
+R.defaultTo('foo', undefined) // => 'foo'
+R.defaultTo('foo', undefined, null, NaN) // => 'foo'
+R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
+R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
+R.defaultTo('foo', 'bar') // => 'bar'
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultTo.spec.js)
+
+---
+#### defaultToWhen
+
+> defaultToWhen(fallback: any, fn: Function, ...inputArguments: any[]): any
+
+It returns `fallback`, if there is none instance of `inputArguments` that satisfies the predicate `fn`.
+
+If there is such instance, then it will be the end result of `R.defaultToWhen`
+.
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = R.defaultWhen(fn, fallback, 1)
-// `result` is `10`
+const result = R.defaultWhen(fallback, fn, 1,6,8,0 )
+// `result` is `6`
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
 
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultWhen.spec.js)
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultToWhen.spec.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20R.defaultWhen(fn%2C%20fallback%2C%201)%0A%2F%2F%20%60result%60%20is%20%6010%60">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20R.defaultWhen(fallback%2C%20fn%2C%201%2C6%2C8%2C0%20)%0A%2F%2F%20%60result%60%20is%20%606%60">Try in REPL</a>
 
 ---
 #### delay
@@ -1199,6 +1230,23 @@ test('when async + fn', async () => {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
 
 ---
+#### unless
+
+> unless(rule: Function|boolean, whenFalse: Function|any): Function
+
+Note that unlike **Ramda**'s `unless`, this method accept values as `whenFalse` argument.
+
+```
+const result = R.unless(
+  R.isNil,
+  2
+)('foo')
+// => 2  
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/unless.spec.js)
+
+---
 #### wait
 
 > wait(fn: Async): Promise<[any, Error]>
@@ -1313,7 +1361,9 @@ const result = condition({
 ---
 #### when
 
-> when(rule: Function|boolean, fn: Function): Function
+> when(rule: Function|boolean, whenTrue: Function|any): Function
+
+Note that unlike **Ramda**'s `when`, this method accept values as `whenTrue` argument.
 
 ```
 const truncate = R.when(
@@ -1662,14 +1712,17 @@ R.dec(2) // => 1
 ---
 #### defaultTo
 
-> defaultTo(defaultValue: T, inputArgument: any): T
+> defaultTo(defaultValue: T, ...inputArguments: any[]): T
 
-It returns `defaultValue`, if `inputArgument` is `undefined`, `null` or `NaN`.
+It either returns `defaultValue`, if all of `inputArguments` are `undefined`, `null` or `NaN`.
 
-It returns `inputArgument` in any other case.
+Or it returns the first truthy `inputArguments` instance(from left to right).
 
 ```
 R.defaultTo('foo', undefined) // => 'foo'
+R.defaultTo('foo', undefined, null, NaN) // => 'foo'
+R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
+R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
 R.defaultTo('foo', 'bar') // => 'bar'
 ```
 
@@ -1677,7 +1730,7 @@ R.defaultTo('foo', 'bar') // => 'bar'
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/defaultTo.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.defaultTo('foo'%2C%20undefined)%20%2F%2F%20%3D%3E%20'foo'%0AR.defaultTo('foo'%2C%20'bar')%20%2F%2F%20%3D%3E%20'bar'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.defaultTo('foo'%2C%20undefined)%20%2F%2F%20%3D%3E%20'foo'%0AR.defaultTo('foo'%2C%20undefined%2C%20null%2C%20NaN)%20%2F%2F%20%3D%3E%20'foo'%0AR.defaultTo('foo'%2C%20undefined%2C%20'bar'%2C%20NaN%2C%20'baz')%20%2F%2F%20%3D%3E%20'bar'%0AR.defaultTo('foo'%2C%20undefined%2C%20null%2C%20NaN%2C%20'baz')%20%2F%2F%20%3D%3E%20'baz'%0AR.defaultTo('foo'%2C%20'bar')%20%2F%2F%20%3D%3E%20'bar'">Try in REPL</a>
 
 ---
 #### dissoc
