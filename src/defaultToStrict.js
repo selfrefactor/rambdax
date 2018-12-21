@@ -11,25 +11,25 @@ function flagIs(targetType, input){
   return true
 }
 
-export function defaultToStrict(defaultArgument, ...inputArgument) {
+export function defaultToStrict(defaultArgument, ...inputArguments) {
   if (arguments.length === 1) {
-    return inputArgumentHolder =>
-      defaultToStrict(defaultArgument, inputArgumentHolder)
+    return inputArgumentsHolder =>
+      defaultToStrict(defaultArgument, inputArgumentsHolder)
   }
   if(arguments.length === 2){
-    return flagIs(type(defaultArgument), inputArgument[0]) ?
-      inputArgument[0] :
+    return flagIs(type(defaultArgument), inputArguments[0]) ?
+      inputArguments[0] :
       defaultArgument
   }
 
   const targetType = type(defaultArgument)
-  const limit = inputArgument.length - 1
+  const limit = inputArguments.length - 1
   let len = limit + 1
   let ready = false
   let holder
 
   while(!ready){
-    const instance = inputArgument[limit - len  + 1]
+    const instance = inputArguments[limit - len  + 1]
 
     if(len === 0){
       ready = true
