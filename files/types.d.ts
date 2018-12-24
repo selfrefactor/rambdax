@@ -274,6 +274,8 @@ declare namespace R {
     
     mergeAll(input: object[]): object
 
+    neg<Out>(fn: Fn<any, Out>): Fn<any, Out>
+
     ok(...inputs: any[]): (...rules: any[]) => true | never 
 
     once(fn: Function): Function
@@ -322,6 +324,11 @@ declare namespace R {
 
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
+
+    then<Out>(
+      createResultFn: Fn<any, Out>
+    ): (createInputFn: Promise<any>) => Promise<Out>
+    then<Out>(createResultFn: Fn<any, Out>, createInputFn: Promise<any>): Promise<Out>
 
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
     

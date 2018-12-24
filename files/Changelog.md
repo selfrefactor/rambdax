@@ -2,6 +2,7 @@
 
 1.4.0 `R.defaultToStrict` accepts indefinite number of arguments
 
+- Add `R.negate` is renamed to `R.neg`
 - Add `R.then`
 - Add `R.defaultToWhen`
 - `R.isValid` accepts prototypes as rules, i.e. `schema = {a: String}`
@@ -49,7 +50,7 @@
 
 0.19.0 Add `R.wait`, expose already complete `R.waitFor`
 
-0.18.0 `R.anyType` `R.allType`
+0.18.0 Add`R.anyType` and `R.allType`
 
 0.17.0 Rename `R.is` to `R.pass` and restore `R.is` original functionality.
 

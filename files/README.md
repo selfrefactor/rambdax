@@ -580,6 +580,12 @@ const result = R.mergeAll(arr)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mergeAll.js)
 
+#### neg
+
+> neg(fn: Function): Function
+
+Same as `R.complement`
+
 #### glue
 
 > glue(input: string, glueString?: string): string
