@@ -6,6 +6,32 @@ import { any } from './rambda/any'
 import { all } from './rambda/all'
 import { init } from './rambda/init'
 
+function fromPrototypeToString(rule, ruleType){
+  if(ruleType !== 'Function') return {rule, parsed: false}
+  if(typeof rule.prototype === 'function' || rule.prototype === undefined){
+    return {rule, parsed: false}
+  } 
+  if(String.prototype === rule.prototype){
+    return {rule: 'string', parsed: true}
+  }
+  if(Boolean.prototype === rule.prototype){
+    return {rule: 'boolean', parsed: true}
+  }
+  return { rule: type(rule.prototype).toLowerCase(), parsed: true}
+}
+
+function getRuleAndType(schema, requirementRaw){
+  const ruleRaw = schema[requirementRaw]
+  const typeIs = type(ruleRaw)
+  const {rule, parsed} = fromPrototypeToString(ruleRaw, typeIs)
+
+  return {
+    rule: rule,
+    ruleType: parsed ? 'String' : typeIs
+  }
+}
+
+
 export function isValid({ input, schema }) {
   if (input === undefined || schema === undefined) return false
 
@@ -23,10 +49,10 @@ export function isValid({ input, schema }) {
         init(requirementRaw) :
         requirementRaw
 
-      const rule = schema[ requirementRaw ]
-      const ruleType = type(rule)
+      const {rule, ruleType} = getRuleAndType(schema, requirementRaw)
       const inputProp = input[ requirement ]
       const inputPropType = type(input[ requirement ])
+
       const ok =
         isOptional && inputProp !== undefined || !isOptional
 

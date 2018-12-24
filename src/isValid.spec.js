@@ -1,6 +1,149 @@
 import { delay } from './delay'
 import { isValid } from './isValid'
 
+test('Object prototype as rule - true', () => {
+  const input = { a: {} }
+  const schema = { a: Object }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('Object prototype as rule - false', () => {
+  const input = { a: null }
+  const schema = { a: Object }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('Array prototype as rule - true', () => {
+  const input = { a: [1,2,3] }
+  const schema = { a: Array }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('Array prototype as rule - false', () => {
+  const input = { a: null }
+  const schema = { a: Array }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('String prototype as rule - true', () => {
+  const input = { a: 'foo' }
+  const schema = { a: String }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('String prototype as rule - false', () => {
+  const input = { a: null }
+  const schema = { a: String }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('Boolean prototype as rule - true', () => {
+  const input = { a: true }
+  const schema = { a: Boolean }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('Boolean prototype as rule - false', () => {
+  const input = { a: null }
+  const schema = { a: Boolean }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('Regex prototype cannot be rule - true', () => {
+  const input = { a: /foo/g }
+  const schema = { a: new RegExp('foo') }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('undefined as a rule - true', () => {
+  const input = { a: undefined }
+  const schema = { a: undefined }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('undefined as a rule - false', () => {
+  const input = { a: null }
+  const schema = { a: undefined }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('null as a rule - true', () => {
+  const input = { a: null }
+  const schema = { a: null }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('null as a rule - false', () => {
+  const input = { a: undefined }
+  const schema = { a: null }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
 test('`any` safeguard against `null`', () => {
   const input = { a: null }
   const schema = { a: 'any' }

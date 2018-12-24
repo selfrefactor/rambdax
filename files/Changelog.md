@@ -4,6 +4,8 @@
 
 - Add `R.then`
 - Add `R.defaultToWhen`
+- `R.isValid` accepts prototypes as rules, i.e. `schema = {a: String}`
+- The prevoious point leads to the same change applied to the methods depending on `R.isValid`, i.e. `R.ok`, `R.pass` and `R.isAttach`
 
 1.3.0 Add `R.unless`
 
