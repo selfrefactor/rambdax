@@ -25,3 +25,12 @@ test('with nested object', () => {
 
   expect(result).toEqual(expectedResult)
 })
+
+test('with wrong input', () => {
+  const rule = { a : { b : 1 } }
+  const input = null
+
+  const result = whereEq(rule)(input)
+
+  expect(result).toEqual(false)
+})

@@ -280,6 +280,12 @@ declare namespace R {
 
     once(fn: Function): Function
 
+    otherwise(fallback: Function, toResolve: Promise): Promise
+    otherwise(fallback: Function) : (toResolve: Promise) => Promise
+    
+    then(fallback: Function, toResolve: Promise): Promise
+    then(fallback: Function) : (toResolve: Promise) => Promise
+
     pathEq(path:string|string[], target: any, obj: object): boolean
     pathEq(path:string|string[], target: any): (obj: object) => boolean
 
@@ -362,6 +368,9 @@ declare namespace R {
     unless<T>(
       ruleFalse: Func<boolean> | boolean
     ): (ruleTrue: any) => IdentityFunction<T>
+
+    whereEq(rule: Object, input: any): Boolean  
+    whereEq(rule: Object) : (input: any) => Boolean  
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,
