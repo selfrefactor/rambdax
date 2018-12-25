@@ -286,6 +286,22 @@ declare namespace R {
     then(fallback: Function, toResolve: Promise): Promise
     then(fallback: Function) : (toResolve: Promise) => Promise
 
+    partition<T>(
+      rule: FilterFunction<T>,
+      input: Object
+    ): [Object, Object]
+    partition<T>(
+      rule: FilterFunction<T>
+    ): (input: Object) => [Object, Object]
+    
+    partition<T>(
+      rule: Predicate<T>,
+      input: Array<T>
+    ): [Array<T>, Array<T>]
+    partition<T>(
+      rule: Predicate<T>
+    ): (input: Array<T>) => [Array<T>, Array<T>]
+
     pathEq(path:string|string[], target: any, obj: object): boolean
     pathEq(path:string|string[], target: any): (obj: object) => boolean
 
