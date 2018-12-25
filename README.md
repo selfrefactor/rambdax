@@ -704,6 +704,15 @@ const result = R.mergeAll(arr)
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### neg
+
+> neg(fn: Function): Function
+
+Same as `R.complement`
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/neg.spec.js)
+
+---
 #### glue
 
 > glue(input: string, glueString?: string): string
