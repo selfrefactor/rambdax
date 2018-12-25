@@ -1,9 +1,9 @@
 import { compose } from './rambda/compose'
 import { map } from './rambda/map'
-import { sort } from './rambda/sort'
-import { type } from './rambda/type'
 import { replace } from './rambda/replace'
+import { sort } from './rambda/sort'
 import { take } from './rambda/take'
+import { type } from './rambda/type'
 
 const cache = {}
 

@@ -31,7 +31,8 @@ test('no curry', async () =>{
     makeQuery,
     fetchMember,
   )
-  
+
+  console.log({a:11})
   const result = await then(
     pick(['firstName', 'lastName']), 
     getMemberName(1)

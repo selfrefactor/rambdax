@@ -2,7 +2,7 @@
 
 1.4.0 `R.defaultToStrict` accepts indefinite number of arguments
 
-- Add `R.negate` is renamed to `R.neg`
+- Add `R.negate` is renamed to `R.opposite`
 - Add `R.then`
 - Add `R.defaultToWhen`
 - `R.isValid` accepts prototypes as rules, i.e. `schema = {a: String}`
