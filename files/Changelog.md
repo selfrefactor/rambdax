@@ -2,25 +2,28 @@
 
 1.4.0 `R.defaultToStrict` accepts indefinite number of arguments
 
+- Add `R.whereEq`
+- Add `R.partition`
 - Add `R.negate` is renamed to `R.opposite`
 - Add `R.then`
+- Add `R.otherwise`
 - Add `R.defaultToWhen`
 - `R.isValid` accepts prototypes as rules, i.e. `schema = {a: String}`
 - The prevoious point leads to the same change applied to the methods depending on `R.isValid`, i.e. `R.ok`, `R.pass` and `R.isAttach`
 
-1.3.0 Add `R.unless`
+  1.3.0 Add `R.unless`
 
 - `R.when` accepts both function and value for `whenTrue` argument. The same is valid for `R.unless`
 
 - export `R.negate` which is the same as `R.complement`
 
-1.2.0 Export `src` folder
+  1.2.0 Export `src` folder
 
-1.1.0 Restore `promiseAllObject` and `flatMap`
+  1.1.0 Restore `promiseAllObject` and `flatMap`
 
-1.0.1 Fix typings
+  1.0.1 Fix typings
 
-1.0.0 Deprecate the following methods:
+  1.0.0 Deprecate the following methods:
 
 - compact
 - evolve

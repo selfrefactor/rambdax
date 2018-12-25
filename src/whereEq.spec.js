@@ -14,9 +14,9 @@ test('', () => {
 })
 
 test('with nested object', () => {
-  const rule = { a : {b: 1} }
+  const rule = { a : { b : 1 } }
   const input = {
-    a : {b: 1},
+    a : { b : 1 },
     c : 2,
   }
 
