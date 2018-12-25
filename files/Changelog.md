@@ -1,13 +1,14 @@
 # CHANGELOG
 
-1.4.0 `R.defaultToStrict` accepts indefinite number of arguments
+1.4.0 Add multiple methods
 
+- Add `R.defaultToStrict`
+- Add `R.defaultToWhen`
 - Add `R.whereEq`
 - Add `R.partition`
 - Add `R.negate` is renamed to `R.opposite`
 - Add `R.then`
 - Add `R.otherwise`
-- Add `R.defaultToWhen`
 - `R.isValid` accepts prototypes as rules, i.e. `schema = {a: String}`
 - The prevoious point leads to the same change applied to the methods depending on `R.isValid`, i.e. `R.ok`, `R.pass` and `R.isAttach`
 

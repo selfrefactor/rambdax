@@ -141,16 +141,8 @@ declare namespace R {
     [key: string]: Promise<any>
   }
 
-  type SchemaStringTypes =
-    | "array"
-    | "string"
-    | "number"
-    | "boolean"
-    | RegExp
-    | Function
-
   interface Schema {
-    [key: string]: SchemaStringTypes | Array<SchemaStringTypes> | Array<Schema>
+    [key: string]: any
   }
 
   interface IsValid {
@@ -193,11 +185,16 @@ declare namespace R {
     
     debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>
 
-    defaultWhen<T>(
-      fn: (x: T) => boolean, 
+    defaultToStrict<T>(
       fallback: T, 
-      input: any
-    ): T  
+      ...inputs: Array<T>
+    ): T
+
+    defaultToWhen<T>(
+      fallback: T, 
+      fn: Pred<T>, 
+      ...inputs: Array<T>
+    ): T
 
     delay(ms: Number): Promise<'RAMBDAX_DELAY'>
 
@@ -226,9 +223,6 @@ declare namespace R {
       marker: string, 
       input: string
     ): string
-
-    isAttach() : boolean
-    pass(...inputs: any[]): (...rules: any[]) => boolean
 
     includesAny(
       targets:any[], 
@@ -274,9 +268,12 @@ declare namespace R {
     
     mergeAll(input: object[]): object
 
-    neg<Out>(fn: Fn<any, Out>): Fn<any, Out>
+    opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
 
     ok(...inputs: any[]): (...rules: any[]) => true | never 
+    pass(...inputs: any[]): (...rules: any[]) => boolean 
+    isValid(x: IsValid): boolean 
+    isAttach() : boolean
 
     once(fn: Function): Function
 
