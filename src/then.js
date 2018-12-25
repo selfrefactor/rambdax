@@ -1,9 +1,9 @@
-export function then (x, y){
-  if(arguments.length === 1){
-    return yHolder => then(x, yHolder)
+export function then(afterResolve, toResolve){
+  if (arguments.length === 1){
+    return toResolveHolder => then(afterResolve, toResolveHolder)
   }
-  
+
   return new Promise(resolve => {
-    y.then(result => resolve(x(result)))
+    toResolve.then(result => resolve(afterResolve(result)))
   })
 }
