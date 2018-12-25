@@ -1,9 +1,9 @@
 import { type } from './rambda/type'
 import { map } from './rambda/map'
 
-function helper({ condition, inputArgument, prop }) {
+function helper({ condition, inputArgument, prop }){
   return new Promise((resolve, reject) => {
-    if (!(type(condition) === 'Async')) {
+    if (!(type(condition) === 'Async')){
       return resolve({
         type    : prop,
         payload : condition(inputArgument),
@@ -21,31 +21,32 @@ function helper({ condition, inputArgument, prop }) {
   })
 }
 
-export function produce(conditions, inputArgument) {
-  if (arguments.length === 1) {
+export function produce(conditions, inputArgument){
+  if (arguments.length === 1){
     return inputArgumentHolder =>
       produce(conditions, inputArgumentHolder)
   }
   let asyncConditionsFlag = false
-  for (const prop in conditions) {
+  for (const prop in conditions){
     if (
       asyncConditionsFlag === false &&
       type(conditions[ prop ]) === 'Async'
-    ) {
+    ){
       asyncConditionsFlag = true
     }
   }
 
-  if (asyncConditionsFlag === false) {
+  if (asyncConditionsFlag === false){
     const willReturn = {}
-    for (const prop in conditions) {
+    for (const prop in conditions){
       willReturn[ prop ] = conditions[ prop ](inputArgument)
     }
 
     return willReturn
   }
+
   const promised = []
-  for (const prop in conditions) {
+  for (const prop in conditions){
     const condition = conditions[ prop ]
     promised.push(
       helper({

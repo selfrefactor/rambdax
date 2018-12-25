@@ -1,26 +1,51 @@
 import { produce } from './produce'
-import { take } from './rambda/take'
+import { delay } from './delay'
 
-const delay = () =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve(take(5, `${Math.random()}`))
-    }, 333)
-  })
-
-test('produce', async () => {
+test('async', async () => {
   const fn = produce({
-    foo: async () => {
-      const result = await delay()
+    foo : async x => {
+      await delay(100)
 
-      return result
+      return `${ x }_ZEPPELIN`
     },
-    bar: inputArgument => inputArgument === 5,
+    bar : inputArgument => inputArgument === 5,
+  })
+  const expected = {
+    foo : 'LED_ZEPPELIN',
+    bar : false,
+  }
+
+  const result = await fn('LED')
+  expect(result).toEqual(expected)
+})
+
+test('async with error', async () => {
+  const fn = produce({
+    foo : async x => {
+      await delay(100)
+      throw new Error(`${ x }_ZEPPELIN`)
+    },
+    bar : inputArgument => inputArgument === 5,
   })
 
-  const result = await fn(5)
+  try {
+    await fn('LED')
+    expect(1).toBe(2)
+  } catch (e){
+    expect(e.message).toBe('LED_ZEPPELIN')
+  }
+})
 
-  expect(result.bar).toEqual(true)
+test('sync', async () => {
+  const fn = produce({
+    foo : x => x + 1,
+    bar : inputArgument => inputArgument === 5,
+  })
+  const expected = {
+    foo : 6,
+    bar : true,
+  }
 
-  expect(typeof result.foo).toEqual('string')
+  const result = fn(5)
+  expect(result).toEqual(expected)
 })
