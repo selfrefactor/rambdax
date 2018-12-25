@@ -11,17 +11,17 @@ test('', () => {
   const memoized = memoize(fn)
   expect(
     memoized({
-      a: 1,
-      c: 3,
-      b: 2,
+      a : 1,
+      c : 3,
+      b : 2,
     })
   ).toBe(0)
   expect(counter).toBe(1)
   expect(
     memoized({
-      b: 2,
-      c: 3,
-      a: 1,
+      b : 2,
+      c : 3,
+      a : 1,
     })
   ).toBe(0)
   expect(counter).toBe(1)
@@ -69,24 +69,25 @@ test('async function', async () => {
   expect(counter).toBe(2)
 })
 
-test('s', () => {
+test('string as argument', () => {
   let count = 0
+  const foo = 'foo'
   const tester = memoize(n => {
     count++
 
-    return n + 6
+    return `${ n }bar`
   })
-  tester(5)
-  tester(5)
-  tester(5)
+  tester(foo)
+  tester(foo)
+  tester(foo)
 
-  expect(tester(5)).toEqual(11)
+  expect(tester(foo)).toEqual('foobar')
 
   expect(count).toEqual(1)
 
-  tester(6)
+  tester('baz')
 
-  expect(tester(6)).toEqual(12)
+  expect(tester('baz')).toEqual('bazbar')
 
   expect(count).toEqual(2)
 })
