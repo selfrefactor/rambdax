@@ -77,7 +77,8 @@
       "build",
       "lint",
       "codestyle",
-      "clean"
+      "clean",
+      "prepublish"
     ],
     "docs": [
       "method",

@@ -141,16 +141,8 @@ declare namespace R {
     [key: string]: Promise<any>
   }
 
-  type SchemaStringTypes =
-    | "array"
-    | "string"
-    | "number"
-    | "boolean"
-    | RegExp
-    | Function
-
   interface Schema {
-    [key: string]: SchemaStringTypes | Array<SchemaStringTypes> | Array<Schema>
+    [key: string]: any
   }
 
   interface IsValid {
@@ -193,11 +185,16 @@ declare namespace R {
     
     debounce<T>(fn: T, ms: number): ReplaceReturnType<T, void>
 
-    defaultWhen<T>(
-      fn: (x: T) => boolean, 
+    defaultToStrict<T>(
       fallback: T, 
-      input: any
-    ): T  
+      ...inputs: Array<T>
+    ): T
+
+    defaultToWhen<T>(
+      fallback: T, 
+      fn: Pred<T>, 
+      ...inputs: Array<T>
+    ): T
 
     delay(ms: Number): Promise<'RAMBDAX_DELAY'>
 
@@ -226,9 +223,6 @@ declare namespace R {
       marker: string, 
       input: string
     ): string
-
-    isAttach() : boolean
-    pass(...inputs: any[]): (...rules: any[]) => boolean
 
     includesAny(
       targets:any[], 
@@ -259,6 +253,8 @@ declare namespace R {
       maybePromiseFunctionOrAsync: any
     ): boolean
 
+    maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
+
     mapAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, obj: object): Promise<Array<T>>
     mapAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
@@ -274,9 +270,36 @@ declare namespace R {
     
     mergeAll(input: object[]): object
 
+    opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
+
     ok(...inputs: any[]): (...rules: any[]) => true | never 
+    pass(...inputs: any[]): (...rules: any[]) => boolean 
+    isValid(x: IsValid): boolean 
+    isAttach() : boolean
 
     once(fn: Function): Function
+
+    otherwise(fallback: Function, toResolve: Promise): Promise
+    otherwise(fallback: Function) : (toResolve: Promise) => Promise
+    
+    then(afterResolve: Function, toResolve: Promise): Promise
+    then(toResolve: Function) : (toResolve: Promise) => Promise
+
+    partition<T>(
+      rule: FilterFunction<T>,
+      input: Object
+    ): [Object, Object]
+    partition<T>(
+      rule: FilterFunction<T>
+    ): (input: Object) => [Object, Object]
+    
+    partition<T>(
+      rule: Predicate<T>,
+      input: Array<T>
+    ): [Array<T>, Array<T>]
+    partition<T>(
+      rule: Predicate<T>
+    ): (input: Array<T>) => [Array<T>, Array<T>]
 
     pathEq(path:string|string[], target: any, obj: object): boolean
     pathEq(path:string|string[], target: any): (obj: object) => boolean
@@ -323,6 +346,11 @@ declare namespace R {
     tapAsync<T>(fn: Function | Promise<any>, input: T): T
     tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
 
+    then<Out>(
+      createResultFn: Fn<any, Out>
+    ): (createInputFn: Promise<any>) => Promise<Out>
+    then<Out>(createResultFn: Fn<any, Out>, createInputFn: Promise<any>): Promise<Out>
+
     throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
     
     template(inputWithTags: string, templateArguments: object): string
@@ -355,6 +383,9 @@ declare namespace R {
     unless<T>(
       ruleFalse: Func<boolean> | boolean
     ): (ruleTrue: any) => IdentityFunction<T>
+
+    whereEq(rule: Object, input: any): Boolean  
+    whereEq(rule: Object) : (input: any) => Boolean  
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,

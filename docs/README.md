@@ -589,6 +589,26 @@ const result = R.isValid({
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
+#### maybe
+
+> maybe<T>(ifRule: Boolean, whenIf: T, whenElse: T): T
+
+It acts as ternary operator and it is helpful when we have nested ternaries.
+
+```
+const x = 4
+const y = 8
+const result = R.maybe(
+  x > 2,
+  y > 10 ? 3 : 7,
+  5
+)
+// `result` is `7`
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/maybe.spec.js)
+
+---
 #### mapAsync
 
 > mapAsync(fn: Async|Promise, arr: Array): Promise
