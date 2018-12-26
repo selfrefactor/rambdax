@@ -253,6 +253,8 @@ declare namespace R {
       maybePromiseFunctionOrAsync: any
     ): boolean
 
+    maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
+
     mapAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, obj: object): Promise<Array<T>>
     mapAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>

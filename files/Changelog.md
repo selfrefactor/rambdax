@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.5.0 Add `R.maybe`
+
 1.4.1 Fix that `R.isValid` didn't work with `Number` prototype.
 
 1.4.0 Add multiple methods

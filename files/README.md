@@ -488,6 +488,23 @@ const result = R.isValid({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
 
+#### maybe
+
+> maybe<T>(ifRule: Boolean, whenIf: T, whenElse: T): T
+
+It acts as ternary operator and it is helpful when we have nested ternaries.
+
+```
+const x = 4
+const y = 8
+const result = R.maybe(
+  x > 2,
+  y > 10 ? 3 : 7,
+  5
+)
+// `result` is `7`
+```
+
 #### mapAsync
 
 > mapAsync(fn: Async|Promise, arr: Array): Promise

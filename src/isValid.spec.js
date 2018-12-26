@@ -23,7 +23,7 @@ test('object prototype as rule - false', () => {
   ).toBeFalsy()
 })
 
-test('Number prototype as rule - true', () => {
+test('number prototype as rule - true', () => {
   const input = { a : 1 }
   const schema = { a : Number }
   expect(
