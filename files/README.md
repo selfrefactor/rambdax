@@ -123,7 +123,7 @@ Explanation:
 
 `path` provide way to specify which object's sub-branch you want to manipulate. Pass empty string if you target the whole `origin` object.
 
-`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch. 
+`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch.
 
 ```
 const simpleResult = change(
@@ -252,15 +252,12 @@ It is similar to `R.defaultTo`, but its definition for truthy value is different
 - Has the same type as `defaultValue`(according to `R.type`)
 - It is neigher empty object or empty array
 
-#### defaultTo
-
-
 ```
-R.defaultTo('foo', undefined) // => 'foo'
-R.defaultTo('foo', undefined, null, NaN) // => 'foo'
-R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
-R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
-R.defaultTo('foo', 'bar') // => 'bar'
+R.defaultToStrict('foo', undefined) // => 'foo'
+R.defaultToStrict('foo', 1) // => 'foo'
+R.defaultToStrict('foo', {}) // => 'foo'
+R.defaultTo('foo', undefined, 1, [], {}) // => 'foo'
+R.defaultTo('foo', undefined, 1, [], {}, 'bar') // => 'bar'
 ```
 
 #### defaultToWhen
@@ -271,14 +268,13 @@ It returns `fallback`, if there is none instance of `inputArguments` that satisf
 
 If there is such instance, then it will be the end result of `R.defaultToWhen`
 .
+
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = R.defaultWhen(fallback, fn, 1,6,8,0 )
-// `result` is `6`
+const result = R.defaultToWhen(fallback, fn, 1,6,8,0 )
+// result is 6
 ```
-
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
 
 #### delay
 
@@ -486,7 +482,7 @@ Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/
 const result = R.isValid({
   input:{ a: ['foo','bar'] },
   schema: {a: ['string'] }
-})  
+})
 // => true
 ```
 
@@ -548,7 +544,7 @@ When `fn` is called for a second time with the same input, then the cache result
 let counter = 0
 const fn = (a,b) =>{
   counter++
-  
+
   return a+b
 }
 const memoized = R.memoize(fn)
@@ -613,7 +609,7 @@ It checks if `inputs` are following `schemas` specifications.
 
 It uses underneath [R.isValid](#isvalid).
 
-If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
+If validation fails, it throws. If you don't want that, then you can use `R.is`. It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
 const result = R.ok(
@@ -635,6 +631,34 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
+```
+
+#### otherwise
+
+> otherwise(fallback: Function, toResolve: Promise): Promise
+
+It is meant to be used inside **pipe** or **compose** methods. It allows to catch the error inside the incoming promise and perform `fallback` in case of error. If no error occurs, it will act as **identity**, i.e. pass the input as a result.
+
+```
+test('with promise', async () => {
+  const fetch = x =>
+    new Promise((res, rej) => rej(new Error('FOO_ERROR')))
+
+  const getMemberName = pipe(
+    email => ({ query : email }),
+    fetch,
+    R.otherwise(e => {
+      expect(e.message).toBe('FOO_ERROR')
+
+      return { firstName : 'BAR' }
+    }),
+    R.then(R.pick('firstName,lastName'))
+  )
+
+  const result = await getMemberName('FOO')
+
+  expect(result).toEqual({ firstName : 'BAR' })
+})
 ```
 
 #### pathEq
@@ -665,6 +689,37 @@ const result = R.pass(1,['foo','bar'])('number',['string'])
 // => true
 ```
 
+#### partition
+
+> partition<T>(rule: Function,input: T): [T, T]
+
+It is similar to `R.filter` but it will return also the instances that are not passing the predicate function.
+
+In regards to the typing definition above, `T` can be either array of object.
+
+```
+import { partition } from './partition'
+
+test('with list', () =>{
+  const rule = (x, i) => {
+    expect(
+      typeof i
+    ).toBe('number')
+
+    return x > 2
+  }
+  const list = [1,2,3,4]
+
+  const result = partition(rule,list)
+  const expectedResult = [[3,4], [1,2]]
+
+  expect(
+    result
+  ).toEqual(expectedResult)
+})
+
+```
+
 #### piped
 
 > piped(...fnList: any[]): any
@@ -689,7 +744,7 @@ Also functions that returns `Promise` will be handled as regular function not as
 
 ```
 const result = await pipedAsync(
-  100, 
+  100,
   async x => {
     await delay(100)
     return x + 2
@@ -907,6 +962,39 @@ const expectedResult = 'foo is BAR even 1 more'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/template.js)
 
+#### then
+
+> then(afterResolve: Function, toResolve: Promise): Promise
+
+Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
+
+The example should explain it better:
+
+```
+const expected = {
+  firstName : 'FIRST_NAME_FOO',
+  lastName  : 'LAST_NAME_FOO',
+}
+
+const fetchMember = async x => {
+  await R.delay(200)
+
+  return {
+    a         : 1,
+    firstName : `FIRST_NAME_${ x.query }`,
+    lastName  : `LAST_NAME_${ x.query }`,
+  }
+}
+
+const getMemberName = pipe(
+  email => ({ query : email }),
+  fetchMember,
+  then(pick('firstName,lastName'))
+)
+const result = await getMemberName('FOO')
+// result === expected
+```
+
 #### throttle
 
 > throttle(fn: Function, period: number): Function
@@ -1037,14 +1125,18 @@ test('when async + fn', async () => {
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
 
-Note that unlike **Ramda**'s `unless`, this method accept values as `whenFalse` argument.
+The method returns function that will be called with argument `input`.
+
+If `rule` with `input` as argument returns false, then the end result will be the outcome of `whenFalse` function with `input` as argument. In the other case, the final output will be the `input` itself.
+
+Please note that unlike **Ramda**'s `unless`, this method accept also plain values as `rule`(boolean values) and `whenFalse`(any values) arguments.
 
 ```
 const result = R.unless(
   R.isNil,
-  2
-)('foo')
-// => 2  
+  R.inc
+)(1)
+// => 2
 ```
 
 #### wait
@@ -1148,6 +1240,25 @@ const result = condition({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/where.js)
 
+#### whereEq
+
+> whereEq(rule: object, input: any): boolean
+
+It will return `true` if all of `input` object fully or partially include `rule` object.
+
+The definition for `input` is `any` as the method perform type check on it and if it is not an object, it will return `false`. Note that **Ramda** will throw in this case.
+
+```
+const rule = { a : { b : 1 } }
+const input = {
+  a : { b : 1 },
+  c : 2,
+}
+
+const result = whereEq(rule, input)
+//=> true
+```
+
 #### when
 
 > when(rule: Function|boolean, whenTrue: Function|any): Function
@@ -1183,7 +1294,7 @@ const replWrap = async input => {
       return x * 5
     }
   )(input)
-  
+
   return wrapResult
 }
 
@@ -1260,6 +1371,7 @@ const result = R.allPass(rules, input) // => true
 > always(x: any): Function
 
 It returns function that always returns `x`.
+
 ```
 const fn = R.always(7)
 
@@ -1415,6 +1527,7 @@ const result = g(4) // => 10
 > dec(x: number): number
 
 It decrements a number.
+
 ```
 R.dec(2) // => 1
 ```
@@ -1571,7 +1684,7 @@ It returns `undefined` or the first element of `arr` satisfying `findFn`.
 const findFn = a => R.type(a.foo) === 'Number'
 const arr = [{foo: 'bar'}, {foo: 1}]
 
-const result = R.find(findFn, arr) 
+const result = R.find(findFn, arr)
 // => {foo: 1}
 ```
 
@@ -2028,7 +2141,7 @@ const result = curried({b: 3, c: 10})
 
 - Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
 
-- You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
+- You can read my argumentation for creating _partialCurry_ [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/partialCurry.js)
 
@@ -2149,7 +2262,7 @@ It will return those members of `arr` that return `false` when applied to functi
 ```
 const fn = x => x % 2 === 1
 
-const result = R.reject(fn, [1, 2, 3, 4]) 
+const result = R.reject(fn, [1, 2, 3, 4])
 // => [2, 4]
 ```
 
@@ -2203,7 +2316,7 @@ Note that `sortFn` must return a number type.
 ```
 const sortFn = (a, b) => a - b
 
-const result = R.sort(sortFn, [3, 1, 2]) 
+const result = R.sort(sortFn, [3, 1, 2])
 // => [1, 2, 3]
 ```
 
@@ -2330,7 +2443,7 @@ R.takeLast(2, ['foo']) // => 'oo'
 - Determines whether `str` matches `regExpression`
 
 ```
-R.test(/^f/, 'foo') 
+R.test(/^f/, 'foo')
 // => true
 ```
 

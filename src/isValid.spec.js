@@ -1,9 +1,9 @@
 import { delay } from './delay'
 import { isValid } from './isValid'
 
-test('Object prototype as rule - true', () => {
-  const input = { a: {} }
-  const schema = { a: Object }
+test('object prototype as rule - true', () => {
+  const input = { a : {} }
+  const schema = { a : Object }
   expect(
     isValid({
       input,
@@ -12,9 +12,9 @@ test('Object prototype as rule - true', () => {
   ).toBeTruthy()
 })
 
-test('Object prototype as rule - false', () => {
-  const input = { a: null }
-  const schema = { a: Object }
+test('object prototype as rule - false', () => {
+  const input = { a : null }
+  const schema = { a : Object }
   expect(
     isValid({
       input,
@@ -23,9 +23,9 @@ test('Object prototype as rule - false', () => {
   ).toBeFalsy()
 })
 
-test('Array prototype as rule - true', () => {
-  const input = { a: [1,2,3] }
-  const schema = { a: Array }
+test('Number prototype as rule - true', () => {
+  const input = { a : 1 }
+  const schema = { a : Number }
   expect(
     isValid({
       input,
@@ -34,20 +34,9 @@ test('Array prototype as rule - true', () => {
   ).toBeTruthy()
 })
 
-test('Array prototype as rule - false', () => {
-  const input = { a: null }
-  const schema = { a: Array }
-  expect(
-    isValid({
-      input,
-      schema,
-    })
-  ).toBeFalsy()
-})
-
-test('String prototype as rule - true', () => {
-  const input = { a: 'foo' }
-  const schema = { a: String }
+test('array prototype as rule - true', () => {
+  const input = { a : [ 1, 2, 3 ] }
+  const schema = { a : Array }
   expect(
     isValid({
       input,
@@ -56,9 +45,9 @@ test('String prototype as rule - true', () => {
   ).toBeTruthy()
 })
 
-test('String prototype as rule - false', () => {
-  const input = { a: null }
-  const schema = { a: String }
+test('array prototype as rule - false', () => {
+  const input = { a : null }
+  const schema = { a : Array }
   expect(
     isValid({
       input,
@@ -67,9 +56,9 @@ test('String prototype as rule - false', () => {
   ).toBeFalsy()
 })
 
-test('Boolean prototype as rule - true', () => {
-  const input = { a: true }
-  const schema = { a: Boolean }
+test('string prototype as rule - true', () => {
+  const input = { a : 'foo' }
+  const schema = { a : String }
   expect(
     isValid({
       input,
@@ -78,9 +67,9 @@ test('Boolean prototype as rule - true', () => {
   ).toBeTruthy()
 })
 
-test('Boolean prototype as rule - false', () => {
-  const input = { a: null }
-  const schema = { a: Boolean }
+test('string prototype as rule - false', () => {
+  const input = { a : null }
+  const schema = { a : String }
   expect(
     isValid({
       input,
@@ -89,9 +78,31 @@ test('Boolean prototype as rule - false', () => {
   ).toBeFalsy()
 })
 
-test('Regex prototype cannot be rule - true', () => {
-  const input = { a: /foo/g }
-  const schema = { a: new RegExp('foo') }
+test('boolean prototype as rule - true', () => {
+  const input = { a : true }
+  const schema = { a : Boolean }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test('boolean prototype as rule - false', () => {
+  const input = { a : null }
+  const schema = { a : Boolean }
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeFalsy()
+})
+
+test('regex prototype cannot be rule - true', () => {
+  const input = { a : /foo/g }
+  const schema = { a : new RegExp('foo') }
   expect(
     isValid({
       input,
@@ -101,8 +112,8 @@ test('Regex prototype cannot be rule - true', () => {
 })
 
 test('undefined as a rule - true', () => {
-  const input = { a: undefined }
-  const schema = { a: undefined }
+  const input = { a : undefined }
+  const schema = { a : undefined }
   expect(
     isValid({
       input,
@@ -112,8 +123,8 @@ test('undefined as a rule - true', () => {
 })
 
 test('undefined as a rule - false', () => {
-  const input = { a: null }
-  const schema = { a: undefined }
+  const input = { a : null }
+  const schema = { a : undefined }
   expect(
     isValid({
       input,
@@ -123,8 +134,8 @@ test('undefined as a rule - false', () => {
 })
 
 test('null as a rule - true', () => {
-  const input = { a: null }
-  const schema = { a: null }
+  const input = { a : null }
+  const schema = { a : null }
   expect(
     isValid({
       input,
@@ -134,8 +145,8 @@ test('null as a rule - true', () => {
 })
 
 test('null as a rule - false', () => {
-  const input = { a: undefined }
-  const schema = { a: null }
+  const input = { a : undefined }
+  const schema = { a : null }
   expect(
     isValid({
       input,
@@ -145,8 +156,8 @@ test('null as a rule - false', () => {
 })
 
 test('`any` safeguard against `null`', () => {
-  const input = { a: null }
-  const schema = { a: 'any' }
+  const input = { a : null }
+  const schema = { a : 'any' }
   expect(
     isValid({
       input,
@@ -156,8 +167,8 @@ test('`any` safeguard against `null`', () => {
 })
 
 test('`any` safeguard against `undefined`', () => {
-  const input = { a: undefined }
-  const schema = { a: 'any' }
+  const input = { a : undefined }
+  const schema = { a : 'any' }
   expect(
     isValid({
       input,
@@ -167,8 +178,8 @@ test('`any` safeguard against `undefined`', () => {
 })
 
 test('type can be `"any"`', () => {
-  const input = { a: () => {} }
-  const schema = { a: 'any' }
+  const input = { a : () => {} }
+  const schema = { a : 'any' }
   expect(
     isValid({
       input,
@@ -178,8 +189,8 @@ test('type can be `"any"`', () => {
 })
 
 test('type can be `"function"`', () => {
-  const input = { a: () => {} }
-  const schema = { a: 'function' }
+  const input = { a : () => {} }
+  const schema = { a : 'function' }
   expect(
     isValid({
       input,
@@ -189,8 +200,8 @@ test('type can be `"function"`', () => {
 })
 
 test('type can be `async`', () => {
-  const input = { a: async () => {} }
-  const schema = { a: 'async' }
+  const input = { a : async () => {} }
+  const schema = { a : 'async' }
   expect(
     isValid({
       input,
@@ -200,8 +211,8 @@ test('type can be `async`', () => {
 })
 
 test('type can be `promise`', () => {
-  const input = { a: delay(1999) }
-  const schema = { a: 'promise' }
+  const input = { a : delay(1999) }
+  const schema = { a : 'promise' }
   expect(
     isValid({
       input,
@@ -211,8 +222,8 @@ test('type can be `promise`', () => {
 })
 
 test('type can be `promise` list', () => {
-  const input = { a: [delay(1999)] }
-  const schema = { a: ['promise'] }
+  const input = { a : [ delay(1999) ] }
+  const schema = { a : [ 'promise' ] }
   expect(
     isValid({
       input,
@@ -223,19 +234,19 @@ test('type can be `promise` list', () => {
 
 test('function as schema - false', () => {
   const input = {
-    a: {
-      ab: () => true,
-      ac: 3,
+    a : {
+      ab : () => true,
+      ac : 3,
     },
-    c: [1, 2],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: /fo/,
-      ac: 'number',
+    'a' : {
+      ab : /fo/,
+      ac : 'number',
     },
-    'b?': 'string',
-    c: ['number'],
+    'b?' : 'string',
+    'c'  : [ 'number' ],
   }
   expect(
     isValid({
@@ -247,19 +258,19 @@ test('function as schema - false', () => {
 
 test('regex ok', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 3,
+    a : {
+      ab : 'foo',
+      ac : 3,
     },
-    c: [1, 2],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: /fo/,
-      ac: 'number',
+    'a' : {
+      ab : /fo/,
+      ac : 'number',
     },
-    'b?': 'string',
-    c: ['number'],
+    'b?' : 'string',
+    'c'  : [ 'number' ],
   }
   expect(
     isValid({
@@ -271,19 +282,19 @@ test('regex ok', () => {
 
 test('regex !ok', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 3,
+    a : {
+      ab : 'foo',
+      ac : 3,
     },
-    c: [1, 2],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: /ba/,
-      ac: 'number',
+    'a' : {
+      ab : /ba/,
+      ac : 'number',
     },
-    'b?': 'string',
-    c: ['number'],
+    'b?' : 'string',
+    'c'  : [ 'number' ],
   }
   expect(
     isValid({
@@ -295,19 +306,19 @@ test('regex !ok', () => {
 
 test('optional props is missing', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 3,
+    a : {
+      ab : 'foo',
+      ac : 3,
     },
-    c: [1, 2],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: 'string',
-      ac: 'number',
+    'a' : {
+      ab : 'string',
+      ac : 'number',
     },
-    'b?': 'string',
-    c: ['number'],
+    'b?' : 'string',
+    'c'  : [ 'number' ],
   }
   expect(
     isValid({
@@ -319,20 +330,20 @@ test('optional props is missing', () => {
 
 test('optional props is wrong type', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 3,
+    a : {
+      ab : 'foo',
+      ac : 3,
     },
-    b: [],
-    c: [1, 2],
+    b : [],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: 'string',
-      ac: 'number',
+    'a' : {
+      ab : 'string',
+      ac : 'number',
     },
-    'b?': 'string',
-    c: ['number'],
+    'b?' : 'string',
+    'c'  : [ 'number' ],
   }
   expect(
     isValid({
@@ -344,20 +355,20 @@ test('optional props is wrong type', () => {
 
 test('optional props - nested', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 3,
+    a : {
+      ab : 'foo',
+      ac : 3,
     },
-    b: [],
-    c: [1, 2],
+    b : [],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: 'string',
-      'ac?': 'number',
+    a : {
+      'ab'  : 'string',
+      'ac?' : 'number',
     },
-    b: 'array',
-    c: ['number'],
+    b : 'array',
+    c : [ 'number' ],
   }
   expect(
     isValid({
@@ -369,17 +380,17 @@ test('optional props - nested', () => {
 
 test('optional props is missing - nested', () => {
   const input = {
-    a: { ab: 'foo' },
-    b: [],
-    c: [1, 2],
+    a : { ab : 'foo' },
+    b : [],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: 'string',
-      'ac?': 'number',
+    a : {
+      'ab'  : 'string',
+      'ac?' : 'number',
     },
-    b: 'array',
-    c: ['number'],
+    b : 'array',
+    c : [ 'number' ],
   }
   expect(
     isValid({
@@ -391,20 +402,20 @@ test('optional props is missing - nested', () => {
 
 test('optional props is wrong type - nested', () => {
   const input = {
-    a: {
-      ab: 'foo',
-      ac: 'bar',
+    a : {
+      ab : 'foo',
+      ac : 'bar',
     },
-    b: [],
-    c: [1, 2],
+    b : [],
+    c : [ 1, 2 ],
   }
   const schema = {
-    a: {
-      ab: 'string',
-      'ac?': 'number',
+    a : {
+      'ab'  : 'string',
+      'ac?' : 'number',
     },
-    b: 'array',
-    c: ['number'],
+    b : 'array',
+    c : [ 'number' ],
   }
   expect(
     isValid({
@@ -416,20 +427,20 @@ test('optional props is wrong type - nested', () => {
 
 test('nested schema', () => {
   const input = {
-    a: {
-      b: 'str',
-      c: 3,
-      d: 'str',
+    a : {
+      b : 'str',
+      c : 3,
+      d : 'str',
     },
-    b: 'foo',
+    b : 'foo',
   }
   const schema = {
-    a: {
-      b: 'string',
-      c: 'number',
-      d: 'string',
+    a : {
+      b : 'string',
+      c : 'number',
+      d : 'string',
     },
-    b: 'string',
+    b : 'string',
   }
 
   expect(
@@ -440,45 +451,45 @@ test('nested schema', () => {
   ).toBeTruthy()
 
   const invalidInputFirst = {
-    a: {
-      b: 'str',
-      c: 3,
-      d: 'str',
+    a : {
+      b : 'str',
+      c : 3,
+      d : 'str',
     },
-    b: 5,
+    b : 5,
   }
 
   expect(
     isValid({
-      input: invalidInputFirst,
+      input : invalidInputFirst,
       schema,
     })
   ).toBeFalsy()
 
   const invalidInputSecond = {
-    a: {
-      b: 'str',
-      c: 'str',
-      d: 'str',
+    a : {
+      b : 'str',
+      c : 'str',
+      d : 'str',
     },
-    b: 5,
+    b : 5,
   }
 
   expect(
     isValid({
-      input: invalidInputSecond,
+      input : invalidInputSecond,
       schema,
     })
   ).toBeFalsy()
 
   const invalidInputThird = {
-    a: { b: 'str' },
-    b: 5,
+    a : { b : 'str' },
+    b : 5,
   }
 
   expect(
     isValid({
-      input: invalidInputThird,
+      input : invalidInputThird,
       schema,
     })
   ).toBeFalsy()
@@ -486,12 +497,12 @@ test('nested schema', () => {
 
 test('array of type', () => {
   const input = {
-    a: [1, 2],
-    b: 'foo',
+    a : [ 1, 2 ],
+    b : 'foo',
   }
   const schema = {
-    a: ['number'],
-    b: 'string',
+    a : [ 'number' ],
+    b : 'string',
   }
 
   expect(
@@ -502,13 +513,13 @@ test('array of type', () => {
   ).toBeTruthy()
 
   const invalidInput = {
-    a: [1, '1'],
-    b: 'foo',
+    a : [ 1, '1' ],
+    b : 'foo',
   }
 
   expect(
     isValid({
-      input: invalidInput,
+      input : invalidInput,
       schema,
     })
   ).toBeFalsy()
@@ -516,17 +527,17 @@ test('array of type', () => {
 
 test('function as rule', () => {
   const input = {
-    a: [1, 2, 3, 4],
-    b: 'foo',
+    a : [ 1, 2, 3, 4 ],
+    b : 'foo',
   }
   const invalidInput = {
-    a: [4],
-    b: 'foo',
+    a : [ 4 ],
+    b : 'foo',
   }
 
   const schema = {
-    a: x => x.length > 2,
-    b: 'string',
+    a : x => x.length > 2,
+    b : 'string',
   }
 
   expect(
@@ -538,15 +549,15 @@ test('function as rule', () => {
 
   expect(
     isValid({
-      input: invalidInput,
+      input : invalidInput,
       schema,
     })
   ).toBeFalsy()
 })
 
 test('input prop is undefined', () => {
-  const input = { b: 3 }
-  const schema = { a: 'number' }
+  const input = { b : 3 }
+  const schema = { a : 'number' }
 
   expect(
     isValid({
@@ -557,10 +568,10 @@ test('input prop is undefined', () => {
 })
 
 test('enum', () => {
-  const input = { a: 'foo' }
-  const invalidInput = { a: '' }
+  const input = { a : 'foo' }
+  const invalidInput = { a : '' }
 
-  const schema = { a: ['foo', 'bar', 'baz'] }
+  const schema = { a : [ 'foo', 'bar', 'baz' ] }
 
   expect(
     isValid({
@@ -571,29 +582,29 @@ test('enum', () => {
 
   expect(
     isValid({
-      input: invalidInput,
+      input : invalidInput,
       schema,
     })
   ).toBeFalsy()
 })
 
 test('readme example', () => {
-  const basicSchema = { a: ['string'] }
+  const basicSchema = { a : [ 'string' ] }
   const schema = {
-    b: [basicSchema],
-    c: {
-      d: { e: 'boolean' },
-      f: 'array',
+    b : [ basicSchema ],
+    c : {
+      d : { e : 'boolean' },
+      f : 'array',
     },
-    g: ['foo', 'bar', 'baz'],
+    g : [ 'foo', 'bar', 'baz' ],
   }
   const input = {
-    b: [{ a: ['led', 'zeppelin'] }],
-    c: {
-      d: { e: true },
-      f: ['any', 1, null, 'value'],
+    b : [ { a : [ 'led', 'zeppelin' ] } ],
+    c : {
+      d : { e : true },
+      f : [ 'any', 1, null, 'value' ],
     },
-    g: 'foo',
+    g : 'foo',
   }
 
   expect(
@@ -606,27 +617,27 @@ test('readme example', () => {
 
 test('should allow additional properties', () => {
   const input = {
-    title: 'You shook me',
-    year: 1969,
+    title : 'You shook me',
+    year  : 1969,
   }
 
   expect(
     isValid({
       input,
-      schema: { title: 'string' },
+      schema : { title : 'string' },
     })
   ).toBeTruthy()
 })
 
 test('accepts values as schemas', () => {
   const input = {
-    title: 'You shook me',
-    genre: 'Blues',
-    year: 1969,
+    title : 'You shook me',
+    genre : 'Blues',
+    year  : 1969,
   }
   const schema = {
-    title: 'You shook me',
-    year: 1969,
+    title : 'You shook me',
+    year  : 1969,
   }
   expect(
     isValid({
@@ -638,24 +649,24 @@ test('accepts values as schemas', () => {
 
 test('compatible schemas with nested object', () => {
   const input = {
-    foo: 'bar',
-    baz: { a: { b: 'c' } },
+    foo : 'bar',
+    baz : { a : { b : 'c' } },
   }
   const invalidInputFirst = {
-    foo: 'bar',
-    baz: { a: { b: 1 } },
+    foo : 'bar',
+    baz : { a : { b : 1 } },
   }
   const invalidInputSecond = {
-    foo: 'bar',
-    baz: { a: { b: [] } },
+    foo : 'bar',
+    baz : { a : { b : [] } },
   }
   const invalidInputThird = {
-    foo: 'bar',
-    baz: { a: { b: null } },
+    foo : 'bar',
+    baz : { a : { b : null } },
   }
   const schema = {
-    foo: 'string',
-    baz: { a: { b: 'string' } },
+    foo : 'string',
+    baz : { a : { b : 'string' } },
   }
 
   expect(
@@ -667,19 +678,19 @@ test('compatible schemas with nested object', () => {
 
   expect(
     isValid({
-      input: invalidInputFirst,
+      input : invalidInputFirst,
       schema,
     })
   ).toBeFalsy()
   expect(
     isValid({
-      input: invalidInputSecond,
+      input : invalidInputSecond,
       schema,
     })
   ).toBeFalsy()
   expect(
     isValid({
-      input: invalidInputThird,
+      input : invalidInputThird,
       schema,
     })
   ).toBeFalsy()
@@ -688,8 +699,8 @@ test('compatible schemas with nested object', () => {
 test('should return true when schema is empty object', () => {
   expect(
     isValid({
-      input: { a: 1 },
-      schema: {},
+      input  : { a : 1 },
+      schema : {},
     })
   ).toBeTruthy()
 })
@@ -697,22 +708,22 @@ test('should return true when schema is empty object', () => {
 test('when schema is undefined', () => {
   expect(
     isValid({
-      input: { a: 1 },
-      schema: undefined,
+      input  : { a : 1 },
+      schema : undefined,
     })
   ).toBeFalsy()
 })
 
 test('should return false with invalid schema rule', () => {
   const input = {
-    foo: 'bar',
-    a: {},
+    foo : 'bar',
+    a   : {},
   }
-  const inputSecond = { foo: 'bar' }
+  const inputSecond = { foo : 'bar' }
 
   const schema = {
-    foo: 'string',
-    baz: { a: {} },
+    foo : 'string',
+    baz : { a : {} },
   }
 
   expect(
@@ -724,7 +735,7 @@ test('should return false with invalid schema rule', () => {
 
   expect(
     isValid({
-      input: inputSecond,
+      input : inputSecond,
       schema,
     })
   ).toBeFalsy()

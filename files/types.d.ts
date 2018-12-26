@@ -280,8 +280,8 @@ declare namespace R {
     otherwise(fallback: Function, toResolve: Promise): Promise
     otherwise(fallback: Function) : (toResolve: Promise) => Promise
     
-    then(fallback: Function, toResolve: Promise): Promise
-    then(fallback: Function) : (toResolve: Promise) => Promise
+    then(afterResolve: Function, toResolve: Promise): Promise
+    then(toResolve: Function) : (toResolve: Promise) => Promise
 
     partition<T>(
       rule: FilterFunction<T>,

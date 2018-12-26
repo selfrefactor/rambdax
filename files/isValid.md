@@ -20,15 +20,15 @@ const schema = {
   b_: 'string',
 }
 const inputA = {
-  a: 1
+  a: 1,
 }
 const inputB = {
   a: 1,
-  b: 'bar'
+  b: 'bar',
 }
 const inputC = {
   a: 1,
-  b: 2
+  b: 2,
 }
 assert.ok(isValid({schema, input: inputA}))
 assert.ok(isValid({schema, input: inputB}))
@@ -48,6 +48,12 @@ assert.ok(isValid({schema, input: inputC})) // throws as `2` is not a string
 > { foo: 'function' }
 
 - Valid object - `{ foo: (x) => x + 2 }`
+
+### Prototype
+
+> { foo: String, bar: Number }
+
+- Valid object - `{ foo: '', bar: 0 }
 
 ### String
 
@@ -97,7 +103,7 @@ assert.ok(isValid({schema, input: inputC})) // throws as `2` is not a string
 
 ### Enumerable
 
-> { foo:  [ 'bar', 'baz', 1 ] }
+> { foo: [ 'bar', 'baz', 1 ] }
 
 - Valid object - `{ foo: 1 }`
 - Valid object - `{ foo: 'baz' }`
@@ -110,11 +116,11 @@ We can nest schemas such as:
 const fooSchema = {bar: 'string'}
 const schema = {
   foo: fooSchema,
-  bar: 'number'
+  bar: 'number',
 }
 const input = {
   foo: {bar: 'You shook me'},
-  bar: 1
+  bar: 1,
 }
 isValid({input, schema})
 // => true
@@ -136,35 +142,35 @@ In other words, we can have aditional properties, without breaking the validatio
 
 ```javascript
 const basicSchema = {
-  a: ['string']
+  a: ['string'],
 }
 const schema = {
   b: [basicSchema],
   c: {
     d: {
-      e: 'boolean'
+      e: 'boolean',
     },
-    f: 'array'
+    f: 'array',
   },
-  g: ['foo','bar','baz']
+  g: ['foo', 'bar', 'baz'],
 }
 const input = {
   b: [
-      {
-        a: ['led', 'zeppelin']
-      },
-      {
-        a: ['dancing', 'days']
-      }
+    {
+      a: ['led', 'zeppelin'],
+    },
+    {
+      a: ['dancing', 'days'],
+    },
   ],
   c: {
     d: {
-      e: true
+      e: true,
     },
-    f: []
+    f: [],
   },
-  g: 'foo'
+  g: 'foo',
 }
 
-isValid({input,schema}) // => true
+isValid({input, schema}) // => true
 ```

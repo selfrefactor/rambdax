@@ -3,7 +3,6 @@ import { pick } from './rambda/pick'
 import { then } from './then'
 import { delay } from './delay'
 import { otherwise } from './otherwise'
-// Import { otherwise } from 'ramda'
 
 const makeQuery = email => ({ query : email })
 
@@ -79,13 +78,11 @@ test('with promise', async () => {
       expect(e.message).toBe('FOO_ERROR')
 
       return { firstName : 'BAR' }
-    })
+    }),
+    then(pick('firstName,lastName'))
   )
 
-  const result = await then(
-    pick([ 'firstName', 'lastName' ]),
-    getMemberName('FOO')
-  )
+  const result = await getMemberName('FOO')
 
   expect(result).toEqual({ firstName : 'BAR' })
 })

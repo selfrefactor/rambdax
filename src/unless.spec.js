@@ -15,8 +15,13 @@ test('use boolean', () => {
   expect(safeInc(1)).toBe(2)
 })
 
-test('condition can be plain boolean', () => {
+test('rule can be plain boolean', () => {
   const safeInc = unless(false)(inc)
 
   expect(safeInc(1)).toBe(2)
+})
+
+test('rule and whenFalse are plain values', () => {
+  expect(unless(false, 'foo')(1)).toBe('foo')
+  expect(unless(true, 'foo')(1)).toBe(1)
 })
