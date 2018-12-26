@@ -146,7 +146,7 @@ Explanation:
 
 `path` provide way to specify which object's sub-branch you want to manipulate. Pass empty string if you target the whole `origin` object.
 
-`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch. 
+`changeData` can be a direct value. If it is a object, then this object is used to edit or add new properties to the selected sub-branch.
 
 ```
 const simpleResult = change(
@@ -291,21 +291,15 @@ It is similar to `R.defaultTo`, but its definition for truthy value is different
 - Has the same type as `defaultValue`(according to `R.type`)
 - It is neigher empty object or empty array
 
+```
+R.defaultToStrict('foo', undefined) // => 'foo'
+R.defaultToStrict('foo', 1) // => 'foo'
+R.defaultToStrict('foo', {}) // => 'foo'
+R.defaultTo('foo', undefined, 1, [], {}) // => 'foo'
+R.defaultTo('foo', undefined, 1, [], {}, 'bar') // => 'bar'
+```
+
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultToStrict.spec.js)
-
----
-#### defaultTo
-
-
-```
-R.defaultTo('foo', undefined) // => 'foo'
-R.defaultTo('foo', undefined, null, NaN) // => 'foo'
-R.defaultTo('foo', undefined, 'bar', NaN, 'baz') // => 'bar'
-R.defaultTo('foo', undefined, null, NaN, 'baz') // => 'baz'
-R.defaultTo('foo', 'bar') // => 'bar'
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultTo.spec.js)
 
 ---
 #### defaultToWhen
@@ -316,18 +310,15 @@ It returns `fallback`, if there is none instance of `inputArguments` that satisf
 
 If there is such instance, then it will be the end result of `R.defaultToWhen`
 .
+
 ```
 const fn = x => x > 2
 const fallback = 10
-const result = R.defaultWhen(fallback, fn, 1,6,8,0 )
-// `result` is `6`
+const result = R.defaultToWhen(fallback, fn, 1,6,8,0 )
+// result is 6
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/defaultWhen.js)
-
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/defaultToWhen.spec.js)
-
-<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%3E%202%0Aconst%20fallback%20%3D%2010%0Aconst%20result%20%3D%20R.defaultWhen(fallback%2C%20fn%2C%201%2C6%2C8%2C0%20)%0A%2F%2F%20%60result%60%20is%20%606%60">Try in REPL</a>
 
 ---
 #### delay
@@ -587,7 +578,7 @@ Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/
 const result = R.isValid({
   input:{ a: ['foo','bar'] },
   schema: {a: ['string'] }
-})  
+})
 // => true
 ```
 
@@ -595,7 +586,7 @@ const result = R.isValid({
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/isValid.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%20%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### mapAsync
@@ -664,7 +655,7 @@ When `fn` is called for a second time with the same input, then the cache result
 let counter = 0
 const fn = (a,b) =>{
   counter++
-  
+
   return a+b
 }
 const memoized = R.memoize(fn)
@@ -745,7 +736,7 @@ It checks if `inputs` are following `schemas` specifications.
 
 It uses underneath [R.isValid](#isvalid).
 
-If validation fails, it throws. If you don't want that, then you can use `R.is`.  It is the same as `R.ok` method, but it returns `false` upon failed validation.
+If validation fails, it throws. If you don't want that, then you can use `R.is`. It is the same as `R.ok` method, but it returns `false` upon failed validation.
 
 ```
 const result = R.ok(
@@ -775,6 +766,37 @@ console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/once.spec.js)
+
+---
+#### otherwise
+
+> otherwise(fallback: Function, toResolve: Promise): Promise
+
+It is meant to be used inside **pipe** or **compose** methods. It allows to catch the error inside the incoming promise and perform `fallback` in case of error. If no error occurs, it will act as **identity**, i.e. pass the input as a result.
+
+```
+test('with promise', async () => {
+  const fetch = x =>
+    new Promise((res, rej) => rej(new Error('FOO_ERROR')))
+
+  const getMemberName = pipe(
+    email => ({ query : email }),
+    fetch,
+    R.otherwise(e => {
+      expect(e.message).toBe('FOO_ERROR')
+
+      return { firstName : 'BAR' }
+    }),
+    R.then(R.pick('firstName,lastName'))
+  )
+
+  const result = await getMemberName('FOO')
+
+  expect(result).toEqual({ firstName : 'BAR' })
+})
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/otherwise.spec.js)
 
 ---
 #### pathEq
@@ -811,6 +833,40 @@ const result = R.pass(1,['foo','bar'])('number',['string'])
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/pass.spec.js)
 
 ---
+#### partition
+
+> partition<T>(rule: Function,input: T): [T, T]
+
+It is similar to `R.filter` but it will return also the instances that are not passing the predicate function.
+
+In regards to the typing definition above, `T` can be either array of object.
+
+```
+import { partition } from './partition'
+
+test('with list', () =>{
+  const rule = (x, i) => {
+    expect(
+      typeof i
+    ).toBe('number')
+
+    return x > 2
+  }
+  const list = [1,2,3,4]
+
+  const result = partition(rule,list)
+  const expectedResult = [[3,4], [1,2]]
+
+  expect(
+    result
+  ).toEqual(expectedResult)
+})
+
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/partition.spec.js)
+
+---
 #### piped
 
 > piped(...fnList: any[]): any
@@ -838,7 +894,7 @@ Also functions that returns `Promise` will be handled as regular function not as
 
 ```
 const result = await pipedAsync(
-  100, 
+  100,
   async x => {
     await delay(100)
     return x + 2
@@ -1105,6 +1161,42 @@ const expectedResult = 'foo is BAR even 1 more'
 <a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### then
+
+> then(afterResolve: Function, toResolve: Promise): Promise
+
+Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
+
+The example should explain it better:
+
+```
+const expected = {
+  firstName : 'FIRST_NAME_FOO',
+  lastName  : 'LAST_NAME_FOO',
+}
+
+const fetchMember = async x => {
+  await R.delay(200)
+
+  return {
+    a         : 1,
+    firstName : `FIRST_NAME_${ x.query }`,
+    lastName  : `LAST_NAME_${ x.query }`,
+  }
+}
+
+const getMemberName = pipe(
+  email => ({ query : email }),
+  fetchMember,
+  then(pick('firstName,lastName'))
+)
+const result = await getMemberName('FOO')
+// result === expected
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/then.spec.js)
+
+---
 #### throttle
 
 > throttle(fn: Function, period: number): Function
@@ -1243,14 +1335,18 @@ test('when async + fn', async () => {
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
 
-Note that unlike **Ramda**'s `unless`, this method accept values as `whenFalse` argument.
+The method returns function that will be called with argument `input`.
+
+If `rule` with `input` as argument returns false, then the end result will be the outcome of `whenFalse` function with `input` as argument. In the other case, the final output will be the `input` itself.
+
+Please note that unlike **Ramda**'s `unless`, this method accept also plain values as `rule`(boolean values) and `whenFalse`(any values) arguments.
 
 ```
 const result = R.unless(
   R.isNil,
-  2
-)('foo')
-// => 2  
+  R.inc
+)(1)
+// => 2
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/unless.spec.js)
@@ -1368,6 +1464,28 @@ const result = condition({
 <a href="https://rambda.now.sh?const%20condition%20%3D%20R.where(%7B%0A%20%20a%20%3A%20aProp%20%3D%3E%20typeof%20aProp%20%3D%3D%3D%20%22string%22%2C%0A%20%20b%20%3A%20bProp%20%3D%3E%20bProp%20%3D%3D%3D%204%0A%7D)%0A%0Aconst%20result%20%3D%20condition(%7B%0A%20%20a%20%3A%20%22foo%22%2C%0A%20%20b%20%3A%204%2C%0A%20%20c%20%3A%2011%2C%0A%7D)%20%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
+#### whereEq
+
+> whereEq(rule: object, input: any): boolean
+
+It will return `true` if all of `input` object fully or partially include `rule` object.
+
+The definition for `input` is `any` as the method perform type check on it and if it is not an object, it will return `false`. Note that **Ramda** will throw in this case.
+
+```
+const rule = { a : { b : 1 } }
+const input = {
+  a : { b : 1 },
+  c : 2,
+}
+
+const result = whereEq(rule, input)
+//=> true
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/whereEq.spec.js)
+
+---
 #### when
 
 > when(rule: Function|boolean, whenTrue: Function|any): Function
@@ -1408,7 +1526,7 @@ const replWrap = async input => {
       return x * 5
     }
   )(input)
-  
+
   return wrapResult
 }
 
@@ -1420,7 +1538,7 @@ const result = replWrap(5)
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/whenAsync.spec.js)
 
-<a href="https://rambda.now.sh?const%20replWrap%20%3D%20async%20input%20%3D%3E%20%7B%0A%0A%20%20const%20wrapResult%20%3D%20await%20R.whenAsync(%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20%3E%202%0A%20%20%20%20%7D%2C%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20*%205%0A%20%20%20%20%7D%0A%20%20)(input)%0A%20%20%0A%20%20return%20wrapResult%0A%7D%0A%0Aconst%20result%20%3D%20replWrap(5)%0A%2F%2F%20%3D%3E%2025">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20replWrap%20%3D%20async%20input%20%3D%3E%20%7B%0A%0A%20%20const%20wrapResult%20%3D%20await%20R.whenAsync(%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20%3E%202%0A%20%20%20%20%7D%2C%0A%20%20%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20%20%20await%20R.delay(x*100)%0A%20%20%20%20%20%20return%20x%20*%205%0A%20%20%20%20%7D%0A%20%20)(input)%0A%0A%20%20return%20wrapResult%0A%7D%0A%0Aconst%20result%20%3D%20replWrap(5)%0A%2F%2F%20%3D%3E%2025">Try in REPL</a>
 
 ---
 #### add
@@ -1510,6 +1628,7 @@ const result = R.allPass(rules, input) // => true
 > always(x: any): Function
 
 It returns function that always returns `x`.
+
 ```
 const fn = R.always(7)
 
@@ -1712,6 +1831,7 @@ const result = g(4) // => 10
 > dec(x: number): number
 
 It decrements a number.
+
 ```
 R.dec(2) // => 1
 ```
@@ -1917,7 +2037,7 @@ It returns `undefined` or the first element of `arr` satisfying `findFn`.
 const findFn = a => R.type(a.foo) === 'Number'
 const arr = [{foo: 'bar'}, {foo: 1}]
 
-const result = R.find(findFn, arr) 
+const result = R.find(findFn, arr)
 // => {foo: 1}
 ```
 
@@ -1925,7 +2045,7 @@ const result = R.find(findFn, arr)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/find.spec.js)
 
-<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%20%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%201%7D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.find(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%201%7D">Try in REPL</a>
 
 ---
 #### findIndex
@@ -2522,7 +2642,7 @@ const result = curried({b: 3, c: 10})
 
 - Note that `partialCurry` is method specific for **Rambda** and the method is not part of **Ramda**'s API
 
-- You can read my argumentation for creating *partialCurry* [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
+- You can read my argumentation for creating _partialCurry_ [here](https://selfrefactor.gitbooks.io/blog/content/argumenting-rambdas-curry.html)
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/partialCurry.js)
 
@@ -2688,7 +2808,7 @@ It will return those members of `arr` that return `false` when applied to functi
 ```
 const fn = x => x % 2 === 1
 
-const result = R.reject(fn, [1, 2, 3, 4]) 
+const result = R.reject(fn, [1, 2, 3, 4])
 // => [2, 4]
 ```
 
@@ -2696,7 +2816,7 @@ const result = R.reject(fn, [1, 2, 3, 4])
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/reject.spec.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(fn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%20%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(fn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
 
 ---
 #### repeat
@@ -2762,7 +2882,7 @@ Note that `sortFn` must return a number type.
 ```
 const sortFn = (a, b) => a - b
 
-const result = R.sort(sortFn, [3, 1, 2]) 
+const result = R.sort(sortFn, [3, 1, 2])
 // => [1, 2, 3]
 ```
 
@@ -2770,7 +2890,7 @@ const result = R.sort(sortFn, [3, 1, 2])
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/sort.spec.js)
 
-<a href="https://rambda.now.sh?const%20sortFn%20%3D%20(a%2C%20b)%20%3D%3E%20a%20-%20b%0A%0Aconst%20result%20%3D%20R.sort(sortFn%2C%20%5B3%2C%201%2C%202%5D)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20sortFn%20%3D%20(a%2C%20b)%20%3D%3E%20a%20-%20b%0A%0Aconst%20result%20%3D%20R.sort(sortFn%2C%20%5B3%2C%201%2C%202%5D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try in REPL</a>
 
 ---
 #### sortBy
@@ -2935,7 +3055,7 @@ R.takeLast(2, ['foo']) // => 'oo'
 - Determines whether `str` matches `regExpression`
 
 ```
-R.test(/^f/, 'foo') 
+R.test(/^f/, 'foo')
 // => true
 ```
 
@@ -2943,7 +3063,7 @@ R.test(/^f/, 'foo')
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/test.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.test(%2F%5Ef%2F%2C%20'foo')%20%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.test(%2F%5Ef%2F%2C%20'foo')%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### times
