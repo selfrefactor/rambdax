@@ -1,73 +1,122 @@
 import { change } from './change'
 
 const origin = {
-  a: 0,
-  foo: {
-    bar: 1,
-    baz: false,
-    bax: { nested: 2 },
+  a   : 0,
+  foo : {
+    bar : 1,
+    baz : false,
+    bax : { nested : 2 },
   },
-  first: {
-    second: {
-      third: {
-        fourth: 3,
-        fourthA: 4,
+  first : {
+    second : {
+      third : {
+        fourthA : 3,
+        fourthB : 4,
+        fourth  : {
+          a     : 1,
+          fifth : { unreachable : 22 },
+        },
       },
     },
   },
 }
 
 test('when rule is not an object', () => {
-  const result = change(origin, 'foo.bar.baz', 7)
+  const expected = {
+    a   : 0,
+    foo : {
+      bar : 1,
+      baz : false,
+      bax : { nested : 7 },
+    },
+    first : {
+      second : {
+        third : {
+          fourthA : 3,
+          fourthB : 4,
+          fourth  : {
+            a     : 1,
+            fifth : { unreachable : 22 },
+          },
+        },
+      },
+    },
+  }
 
-  expect(result.foo.bar.baz).toBe(7)
-  expect(result.foo.bax.nested).toBe(2)
-  expect(result.a).toBe(0)
-  expect(result.first.second.third.fourth).toBe(3)
+  const result = change(origin, 'foo.bax.nested', 7)
+  expect(
+    result
+  ).toEqual(expected)
 })
 
-test('preserve origin object if nesting level is below 3', () => {
+test('works with 4 levels deep nesting', () => {
   const changeData = {
-    foo: {
-      bar: 7,
-      bax: { bay: 8 },
+    foo : {
+      bar : 7,
+      bax : { bay : 8 },
     },
-    first: { second: { third: { fourth: 9 } } },
+    first : {
+      second : {
+        b     : 7,
+        third : {
+          fourthA : 9,
+          fourth  : { a : 2 },
+        },
+      },
+    },
+  }
+  const expected = {
+    a   : 0,
+    foo : {
+      bar : 7,
+      baz : false,
+      bax : {
+        nested : 2,
+        bay    : 8,
+      },
+    },
+    first : {
+      second : {
+        third : {
+          fourthA : 9,
+          fourthB : 4,
+          // This is 5th level nesting
+          // So we get the full change property
+          // Instead of merge with the origin
+          ///////////////////////////
+          fourth  : { a : 2 },
+        },
+        b : 7,
+      },
+    },
   }
   const result = change(origin, '', changeData)
-
-  expect(result.a).toBe(0)
-  expect(result.foo.bar).toBe(7)
-  expect(result.foo.baz).toBe(false)
-  expect(result.foo.bax.nested).toBe(2)
-  expect(result.foo.bax.bay).toBe(8)
-  expect(result.first.second.third.fourth).toBe(9)
-  expect(result.first.second.third.fourthA).toBe(undefined)
+  expect(result).toEqual(expected)
 })
 
 test('simpler', () => {
   const localOrigin = {
-    a: 0,
-    foo: {
-      bar: 1,
-      bax: { nested: 2 },
+    a   : 0,
+    foo : {
+      bar : 1,
+      bax : { nested : 2 },
     },
   }
   const changeData = {
-    bar: 2,
-    bay: 3,
-    bax: { baq: 9 },
+    bar : 2,
+    bay : 3,
+    bax : { baq : 9 },
   }
   const result = change(localOrigin, 'foo', changeData)
 
   const expectedResult = {
-    a: 0,
-    foo: {
-      bar: 2,
-      bay: 3,
-      bax: {
-        nested: 2,
-        baq: 9,
+    a   : 0,
+    foo : {
+      bar : 2,
+      bay : 3,
+      bax : {
+        nested : 2,
+        baq    : 9,
       },
     },
   }
