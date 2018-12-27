@@ -1,5 +1,9 @@
 # CHANGELOG
 
+1.6.0 Add `R.x` method
+
+- Fix errors caugth by `DeepScan` service
+
 1.5.3 Fix Typescript definitions for `R.then` and `R.otherwise`
 
 1.5.1 `R.change` increase nesting level to 4

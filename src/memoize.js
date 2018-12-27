@@ -34,7 +34,7 @@ const stringify = a => {
 
 const generateProp = (fn, ...inputArguments) => {
   let propString = ''
-  inputArguments.map(inputArgument => {
+  inputArguments.forEach(inputArgument => {
     propString += `${ stringify(inputArgument) }_`
   })
 

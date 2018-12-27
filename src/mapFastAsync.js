@@ -1,11 +1,7 @@
 async function mapFastAsyncFn(fn, arr) {
-  try {
-    const promised = arr.map(a => fn(a))
+  const promised = arr.map(a => fn(a))
 
-    return await Promise.all(promised)
-  } catch (err) {
-    throw err
-  }
+  return await Promise.all(promised)
 }
 
 export function mapFastAsync(fn, arr) {

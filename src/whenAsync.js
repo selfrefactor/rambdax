@@ -19,7 +19,7 @@ export function whenAsync(condition, whenTrueFn) {
           return resolve(input)
         }
 
-        whenTrueFn(input)
+        whenTrueFnPromise(input)
           .then(resolve)
           .catch(reject)
       } else {
@@ -31,7 +31,7 @@ export function whenAsync(condition, whenTrueFn) {
               return resolve(input)
             }
 
-            whenTrueFn(input)
+            whenTrueFnPromise(input)
               .then(resolve)
               .catch(reject)
           })

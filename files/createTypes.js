@@ -17,26 +17,22 @@ const SOURCE_PATH = resolve(
 )
 
 function createTypes() {
-  try {
-    const rambda = readFileSync(PATH).toString()
-    const source = readFileSync(SOURCE_PATH).toString()
+  const rambda = readFileSync(PATH).toString()
+  const source = readFileSync(SOURCE_PATH).toString()
 
-    const found = between(
-      rambda,
-      '// RAMBDA_START_MARKER',
-      '// RAMBDA_END_MARKER',
-    )
-    const injected = inject(
-      found,
-      '// RAMBDA_MARKER\n',
-      source
-    )
+  const found = between(
+    rambda,
+    '// RAMBDA_START_MARKER',
+    '// RAMBDA_END_MARKER',
+  )
+  const injected = inject(
+    found,
+    '// RAMBDA_MARKER\n',
+    source
+  )
 
-    writeFileSync(OUTPUT_PATH, injected)
-    console.log('done')
-  } catch (err) {
-    throw err
-  }
+  writeFileSync(OUTPUT_PATH, injected)
+  console.log('done')
 }
 
 createTypes()

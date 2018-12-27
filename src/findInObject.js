@@ -4,7 +4,7 @@ export function findInObject(fn, obj) {
   }
   let willReturn = { fallback : true }
 
-  Object.entries(obj).map(([ prop, value ]) => {
+  Object.entries(obj).forEach(([ prop, value ]) => {
     if (willReturn.fallback) {
       if (fn(value, prop)) {
         willReturn = {
