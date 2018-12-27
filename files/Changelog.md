@@ -1,14 +1,10 @@
 # CHANGELOG
 
-1.6.0 Add `R.x` method
+1.5.4 Add `R.maybe` method
 
 - Fix errors caugth by `DeepScan` service
-
-1.5.3 Fix Typescript definitions for `R.then` and `R.otherwise`
-
-1.5.1 `R.change` increase nesting level to 4
-
-1.5.0 Add `R.maybe`
+- Fix Typescript definitions for `R.then` and `R.otherwise`
+- `R.change` increase nesting level to 4
 
 1.4.1 Fix that `R.isValid` didn't work with `Number` prototype.
 
