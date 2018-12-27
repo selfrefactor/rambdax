@@ -89,7 +89,8 @@
       "method"
     ],
     "typings": [
-      "rambda"
+      "rambda",
+      "fix"
     ],
     "workInProgress": ""
   }
