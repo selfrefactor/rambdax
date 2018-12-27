@@ -1,6 +1,6 @@
 # CHANGELOG
 
-1.5.4 Add `R.maybe` method
+1.5.5 Add `R.maybe` method
 
 - Fix errors caugth by `DeepScan` service
 - Fix Typescript definitions for `R.then` and `R.otherwise`
