@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.5.2 Fix Typescript definitions for `R.then` and `R.otherwise`
+
 1.5.1 `R.change` increase nesting level to 4
 
 1.5.0 Add `R.maybe`
