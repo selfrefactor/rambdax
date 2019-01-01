@@ -42,14 +42,19 @@ const generateProp = (fn, ...inputArguments) => {
 }
 
 export function memoize(fn, ...inputArguments){
+  console.log({
+    fn,
+    inputArguments,
+  })
   if (arguments.length === 1){
+    console.log(1, fn, inputArguments)
+
     return (...inputArgumentsHolder) =>
       memoize(fn, ...inputArgumentsHolder)
   }
   const prop = generateProp(fn, ...inputArguments)
-  if (prop in cache){
-    return cache[ prop ]
-  }
+  if (prop in cache) return cache[ prop ]
+
   if (type(fn) === 'Async'){
     return new Promise(resolve => {
       fn(...inputArguments).then(result => {
@@ -58,6 +63,7 @@ export function memoize(fn, ...inputArguments){
       })
     })
   }
+
   const result = fn(...inputArguments)
   cache[ prop ] = result
 
