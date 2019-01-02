@@ -1,12 +1,14 @@
 # CHANGELOG
 
+1.5.6 R.maybe accepts also anonymous functions as second and third argument
+
 1.5.5 Add `R.maybe` method
 
 - Fix errors caugth by `DeepScan` service
 - Fix Typescript definitions for `R.then` and `R.otherwise`
 - `R.change` increase nesting level to 4
 
-1.4.1 Fix that `R.isValid` didn't work with `Number` prototype.
+1.4.1 `R.isValid` didn't work with `Number` prototype
 
 1.4.0 Add multiple methods
 

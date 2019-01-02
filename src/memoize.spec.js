@@ -1,9 +1,7 @@
 import { memoize } from './memoize'
 
 test('memoize function without input arguments', () => {
-  const fn = () => {
-    return 4
-  }
+  const fn = () => 4
   const memoized = memoize(fn)
   expect(typeof memoized()).toBe('function')
 })
