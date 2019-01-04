@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.6.0 Restore `R.compact` method
+
 1.5.6 R.maybe accepts also anonymous functions as second and third argument
 
 1.5.5 Add `R.maybe` method

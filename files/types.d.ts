@@ -174,6 +174,8 @@ declare namespace R {
       changeData: any
     ): object
 
+    compact<T>(x: any[]): T[]
+
     composeAsync<T>(
       ...fns: Array<Async<T> | Function>
     ): (input: any) => Promise<T>

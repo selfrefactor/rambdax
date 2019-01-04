@@ -1,16 +1,16 @@
 declare namespace R {
   // RAMBDA_START
-  type RambdaTypes =
-    | "Async"
-    | "Promise"
-    | "Object"
-    | "Boolean"
-    | "Undefined"
-    | "String"
-    | "Null"
+  type RambdaTypes = "Async"
     | "Array"
-    | "RegExp"
+    | "Boolean"
     | "Function"
+    | "Null"
+    | "Number"
+    | "Object"
+    | "Promise"
+    | "RegExp"
+    | "String"
+    | "Undefined"
 
   type Func<T> = (input: any) => T  
   type Pred<T> = (input: T) => boolean
@@ -173,6 +173,8 @@ declare namespace R {
       path: string, 
       changeData: any
     ): object
+
+    compact<T>(x: any[]): T[]
 
     composeAsync<T>(
       ...fns: Array<Async<T> | Function>
