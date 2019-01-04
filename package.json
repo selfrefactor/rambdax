@@ -12,6 +12,7 @@
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
     "do": "node files/_modules/do",
+    "go": "npm publish&&git push",
     "minify": "node files/_modules/minify",
     "readme": "node files/_modules/createReadme",
     "types": "node files/createTypes",

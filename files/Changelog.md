@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.6.1 NPM for some reason doesn't respect the changed code and `R.compact` is missing
+
 1.6.0 Restore `R.compact` method
 
 1.5.6 R.maybe accepts also anonymous functions as second and third argument
