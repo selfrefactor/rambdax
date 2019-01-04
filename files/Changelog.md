@@ -1,8 +1,6 @@
 # CHANGELOG
 
-1.6.2 NPM this times force me to log again(again for no reason)
-
-1.6.1 NPM for no reason doesn't respect the changed code and `R.compact` is missing
+1.6.2 NPM for no reason doesn't respect the changed code and `R.compact` is missing
 
 1.6.0 Restore `R.compact` method
 
