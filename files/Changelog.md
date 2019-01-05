@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.7.0 Forgot to export `R.unless`(credit to @mobily for the PR)
+
 1.6.2 NPM for no reason doesn't respect the changed code and `R.compact` is missing
 
 1.6.0 Restore `R.compact` method

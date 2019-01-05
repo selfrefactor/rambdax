@@ -83,7 +83,8 @@
     "docs": [
       "method",
       "build",
-      "docsify"
+      "docsify",
+      "changelog"
     ],
     "test": [
       "method"
