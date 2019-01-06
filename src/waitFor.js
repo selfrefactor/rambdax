@@ -15,8 +15,7 @@ export function waitFor(condition, howLong, loops = 10) {
 
   if (passFunction) {
     return async (...inputs) => {
-      /* deepscan-disable-next-line */
-      for (const i of range(0, loops)) {
+      for (const i of range(0, loops)) { // deepscan-disable-line
         const resultCondition = condition(...inputs)
 
         if (resultCondition === false) {
