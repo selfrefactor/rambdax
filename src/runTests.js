@@ -1,12 +1,12 @@
 import { omit } from './rambda/omit'
 import { template } from './template'
 import { headObject } from './_internals/headObject'
-import { ok } from './ok'
+import { pass as passMethod } from './pass'
 
 const evaluationsSchema = { label : 'string' }
 
 export function runTests(input) {
-  const pass = ok(input)({
+  const pass = passMethod(input)({
     testSuite   : 'string',
     evaluations : [ evaluationsSchema ],
   })

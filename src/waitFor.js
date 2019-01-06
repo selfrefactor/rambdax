@@ -15,6 +15,7 @@ export function waitFor(condition, howLong, loops = 10) {
 
   if (passFunction) {
     return async (...inputs) => {
+      /* deepscan-disable */
       for (const i of range(0, loops)) {
         const resultCondition = condition(...inputs)
 
@@ -24,6 +25,7 @@ export function waitFor(condition, howLong, loops = 10) {
           return resultCondition
         }
       }
+      /* deepscan-enable */
 
       return false
     }
