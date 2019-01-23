@@ -3725,10 +3725,10 @@ rambda@^1.2.6:
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.6.tgz#5feed8039369b65c389ee1e02db9527695d30e83"
   integrity sha512-3tjeDuSMKAf8t099BejrmLgXdexAh63AsU2c2ZTcN5y/gt5njw03Wsfb+Ti9b08ZWLLDN5r0EvKynfYM91PB6g==
 
-rambda@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-2.2.0.tgz#e6aa049a9a27522fc9f9809050ce713548a70c16"
-  integrity sha512-SYDu1pDqbzwj+HDuHOROJM+prko0hBKGxDbVMQLXoa1e9XWvIflGfUfUacSyNf3T+X2V80PqI50yPSZu04nwXg==
+rambda@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-2.3.1.tgz#155dab5bc16d9d0af9c39c210dc834640b3b5816"
+  integrity sha512-HSFkU+DEB4Y3iCzfeyGKQAYA+kscuCkasAq0JbdZPYvYNMia6kYBIGGBLkZGqtl9r9yhdqOwZFDZhgn0TAPvkQ==
 
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
@@ -4335,10 +4335,10 @@ string-fn@^1.7.0:
   dependencies:
     rambda "^1.0.9"
 
-string-fn@^1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/string-fn/-/string-fn-1.8.0.tgz#c53a874f8acb4a8303044de678f7c5b61d36392e"
-  integrity sha512-hgqaNPYRPxpWFPtuo9D2wsc9HcX9pbk+o4h8mQP2TnVj1+kTh4oTQh2uHqvyqlvYxm54SM2HABdLIdb8CSnxkA==
+string-fn@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/string-fn/-/string-fn-2.0.0.tgz#4f475120e2993f7adca9ef57d99e76342c9690b2"
+  integrity sha512-9VKmXv8JgohSI9kQrYFgWdQ4clRHr4471DSdjd3pajOdpW8061Nyx5auylEHmL8Jaq74R8GZQa16UeH9Im4D4A==
   dependencies:
     rambda "^1.2.6"
 
