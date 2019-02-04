@@ -416,6 +416,19 @@ const result = foo.is(['number'])
 // => true
 ```
 
+#### isFalsy
+
+> isFalsy(x: any): boolean
+
+It returns `true` if `x` is falsy.
+
+```
+const result = R.map(
+  R.isFalsy
+)([null, '', [], {}])
+// => [ true, true, true, true ]
+```
+
 #### isFunction
 
 > isFunction(x: any): boolean
