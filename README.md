@@ -423,6 +423,30 @@ R.getter('b') // => undefined
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/reset.spec.js)
 
 ---
+#### glue
+
+> glue(input: string, glueString?: string): string
+
+It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
+
+```
+const result = R.glue(`
+  foo
+  bar
+  baz
+`)
+
+const expectedResult = 'foo bar baz'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/glue.spec.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.glue(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
 #### includesAny(targets:any[], source: string|any[]): boolean
 
 It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
@@ -492,6 +516,22 @@ const result = foo.is(['number'])
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/isAttach.spec.js)
+
+---
+#### isFalsy
+
+> isFalsy(x: any): boolean
+
+It returns `true` if `x` is falsy.
+
+```
+const result = R.map(
+  R.isFalsy
+)([null, '', [], {}])
+// => [ true, true, true, true ]
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/isFalsy.spec.js)
 
 ---
 #### isFunction
@@ -715,37 +755,57 @@ const result = R.mergeAll(arr)
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%0A%20%20%7Ba%3A1%7D%2C%0A%20%20%7Bb%3A2%7D%2C%0A%20%20%7Bc%3A3%7D%0A%5D%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20a%3A1%2C%0A%20%20b%3A2%2C%0A%20%20c%3A3%0A%7D%0Aconst%20result%20%3D%20R.mergeAll(arr)%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
-#### neg
+#### mergeDeep
 
-> neg(fn: Function): Function
+> mergeDeep(slave: object, master: object): object
 
-Same as `R.complement`
+It is best explained with the test example:
 
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/neg.spec.js)
+```
+const slave = {
+  name: 'evilMe',
+  age: 10,
+  contact: {
+    a: 1,
+    email: 'foo@example.com'
+  }
+}
+const master = {
+  age: 40,
+  contact: { email: 'baz@example.com' },
+}
+const result = mergeDeep(aBase,bBase)
+
+const expected = {
+  "age": 40,
+  "name": "evilMe",
+  "contact": {
+    "a": 1,
+    "email": "baz@example.com"
+  },
+}
+expect(result).toEqual(expected)
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/mergeDeep.spec.js)
 
 ---
-#### glue
+#### mergeRight
 
-> glue(input: string, glueString?: string): string
+> mergeRight(master: object, slave:object)
 
-It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
+Same as `R.merge` but in opposite direction.
 
-```
-const result = R.glue(`
-  foo
-  bar
-  baz
-`)
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/mergeRight.spec.js)
 
-const expectedResult = 'foo bar baz'
-// result === expectedResult
-```
+---
+#### nextIndex
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
+> nextIndex(index: number, list: any[]): number
 
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/glue.spec.js)
+It returns the next index of the list, i.e. it increments unless we have reached the end of the list(in this case `0` is returned).
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.glue(%60%0A%20%20foo%0A%20%20bar%0A%20%20baz%0A%60)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20baz'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/nextIndex.spec.js)
 
 ---
 #### ok
@@ -786,6 +846,15 @@ console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/once.spec.js)
+
+---
+#### opposite
+
+> opposite(fn: Function): Function
+
+Same as `R.complement`
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/opposite.spec.js)
 
 ---
 #### otherwise

@@ -242,10 +242,11 @@ declare namespace R {
       list: any[]
     ): boolean
 
-    isType(targetType: RambdaTypes, input: any): boolean
     isArray(input: any): boolean
-    isString(input: any): boolean
+    isFalsy(input: any): boolean
     isObject(input: any): boolean
+    isString(input: any): boolean
+    isType(targetType: RambdaTypes, input: any): boolean
 
     isPromise(
       maybePromiseOrAsync: any
@@ -271,9 +272,12 @@ declare namespace R {
     mergeRight(x: object): (y: object) => object
     
     mergeAll(input: object[]): object
+    mergeDeep<T>(slave: object, master: object): T
+
+    nextIndex(index: number, list: any[]): number
 
     opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
-
+    
     ok(...inputs: any[]): (...rules: any[]) => true | never 
     pass(...inputs: any[]): (...rules: any[]) => boolean 
     isValid(x: IsValid): boolean 
@@ -659,9 +663,9 @@ add(a: number, b: number): number
     path<T>(path: Path | string, obj: any): T
     path<T>(path: Path | string): (obj: any) => T
 
-    pathOr<T>(d: T, p: Path, obj: any): T | any
-    pathOr<T>(d: T, p: Path): (obj: any) => T | any
-    pathOr<T>(d: T): CurriedFunction2<Path, any, T | any>
+    pathOr<T>(d: T, p: Path | string, obj: any): T | any
+    pathOr<T>(d: T, p: Path | string): (obj: any) => T | any
+    pathOr<T>(d: T): CurriedFunction2<Path | string, any, T | any>
 
     pick<T, K extends keyof T>(
       props: Array<K | string> | string,
