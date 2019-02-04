@@ -1,6 +1,6 @@
 import { pipe } from './rambda/pipe'
 import { pick } from './rambda/pick'
-import { then } from './then'
+import { resolve } from './resolve'
 import { delay } from './delay'
 
 const makeQuery = email => ({ query : email })
@@ -24,7 +24,7 @@ test('curried', async () => {
   const getMemberName = pipe(
     makeQuery,
     fetchMember,
-    then(pick([ 'firstName', 'lastName' ]))
+    resolve(pick([ 'firstName', 'lastName' ]))
   )
   const result = await getMemberName('FOO')
   expect(result).toEqual(expected)
@@ -36,7 +36,7 @@ test('no curry', async () => {
     fetchMember
   )
 
-  const result = await then(
+  const result = await resolve(
     pick([ 'firstName', 'lastName' ]),
     getMemberName('FOO')
   )
