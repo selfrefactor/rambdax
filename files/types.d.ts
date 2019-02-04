@@ -272,9 +272,12 @@ declare namespace R {
     mergeRight(x: object): (y: object) => object
     
     mergeAll(input: object[]): object
+    mergeDeep<T>(slave: object, master: object): T
+
+    nextIndex(index: number, list: any[]): number
 
     opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
-
+    
     ok(...inputs: any[]): (...rules: any[]) => true | never 
     pass(...inputs: any[]): (...rules: any[]) => boolean 
     isValid(x: IsValid): boolean 

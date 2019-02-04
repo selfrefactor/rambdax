@@ -359,6 +359,25 @@ R.reset()
 R.getter('b') // => undefined
 ```
 
+#### glue
+
+> glue(input: string, glueString?: string): string
+
+It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
+
+```
+const result = R.glue(`
+  foo
+  bar
+  baz
+`)
+
+const expectedResult = 'foo bar baz'
+// result === expectedResult
+```
+
+[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
+
 #### includesAny(targets:any[], source: string|any[]): boolean
 
 It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
@@ -606,30 +625,49 @@ const result = R.mergeAll(arr)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/mergeAll.js)
 
-#### neg
+#### mergeDeep
 
-> neg(fn: Function): Function
+> mergeDeep(slave: object, master: object): object
 
-Same as `R.complement`
-
-#### glue
-
-> glue(input: string, glueString?: string): string
-
-It transforms multiline string to single line by gluing together the separate lines with the `glueString` and removing the empty spaces. By default `glueString` is equal to single space, so if that is what you need, then you can just pass a single argument.
+It is best explained with the test example:
 
 ```
-const result = R.glue(`
-  foo
-  bar
-  baz
-`)
+const slave = {
+  name: 'evilMe',
+  age: 10,
+  contact: {
+    a: 1,
+    email: 'foo@example.com'
+  }
+}
+const master = {
+  age: 40,
+  contact: { email: 'baz@example.com' },
+}
+const result = mergeDeep(aBase,bBase)
 
-const expectedResult = 'foo bar baz'
-// result === expectedResult
+const expected = {
+  "age": 40,
+  "name": "evilMe",
+  "contact": {
+    "a": 1,
+    "email": "baz@example.com"
+  },
+}
+expect(result).toEqual(expected)
 ```
 
-[Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
+#### mergeRight
+
+> mergeRight(master: object, slave:object)
+
+Same as `R.merge` but in opposite direction.
+
+#### nextIndex
+
+> nextIndex(index: number, list: any[]): number
+
+It returns the next index of the list, i.e. it increments unless we have reached the end of the list(in this case `0` is returned).
 
 #### ok
 
@@ -662,6 +700,12 @@ const addOneOnce = R.once((a, b, c) => a + b + c)
 console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
+
+#### opposite
+
+> opposite(fn: Function): Function
+
+Same as `R.complement`
 
 #### otherwise
 
