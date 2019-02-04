@@ -1,6 +1,6 @@
 import { pipe } from './rambda/pipe'
 import { pick } from './rambda/pick'
-import { then } from './then'
+import { resolve } from './resolve'
 import { delay } from './delay'
 import { otherwise } from './otherwise'
 
@@ -26,7 +26,7 @@ test('with then + good promise', async () => {
     makeQuery,
     fetchMemberGood,
     otherwise(() => ({ firstName : 'BAR' })),
-    then(pick([ 'firstName', 'lastName' ]))
+    resolve(pick([ 'firstName', 'lastName' ]))
   )
   const result = await getMemberName('FOO')
 
@@ -41,7 +41,7 @@ test('with then + bad promise', async () => {
     makeQuery,
     fetchMemberBad,
     otherwise(() => ({ firstName : 'BAR' })),
-    then(pick([ 'firstName', 'lastName' ]))
+    resolve(pick([ 'firstName', 'lastName' ]))
   )
   const result = await getMemberName('FOO')
 
@@ -59,7 +59,7 @@ test('with async', async () => {
     })
   )
 
-  const result = await then(
+  const result = await resolve(
     pick([ 'firstName', 'lastName' ]),
     getMemberName('FOO')
   )
@@ -79,7 +79,7 @@ test('with promise', async () => {
 
       return { firstName : 'BAR' }
     }),
-    then(pick('firstName,lastName'))
+    resolve(pick('firstName,lastName'))
   )
 
   const result = await getMemberName('FOO')
