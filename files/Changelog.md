@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.7.1 Forgot to build types
+
 1.7.0 Rename `R.then` to `R.resolve` because of Ramda issue with `R.then`(they rename it to `R.andThen`)
 
 - Add `R.isFalsy`, `R.nextIndex` and `R.mergeDeep`
