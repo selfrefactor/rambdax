@@ -42,13 +42,7 @@ const generateProp = (fn, ...inputArguments) => {
 }
 
 export function memoize(fn, ...inputArguments){
-  console.log({
-    fn,
-    inputArguments,
-  })
   if (arguments.length === 1){
-    console.log(1, fn, inputArguments)
-
     return (...inputArgumentsHolder) =>
       memoize(fn, ...inputArgumentsHolder)
   }
