@@ -14,10 +14,9 @@ test('with counter', () => {
   expect(counter).toEqual(1)
 })
 
-test.skip('happy path', () => {
+test('happy path', () => {
   const addOneOnce = once((a, b, c) => a + b + c, 1)
 
   expect(addOneOnce(10, 20, 30)).toBe(60)
   expect(addOneOnce(40)).toEqual(60)
 })
-
