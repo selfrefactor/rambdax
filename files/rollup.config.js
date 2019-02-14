@@ -1,8 +1,24 @@
-import babel from 'rollup-plugin-babel'
+const babel = require("rollup-plugin-babel")
+const replace = require("rollup-plugin-replace")
+const resolve = require("rollup-plugin-node-resolve")
+
+const extensions = [".js"]
 
 export default {
-  input    : './rambdax.js',
-  plugins  : [ babel() ],
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    resolve({
+      extensions,
+      preferBuiltins: false
+    }),
+    babel({
+      extensions,
+      exclude: ["node_modules/**"]
+		}),
+  ],
+  input: "rambdax.js",
   output   : [
     {
       sourcemap: true,
@@ -15,4 +31,4 @@ export default {
       format : 'es',
     },
   ],
-}
+}  

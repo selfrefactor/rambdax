@@ -1,15 +1,27 @@
-import babel from 'rollup-plugin-babel'
-import resolve from 'rollup-plugin-node-resolve'
+const babel = require("rollup-plugin-babel")
+const replace = require("rollup-plugin-replace")
+const resolve = require("rollup-plugin-node-resolve")
+const { uglify } = require("rollup-plugin-uglify")
+
+const extensions = [".js"]
 
 export default {
-  external  : false,
-  input     : './rambdax.js',
-  treeshake : false,
-  plugins   : [
-    resolve(),
-    babel(),
+  plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    resolve({
+      extensions,
+      preferBuiltins: false
+    }),
+    babel({
+      extensions,
+      exclude: ["node_modules/**"]
+		}),
+    uglify()
   ],
-  output : [
+  input: "rambdax.js",
+   output : [
     {
       file   : './dist/rambdax.umd.js',
       format : 'umd',
@@ -17,4 +29,4 @@ export default {
       name   : 'R',
     },
   ],
-}
+}  

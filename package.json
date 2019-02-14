@@ -12,16 +12,15 @@
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
     "do": "node files/_modules/do",
-    "minify": "node files/_modules/minify",
     "readme": "node files/_modules/createReadme",
     "types": "node files/createTypes",
     "docs": "docsify init ./docs",
-    "test": "jest src",
+    "test": "jest src/allFalse.spec.js",
     "jest": "jest --watch -o",
     "cover": "jest src --coverage",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",
-    "build": "yarn build:main&&yarn build:web&&yarn minify"
+    "build": "yarn build:main&&yarn build:web"
   },
   "repository": {
     "type": "git",
@@ -41,20 +40,25 @@
   "homepage": "https://github.com/selfrefactor/rambdax#readme",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-annotate-pure-calls": "^0.2.2",
-    "babel-plugin-external-helpers": "^7.0.0-beta.3",
-    "babel-preset-env": "^1.6.1",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.1.0",
+    "jest": "^24.1.0",
     "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
-    "jest": "^23.5.0",
-    "minify": "https://github.com/selfrefactor/minify#0.1.0",
     "rambda": "^2.3.1",
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
     "ramda": "^0.26.1",
-    "rollup": "^0.57.1",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-resolve": "^3.0.2",
+    "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-uglify": "^6.0.2",
     "string-fn": "^2.0.0"
   },
   "jest": {
@@ -69,7 +73,7 @@
     "src",
     "index.d.ts"
   ],
-  "commitMessage": {
+  "commitMessagex": {
     "feature": [
       "method"
     ],
