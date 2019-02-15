@@ -28,6 +28,11 @@ declare namespace R {
     (obj: Dictionary<T>): Dictionary<T>
   }
 
+  interface HeadObject<T>{
+    prop: string
+    value: T
+  }
+
   type IdentityFunction<T> = (x: T) => T
 
   interface Filter<T> {
@@ -214,6 +219,16 @@ declare namespace R {
     setter(keyOrObject: string|object, value?: any): void
     reset(): void
     
+    headObject<T>(input: object) :HeadObject<T>   
+    
+    hasPath<T>(
+      path: string|string[], 
+      input: object
+    ): boolean  
+    hasPath<T>(
+      path: string|string[]
+    ) : (input: object) => boolean
+
     ifElseAsync<T>(
       condition: Async<any> | Function,
       ifFn: Async<any> | Function,

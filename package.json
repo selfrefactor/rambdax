@@ -82,7 +82,8 @@
       "lint",
       "codestyle",
       "clean",
-      "prepublish"
+      "prepublish",
+      "typescript"
     ],
     "docs": [
       "method",
