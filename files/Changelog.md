@@ -1,5 +1,11 @@
 # CHANGELOG
 
+1.8.0 Upgrade to new major Rollup release
+
+- Restore `R.headObject`
+
+- Add `R.hasPath` method
+
 1.7.2 `R.memoize` contains dev console.logs
 
 1.7.1 Forgot to build types
@@ -10,11 +16,9 @@
 
 1.6.3 Forgot to export `R.unless`(credit to @mobily for the PR)
 
-1.6.2 NPM for no reason doesn't respect the changed code and `R.compact` is missing
-
 1.6.0 Restore `R.compact` method
 
-1.5.6 R.maybe accepts also anonymous functions as second and third argument
+1.5.6 `R.maybe` accepts also anonymous functions as second and third argument
 
 1.5.5 Add `R.maybe` method
 
