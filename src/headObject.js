@@ -4,7 +4,7 @@ export function headObject(input){
     prop  : undefined,
     value : undefined,
   }
-  if(_) throw new Error('R.headObject expects object with only one key')
+  if (_) throw new Error('R.headObject expects object with only one key')
 
   return {
     prop  : head[ 0 ],

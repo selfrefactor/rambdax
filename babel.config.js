@@ -12,7 +12,7 @@ const testConfig = {
 }
 
 module.exports = function(api) {
-  const isTest = api.env('test');
+  const isTest = api.env('test')
   if(isTest) return testConfig
   
   return {
