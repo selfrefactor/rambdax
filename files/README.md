@@ -378,6 +378,40 @@ const expectedResult = 'foo bar baz'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/glue.js)
 
+#### hasPath
+
+> hasPath(input: string|string[], input: object): boolean
+
+It will return true, if `input` object has truthy `path`(calculated with `R.path`).
+
+```
+const path = 'a.b'
+const obj = {a: {b:[]}}
+
+const result = hasPath(path,obj)
+
+expect(result).toBe(true)
+```
+
+#### headObject
+
+> headObject(input: object): {prop: string, value: T}
+
+It must be used with object that has only one key, i.e. `{foo:1}`.
+
+It is build for the use case, when we want to pass object and its name.
+
+```
+const foo = x => x + 2
+const bar = x => x * 8
+
+[{foo}, {bar}]
+  .map(method => {
+    const {prop, value: fn} = R.headObject(method)
+    console.log(prop, `result ${fn(1)}`)
+  })
+```
+
 #### includesAny(targets:any[], source: string|any[]): boolean
 
 It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.

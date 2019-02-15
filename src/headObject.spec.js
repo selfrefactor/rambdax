@@ -24,6 +24,15 @@ test('with empty object', () => {
   ).toBe(undefined)
 })
 
+test('with larger object', () => {
+  expect(
+    () => headObject({
+      a : 1,
+      b : 2,
+    })
+  ).toThrow()
+})
+
 test('with undefined', () => {
   expect(
     () => headObject(undefined)
