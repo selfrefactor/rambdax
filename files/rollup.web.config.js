@@ -1,7 +1,6 @@
 const babel = require("rollup-plugin-babel")
 const replace = require("rollup-plugin-replace")
 const resolve = require("rollup-plugin-node-resolve")
-const { uglify } = require("rollup-plugin-uglify")
 
 const extensions = [".js"]
 
@@ -17,8 +16,7 @@ export default {
     babel({
       extensions,
       exclude: ["node_modules/**"]
-		}),
-    uglify()
+		})
   ],
   input: "rambdax.js",
    output : [

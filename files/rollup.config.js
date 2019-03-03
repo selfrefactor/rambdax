@@ -11,7 +11,7 @@ export default {
     }),
     resolve({
       extensions,
-      preferBuiltins: false
+      preferBuiltins: true
     }),
     babel({
       extensions,
