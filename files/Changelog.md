@@ -1,5 +1,7 @@
 # CHANGELOG
 
+1.8.2 No need for sourcemaps
+
 1.8.1 Fix building with `regeneratorRuntime`
 
 1.8.0 Upgrade to new major Rollup release
