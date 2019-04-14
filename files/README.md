@@ -1385,6 +1385,17 @@ const result = truncate('12345678')
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/when.js)
 
+#### _
+
+> _ : object
+
+A proxy object which always returns the target property.
+ 
+```
+console.log(_.FOO) // => 'FOO'
+console.log(_.BAR) // => 'BAR'
+```
+
 #### whenAsync
 
 > whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>

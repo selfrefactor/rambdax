@@ -1,3 +1,4 @@
+export * from './src/_'
 export * from './src/allFalse'
 export * from './src/allTrue'
 export * from './src/allType'

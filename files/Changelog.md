@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.0.0 `R._`
+
 2.0.0 `R.toggle`
 
 1.9.0 `R.pushUniq`
