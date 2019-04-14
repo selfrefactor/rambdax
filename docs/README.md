@@ -1638,6 +1638,20 @@ const result = truncate('12345678')
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
 
 ---
+#### _
+
+> _ : object
+
+A proxy object which always returns the target property.
+ 
+```
+console.log(_.FOO) // => 'FOO'
+console.log(_.BAR) // => 'BAR'
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/_.spec.js)
+
+---
 #### whenAsync
 
 > whenAsync<T>(rule: condition: Async | Function | boolean, whenFn: Async | Function): Promise<T>
