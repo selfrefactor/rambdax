@@ -1,17 +1,17 @@
 export let logHolder = []
-let logFlag = true
-let pushFlag = false
+let shouldLog = true
+let shouldPush = false
 
-export function logInit(logInput = {}){
-  if (logInput.logFlag === false) logFlag = false
-  if (logInput.pushFlag) pushFlag = true
+export function logInit({ logFlag = true, pushFlag = false } = {}){
+  shouldLog = Boolean(logFlag)
+  shouldPush = Boolean(pushFlag)
 
   logHolder = []
 }
 
 export function log(...inputs){
-  if (pushFlag) logHolder.push(inputs)
-  if (!logFlag) return
+  if (shouldPush) logHolder.push(inputs)
+  if (!shouldLog) return
 
   console.log(...inputs)
 }

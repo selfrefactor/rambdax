@@ -3,22 +3,23 @@ import { log, logInit, logHolder } from './log'
 let spy
 let holder
 
-beforeEach(()=> {
+beforeEach(() => {
   spy = jest.fn()
   holder = console.log
   console.log = x => spy(x)
 })
 
-afterEach(()=> {
+afterEach(() => {
+  spy.mockReset()
   console.log = holder
 })
 
 test('happy', () => {
   expect(
     log(1, 2, 3)
-    ).toBeUndefined()
+  ).toBeUndefined()
 
-  expect(spy).toBeCalled()
+  expect(spy).toHaveBeenCalled()
 })
 
 test('with pushFlag', () => {
@@ -35,7 +36,20 @@ test('with pushFlag', () => {
     logHolder
   ).toEqual([ [ 1, 2, 3 ] ])
 
-  expect(spy).not.toBeCalled()
+  expect(spy).not.toHaveBeenCalled()
+})
+
+test('with pushFlag and logFlag', () => {
+  logInit({ pushFlag : true })
+
+  log(1, 2, 3)
+  log(null)
+
+  expect(
+    logHolder
+  ).toEqual([ [ 1, 2, 3 ], [ null ] ])
+
+  expect(spy).toHaveBeenCalled()
 })
 
 test('pushHolder is reset with logInit', () => {
@@ -44,5 +58,5 @@ test('pushHolder is reset with logInit', () => {
   expect(
     logHolder
   ).toEqual([])
-  expect(spy).not.toBeCalled()
+  expect(spy).not.toHaveBeenCalled()
 })

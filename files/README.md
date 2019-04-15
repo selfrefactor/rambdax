@@ -571,6 +571,28 @@ const result = R.maybe(
 // `result` is `7`
 ```
 
+#### log
+
+> log(...inputs: any[]): void
+
+It conditionally logs to `console.log` depending on the input of `R.logInit`
+
+```
+logInit()
+
+R.log(1,2,3)  // => 1,2,3
+
+logInit({logFlag: false})
+
+R.log(1,2,3)  // => void
+
+logInit({pushFlag: true})
+
+R.log(1,2,3) // => 1,2,3
+R.log(null)  // => null
+R.logHolder  // => [ [1,2,3], [null] ]
+```
+
 #### mapAsync
 
 > mapAsync(fn: Async|Promise, arr: Array): Promise
