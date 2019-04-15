@@ -1,5 +1,15 @@
 import { remove } from './remove'
 
+test('happy', () => {
+  const inputs = [/foo/,/not\shere/,/also/, 'bar']
+  const text = 'foo bar baz foo'
+
+  const result = remove(inputs)(text)
+  const expectedResult = 'baz foo'
+
+  expect(result).toEqual(expectedResult)
+})
+
 test('with strings + curry', () => {
   const inputs = ['foo', 'bar']
   const text = 'foo bar baz foo'
