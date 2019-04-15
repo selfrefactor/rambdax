@@ -669,6 +669,31 @@ const result = R.isValid({
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.isValid(%7B%0A%20%20input%3A%7B%20a%3A%20%5B'foo'%2C'bar'%5D%20%7D%2C%0A%20%20schema%3A%20%7Ba%3A%20%5B'string'%5D%20%7D%0A%7D)%0A%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
+#### log
+
+> log(...inputs: any[]): void
+
+It conditionally logs to `console.log` depending on the input of `R.logInit`
+
+```
+logInit()
+
+R.log(1,2,3)  // => 1,2,3
+
+logInit({logFlag: false})
+
+R.log(1,2,3)  // => void
+
+logInit({pushFlag: true})
+
+R.log(1,2,3) // => 1,2,3
+R.log(null)  // => null
+R.logHolder  // => [ [1,2,3], [null] ]
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/log.spec.js)
+
+---
 #### maybe
 
 > maybe<T>(ifRule: Boolean, whenIf: T, whenElse: T): T
