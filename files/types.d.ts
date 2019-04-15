@@ -220,9 +220,6 @@ declare namespace R {
     findInObject(fn: Function, obj: object): object  
     findInObject(fn: Function) : (obj: object) => object  
 
-    flatMap<T>(fn: Function, input: any[]): T[]
-    flatMap<T>(fn: Function) : (input: any[]) => T[]  
-
     glue(input: string, glueString?: string): string
 
     getter<T>(keyOrKeys: string|string[]|undefined): T
@@ -280,6 +277,10 @@ declare namespace R {
     isFunction(
       maybePromiseFunctionOrAsync: any
     ): boolean
+
+    log(...inputs: any[]): void  
+    logInput(input?:{logFlag: boolean, pushFlag: boolean}): void
+    logHolder: Array<Array<any>>
 
     maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
 
