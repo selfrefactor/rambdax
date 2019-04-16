@@ -18,10 +18,9 @@
     "test": "jest src/allFalse.spec.js",
     "jest": "jest --watch -o",
     "cover": "jest src --coverage",
-    "minify": "node files/_modules/minify",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",
-    "build": "yarn build:main&&yarn build:web&&yarn minify"
+    "build": "yarn build:main&&yarn build:web"
   },
   "repository": {
     "type": "git",
@@ -46,7 +45,6 @@
     "@babel/preset-env": "^7.3.1",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
-    "minify": "https://github.com/selfrefactor/minify#0.1.0",
     "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
     "rambda": "^2.3.1",

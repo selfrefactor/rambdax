@@ -1,6 +1,6 @@
 # CHANGELOG
 
-2.2.0 `R.log`, `R.logInit` and `R.logHolder`
+2.2.1 `R.log`, `R.logInit` and `R.logHolder`
 
 2.1.0 `R._`
 
