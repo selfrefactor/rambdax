@@ -15,7 +15,7 @@
     "readme": "node files/_modules/createReadme",
     "types": "node files/createTypes",
     "docs": "docsify init ./docs",
-    "test": "jest src/allFalse.spec.js",
+    "test": "jest src",
     "jest": "jest --watch -o",
     "cover": "jest src --coverage",
     "build:main": "rollup -c files/rollup.config.js",
