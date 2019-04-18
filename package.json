@@ -45,7 +45,6 @@
     "@babel/preset-env": "^7.3.1",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
-    "do": "https://github.com/selfrefactor/do#1.8.4",
     "fs-extra": "^7.0.0",
     "rambda": "^2.3.1",
     "rambda-repl": "https://github.com/selfrefactor/rambda-repl#0.3.0",
