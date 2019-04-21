@@ -11,6 +11,17 @@ test('', () => {
   ).toEqual(_.MORE)
 })
 
+test('parse with constant case', () => {
+  const expected = 'FOO_BAR'
+
+  expect(
+    _.fooBar
+  ).toEqual(expected)
+  expect(
+    _.FooBar
+  ).toEqual(expected)
+})
+
 test('with status', () => {
   expect(
     _.STATUS('ok')

@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.3.0 `R._` parse to constant case
+
 2.2.1 `R.log`, `R.logInit` and `R.logHolder`
 
 2.1.0 `R._`

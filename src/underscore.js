@@ -1,4 +1,4 @@
-import { contantCase } from './_internals/constantCase'
+import { constantCase } from './_internals/constantCase'
 
 const predefined = {
   STATUS : x => {
