@@ -1,3 +1,5 @@
+import { contantCase } from './_internals/constantCase'
+
 const predefined = {
   STATUS : x => {
     const flag = typeof x === 'boolean' ?
@@ -14,7 +16,7 @@ const handler = {
   get : function(target, property){
     if (target[ property ]) return target[ property ]
 
-    return property
+    return constantCase(property)
   },
 }
 

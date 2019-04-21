@@ -1,4 +1,4 @@
-import { _ } from './_'
+import { _ } from './underscore'
 
 test('', () => {
   const result = _.MORE

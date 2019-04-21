@@ -1251,6 +1251,18 @@ test('when async + fn', async () => {
 })
 ```
 
+#### underscore
+
+> _ : object
+
+A proxy object which always returns the target property parsed to constant case
+ 
+```
+console.log(_.foo) // => 'FOO'
+console.log(_.BAR) // => 'BAR'
+console.log(_.fooBar) // => 'FOO_BAR'
+```
+
 #### unless
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
@@ -1406,17 +1418,6 @@ const result = truncate('12345678')
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/when.js)
-
-#### _
-
-> _ : object
-
-A proxy object which always returns the target property.
- 
-```
-console.log(_.FOO) // => 'FOO'
-console.log(_.BAR) // => 'BAR'
-```
 
 #### whenAsync
 
