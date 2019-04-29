@@ -1,8 +1,8 @@
-export function ifElse(condition, ifFn, elseFn){
-  if (ifFn === undefined){
+export function ifElse(condition, ifFn, elseFn) {
+  if (ifFn === undefined) {
     return (ifFnHolder, elseFnHolder) =>
       ifElse(condition, ifFnHolder, elseFnHolder)
-  } else if (elseFn === undefined){
+  } else if (elseFn === undefined) {
     return elseFnHolder => ifElse(condition, ifFn, elseFnHolder)
   }
 
@@ -10,7 +10,7 @@ export function ifElse(condition, ifFn, elseFn){
     const conditionResult =
       typeof condition === 'boolean' ? condition : condition(input)
 
-    if (conditionResult === true){
+    if (conditionResult === true) {
       return ifFn(input)
     }
 

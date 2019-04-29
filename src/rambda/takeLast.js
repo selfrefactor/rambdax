@@ -1,6 +1,6 @@
 import baseSlice from './internal/baseSlice'
 
-export function takeLast(num, x){
+export function takeLast(num, x) {
   if (arguments.length === 1)
     return xHolder => takeLast(num, xHolder)
 
@@ -8,7 +8,7 @@ export function takeLast(num, x){
 
   let numValue = num > len ? len : num
 
-  if (typeof x === 'string'){
+  if (typeof x === 'string') {
     return x.slice(len - numValue)
   }
   numValue = len - numValue

@@ -1,5 +1,5 @@
-export function sortBy(fn, arr){
-  if (arguments.length === 1){
+export function sortBy(fn, arr) {
+  if (arguments.length === 1) {
     return arrHolder => sortBy(fn, arrHolder)
   }
   const arrClone = arr.concat()

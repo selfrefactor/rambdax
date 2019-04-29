@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.5.0 Rambda's `partial`
+
 2.4.0 Add `R.uuid`
 
 2.3.0 `R._` parse to constant case

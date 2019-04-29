@@ -634,7 +634,7 @@ add(a: number, b: number): number
 
     length<T>(list: T[]): number
 
-    map<In, Out>(fn: MapFunction<In, Out>): MapInterface<Out>
+    map<In, Out>(fn: MapFunction<In, Out>): MapInterface<In, Out>
     map<In, Out>(fn: MapFunction<In, Out>, list: In[]): Out[]
 
     map<In, Out>(
@@ -683,6 +683,8 @@ add(a: number, b: number): number
     
     omit<T, K extends keyof T>(name: K): (obj: T) => Omit<T, K>
     
+    partial<T, U>(fn: Function, ...inputs: Array<T> ): U
+
     partialCurry<Out>(
       fn: (input: Dictionary<any>) => Out,
       input: Dictionary<any>

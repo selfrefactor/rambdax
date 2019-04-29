@@ -1,13 +1,13 @@
 import { contains } from './contains'
 
-export function uniq(arr){
+export function uniq(arr) {
   let index = -1
   const willReturn = []
 
-  while (++index < arr.length){
+  while (++index < arr.length) {
     const value = arr[ index ]
 
-    if (!contains(value, willReturn)){
+    if (!contains(value, willReturn)) {
       willReturn.push(value)
     }
   }

@@ -1,8 +1,8 @@
-export function omit(keys, obj){
-  if (arguments.length === 1){
+export function omit(keys, obj) {
+  if (arguments.length === 1) {
     return objHolder => omit(keys, objHolder)
   }
-  if (obj === null || obj === undefined){
+  if (obj === null || obj === undefined) {
     return undefined
   }
 
@@ -11,8 +11,8 @@ export function omit(keys, obj){
 
   const willReturn = {}
 
-  for (const key in obj){
-    if (!keysValue.includes(key)){
+  for (const key in obj) {
+    if (!keysValue.includes(key)) {
       willReturn[ key ] = obj[ key ]
     }
   }

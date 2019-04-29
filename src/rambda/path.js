@@ -1,8 +1,8 @@
-export function path(pathArr, obj){
-  if (arguments.length === 1){
+export function path(pathArr, obj) {
+  if (arguments.length === 1) {
     return objHolder => path(pathArr, objHolder)
   }
-  if (obj === null || obj === undefined){
+  if (obj === null || obj === undefined) {
     return undefined
   }
   let willReturn = obj
@@ -11,8 +11,8 @@ export function path(pathArr, obj){
   const pathArrValue =
     typeof pathArr === 'string' ? pathArr.split('.') : pathArr
 
-  while (counter < pathArrValue.length){
-    if (willReturn === null || willReturn === undefined){
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
       return undefined
     }
     willReturn = willReturn[ pathArrValue[ counter ] ]

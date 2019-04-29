@@ -1,7 +1,7 @@
 import { map } from './map'
 
-export function forEach(fn, arr){
-  if (arguments.length === 1){
+export function forEach(fn, arr) {
+  if (arguments.length === 1) {
     return arrHolder => forEach(fn, arrHolder)
   }
 

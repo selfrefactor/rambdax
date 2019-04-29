@@ -8,7 +8,7 @@ export function type(a){
   } else if (typeOf === 'boolean'){
     return 'Boolean'
   } else if (typeOf === 'number'){
-    return 'Number'
+    return Number.isNaN(a) ? 'NaN' : 'Number'
   } else if (typeOf === 'string'){
     return 'String'
   } else if (Array.isArray(a)){

@@ -1,7 +1,7 @@
 import { any } from './any'
 
-export function anyPass(conditions, x){
-  if (arguments.length === 1){
+export function anyPass(conditions, x) {
+  if (arguments.length === 1) {
     return xHolder => anyPass(conditions, xHolder)
   }
 

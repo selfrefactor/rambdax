@@ -1,5 +1,5 @@
-export function merge(obj, newProps){
-  if (arguments.length === 1){
+export function merge(obj, newProps) {
+  if (arguments.length === 1) {
     return newPropsHolder => merge(obj, newPropsHolder)
   }
 
