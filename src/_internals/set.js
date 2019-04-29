@@ -252,8 +252,8 @@ Hash.prototype.set = hashSet
  * @param {Array} [entries] The key-value pairs to cache.
  */
 function ListCache(entries){
-  const index = -1,
-    length = entries ? entries.length : 0
+  let index = -1
+  const length = entries ? entries.length : 0
 
   this.clear()
   while (++index < length){
@@ -366,8 +366,8 @@ ListCache.prototype.set = listCacheSet
  * @param {Array} [entries] The key-value pairs to cache.
  */
 function MapCache(entries){
-  const index = -1,
-    length = entries ? entries.length : 0
+  let index = -1
+  const length = entries ? entries.length : 0
 
   this.clear()
   while (++index < length){
