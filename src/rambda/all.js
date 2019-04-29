@@ -1,7 +1,7 @@
 import { filter } from './filter'
 
-export function all(condition, arr) {
-  if (arguments.length === 1) {
+export function all(condition, arr){
+  if (arguments.length === 1){
     return arrHolder => all(condition, arrHolder)
   }
 

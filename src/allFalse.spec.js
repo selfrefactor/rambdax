@@ -1,17 +1,17 @@
-import {allFalse} from './allFalse'
-import {runTests} from './runTests'
+import { allFalse } from './allFalse'
+import { runTests } from './runTests'
 
-const OBJ = {c: 1}
+const OBJ = { c : 1 }
 
 const case1 = {
-  foo: false,
-  t: () => 2 > 10,
-  f: () => 2 < 10,
+  foo : false,
+  t   : () => 2 > 10,
+  f   : () => 2 < 10,
 }
 const case2 = {
-  foo: OBJ.a,
-  t: OBJ.b,
-  f: OBJ.c,
+  foo : OBJ.a,
+  t   : OBJ.b,
+  f   : OBJ.c,
 }
 
 const trueEvaluation = x => {
@@ -23,16 +23,16 @@ const falseEvaluation = x => {
 }
 
 runTests({
-  data: [{case1}, {case2}],
-  evaluations: [
+  data        : [ { case1 }, { case2 } ],
+  evaluations : [
     {
-      label: '{{tag}} - true',
+      label : '{{tag}} - true',
       trueEvaluation,
     },
     {
-      label: '{{tag}} - false',
+      label : '{{tag}} - false',
       falseEvaluation,
     },
   ],
-  testSuite: 'allFalse',
+  testSuite : 'allFalse',
 })

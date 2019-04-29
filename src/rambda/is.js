@@ -1,5 +1,5 @@
-export function is(xPrototype, x) {
-  if (arguments.length === 1) {
+export function is(xPrototype, x){
+  if (arguments.length === 1){
     return xHolder => is(xPrototype, xHolder)
   }
 

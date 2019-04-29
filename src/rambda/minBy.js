@@ -1,7 +1,7 @@
-export function minBy(fn, x, y) {
-  if (arguments.length === 2) {
+export function minBy(fn, x, y){
+  if (arguments.length === 2){
     return yHolder => minBy(fn, x, yHolder)
-  } else if (arguments.length === 1) {
+  } else if (arguments.length === 1){
     return (xHolder, yHolder) => minBy(fn, xHolder, yHolder)
   }
 

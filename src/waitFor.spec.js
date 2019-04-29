@@ -6,6 +6,7 @@ test('true', async () => {
   let counter = 0
   const condition = x => {
     counter++
+
     return counter > x
   }
 
@@ -17,6 +18,7 @@ test('false', async () => {
   let counter = 0
   const condition = x => {
     counter++
+
     return counter > x
   }
 
@@ -28,6 +30,7 @@ test('async condition | true', async () => {
   let counter = 0
   const condition = async x => {
     counter++
+
     return counter > x
   }
 
@@ -39,6 +42,7 @@ test('async condition | false', async () => {
   let counter = 0
   const condition = async x => {
     counter++
+
     return counter > x
   }
 

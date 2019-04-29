@@ -1,7 +1,7 @@
 import { any } from './rambda/any'
 import { check } from './ok'
 
-export function pass(...inputs) {
+export function pass(...inputs){
   return (...schemas) =>
     any((x, i) => {
       const schema =

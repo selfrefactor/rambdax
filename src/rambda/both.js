@@ -1,5 +1,5 @@
-export function both(x, y) {
-  if (arguments.length === 1) {
+export function both(x, y){
+  if (arguments.length === 1){
     return yHolder => both(x, yHolder)
   }
 

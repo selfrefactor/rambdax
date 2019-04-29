@@ -1,5 +1,5 @@
-export function last(a) {
-  if (typeof a === 'string') {
+export function last(a){
+  if (typeof a === 'string'){
     return a[ a.length - 1 ] || ''
   }
 

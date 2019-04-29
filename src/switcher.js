@@ -11,10 +11,10 @@ const getMatchingKeyValuePair = (
 ) => {
   let iterationValue
 
-  for (let index = 0; index < cases.length; index++) {
+  for (let index = 0; index < cases.length; index++){
     iterationValue = cases[ index ].test(testValue)
 
-    if (iterationValue !== NO_MATCH_FOUND) {
+    if (iterationValue !== NO_MATCH_FOUND){
       return iterationValue
     }
   }
@@ -37,13 +37,13 @@ const is = (testValue, matchResult = true) => ({
     isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND,
 })
 
-class Switchem {
-  constructor(defaultValue, cases, willMatch) {
+class Switchem{
+  constructor(defaultValue, cases, willMatch){
     if (
       defaultValue !== undefined &&
       cases === undefined &&
       willMatch === undefined
-    ) {
+    ){
       this.cases = []
       this.defaultValue = undefined
       this.willMatch = defaultValue
@@ -56,7 +56,7 @@ class Switchem {
     return this
   }
 
-  default(defaultValue) {
+  default(defaultValue){
     const holder = new Switchem(
       defaultValue,
       this.cases,
@@ -66,7 +66,7 @@ class Switchem {
     return holder.match(this.willMatch)
   }
 
-  is(testValue, matchResult) {
+  is(testValue, matchResult){
     return new Switchem(
       this.defaultValue,
       [ ...this.cases, is(testValue, matchResult) ],
@@ -74,7 +74,7 @@ class Switchem {
     )
   }
 
-  match(matchValue) {
+  match(matchValue){
     return getMatchingKeyValuePair(
       this.cases,
       matchValue,
@@ -83,6 +83,6 @@ class Switchem {
   }
 }
 
-export function switcher(input) {
+export function switcher(input){
   return new Switchem(input)
 }

@@ -2,9 +2,9 @@ import { path } from './path'
 import { defaultTo } from './defaultTo'
 import { curry } from './curry'
 
-function pathOrRaw(defaultValue, inputPath, inputObject) {
+function pathOrRaw(defaultValue, inputPath, inputObject){
   return defaultTo(
-    defaultValue, 
+    defaultValue,
     path(inputPath, inputObject)
   )
 }

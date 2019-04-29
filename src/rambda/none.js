@@ -1,4 +1,4 @@
-export function none(fn, arr) {
+export function none(fn, arr){
   if (arguments.length === 1)
     return arrHolder => none(fn, arrHolder)
 

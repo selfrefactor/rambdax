@@ -15,7 +15,7 @@ test('error contains schema', () => {
   try {
     ok(1, 'foo', {})('number', 'string', 'string')
     expect(false).toBe(true)
-  } catch (e) {
+  } catch (e){
     expect(
       e.message.startsWith('Failed R.ok with schema')
     ).toBeTruthy()

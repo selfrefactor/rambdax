@@ -2,16 +2,18 @@ import { pipedAsync } from './pipedAsync'
 import { delay } from './delay'
 import { add } from './rambda/add'
 
-test('', async () =>{
+test('', async () => {
   const result = await pipedAsync(
-    100, 
+    100,
     async x => {
       await delay(100)
+
       return x + 2
     },
     add(2),
     async x => {
       const delayed = await delay(100)
+
       return delayed + x
     }
   )

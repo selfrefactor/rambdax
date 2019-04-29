@@ -1,11 +1,11 @@
-function createThenable(x) {
-  return async function(input) {
+function createThenable(x){
+  return async function(input){
     return x(input)
   }
 }
 
-export function whenAsync(condition, whenTrueFn) {
-  if (arguments.length === 1) {
+export function whenAsync(condition, whenTrueFn){
+  if (arguments.length === 1){
     return whenTrueFnHolder =>
       whenAsync(condition, whenTrueFnHolder)
   }
@@ -14,8 +14,8 @@ export function whenAsync(condition, whenTrueFn) {
     new Promise((resolve, reject) => {
       const whenTrueFnPromise = createThenable(whenTrueFn)
 
-      if (typeof condition === 'boolean') {
-        if (condition === false) {
+      if (typeof condition === 'boolean'){
+        if (condition === false){
           return resolve(input)
         }
 
@@ -27,7 +27,7 @@ export function whenAsync(condition, whenTrueFn) {
 
         conditionPromise(input)
           .then(conditionResult => {
-            if (conditionResult === false) {
+            if (conditionResult === false){
               return resolve(input)
             }
 

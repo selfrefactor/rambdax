@@ -1,5 +1,5 @@
-export function add(x, y) {
-  if (y === undefined) {
+export function add(x, y){
+  if (y === undefined){
     return yHolder => add(x, yHolder)
   }
 

@@ -1,5 +1,5 @@
-export function flatMap(fn, xs) {
-  if (arguments.length === 1) {
+export function flatMap(fn, xs){
+  if (arguments.length === 1){
     return xsHolder => flatMap(fn, xsHolder)
   }
 

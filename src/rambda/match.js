@@ -1,5 +1,5 @@
-export function match(regex, x) {
-  if (arguments.length === 1) {
+export function match(regex, x){
+  if (arguments.length === 1){
     return xHolder => match(regex, xHolder)
   }
 

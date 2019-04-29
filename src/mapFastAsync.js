@@ -1,11 +1,11 @@
-async function mapFastAsyncFn(fn, arr) {
+async function mapFastAsyncFn(fn, arr){
   const promised = arr.map(a => fn(a))
 
   return await Promise.all(promised)
 }
 
-export function mapFastAsync(fn, arr) {
-  if (arguments.length === 1) {
+export function mapFastAsync(fn, arr){
+  if (arguments.length === 1){
     return async holder => mapFastAsyncFn(fn, holder)
   }
 

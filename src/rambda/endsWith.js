@@ -1,5 +1,5 @@
-export function endsWith(substr, str) {
-  if (arguments.length === 1) {
+export function endsWith(substr, str){
+  if (arguments.length === 1){
     return strHolder => endsWith(substr, strHolder)
   }
 

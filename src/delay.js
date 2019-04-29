@@ -1,4 +1,4 @@
-export function delay(ms) {
+export function delay(ms){
   return new Promise(resolve => {
     setTimeout(() => {
       resolve('RAMBDAX_DELAY')

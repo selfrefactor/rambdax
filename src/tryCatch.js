@@ -1,17 +1,17 @@
 import { isFunction } from './isFunction'
 import { isPromise } from './isPromise'
 
-export function tryCatch(fn, fallback) {
-  if (!isFunction(fn)) {
+export function tryCatch(fn, fallback){
+  if (!isFunction(fn)){
     throw new Error(`R.tryCatch | fn '${ fn }'`)
   }
   const passFallback = isFunction(fallback)
 
-  if (!isPromise(fn)) {
+  if (!isPromise(fn)){
     return (...inputs) => {
       try {
         return fn(...inputs)
-      } catch (e) {
+      } catch (e){
         return passFallback ? fallback(...inputs) : fallback
       }
     }
@@ -22,11 +22,11 @@ export function tryCatch(fn, fallback) {
       fn(...inputs)
         .then(resolve)
         .catch(() => {
-          if (!passFallback) {
+          if (!passFallback){
             return resolve(fallback)
           }
 
-          if (!isPromise(fallback)) {
+          if (!isPromise(fallback)){
             return resolve(fallback(...inputs))
           }
 

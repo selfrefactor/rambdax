@@ -1,10 +1,10 @@
-import {curry} from './curry'
+import { curry } from './curry'
 
-function adjustRaw(fn, index, arr) {
+function adjustRaw(fn, index, arr){
   const clone = arr.concat()
 
   return clone.map((val, key) => {
-    if (key === index) {
+    if (key === index){
       return fn(arr[ index ])
     }
 

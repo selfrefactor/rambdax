@@ -11,13 +11,13 @@ test('', async () => {
     new Promise(resolve => {
       setTimeout(() => {
         resolve({
-          type: 'result',
-          payload: input,
+          type    : 'result',
+          payload : input,
         })
       }, 100)
     })
 
-  const list = ['foo', 'bar'].map(a => fn(a))
+  const list = [ 'foo', 'bar' ].map(a => fn(a))
 
   const result = await composeAsync(
     map(prop('payload')),
@@ -26,7 +26,7 @@ test('', async () => {
     map(prop('payload'))
   )(await Promise.all(list))
 
-  expect(result).toEqual(['foo', 'bar'])
+  expect(result).toEqual([ 'foo', 'bar' ])
 })
 
 test('', async () => {
@@ -59,7 +59,7 @@ test('', async () => {
         }, ms)
       })
     await composeAsync(a => a - 1000, delayAsync)(20)
-  } catch (err) {
+  } catch (err){
     expect(err).toEqual('error')
   }
 })
@@ -68,7 +68,7 @@ test('', async () => {
   let sideEffect
   const result = await composeAsync(
     tapAsync(async x => {
-      sideEffect = equals(x, [2, 4, 6])
+      sideEffect = equals(x, [ 2, 4, 6 ])
 
       return await delayModule(x * 3)
     }),
@@ -77,9 +77,9 @@ test('', async () => {
 
       return x * 2
     })
-  )([1, 2, 3])
+  )([ 1, 2, 3 ])
 
-  expect(result).toEqual([2, 4, 6])
+  expect(result).toEqual([ 2, 4, 6 ])
 
   expect(sideEffect).toEqual(true)
 })
@@ -131,7 +131,7 @@ test('throw error', async () => {
       async a => delay(a),
       a => a + 11
     )(20)
-  } catch (e) {
+  } catch (e){
     flag = false
   }
 

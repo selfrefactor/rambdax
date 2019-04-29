@@ -12,13 +12,13 @@ test('one input argument + fallback', () => {
 })
 
 test('three input argument + fallback', () => {
-  expect(defaultToWhen(fallback, fn, 0,1,2)).toBe(10)
+  expect(defaultToWhen(fallback, fn, 0, 1, 2)).toBe(10)
 })
 
 test('three input argument + no fallback', () => {
-  expect(defaultToWhen(fallback, fn, 0,1,2,3)).toBe(3)
+  expect(defaultToWhen(fallback, fn, 0, 1, 2, 3)).toBe(3)
 })
 
 test('curry', () => {
-  expect(defaultToWhen(fallback, fn)(0,1,2,3)).toBe(3)
+  expect(defaultToWhen(fallback, fn)(0, 1, 2, 3)).toBe(3)
 })

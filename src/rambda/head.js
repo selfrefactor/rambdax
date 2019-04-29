@@ -1,5 +1,5 @@
-export function head(a) {
-  if (typeof a === 'string') {
+export function head(a){
+  if (typeof a === 'string'){
     return a[ 0 ] || ''
   }
 

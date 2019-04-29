@@ -1,14 +1,14 @@
 import { type } from './rambda/type'
 
-export function maybe (ifRule,whenIfRaw,whenElseRaw){ 
+export function maybe(ifRule, whenIfRaw, whenElseRaw){
   const whenIf = ifRule && type(whenIfRaw) === 'Function' ?
-    whenIfRaw():
+    whenIfRaw() :
     whenIfRaw
 
   const whenElse = !ifRule && type(whenElseRaw) === 'Function' ?
-    whenElseRaw():
+    whenElseRaw() :
     whenElseRaw
-    
+
   return ifRule ?
     whenIf :
     whenElse

@@ -1,5 +1,5 @@
-export function repeat(x, num) {
-  if (arguments.length === 1) {
+export function repeat(x, num){
+  if (arguments.length === 1){
     return numHolder => repeat(x, numHolder)
   }
   const willReturn = Array(num)

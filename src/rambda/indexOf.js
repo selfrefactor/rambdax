@@ -1,13 +1,13 @@
-export function indexOf(x, arr) {
-  if (arguments.length === 1) {
+export function indexOf(x, arr){
+  if (arguments.length === 1){
     return arrHolder => indexOf(x, arrHolder)
   }
 
   let index = -1
-  const length = arr.length
+  const { length } = arr
 
-  while (++index < length) {
-    if (arr[ index ] === x) {
+  while (++index < length){
+    if (arr[ index ] === x){
       return index
     }
   }

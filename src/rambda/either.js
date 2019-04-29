@@ -1,5 +1,5 @@
-export function either(x, y) {
-  if (arguments.length === 1) {
+export function either(x, y){
+  if (arguments.length === 1){
     return yHolder => either(x, yHolder)
   }
 

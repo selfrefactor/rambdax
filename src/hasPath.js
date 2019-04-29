@@ -1,10 +1,10 @@
-import {path} from './rambda/path'
+import { path } from './rambda/path'
 
 // WAIT
-export function hasPath (maybePath,obj){ 
-  if(arguments.length === 1){
+export function hasPath(maybePath, obj){
+  if (arguments.length === 1){
     return objHolder => hasPath(maybePath, objHolder)
   }
-  
+
   return path(maybePath, obj) !== undefined
 }

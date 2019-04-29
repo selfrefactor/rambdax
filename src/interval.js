@@ -5,19 +5,20 @@ import { shuffle } from './shuffle'
 const uuidList = '0123456789qwertyuiopasdfghjklzxcvbnm'.split('')
 
 function uuid(){
-  return take(5,shuffle(uuidList).join(''))
+  return take(5, shuffle(uuidList).join(''))
 }
 
 const holder = {}
 
-export function interval ({fn,ms,whenStop}){
+export function interval({ fn, ms, whenStop }){
   const key = uuid()
+
   return new Promise(resolve => {
-    holder[key] = setInterval(()=>{
-      if(whenStop() === true){
-        clearInterval(holder[key])
+    holder[ key ] = setInterval(() => {
+      if (whenStop() === true){
+        clearInterval(holder[ key ])
         resolve()
-      }else{
+      } else {
         fn()
       }
     }, ms)

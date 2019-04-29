@@ -6,10 +6,10 @@ const getOccuranceProp = occurance =>
 const replace = ({ inputHolder, prop, replacer }) =>
   inputHolder.replace(`{{${ prop }}}`, replacer)
 
-export function template(input, templateInput) {
-  if(arguments.length === 1){
+export function template(input, templateInput){
+  if (arguments.length === 1){
     return templateInputHolder => template(
-      input, 
+      input,
       templateInputHolder
     )
   }
@@ -17,7 +17,7 @@ export function template(input, templateInput) {
   if (occurances === null) return input
 
   let inputHolder = input
-  for (const occurance of occurances) {
+  for (const occurance of occurances){
     const prop = getOccuranceProp(occurance)
     const replacer = templateInput[ prop ]
 

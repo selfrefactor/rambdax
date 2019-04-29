@@ -1,4 +1,4 @@
-export function nth(index, list) {
+export function nth(index, list){
   if (arguments.length === 1)
     return listHolder => nth(index, listHolder)
 

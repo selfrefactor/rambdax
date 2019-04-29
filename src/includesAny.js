@@ -9,23 +9,23 @@ function expensiveIncludes(target, source){
   )
 }
 
-export function includesAny (targets,source){ 
-  if(arguments.length === 1){
+export function includesAny(targets, source){
+  if (arguments.length === 1){
     return sourceHolder => includesAny(targets, sourceHolder)
   }
   const sourceType = type(source)
 
-  if(['Array','String'].includes(sourceType) === false){
+  if ([ 'Array', 'String' ].includes(sourceType) === false){
     return false
   }
 
-  if(sourceType === 'String'){
+  if (sourceType === 'String'){
     return any(
       x => source.includes(x),
       targets
     )
   }
-  
+
   return any(
     x => expensiveIncludes(x, source),
     targets

@@ -8,9 +8,9 @@ test('', () => {
     map(add(1)),
     map(x => x * 10),
     filter(x => x > 1),
-    [1, 2, 3]
+    [ 1, 2, 3 ]
   )
-  const expectedResult = [21, 31]
+  const expectedResult = [ 21, 31 ]
 
   expect(result).toEqual(expectedResult)
 })

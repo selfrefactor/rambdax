@@ -3,7 +3,7 @@ import { maybe } from './maybe'
 const whenIf = 7
 const whenElse = 9
 
-test('prevent type error', () =>{
+test('prevent type error', () => {
   const x = 5
   const y = null
   const ifRule = x > 3
@@ -20,9 +20,9 @@ test('prevent type error', () =>{
   ).toEqual(expectedResult)
 })
 
-test('function as whenElse', () =>{
+test('function as whenElse', () => {
   const x = 2
-  const y = {a:1}
+  const y = { a : 1 }
   const ifRule = x > 3
 
   const result = maybe(
@@ -37,11 +37,11 @@ test('function as whenElse', () =>{
   ).toEqual(expectedResult)
 })
 
-test('when if', () =>{
+test('when if', () => {
   const x = 5
   const ifRule = x > 3
 
-  const result = maybe(ifRule,whenIf,whenElse)
+  const result = maybe(ifRule, whenIf, whenElse)
   const expectedResult = 7
 
   expect(
@@ -49,11 +49,11 @@ test('when if', () =>{
   ).toEqual(expectedResult)
 })
 
-test('when else', () =>{
+test('when else', () => {
   const x = 1
   const ifRule = x > 3
 
-  const result = maybe(ifRule,whenIf,whenElse)
+  const result = maybe(ifRule, whenIf, whenElse)
   const expectedResult = 9
 
   expect(

@@ -8,15 +8,15 @@ test('promiseAllObject', async () => {
       }, ms)
     })
   const promises = {
-    a: delay(1),
-    b: delay(2),
-    c: delay(3),
+    a : delay(1),
+    b : delay(2),
+    c : delay(3),
   }
   const result = await promiseAllObject(promises)
 
   expect(result).toEqual({
-    a: 1,
-    b: 2,
-    c: 3,
+    a : 1,
+    b : 2,
+    c : 3,
   })
 })

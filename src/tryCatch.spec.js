@@ -7,7 +7,7 @@ test('throws when fn is not function', () => {
 
   expect(
     () => tryCatch(fn, false)(null)
-  ).toThrow(`R.tryCatch | fn 'foo'`)
+  ).toThrow('R.tryCatch | fn \'foo\'')
 })
 
 test('when fallback is used', () => {
@@ -26,7 +26,7 @@ test('when fn is used', () => {
   const fn = prop('x')
 
   expect(tryCatch(fn, false)({})).toBe(undefined)
-  expect(tryCatch(fn, false)({ x: 1 })).toBe(1)
+  expect(tryCatch(fn, false)({ x : 1 })).toBe(1)
 })
 
 test('when async + fallback', async () => {
@@ -65,9 +65,7 @@ test('when async + fallback is async', async () => {
 
     return JSON.parse('{a:')
   }
-  const fallback = async input => {
-    return input + 1
-  }
+  const fallback = async input => input + 1
 
   expect(await tryCatch(fn, fallback)(100)).toBe(101)
   expect(called).toBe(true)

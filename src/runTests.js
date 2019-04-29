@@ -5,13 +5,13 @@ import { pass as passMethod } from './pass'
 
 const evaluationsSchema = { label : 'string' }
 
-export function runTests(input) {
+export function runTests(input){
   const pass = passMethod(input)({
     testSuite   : 'string',
     evaluations : [ evaluationsSchema ],
   })
 
-  if (describe === undefined || !pass) {
+  if (describe === undefined || !pass){
     throw new Error('R.runTests.init')
   }
   try {
@@ -33,7 +33,7 @@ export function runTests(input) {
         })
       })
     })
-  } catch (err) {
+  } catch (err){
     console.log(err)
     throw new Error('R.runTestsCatch')
   }

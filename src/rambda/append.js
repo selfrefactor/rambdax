@@ -1,5 +1,5 @@
-export function append(x, arr) {
-  if (arguments.length === 1) {
+export function append(x, arr){
+  if (arguments.length === 1){
     return arrHolder => append(x, arrHolder)
   }
 

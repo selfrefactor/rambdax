@@ -9,7 +9,7 @@ let holder = {}
  * Pass array to get object of values
  * Pass undefined to get all data
  */
-export function getter(key) {
+export function getter(key){
   const typeKey = type(key)
 
   if (typeKey === 'String') return holder[ key ]
@@ -19,12 +19,12 @@ export function getter(key) {
   return holder
 }
 
-export function setter(maybeKey, maybeValue) {
+export function setter(maybeKey, maybeValue){
   const typeKey = type(maybeKey)
   const typeValue = type(maybeValue)
 
-  if (typeKey === 'String') {
-    if (typeValue === 'Function') {
+  if (typeKey === 'String'){
+    if (typeValue === 'Function'){
       return holder[ maybeKey ] = maybeValue(holder[ maybeKey ])
     }
 
@@ -36,6 +36,6 @@ export function setter(maybeKey, maybeValue) {
   holder = merge(holder, maybeKey)
 }
 
-export function reset() {
+export function reset(){
   holder = {}
 }

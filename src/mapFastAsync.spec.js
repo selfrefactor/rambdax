@@ -24,8 +24,8 @@ const rejectDelay = a =>
   })
 
 test('happy path', async () => {
-  const result = await mapFastAsync(delay, [1, 2, 3])
-  expect(result).toEqual([21, 22, 23])
+  const result = await mapFastAsync(delay, [ 1, 2, 3 ])
+  expect(result).toEqual([ 21, 22, 23 ])
 })
 
 test('composeAsync', async () => {
@@ -33,14 +33,14 @@ test('composeAsync', async () => {
     mapFastAsync(async a => await delay(a)),
     mapFastAsync(delay),
     map(a => a * 10)
-  )(await tap([1, 2, 3]))
-  expect(result).toEqual([50, 60, 70])
+  )(await tap([ 1, 2, 3 ]))
+  expect(result).toEqual([ 50, 60, 70 ])
 })
 
 test('error', async () => {
   try {
-    const result = await mapFastAsync(rejectDelay)([1, 2, 3])
-  } catch (err) {
+    const result = await mapFastAsync(rejectDelay)([ 1, 2, 3 ])
+  } catch (err){
     expect(err).toBe(21)
   }
 })

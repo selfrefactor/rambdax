@@ -14,19 +14,22 @@ test('', () => {
 
 test('when array is key in getter', () => {
   setter({
-    a: 1,
-    b: 2,
-    c: 3,
+    a : 1,
+    b : 2,
+    c : 3,
   })
 
-  expect(getter(['a', 'b'])).toEqual({ a: 1, b: 2 })
+  expect(getter([ 'a', 'b' ])).toEqual({
+    a : 1,
+    b : 2,
+  })
 })
 
 test('getter with undefined as key returns all', () => {
   const data = {
-    a: 1,
-    b: 2,
-    c: 3,
+    a : 1,
+    b : 2,
+    c : 3,
   }
 
   setter(data)
@@ -36,18 +39,18 @@ test('getter with undefined as key returns all', () => {
 
 test('function as setter value', () => {
   const data = {
-    a: 1,
-    b: 2,
-    c: 3,
+    a : 1,
+    b : 2,
+    c : 3,
   }
 
   setter(data)
   setter('a', add(10))
 
   expect(getter()).toEqual({
-    a: 11,
-    b: 2,
-    c: 3,
+    a : 11,
+    b : 2,
+    c : 3,
   })
 })
 

@@ -1,16 +1,16 @@
 import { type } from './rambda/type'
 import { replace } from './rambda/replace'
 
-export function remove(inputs, text) {
-  if (arguments.length === 1) {
+export function remove(inputs, text){
+  if (arguments.length === 1){
     return textHolder => remove(inputs, textHolder)
   }
 
-  if (type(text) !== 'String') {
-    throw new Error(`R.remove requires string not ${type(text)}`)
+  if (type(text) !== 'String'){
+    throw new Error(`R.remove requires string not ${ type(text) }`)
   }
 
-  if (type(inputs) !== 'Array') {
+  if (type(inputs) !== 'Array'){
     return replace(inputs, '', text).trim()
   }
 
@@ -22,5 +22,4 @@ export function remove(inputs, text) {
 
   return textCopy
 }
-
 

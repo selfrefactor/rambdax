@@ -1,14 +1,14 @@
 import { isValid } from './isValid'
 import { any } from './rambda/any'
 
-export function check(singleInput, schema) {
+export function check(singleInput, schema){
   return isValid({
     input  : { singleInput },
     schema : { singleInput : schema },
   })
 }
 
-export function ok(...inputs) {
+export function ok(...inputs){
   return (...schemas) => {
     let failedSchema
 
@@ -18,7 +18,7 @@ export function ok(...inputs) {
           schemas[ i ] === undefined ? schemas[ 0 ] : schemas[ i ]
 
         const checked = check(singleInput, schema)
-        if (!checked) {
+        if (!checked){
           failedSchema = JSON.stringify({
             input : singleInput,
             schema,

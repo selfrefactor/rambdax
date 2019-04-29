@@ -1,6 +1,6 @@
 import { any } from './any'
 
-export function uniqWith(fn, arr) {
+export function uniqWith(fn, arr){
   if (arguments.length === 1)
     return arrHolder => uniqWith(fn, arrHolder)
 
@@ -8,14 +8,14 @@ export function uniqWith(fn, arr) {
   const len = arr.length
   const willReturn = []
 
-  while (++index < len) {
+  while (++index < len){
     const value = arr[ index ]
     const flag = any(
       willReturnInstance => fn(value, willReturnInstance),
       willReturn
     )
 
-    if (!flag) {
+    if (!flag){
       willReturn.push(value)
     }
   }

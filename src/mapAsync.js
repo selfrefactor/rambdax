@@ -1,7 +1,7 @@
-async function mapAsyncFn(fn, arr) {
-  if (Array.isArray(arr)) {
+async function mapAsyncFn(fn, arr){
+  if (Array.isArray(arr)){
     const willReturn = []
-    for (const a of arr) {
+    for (const a of arr){
       willReturn.push(await fn(a))
     }
 
@@ -9,15 +9,15 @@ async function mapAsyncFn(fn, arr) {
   }
 
   const willReturn = {}
-  for (const prop in arr) {
+  for (const prop in arr){
     willReturn[ prop ] = await fn(arr[ prop ], prop)
   }
 
   return willReturn
 }
 
-export function mapAsync(fn, arr) {
-  if (arguments.length === 1) {
+export function mapAsync(fn, arr){
+  if (arguments.length === 1){
     return async holder => mapAsyncFn(fn, holder)
   }
 

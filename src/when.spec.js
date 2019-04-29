@@ -7,7 +7,7 @@ test('whenTrue can be other than function', () => {
     Boolean,
     2
   )(true)
-  
+
   expect(
     result
   ).toBe(2)
@@ -17,7 +17,7 @@ test('', () => {
   const truncate = when(
     x => x.length > 5,
     compose(
-      x => `${x}...`,
+      x => `${ x }...`,
       take(5)
     )
   )
@@ -29,7 +29,7 @@ test('', () => {
 test('use boolean', () => {
   const truncateTrue = when(true)(
     compose(
-      x => `${x}...`,
+      x => `${ x }...`,
       take(5)
     )
   )
@@ -37,7 +37,7 @@ test('use boolean', () => {
   const truncateFalse = when(
     false,
     compose(
-      x => `${x}...`,
+      x => `${ x }...`,
       take(5)
     )
   )

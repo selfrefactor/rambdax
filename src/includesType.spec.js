@@ -1,17 +1,17 @@
 import { includesType } from './includesType'
 
-test('when true', () =>{
+test('when true', () => {
   const targetType = 'Array'
-  const list = [1,2,3,[]]
+  const list = [ 1, 2, 3, [] ]
 
   expect(
-    includesType(targetType,list)
+    includesType(targetType, list)
   ).toBeTruthy()
 })
 
-test('when false + curry', () =>{
+test('when false + curry', () => {
   const targetType = 'String'
-  const list = [1,2,3,[]]
+  const list = [ 1, 2, 3, [] ]
 
   expect(
     includesType(targetType)(list)

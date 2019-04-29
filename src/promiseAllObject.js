@@ -1,10 +1,10 @@
-export function promiseAllObject(promises) {
+export function promiseAllObject(promises){
   return new Promise((res, rej) => {
     let counter = 0
     const props = {}
     const promisedArr = []
 
-    for (const prop in promises) {
+    for (const prop in promises){
       props[ counter ] = prop
       promisedArr.push(promises[ prop ])
       counter++

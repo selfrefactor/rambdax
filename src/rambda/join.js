@@ -1,5 +1,5 @@
-export function join(glue, arr) {
-  if (arguments.length === 1) {
+export function join(glue, arr){
+  if (arguments.length === 1){
     return arrHolder => join(glue, arrHolder)
   }
 

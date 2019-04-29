@@ -1,6 +1,6 @@
 //WAIT
-export function findModify(fn, list) {
-  if (arguments.length === 1) {
+export function findModify(fn, list){
+  if (arguments.length === 1){
     return listHolder => findModify(fn, listHolder)
   }
 
@@ -9,9 +9,9 @@ export function findModify(fn, list) {
 
   let index = -1
 
-  while (++index < len) {
+  while (++index < len){
     const result = fn(list[ index ], index)
-    if (result !== false) {
+    if (result !== false){
       return result
     }
   }

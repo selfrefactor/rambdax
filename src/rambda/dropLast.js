@@ -1,5 +1,5 @@
-export function dropLast(dropNumber, x) {
-  if (arguments.length === 1) {
+export function dropLast(dropNumber, x){
+  if (arguments.length === 1){
     return xHolder => dropLast(dropNumber, xHolder)
   }
 

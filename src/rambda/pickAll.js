@@ -1,8 +1,8 @@
-export function pickAll(keys, obj) {
-  if (arguments.length === 1) {
+export function pickAll(keys, obj){
+  if (arguments.length === 1){
     return objHolder => pickAll(keys, objHolder)
   }
-  if (obj === null || obj === undefined) {
+  if (obj === null || obj === undefined){
     return undefined
   }
   const keysValue =
@@ -11,8 +11,8 @@ export function pickAll(keys, obj) {
   const willReturn = {}
   let counter = 0
 
-  while (counter < keysValue.length) {
-    if (keysValue[ counter ] in obj) {
+  while (counter < keysValue.length){
+    if (keysValue[ counter ] in obj){
       willReturn[ keysValue[ counter ] ] = obj[ keysValue[ counter ] ]
     } else {
       willReturn[ keysValue[ counter ] ] = undefined

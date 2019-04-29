@@ -1,7 +1,7 @@
 import { allType } from './allType'
 
 test('when true', () => {
-  const result = allType('Array')([1, 2, 3], [], [null])
+  const result = allType('Array')([ 1, 2, 3 ], [], [ null ])
 
   expect(result).toBe(true)
 })
