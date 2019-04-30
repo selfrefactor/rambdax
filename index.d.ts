@@ -23,9 +23,9 @@ declare namespace R {
   type MapFunction<In, Out> = (x: In, prop?: string) => Out
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-  interface MapInterface<T> {
-    (list: T[]): T[]
-    (obj: Dictionary<T>): Dictionary<T>
+  interface MapInterface<In, Out> {
+    (list: In[]): Out[]
+    (obj: Dictionary<In>): Dictionary<Out>
   }
 
   interface HeadObject<T>{
@@ -634,7 +634,7 @@ add(a: number, b: number): number
 
     length<T>(list: T[]): number
 
-    map<In, Out>(fn: MapFunction<In, Out>): MapInterface<Out>
+    map<In, Out>(fn: MapFunction<In, Out>): MapInterface<In, Out>
     map<In, Out>(fn: MapFunction<In, Out>, list: In[]): Out[]
 
     map<In, Out>(
