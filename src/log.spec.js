@@ -4,6 +4,7 @@ let spy
 let holder
 
 beforeEach(() => {
+  process.env.RAMBDAX_LOG = 'false'
   spy = jest.fn()
   holder = console.log
   console.log = x => spy(x)
@@ -15,6 +16,7 @@ afterEach(() => {
 })
 
 test('happy', () => {
+  process.env.RAMBDAX_LOG = 'true'
   expect(
     log(1, 2, 3)
   ).toBeUndefined()
@@ -23,6 +25,7 @@ test('happy', () => {
 })
 
 test('with pushFlag', () => {
+  process.env.RAMBDAX_LOG = 'true'  
   logInit({
     pushFlag : true,
     logFlag  : false,
