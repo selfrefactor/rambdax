@@ -3,7 +3,6 @@ import { allTrue } from './allTrue'
 test('with functions', () => {
   const foo = () => 1
   const baz = () => false
-
   const result = allTrue(foo, baz)
   expect(result).toBe(false)
 })
