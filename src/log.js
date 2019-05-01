@@ -11,7 +11,6 @@ function init(){
   if (!process.env) return
 
   if (process.env.RAMBDAX_LOG === 'true'){
-    console.warn(1)
     shouldLog = true
   }
 }
@@ -27,10 +26,8 @@ export function logInit({ logFlag = true, pushFlag = false } = {}){
 export function log(...inputs){
 
   init()
-  console.warn(21, shouldLog, process.env.RAMBDAX_LOG)
   if (shouldPush) logHolder.push(inputs)
   if (!shouldLog) return
-  console.warn(2)
 
   console.log(...inputs)
 }

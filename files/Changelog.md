@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.6.0 `R.log` depends on `RAMBDAX_LOG`
+
 2.5.0 Rambda's `partial`
 
 2.4.0 Add `R.uuid`
