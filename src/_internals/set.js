@@ -528,10 +528,10 @@ function baseSet(object, path, value, customizer){
   }
   path = isKey(path, object) ? [ path ] : castPath(path)
 
-  const index = -1,
-    { length } = path,
-    lastIndex = length - 1,
-    nested = object
+  let index = -1
+  let nested = object 
+  const  { length } = path
+  const lastIndex = length - 1
 
   while (nested != null && ++index < length){
     let key = toKey(path[ index ]),
