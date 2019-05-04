@@ -2560,7 +2560,7 @@ R.tail('foo')  // => 'oo'
 
 ```
 R.take(1, ['foo', 'bar']) // => ['foo']
-R.take(2, ['foo']) // => 'fo'
+R.take(2, 'foo') // => 'fo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/take.js)
@@ -2573,7 +2573,7 @@ R.take(2, ['foo']) // => 'fo'
 
 ```
 R.takeLast(1, ['foo', 'bar']) // => ['bar']
-R.takeLast(2, ['foo']) // => 'oo'
+R.takeLast(2, 'foo') // => 'oo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/takeLast.js)
