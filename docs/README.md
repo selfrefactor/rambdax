@@ -1485,6 +1485,21 @@ test('when async + fn', async () => {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
 
 ---
+#### underscore
+
+> _ : object
+
+A proxy object which always returns the target property parsed to constant case
+ 
+```
+console.log(_.foo) // => 'FOO'
+console.log(_.BAR) // => 'BAR'
+console.log(_.fooBar) // => 'FOO_BAR'
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/underscore.spec.js)
+
+---
 #### unless
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
@@ -1661,20 +1676,6 @@ const result = truncate('12345678')
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/when.spec.js)
 
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
-
----
-#### _
-
-> _ : object
-
-A proxy object which always returns the target property.
- 
-```
-console.log(_.FOO) // => 'FOO'
-console.log(_.BAR) // => 'BAR'
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/_.spec.js)
 
 ---
 #### whenAsync
@@ -3188,14 +3189,14 @@ R.tail('foo')  // => 'oo'
 
 ```
 R.take(1, ['foo', 'bar']) // => ['foo']
-R.take(2, ['foo']) // => 'fo'
+R.take(2, 'foo') // => 'fo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/take.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/take.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.take(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%5D%0AR.take(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.take(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'foo'%5D%0AR.take(2%2C%20'foo')%20%2F%2F%20%3D%3E%20'fo'">Try in REPL</a>
 
 ---
 #### takeLast
@@ -3206,14 +3207,14 @@ R.take(2, ['foo']) // => 'fo'
 
 ```
 R.takeLast(1, ['foo', 'bar']) // => ['bar']
-R.takeLast(2, ['foo']) // => 'oo'
+R.takeLast(2, 'foo') // => 'oo'
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/takeLast.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/takeLast.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.takeLast(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%5D%0AR.takeLast(2%2C%20%5B'foo'%5D)%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.takeLast(1%2C%20%5B'foo'%2C%20'bar'%5D)%20%2F%2F%20%3D%3E%20%5B'bar'%5D%0AR.takeLast(2%2C%20'foo')%20%2F%2F%20%3D%3E%20'oo'">Try in REPL</a>
 
 ---
 #### test

@@ -1485,6 +1485,21 @@ test('when async + fn', async () => {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
 
 ---
+#### underscore
+
+> _ : object
+
+A proxy object which always returns the target property parsed to constant case
+ 
+```
+console.log(_.foo) // => 'FOO'
+console.log(_.BAR) // => 'BAR'
+console.log(_.fooBar) // => 'FOO_BAR'
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/underscore.spec.js)
+
+---
 #### unless
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
@@ -1661,20 +1676,6 @@ const result = truncate('12345678')
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/when.spec.js)
 
 <a href="https://rambda.now.sh?const%20truncate%20%3D%20R.when(%0A%20%20x%20%3D%3E%20x.length%20%3E%205%2C%0A%20%20R.compose(x%20%3D%3E%20%60%24%7Bx%7D...%60%2C%20R.take(5))%0A)%0A%0Aconst%20result%20%3D%20truncate('12345678')%0A%2F%2F%20%3D%3E%20'12345...'">Try in REPL</a>
-
----
-#### _
-
-> _ : object
-
-A proxy object which always returns the target property.
- 
-```
-console.log(_.FOO) // => 'FOO'
-console.log(_.BAR) // => 'BAR'
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/_.spec.js)
 
 ---
 #### whenAsync
