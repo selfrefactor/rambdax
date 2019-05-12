@@ -18,9 +18,9 @@ declare namespace R {
   type Fn<In, Out> = (x: In) => Out
   type FnTwo<In, Out> = (x: In, y: In) => Out
   type MapFn<In, Out> = (x: In, index: number) => Out  
-
-  type FilterFunction<T> = (x: T, prop?: string) => boolean
-  type MapFunction<In, Out> = (x: In, prop?: string) => Out
+  
+  type FilterFunction<T> = (x: T, prop?: string, inputObj?: object) => boolean
+  type MapFunction<In, Out> = (x: In, prop?: string, inputObj?: object) => Out
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
   interface MapInterface<T> {

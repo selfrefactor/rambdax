@@ -18,14 +18,14 @@ declare namespace R {
   type Fn<In, Out> = (x: In) => Out
   type FnTwo<In, Out> = (x: In, y: In) => Out
   type MapFn<In, Out> = (x: In, index: number) => Out  
-
-  type FilterFunction<T> = (x: T, prop?: string) => boolean
-  type MapFunction<In, Out> = (x: In, prop?: string) => Out
+  
+  type FilterFunction<T> = (x: T, prop?: string, inputObj?: object) => boolean
+  type MapFunction<In, Out> = (x: In, prop?: string, inputObj?: object) => Out
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-  interface MapInterface<In, Out> {
-    (list: In[]): Out[]
-    (obj: Dictionary<In>): Dictionary<Out>
+  interface MapInterface<T> {
+    (list: T[]): T[]
+    (obj: Dictionary<T>): Dictionary<T>
   }
 
   interface HeadObject<T>{
@@ -583,6 +583,9 @@ add(a: number, b: number): number
 
     forEach<T>(fn: MapFn<T, any>, list: T[]): T[]
     forEach<T>(fn: MapFn<T, any>): (list: T[]) => T[]
+
+    forEach<T>(fn: MapFunction<any, any>, inputObj: T): T
+    forEach<T>(fn: MapFunction<any, any>): (inputObj: T) => T
 
     groupBy<T>(fn: (x: T) => string, list: T[]): { [index: string]: T[] }
     groupBy<T>(fn: (x: T) => string): (list: T[]) => { [index: string]: T[] }
