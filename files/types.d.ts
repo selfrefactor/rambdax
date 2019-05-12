@@ -301,6 +301,7 @@ declare namespace R {
     mergeDeep<T>(slave: object, master: object): T
 
     nextIndex(index: number, list: any[]): number
+    prevIndex(index: number, list: any[]): number
 
     opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
     
