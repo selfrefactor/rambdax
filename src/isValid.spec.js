@@ -24,7 +24,7 @@ test('list of functions', () => {
   ).toBeTruthy()
 })
 
-test.only('list of functions - 2', () => {
+test('function schema type can be only string', () => {
   const input = { a : [ () => {}, delay ] }
   const schema = { a : [ Function ] }
 
@@ -33,7 +33,7 @@ test.only('list of functions - 2', () => {
       input,
       schema,
     })
-  ).toBeTruthy()
+  ).toBeFalsy()
 })
 
 test('object prototype as rule - false', () => {
