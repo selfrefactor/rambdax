@@ -12,6 +12,18 @@ test('object prototype as rule - true', () => {
   ).toBeTruthy()
 })
 
+test('list of functions', () => {
+  const input = {a: [ () => {}, delay ] }
+  const schema = { a : ['function'] }
+  
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
 test('object prototype as rule - false', () => {
   const input = { a : null }
   const schema = { a : Object }
