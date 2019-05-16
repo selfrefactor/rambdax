@@ -13,9 +13,21 @@ test('object prototype as rule - true', () => {
 })
 
 test('list of functions', () => {
-  const input = {a: [ () => {}, delay ] }
-  const schema = { a : ['function'] }
-  
+  const input = { a : [ () => {}, delay ] }
+  const schema = { a : [ 'function' ] }
+
+  expect(
+    isValid({
+      input,
+      schema,
+    })
+  ).toBeTruthy()
+})
+
+test.only('list of functions - 2', () => {
+  const input = { a : [ () => {}, delay ] }
+  const schema = { a : [ Function ] }
+
   expect(
     isValid({
       input,
