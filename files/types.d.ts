@@ -54,14 +54,6 @@ declare namespace R {
     is: isfn<Switchem<T>>
     default: IdentityFunction<T>
   }
-
-  interface UnderscoreBase {
-    [prop: string]: string,
-  }
-  interface UnderscoreFn {
-    ['STATUS']: (status: string|boolean) => string,
-  }
-  type Underscore = UnderscoreBase | UnderscoreFn
   // RAMBDAX_END
   // RAMDA_START
   type Ord = number | string | boolean
@@ -172,7 +164,7 @@ declare namespace R {
   // RAMDA_END
   interface X {
     // RAMBDAX_START
-    _: Underscore
+    _: any
 
     allFalse(...input: Array<any>): boolean
     anyFalse(...input: Array<any>): boolean
