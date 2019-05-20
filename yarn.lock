@@ -2448,6 +2448,15 @@ jest@^24.1.0:
     import-local "^2.0.0"
     jest-cli "^24.1.0"
 
+js-cleanup@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/js-cleanup/-/js-cleanup-1.0.1.tgz#1d38080c7ee92e1d2d2b94054d0a33c48951e0df"
+  integrity sha512-wyHeWKqbcQV78/tiMJ6pgJrkG7p2u3b2xX9IJFvvurpJL9/++89dHfkUebhWvSMS84LG0uQ7BnG5GGyAzY21Ag==
+  dependencies:
+    magic-string "^0.25.1"
+    perf-regexes "^1.0.1"
+    skip-regex "^1.0.2"
+
 js-levenshtein@^1.1.3:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
@@ -3188,6 +3197,11 @@ path-type@^3.0.0:
   dependencies:
     pify "^3.0.0"
 
+perf-regexes@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/perf-regexes/-/perf-regexes-1.0.1.tgz#6da1d62f5a94bf9353a0451bccacf69068b75d0b"
+  integrity sha512-L7MXxUDtqr4PUaLFCDCXBfGV/6KLIuSEccizDI7JxT+c9x1G1v04BQ4+4oag84SHaCdrBgQAIs/Cqn+flwFPng==
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -3296,11 +3310,6 @@ rambda@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/rambda/-/rambda-1.2.6.tgz#5feed8039369b65c389ee1e02db9527695d30e83"
   integrity sha512-3tjeDuSMKAf8t099BejrmLgXdexAh63AsU2c2ZTcN5y/gt5njw03Wsfb+Ti9b08ZWLLDN5r0EvKynfYM91PB6g==
-
-rambda@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-2.6.0.tgz#d99f3a924e63e281332b7818a10b2f65126414fb"
-  integrity sha512-M4l2FCy37Ksy6sK+QuMFogtMK2ylDMlTYlUomnc/eV/8G0yz7jlAAvMkmcqtX0edZoEG1keeaTjDgQbQ5ROZrg==
 
 "rambda@https://github.com/selfrefactor/rambda#1.1.0":
   version "1.0.9"
@@ -3557,6 +3566,14 @@ rollup-plugin-babel@^4.3.2:
     "@babel/helper-module-imports" "^7.0.0"
     rollup-pluginutils "^2.3.0"
 
+rollup-plugin-cleanup@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-cleanup/-/rollup-plugin-cleanup-3.1.1.tgz#d012faab5e212b1c4bfa8144ace70fc6ac7b3315"
+  integrity sha512-wMS9JQm4ShvlMqno1pOfqvh0yYgNLO2ZgmzDsVvKuDt4XCn+9DcMoUwRQ5t9p9b113dR5FhPFFUHnvvQ/yuEtA==
+  dependencies:
+    js-cleanup "^1.0.1"
+    rollup-pluginutils "^2.3.3"
+
 rollup-plugin-commonjs@^9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-commonjs/-/rollup-plugin-commonjs-9.2.0.tgz#4604e25069e0c78a09e08faa95dc32dec27f7c89"
@@ -3717,6 +3734,11 @@ sisteransi@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.0.tgz#77d9622ff909080f1c19e5f4a1df0c1b0a27b88c"
   integrity sha512-N+z4pHB4AmUv0SjveWRd6q1Nj5w62m5jodv+GD8lvmbY/83T/rpbJGZOnK5T149OldDj4Db07BSv9xY4K6NTPQ==
+
+skip-regex@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/skip-regex/-/skip-regex-1.0.2.tgz#ac655d77e7c771ac2b9f37585fea37bff56ad65b"
+  integrity sha512-pEjMUbwJ5Pl/6Vn6FsamXHXItJXSRftcibixDmNCWbWhic0hzHrwkMZo0IZ7fMRH9KxcWDFSkzhccB4285PutA==
 
 slash@^2.0.0:
   version "2.0.0"

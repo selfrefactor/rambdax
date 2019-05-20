@@ -10,17 +10,17 @@ const case1 = {
 }
 const case2 = {
   foo : OBJ.a,
-  t   : OBJ.b,
+  t   : OBJ.b, 
   f   : OBJ.c,
 }
-
+ 
 const trueEvaluation = x => {
   expect(allFalse(false, x.foo, x.t)).toBeTruthy()
 }
 
 const falseEvaluation = x => {
   expect(allFalse(x.foo, x.f)).toBeFalsy()
-}
+}  
 
 runTests({
   data        : [ { case1 }, { case2 } ],
@@ -36,3 +36,5 @@ runTests({
   ],
   testSuite : 'allFalse',
 })
+
+ 

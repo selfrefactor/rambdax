@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.8.0 Sync with Rambda | no need for create types script
+
 2.7.0 `R.prevIndex`
 
 2.6.2 Sync with Rambda
