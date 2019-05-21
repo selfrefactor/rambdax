@@ -68,8 +68,7 @@ test('with async', async () => {
 })
 
 test('with promise', async () => {
-  const fetch = x =>
-    new Promise((res, rej) => rej(new Error('FOO_ERROR')))
+  const fetch = x => new Promise((res, rej) => rej(new Error('FOO_ERROR')))
 
   const getMemberName = pipe(
     makeQuery,
