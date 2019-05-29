@@ -39,7 +39,7 @@ You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
-Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located (/files/deprecated/README.md)[here.]
+Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located [/files/deprecated/README.md](here.)
 
 #### allFalse
 
