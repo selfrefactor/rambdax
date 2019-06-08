@@ -544,6 +544,8 @@ If validation fails, it returns `false`.
 
 Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/blob/master/files/isValid.md) as it is hard to write a short description of this method.
 
+Independently, somebody else came with very similar idea called [superstruct](https://github.com/ianstormtaylor/superstruct)
+
 ```
 const result = R.isValid({
   input:{ a: ['foo','bar'] },
