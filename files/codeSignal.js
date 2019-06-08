@@ -1,4 +1,3 @@
-
 function compose (...fns) {
   return (...args) => {
     const list = fns.slice()
@@ -22,4 +21,22 @@ function piped(...inputs){
   const [ input, ...fnList ] = inputs
 
   return pipe(...fnList)(input)
+}
+
+function alternatingSort(a) {
+  let counter = -1
+  let flag = true
+  let mark = -Infinity
+  while(counter < a.length || !flag){
+    counter++
+    const current = counter %2 === 0 ? a[counter] : a[a.length - 1 - counter]
+    console.log({current, counter, mark})
+    if(mark < current) {
+      mark = current
+    }else{
+      flag = false
+    }
+  }
+
+  return flag
 }

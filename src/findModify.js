@@ -1,4 +1,3 @@
-//WAIT
 export function findModify(fn, list){
   if (arguments.length === 1){
     return listHolder => findModify(fn, listHolder)

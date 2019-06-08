@@ -1,6 +1,6 @@
 import { findModify } from './findModify'
 
-const fn = (x, i) => x + 1 > 10 ?
+const fn = x => x + 1 > 10 ?
   {
     a : 8,
     x,

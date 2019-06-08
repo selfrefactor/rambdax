@@ -250,7 +250,7 @@ It is similar to `R.defaultTo`, but its definition for truthy value is different
 
 - Truthy with `Boolean`
 - Has the same type as `defaultValue`(according to `R.type`)
-- It is neigher empty object or empty array
+- It is neither empty object or empty array
 
 ```
 R.defaultToStrict('foo', undefined) // => 'foo'
