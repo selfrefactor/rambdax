@@ -637,7 +637,7 @@ add(a: number, b: number): number
       fn: MapFunction<In, Out>,
       obj: Dictionary<In>
     ): Dictionary<Out>
-    map<In, Out>(fn: MapFunction<In, Out>): MapInterface<Out>
+    map<In, Out>(fn: MapFunction<In, Out>): Dictionary<Out>
 
     match(regexp: RegExp, input: string): any[]
     match(regexp: RegExp): (input: string) => any[]
