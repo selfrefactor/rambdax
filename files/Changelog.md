@@ -1,6 +1,6 @@
 # CHANGELOG
 
-2.9.1 R.map typing
+2.9.1 R.fromPairs/toPairs typing
 
 2.9.0 npm doesn't update version on their site
 

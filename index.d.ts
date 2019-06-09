@@ -557,6 +557,11 @@ add(a: number, b: number): number
     equals<T>(a: T, b: T): boolean
     equals<T>(a: T): (b: T) => boolean
 
+    fromPairs<V>(pairs: Array<KeyValuePair<string, V>>): { [index: string]: V };
+    fromPairs<V>(pairs: Array<KeyValuePair<number, V>>): { [index: number]: V };
+
+    toPairs<S>(obj: { [k: string]: S } | { [k: number]: S }): Array<[string, S]>;
+
     F(): boolean
 
     filter<T>(fn: FilterFunction<T>): Filter<T>
