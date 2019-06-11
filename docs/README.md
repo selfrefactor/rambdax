@@ -39,7 +39,7 @@ You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
-Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located (/files/deprecated/README.md)[here.]
+Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located [/files/deprecated/README.md](here.)
 
 ---
 #### allFalse
@@ -289,7 +289,7 @@ It is similar to `R.defaultTo`, but its definition for truthy value is different
 
 - Truthy with `Boolean`
 - Has the same type as `defaultValue`(according to `R.type`)
-- It is neigher empty object or empty array
+- It is neither empty object or empty array
 
 ```
 R.defaultToStrict('foo', undefined) // => 'foo'
@@ -653,6 +653,8 @@ It checks if `input` is following `schema` specifications.
 If validation fails, it returns `false`.
 
 Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/blob/master/files/isValid.md) as it is hard to write a short description of this method.
+
+Independently, somebody else came with very similar idea called [superstruct](https://github.com/ianstormtaylor/superstruct)
 
 ```
 const result = R.isValid({
@@ -1069,6 +1071,8 @@ const expected = 'RAMBDAX_DELAY104'
 #### produce
 
 > produce(conditions: Object, input: any): Promise|Object
+
+It is very similar to [Ramda's 'apply' method](https://ramdajs.com/docs/#applySpec)
 
 ```
 const conditions = {
