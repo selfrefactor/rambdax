@@ -164,8 +164,6 @@ declare namespace R {
   // RAMDA_END
   interface X {
     // RAMBDAX_START
-    _: any
-
     allFalse(...input: Array<any>): boolean
     anyFalse(...input: Array<any>): boolean
 

@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.10.0 deprecate `R._`
+
 2.9.1 R.fromPairs/toPairs typing
 
 2.9.0 npm doesn't update version on their site
