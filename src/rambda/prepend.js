@@ -12,10 +12,10 @@
  *
  *      R.prepend('fee', ['fi', 'fo', 'fum']); //=> ['fee', 'fi', 'fo', 'fum']
  */
-export function prepend (el, list) {
+export function prepend (el, list){
   if (arguments.length === 1) return _list => prepend(el, _list)
 
-  if (typeof list === 'string') return `${el}${list}`
+  if (typeof list === 'string') return `${ el }${ list }`
 
   const clone = list.concat()
   clone.unshift(el)

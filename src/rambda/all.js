@@ -21,7 +21,7 @@ import { filter } from './filter'
  *      R.all(equals3)([3, 3, 3, 3]); //=> true
  *      R.all(equals3)([3, 3, 1, 3]); //=> false
  */
-export function all (fn, list) {
+export function all (fn, list){
   if (arguments.length === 1) return _list => all(fn, _list)
 
   return filter(fn, list).length === list.length

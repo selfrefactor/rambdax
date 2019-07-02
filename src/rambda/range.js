@@ -12,12 +12,12 @@
  *      R.range(1, 5);    //=> [1, 2, 3, 4]
  *      R.range(50, 53);  //=> [50, 51, 52]
  */
-export function range (from, to) {
+export function range (from, to){
   if (arguments.length === 1) return _to => range(from, _to)
 
   const willReturn = []
 
-  for (let i = from; i < to; i++) {
+  for (let i = from; i < to; i++){
     willReturn.push(i)
   }
 

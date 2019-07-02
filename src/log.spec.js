@@ -25,7 +25,7 @@ test('happy', () => {
 })
 
 test('with pushFlag', () => {
-  process.env.RAMBDAX_LOG = 'true'  
+  process.env.RAMBDAX_LOG = 'true'
   logInit({
     pushFlag : true,
     logFlag  : false,

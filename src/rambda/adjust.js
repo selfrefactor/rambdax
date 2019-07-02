@@ -22,12 +22,12 @@ import { curry } from './curry'
  * @symb R.adjust(-1, f, [a, b]) = [a, f(b)]
  * @symb R.adjust(0, f, [a, b]) = [f(a), b]
  */
-function adjustRaw (fn, idx, list) {
+function adjustRaw (fn, idx, list){
   const clone = list.concat()
 
   return clone.map((val, key) => {
-    if (key === idx) {
-      return fn(list[idx])
+    if (key === idx){
+      return fn(list[ idx ])
     }
 
     return val

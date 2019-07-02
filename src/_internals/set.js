@@ -529,8 +529,8 @@ function baseSet(object, path, value, customizer){
   path = isKey(path, object) ? [ path ] : castPath(path)
 
   let index = -1
-  let nested = object 
-  const  { length } = path
+  let nested = object
+  const { length } = path
   const lastIndex = length - 1
 
   while (nested != null && ++index < length){
