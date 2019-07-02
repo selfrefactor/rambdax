@@ -1,5 +1,5 @@
 const { all, glue } = require('../../dist/rambdax')
-const { rambdaREPL } = require('rambda-repl')
+const { rambdaREPL } = require('./rambdaREPL')
 const { readFileSync, writeFileSync } = require('fs')
 
 const MARKER_SOURCE = '[Source]'

@@ -13,7 +13,7 @@ test('usage with non boolean', () => {
 
   const result = allTrue(foo, foo, baz)
   expect(result).toBe(true)
-})
+}) 
 
 test('usage with boolean', () => {
   const foo = 4

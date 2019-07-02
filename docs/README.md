@@ -1489,21 +1489,6 @@ test('when async + fn', async () => {
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/tryCatch.spec.js)
 
 ---
-#### underscore
-
-> _ : object
-
-A proxy object which always returns the target property parsed to constant case
- 
-```
-console.log(_.foo) // => 'FOO'
-console.log(_.BAR) // => 'BAR'
-console.log(_.fooBar) // => 'FOO_BAR'
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/underscore.spec.js)
-
----
 #### unless
 
 > unless(rule: Function|boolean, whenFalse: Function|any): Function
