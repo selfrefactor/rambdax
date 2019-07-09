@@ -23,7 +23,7 @@ import { type } from './type'
  *      const b = {}; b.v = b;
  *      R.equals(a, b); //=> true
  */
-export function equals (a, b){
+export function equals(a, b){
   if (arguments.length === 1) return _b => equals(a, _b)
 
   if (a === b){

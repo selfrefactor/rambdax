@@ -13,7 +13,7 @@
  *
  *      R.zipObj(['a', 'b', 'c'], [1, 2, 3]); //=> {a: 1, b: 2, c: 3}
  */
-export function zipObj (keys, values){
+export function zipObj(keys, values){
   if (arguments.length === 1) return yHolder => zipObj(keys, yHolder)
 
   return keys.reduce((prev, xInstance, i) => {

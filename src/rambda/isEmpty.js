@@ -16,7 +16,7 @@
  *      R.isEmpty({});          //=> true
  *      R.isEmpty({length: 0}); //=> false
  */
-export function isEmpty (x){
+export function isEmpty(x){
   if (Number.isFinite(x) || !x){
     return true
   }

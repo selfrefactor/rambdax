@@ -14,7 +14,7 @@
  *      R.indexOf(3, [1,2,3,4]); //=> 2
  *      R.indexOf(10, [1,2,3,4]); //=> -1
  */
-export function indexOf (target, list){
+export function indexOf(target, list){
   if (arguments.length === 1) return _list => indexOf(target, _list)
 
   let index = -1

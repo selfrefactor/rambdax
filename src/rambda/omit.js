@@ -11,7 +11,7 @@
  *
  *      R.omit(['a', 'd'], {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, c: 3}
  */
-export function omit (keys, obj){
+export function omit(keys, obj){
   if (arguments.length === 1) return _obj => omit(keys, _obj)
 
   if (obj === null || obj === undefined){

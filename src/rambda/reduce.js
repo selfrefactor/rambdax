@@ -41,7 +41,7 @@
  *
  * @symb R.reduce(f, a, [b, c, d]) = f(f(f(a, b), c), d)
  */
-export function reduce (fn, acc, list){
+export function reduce(fn, acc, list){
   if (acc === undefined){
     return (_acc, _list) => reduce(fn, _acc, _list)
   } else if (list === undefined){

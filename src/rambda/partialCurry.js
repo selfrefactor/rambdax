@@ -26,7 +26,7 @@ import { type } from './type'
  *      sayHelloToMs('Jane', 'Jones'); //=> 'Hello, Ms. Jane Jones!'
  * @symb R.partialCurry(f, [a, b])(c, d) = f(a, b, c, d)
  */
-export function partialCurry (fn, args = {}){
+export function partialCurry(fn, args = {}){
   return rest => {
     if (type(fn) === 'Async' || type(fn) === 'Promise'){
       return new Promise((resolve, reject) => {

@@ -13,7 +13,7 @@
  *      R.pick(['a', 'd'], {a: 1, b: 2, c: 3, d: 4}); //=> {a: 1, d: 4}
  *      R.pick(['a', 'e', 'f'], {a: 1, b: 2, c: 3, d: 4}); //=> {a: 1}
  */
-export function pick (keys, obj){
+export function pick(keys, obj){
   if (arguments.length === 1) return _obj => pick(keys, _obj)
 
   if (obj === null || obj === undefined){

@@ -19,7 +19,7 @@
  *      // parseInt('string') results in NaN
  *      defaultTo42(parseInt('string')); //=> 42
  */
-export function defaultTo (defaultArgument, ...inputArgument){
+export function defaultTo(defaultArgument, ...inputArgument){
   if (arguments.length === 1){
     return _inputArgument => defaultTo(defaultArgument, _inputArgument)
   } else if (arguments.length === 2){
@@ -49,7 +49,7 @@ export function defaultTo (defaultArgument, ...inputArgument){
     holder
 }
 
-function flagIs (inputArgument){
+function flagIs(inputArgument){
   return inputArgument === undefined ||
     inputArgument === null ||
     Number.isNaN(inputArgument) === true

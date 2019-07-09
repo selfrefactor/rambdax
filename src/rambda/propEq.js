@@ -20,7 +20,7 @@
  *      const hasBrownHair = R.propEq('hair', 'brown');
  *      R.filter(hasBrownHair, kids); //=> [fred, rusty]
  */
-export function propEq (key, val, obj){
+export function propEq(key, val, obj){
   if (val === undefined){
     return (_val, _obj) => propEq(key, _val, _obj)
   } else if (obj === undefined){

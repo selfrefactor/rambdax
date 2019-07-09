@@ -18,7 +18,7 @@
  *      R.indexBy(R.prop('id'), list);
  *      //=> {abc: {id: 'abc', title: 'B'}, xyz: {id: 'xyz', title: 'A'}}
  */
-export function indexBy (fn, list){
+export function indexBy(fn, list){
   if (arguments.length === 1) return _list => indexBy(fn, _list)
 
   const result = {}

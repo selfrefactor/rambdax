@@ -19,7 +19,7 @@
  *      R.reduce(R.maxBy(square), 0, [3, -5, 4, 1, -2]); //=> -5
  *      R.reduce(R.maxBy(square), 0, []); //=> 0
  */
-export function maxBy (fn, a, b){
+export function maxBy(fn, a, b){
   if (arguments.length === 2){
     return _b => maxBy(fn, a, _b)
   } else if (arguments.length === 1){

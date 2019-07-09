@@ -30,7 +30,7 @@
  * @symb R.map(f, { x: a, y: b }) = { x: f(a), y: f(b) }
  * @symb R.map(f, functor_o) = functor_o.map(f)
  */
-export function map (fn, list){
+export function map(fn, list){
   if (arguments.length === 1) return _list => map(fn, _list)
 
   if (list === undefined){
@@ -51,7 +51,7 @@ export function map (fn, list){
   return willReturn
 }
 
-function mapObject (fn, obj){
+function mapObject(fn, obj){
   const willReturn = {}
 
   for (const prop in obj){

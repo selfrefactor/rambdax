@@ -17,7 +17,7 @@
  *      objects === objectsClone; //=> false
  *      objects[0] === objectsClone[0]; //=> false
  */
-export function clone (val){
+export function clone(val){
   const out = Array.isArray(val) ? Array(val.length) : {}
 
   for (const key in val){

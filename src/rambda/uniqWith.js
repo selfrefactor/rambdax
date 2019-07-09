@@ -20,7 +20,7 @@ import { any } from './any'
  *      R.uniqWith(strEq)([1, '1', 1]);    //=> [1]
  *      R.uniqWith(strEq)(['1', 1, 1]);    //=> ['1']
  */
-export function uniqWith (fn, list){
+export function uniqWith(fn, list){
   if (arguments.length === 1) return _list => uniqWith(fn, _list)
 
   let index = -1

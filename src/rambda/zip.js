@@ -16,7 +16,7 @@
  *      R.zip([1, 2, 3], ['a', 'b', 'c']); //=> [[1, 'a'], [2, 'b'], [3, 'c']]
  * @symb R.zip([a, b, c], [d, e, f]) = [[a, d], [b, e], [c, f]]
  */
-export function zip (left, right){
+export function zip(left, right){
   if (arguments.length === 1) return _right => zip(left, _right)
 
   const result = []

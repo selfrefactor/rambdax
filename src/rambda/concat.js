@@ -24,7 +24,7 @@
  *      R.concat([4, 5, 6], [1, 2, 3]); //=> [4, 5, 6, 1, 2, 3]
  *      R.concat([], []); //=> []
  */
-export function concat (left, right){
+export function concat(left, right){
   if (arguments.length === 1) return _right => concat(left, _right)
 
   return typeof left === 'string' ? `${ left }${ right }` : [ ...left, ...right ]

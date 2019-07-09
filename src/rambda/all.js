@@ -1,5 +1,3 @@
-import { filter } from './filter'
-
 /**
  * Returns `true` if all elements of the list match the predicate, `false` if
  * there are any that don't.
@@ -21,8 +19,13 @@ import { filter } from './filter'
  *      R.all(equals3)([3, 3, 3, 3]); //=> true
  *      R.all(equals3)([3, 3, 1, 3]); //=> false
  */
-export function all (fn, list){
+export function all(fn, list){
   if (arguments.length === 1) return _list => all(fn, _list)
 
-  return filter(fn, list).length === list.length
+  for (let i = 0; i < list.length; i++){
+    if (!fn(list[ i ], i))
+      return false
+  }
+
+  return true
 }

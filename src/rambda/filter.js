@@ -22,7 +22,7 @@
  *
  *      R.filter(isEven, {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, d: 4}
  */
-export function filter (fn, list){
+export function filter(fn, list){
   if (arguments.length === 1) return _list => filter(fn, _list)
 
   if (list === undefined){
@@ -49,7 +49,7 @@ export function filter (fn, list){
   return willReturn
 }
 
-function filterObject (fn, obj){
+function filterObject(fn, obj){
   const willReturn = {}
 
   for (const prop in obj){

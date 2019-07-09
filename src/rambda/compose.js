@@ -19,7 +19,7 @@
  *
  * @symb R.compose(f, g, h)(a, b) = f(g(h(a, b)))
  */
-export function compose (...fns){
+export function compose(...fns){
   return (...args) => {
     const list = fns.slice()
     if (list.length > 0){

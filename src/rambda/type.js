@@ -21,7 +21,7 @@
  *      R.type(() => {}); //=> "Function"
  *      R.type(undefined); //=> "Undefined"
  */
-export function type (val){
+export function type(val){
   const typeOf = typeof val
 
   if (val === null){
@@ -46,7 +46,7 @@ export function type (val){
     return 'Async'
   } else if (asStr === '[object Promise]'){
     return 'Promise'
-  } else if (asStr.includes('function') || asStr.includes('=>')){
+  } else if (typeOf === 'function'){
     return 'Function'
   }
 

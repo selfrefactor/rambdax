@@ -20,7 +20,7 @@
  *      pointHas('y');  //=> true
  *      pointHas('z');  //=> false
  */
-export function has (prop, obj){
+export function has(prop, obj){
   if (arguments.length === 1) return _obj => has(prop, _obj)
 
   return obj[ prop ] !== undefined

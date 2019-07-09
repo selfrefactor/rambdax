@@ -35,7 +35,7 @@
  *      //   'F': [{name: 'Eddy', score: 58}]
  *      // }
  */
-export function groupBy (fn, list){
+export function groupBy(fn, list){
   if (arguments.length === 1) return _list => groupBy(fn, _list)
 
   const result = {}
