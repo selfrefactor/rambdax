@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.10.2 Fix [issue 32](https://github.com/selfrefactor/rambdax/issues/32)
+
 2.10.0 deprecate `R._`
 
 2.9.1 R.fromPairs/toPairs typing
@@ -21,6 +23,8 @@
 2.4.0 Add `R.uuid`
 
 2.3.0 `R._` parse to constant case
+
+> This introduce breaking change for ie11 as noted in [issue 31](https://github.com/selfrefactor/rambdax/issues/31) which is fixed with `2.10.0` which deprecates this method
 
 2.2.1 `R.log`, `R.logInit` and `R.logHolder`
 
