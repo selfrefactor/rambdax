@@ -7,7 +7,7 @@ test('', async () => {
 test('', async () => {
   console.log(
     sum([
-      1,4,5,6,55
+      1, 4, 5, 6, 55,
     ])
   )
 
