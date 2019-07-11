@@ -95,6 +95,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": "is.valid support array of prototypes"
+    "workInProgress": ""
   }
 }

@@ -24,7 +24,8 @@ export function prototypeToString(input){
   const translatedList = [ 'Number', 'String', 'Boolean' ]
   let found
   let counter = -1
-  while (++counter < list.length && found === undefined){
+
+  while (++counter < list.length){
     if (currentPrototype === list[ counter ].prototype) found = counter
   }
 
@@ -39,7 +40,6 @@ const typesWithoutPrototype = [
 ]
 
 function fromPrototypeToString(rule){
-  // console.log({ rule, a: rule.prototype })
   if (
     Array.isArray(rule) ||
     rule === undefined ||
@@ -81,12 +81,6 @@ function getRuleAndType(schema, requirementRaw){
   const ruleRaw = schema[ requirementRaw ]
   const typeIs = type(ruleRaw)
   const { rule, parsed } = fromPrototypeToString(ruleRaw)
-  // console.log({
-  //   ruleRaw,
-  //   typeIs,
-  //   rule,
-  //   parsed,
-  // })
 
   return {
     rule     : rule,
@@ -117,15 +111,6 @@ export function isValid({ input, schema }){
       )
       const inputProp = input[ requirement ]
       const inputPropType = type(input[ requirement ])
-      console.log({
-        requirementRaw,
-        inputProp,
-        inputPropType,
-        rule,
-        ruleType,
-        schema,
-        isOptional
-      })
 
       const ok =
         isOptional && inputProp !== undefined || !isOptional
@@ -194,9 +179,7 @@ export function isValid({ input, schema }){
             inputProp
           )
           boom(isValidResult)
-        }
-
-        if (flag){
+        } else if (flag){
           /**
            * 1. array of type
            */
@@ -204,14 +187,6 @@ export function isValid({ input, schema }){
           const actualRule = currentRuleType === 'String' ?
             currentRule :
             prototypeToString(currentRule)
-
-          // console.log({ 
-          //   actualRule,
-          //   currentRuleType,
-          //   currentRule,
-          //   requirementRaw,
-          //   rule,
-          // })
 
           const isInvalidResult = any(
             inputPropInstance =>
