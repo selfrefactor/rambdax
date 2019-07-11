@@ -8,7 +8,7 @@ import { type } from './rambda/type'
 const cache = {}
 
 const normalizeObject = obj => {
-  const sortFn = (a, b) => a > b
+  const sortFn = (a, b) => a > b ? 1 : -1
   const willReturn = {}
   compose(
     map(prop => willReturn[ prop ] = obj[ prop ]),
@@ -46,6 +46,7 @@ export function memoize(fn, ...inputArguments){
     return (...inputArgumentsHolder) =>
       memoize(fn, ...inputArgumentsHolder)
   }
+
   const prop = generateProp(fn, ...inputArguments)
   if (prop in cache) return cache[ prop ]
 

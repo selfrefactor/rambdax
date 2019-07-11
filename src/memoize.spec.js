@@ -6,7 +6,7 @@ test('memoize function without input arguments', () => {
   expect(typeof memoized()).toBe('function')
 })
 
-test.skip('happy', () => {
+test('happy', () => {
   let counter = 0
 
   const fn = ({ a, b, c }) => {
@@ -25,9 +25,9 @@ test.skip('happy', () => {
   expect(counter).toBe(1)
   expect(
     memoized({
-      b : 2,
       c : 3,
       a : 1,
+      b : 2,
     })
   ).toBe(0)
   expect(counter).toBe(1)
