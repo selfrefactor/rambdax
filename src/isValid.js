@@ -8,7 +8,7 @@ import { init } from './rambda/init'
 
 export function isPrototype(input){
   const currentPrototype = input.prototype
-  const list = [ Number, String, Boolean ]
+  const list = [ Number, String, Boolean, Promise ]
   let toReturn = false
   let counter = -1
   while (++counter < list.length && !toReturn){
@@ -20,8 +20,8 @@ export function isPrototype(input){
 
 export function prototypeToString(input){
   const currentPrototype = input.prototype
-  const list = [ Number, String, Boolean ]
-  const translatedList = [ 'Number', 'String', 'Boolean' ]
+  const list = [ Number, String, Boolean, Promise ]
+  const translatedList = [ 'Number', 'String', 'Boolean', 'Promise' ]
   let found
   let counter = -1
 
@@ -187,7 +187,6 @@ export function isValid({ input, schema }){
           const actualRule = currentRuleType === 'String' ?
             currentRule :
             prototypeToString(currentRule)
-
           const isInvalidResult = any(
             inputPropInstance =>
               type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(),

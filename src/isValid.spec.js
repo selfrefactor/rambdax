@@ -2,6 +2,7 @@ import { delay } from './delay'
 import { isValid, isPrototype } from './isValid'
 
 test('is prototype', () => {
+  expect(isPrototype(Promise)).toBe(true)
   expect(isPrototype(Number)).toBe(true)
   expect(isPrototype(Boolean)).toBe(true)
   expect(isPrototype(String)).toBe(true)
@@ -20,7 +21,7 @@ test('prototype inside array', () => {
   ).toBeTruthy()
 })
 
-test('without Promise prototype', () => {
+test('with Promise prototype', () => {
   const input = { a : [ delay(1), delay(2) ] }
   const schema = { a : [ Promise ] }
   expect(
@@ -28,7 +29,7 @@ test('without Promise prototype', () => {
       input,
       schema,
     })
-  ).toBeFalsy()
+  ).toBeTruthy()
 })
 
 test('object prototype as rule - true', () => {
