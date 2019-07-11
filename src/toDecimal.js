@@ -1,5 +1,5 @@
 export function toDecimal(number, charsAfterDecimalPoint = 2){
-  return parseFloat(String(number))
+  return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint))
 }
 
 export function sum(list){

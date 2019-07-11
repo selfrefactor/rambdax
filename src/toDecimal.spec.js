@@ -1,14 +1,8 @@
-import { toDecimal, sum } from './toDecimal'
+import { toDecimal } from './toDecimal'
 
-test('', async () => {
-  console.log(toDecimal(2.2789))
-
-})
-test('', async () => {
-  console.log(
-    sum([
-      1, 4, 5, 6, 55,
-    ])
-  )
+test('', () => {
+  expect(toDecimal(2.2789, 1)).toBe(2.3)
+  expect(toDecimal(2.2789, 3)).toBe(2.279)
+  expect(toDecimal(2.2789)).toBe(2.28)
 
 })
