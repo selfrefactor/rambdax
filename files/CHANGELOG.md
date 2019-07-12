@@ -1,6 +1,6 @@
 # CHANGELOG
 
-2.7.0 Add `R.toDecimal`
+2.11.0 Add `R.toDecimal`
 
 2.10.2 Fix [issue 32](https://github.com/selfrefactor/rambdax/issues/32)
 
