@@ -1129,6 +1129,14 @@ const result = await getMemberName('FOO')
 // result === expected
 ```
 
+#### toDecimal
+
+> toDecimal(num: number, charsAfterDecimalPoint: number): number
+
+```
+R.toDecimal(2.45464,2) // => 2.45
+```
+
 #### throttle
 
 > throttle(fn: Function, period: number): Function

@@ -374,7 +374,9 @@ declare namespace R {
     ): (createInputFn: Promise<any>) => Promise<Out>
     then<Out>(createResultFn: Fn<any, Out>, createInputFn: Promise<any>): Promise<Out>
 
-    throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>;    
+    throttle<T>(fn: T, ms: number): ReplaceReturnType<T, void>
+    
+    toDecimal(num: number, charsAfterDecimalPoint?: number): number    
     
     template(inputWithTags: string, templateArguments: object): string
     template(inputWithTags: string): (templateArguments: object) => string

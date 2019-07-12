@@ -1355,6 +1355,17 @@ const result = await getMemberName('FOO')
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/then.spec.js)
 
 ---
+#### toDecimal
+
+> toDecimal(num: number, charsAfterDecimalPoint: number): number
+
+```
+R.toDecimal(2.45464,2) // => 2.45
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/toDecimal.spec.js)
+
+---
 #### throttle
 
 > throttle(fn: Function, period: number): Function

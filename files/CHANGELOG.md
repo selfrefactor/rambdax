@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.7.0 Add `R.toDecimal`
+
 2.10.2 Fix [issue 32](https://github.com/selfrefactor/rambdax/issues/32)
 
 2.10.0 deprecate `R._`
@@ -12,7 +14,7 @@
 
 2.8.0 Sync with Rambda | no need for create types script
 
-2.7.0 `R.prevIndex`
+2.7.0 Add `R.prevIndex`
 
 2.6.2 Sync with Rambda
 
@@ -26,13 +28,13 @@
 
 > This introduce breaking change for ie11 as noted in [issue 31](https://github.com/selfrefactor/rambdax/issues/31) which is fixed with `2.10.0` which deprecates this method
 
-2.2.1 `R.log`, `R.logInit` and `R.logHolder`
+2.2.1 Add `R.log`, `R.logInit` and `R.logHolder`
 
-2.1.0 `R._`
+2.1.0 Add `R._`
 
-2.0.0 `R.toggle`
+2.0.0 Add `R.toggle`
 
-1.9.0 `R.pushUniq`
+1.9.0 Add `R.pushUniq`
 
 1.8.2 No need for sourcemaps
 
