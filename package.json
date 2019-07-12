@@ -80,7 +80,8 @@
       "codestyle",
       "clean",
       "prepublish",
-      "typescript"
+      "typescript",
+      "sync"
     ],
     "docs": [
       "method",
