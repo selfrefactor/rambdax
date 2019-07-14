@@ -1072,7 +1072,7 @@ const expected = 'RAMBDAX_DELAY104'
 
 > produce(conditions: Object, input: any): Promise|Object
 
-It is very similar to [Ramda's 'apply' method](https://ramdajs.com/docs/#applySpec)
+It is very similar to [Ramda's 'applySpec' method](https://ramdajs.com/docs/#applySpec)
 
 ```
 const conditions = {
