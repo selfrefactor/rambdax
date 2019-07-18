@@ -40,7 +40,7 @@ const generateProp = (fn, ...inputArguments) => {
 
   return `${ propString }${ stringify(fn) }`
 }
-
+// with weakmaps
 export function memoize(fn, ...inputArguments){
   if (arguments.length === 1){
     return (...inputArgumentsHolder) =>

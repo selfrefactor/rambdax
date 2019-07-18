@@ -81,7 +81,8 @@
       "clean",
       "prepublish",
       "typescript",
-      "sync"
+      "sync",
+      "todo"
     ],
     "docs": [
       "method",
