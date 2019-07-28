@@ -841,7 +841,7 @@ const master = {
   age: 40,
   contact: { email: 'baz@example.com' },
 }
-const result = mergeDeep(aBase,bBase)
+const result = mergeDeep(slave, master)
 
 const expected = {
   "age": 40,
