@@ -393,7 +393,7 @@ declare namespace R {
     waitFor(
       waitForTrueCondition: Function|Promise<any>, 
       msHowLong: number
-    ): (input: any) => Promise<boolean>
+    ): (input?: any) => Promise<boolean>
 
     when<T>(
       rule: Func<boolean> | boolean, ruleTrue: any
