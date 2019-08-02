@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.12.0 Sync with Rambda
+
 2.11.1 Fix `R.waitFor`
 
 2.11.0 Add `R.toDecimal`
