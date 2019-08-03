@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.12.1 Add `R.mapToObject` typings
+
 2.12.0 Sync with Rambda
 
 2.11.1 Fix `R.waitFor`

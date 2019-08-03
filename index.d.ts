@@ -282,6 +282,9 @@ declare namespace R {
     mapFastAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
 
+    mapToObject<T, U>(fn: (input: T) => object, list: T[]): U  
+    mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U  
+
     memoize<T>(fn: Function | Async<any>): T
 
     mergeRight(x: object, y: object): object
