@@ -1,0 +1,2982 @@
+function type(val) {
+  const typeOf = typeof val;
+
+  if (val === null) {
+    return 'Null';
+  } else if (val === undefined) {
+    return 'Undefined';
+  } else if (typeOf === 'boolean') {
+    return 'Boolean';
+  } else if (typeOf === 'number') {
+    return Number.isNaN(val) ? 'NaN' : 'Number';
+  } else if (typeOf === 'string') {
+    return 'String';
+  } else if (Array.isArray(val)) {
+    return 'Array';
+  } else if (val instanceof RegExp) {
+    return 'RegExp';
+  }
+
+  const asStr = val.toString();
+
+  if (asStr.startsWith('async')) {
+    return 'Async';
+  } else if (asStr === '[object Promise]') {
+    return 'Promise';
+  } else if (typeOf === 'function') {
+    return 'Function';
+  }
+
+  return 'Object';
+}
+
+function allFalse(...inputs) {
+  let counter = 0;
+
+  while (counter < inputs.length) {
+    const x = inputs[counter];
+
+    if (type(x) === 'Function') {
+      if (inputs[counter]()) {
+        return false;
+      }
+    } else if (inputs[counter]) {
+      return false;
+    }
+
+    counter++;
+  }
+
+  return true;
+}
+
+function allTrue(...inputs) {
+  let counter = 0;
+
+  while (counter < inputs.length) {
+    const x = inputs[counter];
+
+    if (type(x) === 'Function') {
+      if (!inputs[counter]()) {
+        return false;
+      }
+    } else if (!inputs[counter]) {
+      return false;
+    }
+
+    counter++;
+  }
+
+  return true;
+}
+
+function allType(targetType) {
+  return (...inputs) => {
+    let counter = 0;
+
+    while (counter < inputs.length) {
+      if (type(inputs[counter]) !== targetType) {
+        return false;
+      }
+
+      counter++;
+    }
+
+    return true;
+  };
+}
+
+function anyFalse(...inputs) {
+  let counter = 0;
+
+  while (counter < inputs.length) {
+    if (!inputs[counter]) {
+      return true;
+    }
+
+    counter++;
+  }
+
+  return false;
+}
+
+function anyTrue(...inputs) {
+  let counter = 0;
+
+  while (counter < inputs.length) {
+    if (inputs[counter]) {
+      return true;
+    }
+
+    counter++;
+  }
+
+  return false;
+}
+
+function anyType(targetType) {
+  return (...inputs) => {
+    let counter = 0;
+
+    while (counter < inputs.length) {
+      if (type(inputs[counter]) === targetType) {
+        return true;
+      }
+
+      counter++;
+    }
+
+    return false;
+  };
+}
+
+const FUNC_ERROR_TEXT = 'Expected a function';
+const HASH_UNDEFINED = '__lodash_hash_undefined__';
+const INFINITY = 1 / 0,
+      MAX_SAFE_INTEGER = 9007199254740991;
+const funcTag = '[object Function]',
+      genTag = '[object GeneratorFunction]',
+      symbolTag = '[object Symbol]';
+const reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+      reIsPlainProp = /^\w*$/,
+      reLeadingDot = /^\./,
+      rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+const reEscapeChar = /\\(\\)?/g;
+const reIsHostCtor = /^\[object .+?Constructor\]$/;
+const reIsUint = /^(?:0|[1-9]\d*)$/;
+const freeGlobal = typeof global === 'object' && global && global.Object === Object && global;
+const freeSelf = typeof self === 'object' && self && self.Object === Object && self;
+const root = freeGlobal || freeSelf || Function('return this')();
+
+function getValue(object, key) {
+  return object == null ? undefined : object[key];
+}
+
+function isHostObject(value) {
+  let result = false;
+
+  if (value != null && typeof value.toString !== 'function') {
+    try {
+      result = Boolean(String(value));
+    } catch (e) {}
+  }
+
+  return result;
+}
+
+const arrayProto = Array.prototype,
+      funcProto = Function.prototype,
+      objectProto = Object.prototype;
+const coreJsData = root['__core-js_shared__'];
+
+const maskSrcKey = function () {
+  const uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+  return uid ? 'Symbol(src)_1.' + uid : '';
+}();
+
+const funcToString = funcProto.toString;
+const {
+  hasOwnProperty
+} = objectProto;
+const objectToString = objectProto.toString;
+const reIsNative = RegExp('^' + funcToString.call(hasOwnProperty).replace(reRegExpChar, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+const {
+  Symbol: Symbol$1
+} = root,
+      {
+  splice
+} = arrayProto;
+const Map = getNative(root, 'Map'),
+      nativeCreate = getNative(Object, 'create');
+const symbolProto = Symbol$1 ? Symbol$1.prototype : undefined,
+      symbolToString = symbolProto ? symbolProto.toString : undefined;
+
+function Hash(entries) {
+  let index = -1,
+      length = entries ? entries.length : 0;
+  this.clear();
+
+  while (++index < length) {
+    const entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+function hashClear() {
+  this.__data__ = nativeCreate ? nativeCreate(null) : {};
+}
+
+function hashDelete(key) {
+  return this.has(key) && delete this.__data__[key];
+}
+
+function hashGet(key) {
+  const data = this.__data__;
+
+  if (nativeCreate) {
+    const result = data[key];
+    return result === HASH_UNDEFINED ? undefined : result;
+  }
+
+  return hasOwnProperty.call(data, key) ? data[key] : undefined;
+}
+
+function hashHas(key) {
+  const data = this.__data__;
+  return nativeCreate ? data[key] !== undefined : hasOwnProperty.call(data, key);
+}
+
+function hashSet(key, value) {
+  const data = this.__data__;
+  data[key] = nativeCreate && value === undefined ? HASH_UNDEFINED : value;
+  return this;
+}
+
+Hash.prototype.clear = hashClear;
+Hash.prototype.delete = hashDelete;
+Hash.prototype.get = hashGet;
+Hash.prototype.has = hashHas;
+Hash.prototype.set = hashSet;
+
+function ListCache(entries) {
+  let index = -1;
+  const length = entries ? entries.length : 0;
+  this.clear();
+
+  while (++index < length) {
+    const entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+function listCacheClear() {
+  this.__data__ = [];
+}
+
+function listCacheDelete(key) {
+  const data = this.__data__,
+        index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    return false;
+  }
+
+  const lastIndex = data.length - 1;
+
+  if (index == lastIndex) {
+    data.pop();
+  } else {
+    splice.call(data, index, 1);
+  }
+
+  return true;
+}
+
+function listCacheGet(key) {
+  const data = this.__data__,
+        index = assocIndexOf(data, key);
+  return index < 0 ? undefined : data[index][1];
+}
+
+function listCacheHas(key) {
+  return assocIndexOf(this.__data__, key) > -1;
+}
+
+function listCacheSet(key, value) {
+  const data = this.__data__,
+        index = assocIndexOf(data, key);
+
+  if (index < 0) {
+    data.push([key, value]);
+  } else {
+    data[index][1] = value;
+  }
+
+  return this;
+}
+
+ListCache.prototype.clear = listCacheClear;
+ListCache.prototype.delete = listCacheDelete;
+ListCache.prototype.get = listCacheGet;
+ListCache.prototype.has = listCacheHas;
+ListCache.prototype.set = listCacheSet;
+
+function MapCache(entries) {
+  let index = -1;
+  const length = entries ? entries.length : 0;
+  this.clear();
+
+  while (++index < length) {
+    const entry = entries[index];
+    this.set(entry[0], entry[1]);
+  }
+}
+
+function mapCacheClear() {
+  this.__data__ = {
+    hash: new Hash(),
+    map: new (Map || ListCache)(),
+    string: new Hash()
+  };
+}
+
+function mapCacheDelete(key) {
+  return getMapData(this, key).delete(key);
+}
+
+function mapCacheGet(key) {
+  return getMapData(this, key).get(key);
+}
+
+function mapCacheHas(key) {
+  return getMapData(this, key).has(key);
+}
+
+function mapCacheSet(key, value) {
+  getMapData(this, key).set(key, value);
+  return this;
+}
+
+MapCache.prototype.clear = mapCacheClear;
+MapCache.prototype.delete = mapCacheDelete;
+MapCache.prototype.get = mapCacheGet;
+MapCache.prototype.has = mapCacheHas;
+MapCache.prototype.set = mapCacheSet;
+
+function assignValue(object, key, value) {
+  const objValue = object[key];
+
+  if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === undefined && !(key in object)) {
+    object[key] = value;
+  }
+}
+
+function assocIndexOf(array, key) {
+  let {
+    length
+  } = array;
+
+  while (length--) {
+    if (eq(array[length][0], key)) {
+      return length;
+    }
+  }
+
+  return -1;
+}
+
+function baseIsNative(value) {
+  if (!isObject(value) || isMasked(value)) {
+    return false;
+  }
+
+  const pattern = isFunction(value) || isHostObject(value) ? reIsNative : reIsHostCtor;
+  return pattern.test(toSource(value));
+}
+
+function baseSet(object, path, value, customizer) {
+  if (!isObject(object)) {
+    return object;
+  }
+
+  path = isKey(path, object) ? [path] : castPath(path);
+  let index = -1;
+  let nested = object;
+  const {
+    length
+  } = path;
+  const lastIndex = length - 1;
+
+  while (nested != null && ++index < length) {
+    let key = toKey(path[index]),
+        newValue = value;
+
+    if (index != lastIndex) {
+      const objValue = nested[key];
+      newValue = customizer ? customizer(objValue, key, nested) : undefined;
+
+      if (newValue === undefined) {
+        newValue = isObject(objValue) ? objValue : isIndex(path[index + 1]) ? [] : {};
+      }
+    }
+
+    assignValue(nested, key, newValue);
+    nested = nested[key];
+  }
+
+  return object;
+}
+
+function baseToString(value) {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (isSymbol(value)) {
+    return symbolToString ? symbolToString.call(value) : '';
+  }
+
+  const result = String(value);
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
+}
+
+function castPath(value) {
+  return isArray(value) ? value : stringToPath(value);
+}
+
+function getMapData(map, key) {
+  const data = map.__data__;
+  return isKeyable(key) ? data[typeof key === 'string' ? 'string' : 'hash'] : data.map;
+}
+
+function getNative(object, key) {
+  const value = getValue(object, key);
+  return baseIsNative(value) ? value : undefined;
+}
+
+function isIndex(value, length) {
+  length = length == null ? MAX_SAFE_INTEGER : length;
+  return Boolean(length) && (typeof value === 'number' || reIsUint.test(value)) && value > -1 && value % 1 == 0 && value < length;
+}
+
+function isKey(value, object) {
+  if (isArray(value)) {
+    return false;
+  }
+
+  const type = typeof value;
+
+  if (type == 'number' || type == 'symbol' || type == 'boolean' || value == null || isSymbol(value)) {
+    return true;
+  }
+
+  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
+}
+
+function isKeyable(value) {
+  const type = typeof value;
+  return type == 'string' || type == 'number' || type == 'symbol' || type == 'boolean' ? value !== '__proto__' : value === null;
+}
+
+function isMasked(func) {
+  return Boolean(maskSrcKey) && maskSrcKey in func;
+}
+
+var stringToPath = memoize(string => {
+  string = toString(string);
+  const result = [];
+
+  if (reLeadingDot.test(string)) {
+    result.push('');
+  }
+
+  string.replace(rePropName, (match, number, quote, string) => {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : number || match);
+  });
+  return result;
+});
+
+function toKey(value) {
+  if (typeof value === 'string' || isSymbol(value)) {
+    return value;
+  }
+
+  const result = String(value);
+  return result == '0' && 1 / value == -INFINITY ? '-0' : result;
+}
+
+function toSource(func) {
+  if (func != null) {
+    try {
+      return funcToString.call(func);
+    } catch (e) {}
+
+    try {
+      return String(func);
+    } catch (e) {}
+  }
+
+  return '';
+}
+
+function memoize(func, resolver) {
+  if (typeof func !== 'function' || resolver && typeof resolver !== 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+
+  var memoized = function () {
+    const args = arguments,
+          key = resolver ? resolver.apply(this, args) : args[0],
+          {
+      cache
+    } = memoized;
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+
+    const result = func.apply(this, args);
+    memoized.cache = cache.set(key, result);
+    return result;
+  };
+
+  memoized.cache = new (memoize.Cache || MapCache)();
+  return memoized;
+}
+
+memoize.Cache = MapCache;
+
+function eq(value, other) {
+  return value === other || value !== value && other !== other;
+}
+
+var {
+  isArray
+} = Array;
+
+function isFunction(value) {
+  const tag = isObject(value) ? objectToString.call(value) : '';
+  return tag == funcTag || tag == genTag;
+}
+
+function isObject(value) {
+  const type = typeof value;
+  return Boolean(value) && (type == 'object' || type == 'function');
+}
+
+function isObjectLike(value) {
+  return Boolean(value) && typeof value === 'object';
+}
+
+function isSymbol(value) {
+  return typeof value === 'symbol' || isObjectLike(value) && objectToString.call(value) == symbolTag;
+}
+
+function toString(value) {
+  return value == null ? '' : baseToString(value);
+}
+
+function set(object, path, value) {
+  return object == null ? object : baseSet(object, path, value);
+}
+
+function whenObject(rule, hash) {
+  const yes = {};
+  const no = {};
+  Object.entries(hash).forEach(([prop, value]) => {
+    if (rule(value, prop)) {
+      yes[prop] = value;
+    } else {
+      no[prop] = value;
+    }
+  });
+  return [yes, no];
+}
+
+function partition(rule, list) {
+  if (arguments.length === 1) {
+    return listHolder => partition(rule, listHolder);
+  }
+
+  if (!Array.isArray(list)) return whenObject(rule, list);
+  const yes = [];
+  const no = [];
+  let counter = -1;
+
+  while (counter++ < list.length - 1) {
+    if (rule(list[counter], counter)) {
+      yes.push(list[counter]);
+    } else {
+      no.push(list[counter]);
+    }
+  }
+
+  return [yes, no];
+}
+
+const isObject$1 = x => {
+  const ok = x !== null && !Array.isArray(x) && typeof x === 'object';
+
+  if (!ok) {
+    return false;
+  }
+
+  return Object.keys(x).length > 0;
+};
+
+function change(origin, pathRaw, rules) {
+  const willReturn = JSON.parse(JSON.stringify(origin));
+
+  if (!isObject$1(rules)) {
+    set(willReturn, pathRaw, rules);
+    return willReturn;
+  }
+
+  const path = pathRaw === '' ? '' : `${pathRaw}.`;
+
+  for (const ruleKey of Object.keys(rules)) {
+    const rule = rules[ruleKey];
+
+    if (!isObject$1(rule)) {
+      set(willReturn, `${path}${ruleKey}`, rule);
+      continue;
+    }
+
+    const [withObjects, withoutObjects] = partition(subruleKey => isObject$1(rule[subruleKey]), Object.keys(rule));
+    withoutObjects.forEach(subruleKey => {
+      const subrule = rule[subruleKey];
+      set(willReturn, `${path}${ruleKey}.${subruleKey}`, subrule);
+    });
+    withObjects.forEach(subruleKey => {
+      const subrule = rule[subruleKey];
+      Object.keys(subrule).forEach(deepKey => {
+        const deep = rule[subruleKey][deepKey];
+
+        if (!isObject$1(deep)) {
+          return set(willReturn, `${path}${ruleKey}.${subruleKey}.${deepKey}`, deep);
+        }
+
+        Object.keys(deep).forEach(superDeepKey => {
+          const superDeep = rule[subruleKey][deepKey][superDeepKey];
+          set(willReturn, `${path}${ruleKey}.${subruleKey}.${deepKey}.${superDeepKey}`, superDeep);
+        });
+      });
+    });
+  }
+
+  return willReturn;
+}
+
+function equals(a, b) {
+  if (arguments.length === 1) return _b => equals(a, _b);
+
+  if (a === b) {
+    return true;
+  }
+
+  const aType = type(a);
+
+  if (aType !== type(b)) {
+    return false;
+  }
+
+  if (aType === 'Array') {
+    const aClone = Array.from(a);
+    const bClone = Array.from(b);
+
+    if (aClone.toString() !== bClone.toString()) {
+      return false;
+    }
+
+    let loopArrayFlag = true;
+    aClone.forEach((aCloneInstance, aCloneIndex) => {
+      if (loopArrayFlag) {
+        if (aCloneInstance !== bClone[aCloneIndex] && !equals(aCloneInstance, bClone[aCloneIndex])) {
+          loopArrayFlag = false;
+        }
+      }
+    });
+    return loopArrayFlag;
+  }
+
+  if (aType === 'Object') {
+    const aKeys = Object.keys(a);
+
+    if (aKeys.length !== Object.keys(b).length) {
+      return false;
+    }
+
+    let loopObjectFlag = true;
+    aKeys.forEach(aKeyInstance => {
+      if (loopObjectFlag) {
+        const aValue = a[aKeyInstance];
+        const bValue = b[aKeyInstance];
+
+        if (aValue !== bValue && !equals(aValue, bValue)) {
+          loopObjectFlag = false;
+        }
+      }
+    });
+    return loopObjectFlag;
+  }
+
+  return false;
+}
+
+const forbidden = ['Null', 'Undefined', 'RegExp'];
+const allowed = ['Number', 'Boolean'];
+const notEmpty = ['Array', 'String'];
+function compact(arr) {
+  const willReturn = [];
+  arr.forEach(a => {
+    const currentType = type(a);
+    if (forbidden.includes(currentType)) return;
+    if (allowed.includes(currentType)) return willReturn.push(a);
+
+    if (currentType === 'Object') {
+      if (!equals(a, {})) willReturn.push(a);
+      return;
+    }
+
+    if (!notEmpty.includes(currentType)) return;
+    if (a.length === 0) return;
+    willReturn.push(a);
+  });
+  return willReturn;
+}
+
+function composeAsync(...inputArguments) {
+  return async function (startArgument) {
+    let argumentsToPass = startArgument;
+
+    while (inputArguments.length !== 0) {
+      const fn = inputArguments.pop();
+      const typeFn = type(fn);
+
+      if (typeFn === 'Async') {
+        argumentsToPass = await fn(argumentsToPass);
+      } else {
+        argumentsToPass = fn(argumentsToPass);
+      }
+    }
+
+    return argumentsToPass;
+  };
+}
+
+function compose(...fns) {
+  return (...args) => {
+    const list = fns.slice();
+
+    if (list.length > 0) {
+      const fn = list.pop();
+      let result = fn(...args);
+
+      while (list.length > 0) {
+        result = list.pop()(result);
+      }
+
+      return result;
+    }
+
+    return undefined;
+  };
+}
+
+function last(list) {
+  if (typeof list === 'string') return list[list.length - 1] || '';
+  return list[list.length - 1];
+}
+
+function baseSlice(array, start, end) {
+  let index = -1;
+  let {
+    length
+  } = array;
+  end = end > length ? length : end;
+
+  if (end < 0) {
+    end += length;
+  }
+
+  length = start > end ? 0 : end - start >>> 0;
+  start >>>= 0;
+  const result = Array(length);
+
+  while (++index < length) {
+    result[index] = array[index + start];
+  }
+
+  return result;
+}
+
+function init(list) {
+  if (typeof list === 'string') return list.slice(0, -1);
+  return list.length ? baseSlice(list, 0, -1) : [];
+}
+
+function composed(...inputs) {
+  return compose(...init(inputs))(last(inputs));
+}
+
+function count(target, list) {
+  if (arguments.length === 1) {
+    return listHolder => count(target, listHolder);
+  }
+
+  if (!Array.isArray(list)) return 0;
+  return list.filter(x => equals(x, target)).length;
+}
+
+function debounce(func, ms, immediate = false) {
+  let timeout;
+  return function (...input) {
+    const later = function () {
+      timeout = null;
+
+      if (!immediate) {
+        func.apply(null, input);
+      }
+    };
+
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, ms);
+
+    if (callNow) {
+      func.apply(null, input);
+    }
+  };
+}
+
+function flagIs(targetType, input) {
+  if (!input) return false;
+  if (type(input) !== targetType) return false;
+  if (targetType === 'Array') return !equals([], input);
+  if (targetType === 'Object') return !equals({}, input);
+  return true;
+}
+
+function defaultToStrict(defaultArgument, ...inputArguments) {
+  if (arguments.length === 1) {
+    return inputArgumentsHolder => defaultToStrict(defaultArgument, inputArgumentsHolder);
+  }
+
+  if (arguments.length === 2) {
+    return flagIs(type(defaultArgument), inputArguments[0]) ? inputArguments[0] : defaultArgument;
+  }
+
+  const targetType = type(defaultArgument);
+  const limit = inputArguments.length - 1;
+  let len = limit + 1;
+  let ready = false;
+  let holder;
+
+  while (!ready) {
+    const instance = inputArguments[limit - len + 1];
+
+    if (len === 0) {
+      ready = true;
+    } else if (flagIs(targetType, instance)) {
+      holder = instance;
+      ready = true;
+    } else {
+      len -= 1;
+    }
+  }
+
+  return holder === undefined ? defaultArgument : holder;
+}
+
+function defaultToWhen(defaultArgument, fn, ...inputArguments) {
+  if (arguments.length === 2) {
+    return (...inputArgumentsHolder) => defaultToWhen(defaultArgument, fn, ...inputArgumentsHolder);
+  }
+
+  const limit = inputArguments.length - 1;
+  let len = limit + 1;
+  let ready = false;
+  let holder;
+
+  while (!ready) {
+    const instance = inputArguments[limit - len + 1];
+
+    if (len === 0) {
+      ready = true;
+    } else if (fn(instance) === true) {
+      holder = instance;
+      ready = true;
+    } else {
+      len -= 1;
+    }
+  }
+
+  return holder === undefined ? defaultArgument : holder;
+}
+
+function delay(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('RAMBDAX_DELAY');
+    }, ms);
+  });
+}
+
+function findInObject(fn, obj) {
+  if (arguments.length === 1) {
+    return objHolder => findInObject(fn, objHolder);
+  }
+
+  let willReturn = {
+    fallback: true
+  };
+  Object.entries(obj).forEach(([prop, value]) => {
+    if (willReturn.fallback) {
+      if (fn(value, prop)) {
+        willReturn = {
+          prop,
+          value
+        };
+      }
+    }
+  });
+  return willReturn;
+}
+
+function findModify(fn, list) {
+  if (arguments.length === 1) {
+    return listHolder => findModify(fn, listHolder);
+  }
+
+  const len = list.length;
+  if (len === 0) return false;
+  let index = -1;
+
+  while (++index < len) {
+    const result = fn(list[index], index);
+
+    if (result !== false) {
+      return result;
+    }
+  }
+
+  return false;
+}
+
+function flatMap(fn, xs) {
+  if (arguments.length === 1) {
+    return xsHolder => flatMap(fn, xsHolder);
+  }
+
+  return [].concat(...xs.map(fn));
+}
+
+function pick(keys, obj) {
+  if (arguments.length === 1) return _obj => pick(keys, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
+  const willReturn = {};
+  let counter = 0;
+
+  while (counter < keysValue.length) {
+    if (keysValue[counter] in obj) {
+      willReturn[keysValue[counter]] = obj[keysValue[counter]];
+    }
+
+    counter++;
+  }
+
+  return willReturn;
+}
+
+function merge(obj, props) {
+  if (arguments.length === 1) return _props => merge(obj, _props);
+  return Object.assign({}, obj || {}, props || {});
+}
+
+let holder = {};
+function getter(key) {
+  const typeKey = type(key);
+  if (typeKey === 'String') return holder[key];
+  if (typeKey === 'Array') return pick(key, holder);
+  return holder;
+}
+function setter(maybeKey, maybeValue) {
+  const typeKey = type(maybeKey);
+  const typeValue = type(maybeValue);
+
+  if (typeKey === 'String') {
+    if (typeValue === 'Function') {
+      return holder[maybeKey] = maybeValue(holder[maybeKey]);
+    }
+
+    return holder[maybeKey] = maybeValue;
+  }
+
+  if (typeKey !== 'Object') return;
+  holder = merge(holder, maybeKey);
+}
+function reset() {
+  holder = {};
+}
+
+function glue(input, glue) {
+  return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue !== undefined ? glue : ' ');
+}
+
+function path(list, obj) {
+  if (arguments.length === 1) return _obj => path(list, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  let willReturn = obj;
+  let counter = 0;
+  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
+
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
+      return undefined;
+    }
+
+    willReturn = willReturn[pathArrValue[counter]];
+    counter++;
+  }
+
+  return willReturn;
+}
+
+function hasPath(maybePath, obj) {
+  if (arguments.length === 1) {
+    return objHolder => hasPath(maybePath, objHolder);
+  }
+
+  return path(maybePath, obj) !== undefined;
+}
+
+function headObject(input) {
+  const [head, _] = Object.entries(input);
+  if (!head) return {
+    prop: undefined,
+    value: undefined
+  };
+  if (_) throw new Error('R.headObject expects object with only one key');
+  return {
+    prop: head[0],
+    value: head[1]
+  };
+}
+
+function createThenable(x) {
+  return async function (input) {
+    return x(input);
+  };
+}
+
+function ifElseAsync(condition, ifFn, elseFn) {
+  return input => new Promise((resolve, reject) => {
+    const conditionPromise = createThenable(condition);
+    const ifFnPromise = createThenable(ifFn);
+    const elseFnPromise = createThenable(elseFn);
+    conditionPromise(input).then(conditionResult => {
+      const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
+      promised(input).then(resolve).catch(reject);
+    }).catch(reject);
+  });
+}
+
+function any(fn, list) {
+  if (arguments.length === 1) return _list => any(fn, _list);
+  let counter = 0;
+
+  while (counter < list.length) {
+    if (fn(list[counter], counter)) {
+      return true;
+    }
+
+    counter++;
+  }
+
+  return false;
+}
+
+function expensiveIncludes(target, source) {
+  return any(singleSource => equals(target, singleSource), source);
+}
+
+function includesAny(targets, source) {
+  if (arguments.length === 1) {
+    return sourceHolder => includesAny(targets, sourceHolder);
+  }
+
+  const sourceType = type(source);
+
+  if (['Array', 'String'].includes(sourceType) === false) {
+    return false;
+  }
+
+  if (sourceType === 'String') {
+    return any(x => source.includes(x), targets);
+  }
+
+  return any(x => expensiveIncludes(x, source), targets);
+}
+
+function includesType(targetType, list) {
+  if (arguments.length === 1) {
+    return listHolder => includesType(targetType, listHolder);
+  }
+
+  return any(x => type(x) === targetType, list);
+}
+
+function replace(pattern, replacer, str) {
+  if (replacer === undefined) {
+    return (_replacer, _str) => replace(pattern, _replacer, _str);
+  } else if (str === undefined) {
+    return _str => replace(pattern, replacer, _str);
+  }
+
+  return str.replace(pattern, replacer);
+}
+
+function inject(injection, marker, content) {
+  return replace(marker, `${marker}${injection}`, content);
+}
+
+function take(n, list) {
+  if (arguments.length === 1) return _list => take(n, _list);
+  if (typeof list === 'string') return list.slice(0, n);
+  return baseSlice(list, 0, n);
+}
+
+function shuffle(arrayRaw) {
+  const array = arrayRaw.concat();
+  let counter = array.length;
+
+  while (counter > 0) {
+    const index = Math.floor(Math.random() * counter);
+    counter--;
+    const temp = array[counter];
+    array[counter] = array[index];
+    array[index] = temp;
+  }
+
+  return array;
+}
+
+const uuidList = '0123456789qwertyuiopasdfghjklzxcvbnm'.split('');
+
+function uuid() {
+  return take(5, shuffle(uuidList).join(''));
+}
+
+const holder$1 = {};
+function interval({
+  fn,
+  ms,
+  whenStop
+}) {
+  const key = uuid();
+  return new Promise(resolve => {
+    holder$1[key] = setInterval(() => {
+      if (whenStop() === true) {
+        clearInterval(holder$1[key]);
+        resolve();
+      } else {
+        fn();
+      }
+    }, ms);
+  });
+}
+
+function toLower(str) {
+  return str.toLowerCase();
+}
+
+function contains(val, list) {
+  if (arguments.length === 1) return _list => contains(val, _list);
+  let index = -1;
+
+  while (++index < list.length) {
+    if (equals(list[index], val)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function test$1(pattern, str) {
+  if (arguments.length === 1) return str => test$1(pattern, str);
+  return str.search(pattern) !== -1;
+}
+
+function all(fn, list) {
+  if (arguments.length === 1) return _list => all(fn, _list);
+
+  for (let i = 0; i < list.length; i++) {
+    if (!fn(list[i], i)) return false;
+  }
+
+  return true;
+}
+
+function isPrototype(input) {
+  const currentPrototype = input.prototype;
+  const list = [Number, String, Boolean, Promise];
+  let toReturn = false;
+  let counter = -1;
+
+  while (++counter < list.length && !toReturn) {
+    if (currentPrototype === list[counter].prototype) toReturn = true;
+  }
+
+  return toReturn;
+}
+function prototypeToString(input) {
+  const currentPrototype = input.prototype;
+  const list = [Number, String, Boolean, Promise];
+  const translatedList = ['Number', 'String', 'Boolean', 'Promise'];
+  let found;
+  let counter = -1;
+
+  while (++counter < list.length) {
+    if (currentPrototype === list[counter].prototype) found = counter;
+  }
+
+  return translatedList[found];
+}
+const typesWithoutPrototype = ['any', 'promise', 'async', 'function'];
+
+function fromPrototypeToString(rule) {
+  if (Array.isArray(rule) || rule === undefined || rule === null || rule.prototype === undefined || typesWithoutPrototype.includes(rule)) {
+    return {
+      rule,
+      parsed: false
+    };
+  }
+
+  if (String.prototype === rule.prototype) {
+    return {
+      rule: 'string',
+      parsed: true
+    };
+  }
+
+  if (Boolean.prototype === rule.prototype) {
+    return {
+      rule: 'boolean',
+      parsed: true
+    };
+  }
+
+  if (Number.prototype === rule.prototype) {
+    return {
+      rule: 'number',
+      parsed: true
+    };
+  }
+
+  return {
+    rule: type(rule.prototype).toLowerCase(),
+    parsed: true
+  };
+}
+
+function getRuleAndType(schema, requirementRaw) {
+  const ruleRaw = schema[requirementRaw];
+  const typeIs = type(ruleRaw);
+  const {
+    rule,
+    parsed
+  } = fromPrototypeToString(ruleRaw);
+  return {
+    rule: rule,
+    ruleType: parsed ? 'String' : typeIs
+  };
+}
+
+function isValid({
+  input,
+  schema
+}) {
+  if (input === undefined || schema === undefined) return false;
+  let flag = true;
+
+  const boom = boomFlag => {
+    if (!boomFlag) {
+      flag = false;
+    }
+  };
+
+  for (const requirementRaw in schema) {
+    if (flag) {
+      const isOptional = requirementRaw.endsWith('?');
+      const requirement = isOptional ? init(requirementRaw) : requirementRaw;
+      const {
+        rule,
+        ruleType
+      } = getRuleAndType(schema, requirementRaw);
+      const inputProp = input[requirement];
+      const inputPropType = type(input[requirement]);
+      const ok = isOptional && inputProp !== undefined || !isOptional;
+      if (!ok || rule === 'any' && inputProp != null || rule === inputProp) continue;
+
+      if (ruleType === 'Object') {
+        const isValidResult = isValid({
+          input: inputProp,
+          schema: rule
+        });
+        boom(isValidResult);
+      } else if (ruleType === 'String') {
+        boom(toLower(inputPropType) === rule);
+      } else if (typeof rule === 'function') {
+        boom(rule(inputProp));
+      } else if (ruleType === 'Array' && inputPropType === 'String') {
+        boom(contains(inputProp, rule));
+      } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
+        const currentRule = rule[0];
+        const currentRuleType = type(rule[0]);
+        boom(currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule));
+
+        if (currentRuleType === 'Object' && flag) {
+          const isValidResult = all(inputPropInstance => isValid({
+            input: inputPropInstance,
+            schema: currentRule
+          }), inputProp);
+          boom(isValidResult);
+        } else if (flag) {
+          const actualRule = currentRuleType === 'String' ? currentRule : prototypeToString(currentRule);
+          const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(), inputProp);
+          boom(!isInvalidResult);
+        }
+      } else if (ruleType === 'RegExp' && inputPropType === 'String') {
+        boom(test$1(rule, inputProp));
+      } else {
+        boom(false);
+      }
+    }
+  }
+
+  return flag;
+}
+
+function isAttach() {
+  if (Object.prototype.is !== undefined) {
+    return false;
+  }
+
+  Object.defineProperty(Object.prototype, 'is', {
+    value: function (schema) {
+      return isValid({
+        input: {
+          isProp: this
+        },
+        schema: {
+          isProp: schema
+        }
+      });
+    },
+    writable: true,
+    configurable: true
+  });
+  return true;
+}
+
+function isFunction$1(fn) {
+  return ['Async', 'Promise', 'Function'].includes(type(fn));
+}
+
+function isFalsy(x) {
+  const typeIs = type(x);
+  if (['Array', 'String'].includes(typeIs)) return x.length === 0;
+  if (typeIs === 'Object') return Object.keys(x).length === 0;
+  if (['Null', 'Undefined'].includes(typeIs)) return true;
+  return false;
+}
+
+function isPromise(x) {
+  return ['Async', 'Promise'].includes(type(x));
+}
+
+function isType(xType, x) {
+  if (arguments.length === 1) {
+    return xHolder => isType(xType, xHolder);
+  }
+
+  return type(x) === xType;
+}
+
+let logHolder = [];
+let shouldLog = false;
+let shouldPush = false;
+let initPassed = false;
+
+function init$1() {
+  if (initPassed) return;
+  initPassed = true;
+  if (!process) return;
+  if (!process.env) return;
+
+  if (process.env.RAMBDAX_LOG === 'true') {
+    shouldLog = true;
+  }
+}
+
+function logInit({
+  logFlag = true,
+  pushFlag = false
+} = {}) {
+  shouldLog = Boolean(logFlag);
+  shouldPush = Boolean(pushFlag);
+  logHolder = [];
+  initPassed = true;
+}
+function log(...inputs) {
+  init$1();
+  if (shouldPush) logHolder.push(inputs);
+  if (!shouldLog) return;
+  console.log(...inputs);
+}
+
+async function mapAsyncFn(fn, arr) {
+  if (Array.isArray(arr)) {
+    const willReturn = [];
+
+    for (const a of arr) {
+      willReturn.push((await fn(a)));
+    }
+
+    return willReturn;
+  }
+
+  const willReturn = {};
+
+  for (const prop in arr) {
+    willReturn[prop] = await fn(arr[prop], prop);
+  }
+
+  return willReturn;
+}
+
+function mapAsync(fn, arr) {
+  if (arguments.length === 1) {
+    return async holder => mapAsyncFn(fn, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  });
+}
+
+async function mapFastAsyncFn(fn, arr) {
+  const promised = arr.map(a => fn(a));
+  return await Promise.all(promised);
+}
+
+function mapFastAsync(fn, arr) {
+  if (arguments.length === 1) {
+    return async holder => mapFastAsyncFn(fn, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
+  });
+}
+
+function map(fn, list) {
+  if (arguments.length === 1) return _list => map(fn, _list);
+
+  if (list === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(list)) {
+    return mapObject(fn, list);
+  }
+
+  let index = -1;
+  const len = list.length;
+  const willReturn = Array(len);
+
+  while (++index < len) {
+    willReturn[index] = fn(list[index], index);
+  }
+
+  return willReturn;
+}
+
+function mapObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    willReturn[prop] = fn(obj[prop], prop, obj);
+  }
+
+  return willReturn;
+}
+
+function mergeAll(arr) {
+  let willReturn = {};
+  map(val => {
+    willReturn = merge(willReturn, val);
+  }, arr);
+  return willReturn;
+}
+
+function check(singleInput, schema) {
+  return isValid({
+    input: {
+      singleInput
+    },
+    schema: {
+      singleInput: schema
+    }
+  });
+}
+function ok(...inputs) {
+  return (...schemas) => {
+    let failedSchema;
+    const pass = any((singleInput, i) => {
+      const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+      const checked = check(singleInput, schema);
+
+      if (!checked) {
+        failedSchema = JSON.stringify({
+          input: singleInput,
+          schema
+        });
+      }
+
+      return !checked;
+    }, inputs) === false;
+    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
+    return true;
+  };
+}
+
+function mapToObject(fn, list) {
+  if (arguments.length === 1) {
+    return listHolder => mapToObject(fn, listHolder);
+  }
+
+  ok(type(fn), type(list))('Function', 'Array');
+  return mergeAll(map(fn, list));
+}
+
+function maybe(ifRule, whenIfRaw, whenElseRaw) {
+  const whenIf = ifRule && type(whenIfRaw) === 'Function' ? whenIfRaw() : whenIfRaw;
+  const whenElse = !ifRule && type(whenElseRaw) === 'Function' ? whenElseRaw() : whenElseRaw;
+  return ifRule ? whenIf : whenElse;
+}
+
+function sort(fn, list) {
+  if (arguments.length === 1) return _list => sort(fn, _list);
+  const arrClone = list.concat();
+  return arrClone.sort(fn);
+}
+
+const cache = {};
+
+const normalizeObject = obj => {
+  const sortFn = (a, b) => a > b ? 1 : -1;
+
+  const willReturn = {};
+  compose(map(prop => willReturn[prop] = obj[prop]), sort(sortFn))(Object.keys(obj));
+  return willReturn;
+};
+
+const stringify = a => {
+  if (type(a) === 'String') {
+    return a;
+  } else if (['Function', 'Async'].includes(type(a))) {
+    const compacted = replace(/\s{1,}/g, ' ', a.toString());
+    return replace(/\s/g, '_', take(15, compacted));
+  } else if (type(a) === 'Object') {
+    a = normalizeObject(a);
+  }
+
+  return JSON.stringify(a);
+};
+
+const generateProp = (fn, ...inputArguments) => {
+  let propString = '';
+  inputArguments.forEach(inputArgument => {
+    propString += `${stringify(inputArgument)}_`;
+  });
+  return `${propString}${stringify(fn)}`;
+};
+
+function memoize$1(fn, ...inputArguments) {
+  if (arguments.length === 1) {
+    return (...inputArgumentsHolder) => memoize$1(fn, ...inputArgumentsHolder);
+  }
+
+  const prop = generateProp(fn, ...inputArguments);
+  if (prop in cache) return cache[prop];
+
+  if (type(fn) === 'Async') {
+    return new Promise(resolve => {
+      fn(...inputArguments).then(result => {
+        cache[prop] = result;
+        resolve(result);
+      });
+    });
+  }
+
+  const result = fn(...inputArguments);
+  cache[prop] = result;
+  return result;
+}
+
+function mergeRight(x, y) {
+  return merge(y, x);
+}
+
+function mergeDeep(target, source) {
+  if (arguments.length === 1) {
+    return sourceHolder => mergeDeep(target, sourceHolder);
+  }
+
+  const willReturn = JSON.parse(JSON.stringify(target));
+  Object.keys(source).forEach(key => {
+    if (type(source[key]) === 'Object') {
+      if (type(target[key]) === 'Object') {
+        willReturn[key] = mergeDeep(target[key], source[key]);
+      } else {
+        willReturn[key] = source[key];
+      }
+    } else {
+      willReturn[key] = source[key];
+    }
+  });
+  return willReturn;
+}
+
+function nextIndex(index, list) {
+  const newIndex = index >= list.length - 1 ? 0 : index + 1;
+  return newIndex;
+}
+
+function pass(...inputs) {
+  return (...schemas) => any((x, i) => {
+    const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+    return !check(x, schema);
+  }, inputs) === false;
+}
+
+function curry(fn, args = []) {
+  return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
+}
+
+function onceFn(fn, context) {
+  let result;
+  return function () {
+    if (fn) {
+      result = fn.apply(context || this, arguments);
+      fn = null;
+    }
+
+    return result;
+  };
+}
+
+function once(fn, context) {
+  if (arguments.length === 1) {
+    const wrap = onceFn(fn, context);
+    return curry(wrap);
+  }
+
+  return onceFn(fn, context);
+}
+
+function otherwise(fallback, toResolve) {
+  if (arguments.length === 1) {
+    return toResolveHolder => otherwise(fallback, toResolveHolder);
+  }
+
+  return new Promise(resolve => {
+    toResolve.then(resolve).catch(e => resolve(fallback(e)));
+  });
+}
+
+function pathEq(path$$1, target, obj) {
+  if (arguments.length === 2) {
+    return objHolder => pathEq(path$$1, target, objHolder);
+  }
+
+  return path(path$$1, obj) === target;
+}
+
+function pipe(...fns) {
+  return compose(...fns.reverse());
+}
+
+function piped(...inputs) {
+  const [input, ...fnList] = inputs;
+  return pipe(...fnList)(input);
+}
+
+async function pipedAsync(...inputs) {
+  const [input, ...fnList] = inputs;
+  let argumentsToPass = input;
+
+  while (fnList.length !== 0) {
+    const fn = fnList.shift();
+    const typeFn = type(fn);
+
+    if (typeFn === 'Async') {
+      argumentsToPass = await fn(argumentsToPass);
+    } else {
+      argumentsToPass = fn(argumentsToPass);
+    }
+  }
+
+  return argumentsToPass;
+}
+
+function prevIndex(index, list) {
+  const newIndex = index === 0 ? list.length - 1 : index - 1;
+  return newIndex;
+}
+
+function helper({
+  condition,
+  inputArgument,
+  prop
+}) {
+  return new Promise((resolve, reject) => {
+    if (!(type(condition) === 'Async')) {
+      return resolve({
+        type: prop,
+        payload: condition(inputArgument)
+      });
+    }
+
+    condition(inputArgument).then(result => {
+      resolve({
+        type: prop,
+        payload: result
+      });
+    }).catch(err => reject(err));
+  });
+}
+
+function produce(conditions, inputArgument) {
+  if (arguments.length === 1) {
+    return inputArgumentHolder => produce(conditions, inputArgumentHolder);
+  }
+
+  let asyncConditionsFlag = false;
+
+  for (const prop in conditions) {
+    if (asyncConditionsFlag === false && type(conditions[prop]) === 'Async') {
+      asyncConditionsFlag = true;
+    }
+  }
+
+  if (asyncConditionsFlag === false) {
+    const willReturn = {};
+
+    for (const prop in conditions) {
+      willReturn[prop] = conditions[prop](inputArgument);
+    }
+
+    return willReturn;
+  }
+
+  const promised = [];
+
+  for (const prop in conditions) {
+    const condition = conditions[prop];
+    promised.push(helper({
+      inputArgument,
+      condition,
+      prop
+    }));
+  }
+
+  return new Promise((resolve, reject) => {
+    Promise.all(promised).then(results => {
+      const willReturn = {};
+      map(result => willReturn[result.type] = result.payload, results);
+      resolve(willReturn);
+    }).catch(err => reject(err));
+  });
+}
+
+function promiseAllObject(promises) {
+  return new Promise((res, rej) => {
+    let counter = 0;
+    const props = {};
+    const promisedArr = [];
+
+    for (const prop in promises) {
+      props[counter] = prop;
+      promisedArr.push(promises[prop]);
+      counter++;
+    }
+
+    Promise.all(promisedArr).then(result => {
+      const willReturn = {};
+      result.map((val, key) => {
+        const prop = props[key];
+        willReturn[prop] = val;
+      });
+      res(willReturn);
+    }).catch(rej);
+  });
+}
+
+function pushUniq(x, list) {
+  if (list.includes(x)) return;
+  list.push(x);
+}
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function remove(inputs, text) {
+  if (arguments.length === 1) {
+    return textHolder => remove(inputs, textHolder);
+  }
+
+  if (type(text) !== 'String') {
+    throw new Error(`R.remove requires string not ${type(text)}`);
+  }
+
+  if (type(inputs) !== 'Array') {
+    return replace(inputs, '', text).trim();
+  }
+
+  let textCopy = text;
+  inputs.forEach(singleInput => {
+    textCopy = replace(singleInput, '', textCopy).trim();
+  });
+  return textCopy;
+}
+
+function omit(keys, obj) {
+  if (arguments.length === 1) return _obj => omit(keys, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
+  const willReturn = {};
+
+  for (const key in obj) {
+    if (!keysValue.includes(key)) {
+      willReturn[key] = obj[key];
+    }
+  }
+
+  return willReturn;
+}
+
+function renameProps(conditions, inputObject) {
+  if (inputObject === undefined) {
+    return inputObjectHolder => renameProps(conditions, inputObjectHolder);
+  }
+
+  const renamed = {};
+  Object.keys(conditions).forEach(renameConditionProp => {
+    if (Object.keys(inputObject).includes(renameConditionProp)) {
+      renamed[conditions[renameConditionProp]] = inputObject[renameConditionProp];
+    }
+  });
+  return merge(renamed, omit(Object.keys(conditions), inputObject));
+}
+
+function resolve(afterResolve, toResolve) {
+  if (arguments.length === 1) {
+    return toResolveHolder => resolve(afterResolve, toResolveHolder);
+  }
+
+  return new Promise(res => {
+    toResolve.then(result => res(afterResolve(result)));
+  });
+}
+
+const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
+
+const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
+
+const replace$1 = ({
+  inputHolder,
+  prop,
+  replacer
+}) => inputHolder.replace(`{{${prop}}}`, replacer);
+
+function template(input, templateInput) {
+  if (arguments.length === 1) {
+    return templateInputHolder => template(input, templateInputHolder);
+  }
+
+  const occurances = getOccurances(input);
+  if (occurances === null) return input;
+  let inputHolder = input;
+
+  for (const occurance of occurances) {
+    const prop = getOccuranceProp(occurance);
+    const replacer = templateInput[prop];
+    if (replacer === undefined) continue;
+    inputHolder = replace$1({
+      inputHolder,
+      prop,
+      replacer
+    });
+  }
+
+  return inputHolder;
+}
+
+function headObject$1(x) {
+  if (type(x) !== 'Object') throw new Error('R.headObject.type');
+  const [tag, no] = Object.keys(x);
+  if (tag === undefined) throw new Error('R.headObject.less');
+  if (no !== undefined) throw new Error('R.headObject.more');
+  return {
+    prop: tag,
+    value: x[tag]
+  };
+}
+
+const evaluationsSchema = {
+  label: 'string'
+};
+function runTests(input) {
+  const pass$$1 = pass(input)({
+    testSuite: 'string',
+    evaluations: [evaluationsSchema]
+  });
+
+  if (describe === undefined || !pass$$1) {
+    throw new Error('R.runTests.init');
+  }
+
+  try {
+    const {
+      testSuite,
+      evaluations,
+      data
+    } = input;
+    describe(testSuite, () => {
+      evaluations.forEach(singleEvaluation => {
+        data.forEach(dataInstance => {
+          const {
+            prop: tag,
+            value: x
+          } = headObject$1(dataInstance);
+          const {
+            value: evaluationFunction
+          } = headObject$1(omit('label', singleEvaluation));
+          const label = template(singleEvaluation.label, {
+            tag
+          });
+          test(label, () => {
+            evaluationFunction(x);
+          });
+        });
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error('R.runTestsCatch');
+  }
+}
+
+function s() {
+  if (Object.prototype.s === undefined) {
+    Object.defineProperty(Object.prototype, 's', {
+      value: function (f) {
+        return f(this.valueOf());
+      },
+      writable: true,
+      configurable: true
+    });
+    return true;
+  }
+
+  return false;
+}
+
+const NO_MATCH_FOUND = Symbol ? Symbol('NO_MATCH_FOUND') : undefined;
+
+const getMatchingKeyValuePair = (cases, testValue, defaultValue) => {
+  let iterationValue;
+
+  for (let index = 0; index < cases.length; index++) {
+    iterationValue = cases[index].test(testValue);
+
+    if (iterationValue !== NO_MATCH_FOUND) {
+      return iterationValue;
+    }
+  }
+
+  return defaultValue;
+};
+
+const isEqual = (testValue, matchValue) => {
+  const willReturn = typeof testValue === 'function' ? testValue(matchValue) : equals(testValue, matchValue);
+  return willReturn;
+};
+
+const is = (testValue, matchResult = true) => ({
+  key: testValue,
+  test: matchValue => isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
+});
+
+class Switchem {
+  constructor(defaultValue, cases, willMatch) {
+    if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
+      this.cases = [];
+      this.defaultValue = undefined;
+      this.willMatch = defaultValue;
+    } else {
+      this.cases = cases;
+      this.defaultValue = defaultValue;
+      this.willMatch = willMatch;
+    }
+
+    return this;
+  }
+
+  default(defaultValue) {
+    const holder = new Switchem(defaultValue, this.cases, this.willMatch);
+    return holder.match(this.willMatch);
+  }
+
+  is(testValue, matchResult) {
+    return new Switchem(this.defaultValue, [...this.cases, is(testValue, matchResult)], this.willMatch);
+  }
+
+  match(matchValue) {
+    return getMatchingKeyValuePair(this.cases, matchValue, this.defaultValue);
+  }
+
+}
+
+function switcher(input) {
+  return new Switchem(input);
+}
+
+function tapAsync(fn, input) {
+  if (arguments.length === 1) {
+    return inputHolder => tapAsync(fn, inputHolder);
+  }
+
+  if (isPromise(fn) === true) {
+    return new Promise((resolve, reject) => {
+      fn(input).then(() => {
+        resolve(input);
+      }).catch(reject);
+    });
+  }
+
+  fn(input);
+  return input;
+}
+
+function throttle(fn, ms) {
+  let wait = false;
+  return function (...input) {
+    if (!wait) {
+      fn.apply(null, input);
+      wait = true;
+      setTimeout(() => {
+        wait = false;
+      }, ms);
+    }
+  };
+}
+
+function toDecimal(number, charsAfterDecimalPoint = 2) {
+  return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
+}
+
+function toggle(input, list) {
+  return input === list[0] ? list[1] : list[0];
+}
+
+function tryCatch(fn, fallback) {
+  if (!isFunction$1(fn)) {
+    throw new Error(`R.tryCatch | fn '${fn}'`);
+  }
+
+  const passFallback = isFunction$1(fallback);
+
+  if (!isPromise(fn)) {
+    return (...inputs) => {
+      try {
+        return fn(...inputs);
+      } catch (e) {
+        return passFallback ? fallback(...inputs) : fallback;
+      }
+    };
+  }
+
+  return (...inputs) => new Promise(resolve => {
+    fn(...inputs).then(resolve).catch(() => {
+      if (!passFallback) {
+        return resolve(fallback);
+      }
+
+      if (!isPromise(fallback)) {
+        return resolve(fallback(...inputs));
+      }
+
+      fallback(...inputs).then(resolve);
+    });
+  });
+}
+
+function unless(condition, whenFalse) {
+  if (arguments.length === 1) {
+    return whenFalseHolder => unless(condition, whenFalseHolder);
+  }
+
+  return input => {
+    const flag = typeof condition === 'boolean' ? condition : condition(input);
+    if (flag) return input;
+    if (isFunction$1(whenFalse)) return whenFalse(input);
+    return whenFalse;
+  };
+}
+
+function range(from, to) {
+  if (arguments.length === 1) return _to => range(from, _to);
+  const len = to - from;
+  const willReturn = Array(len);
+
+  for (let i = 0; i < len; i++) {
+    willReturn[i] = from + i;
+  }
+
+  return willReturn;
+}
+
+function head(list) {
+  if (typeof list === 'string') return list[0] || '';
+  return list[0];
+}
+
+const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
+const loops = range(0, 8);
+function uuid$1() {
+  return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
+}
+
+function wait(fn) {
+  return new Promise(resolve => {
+    fn.then(result => resolve([result])).catch(e => resolve([, e]));
+  });
+}
+
+function waitFor(condition, howLong, loops = 10) {
+  const typeCondition = type(condition);
+  const passPromise = typeCondition === 'Async';
+  const passFunction = typeCondition === 'Function';
+  const interval = Math.floor(howLong / loops);
+
+  if (!(passPromise || passFunction)) {
+    throw new Error('R.waitFor');
+  }
+
+  return async (...inputs) => {
+    for (const i of range(0, loops)) {
+      const resultCondition = await condition(...inputs);
+
+      if (resultCondition === false) {
+        await delay(interval);
+      } else {
+        return resultCondition;
+      }
+    }
+
+    return false;
+  };
+}
+
+function when(condition, whenTrue) {
+  if (arguments.length === 1) {
+    return whenTrueHolder => when(condition, whenTrueHolder);
+  }
+
+  return input => {
+    const flag = typeof condition === 'boolean' ? condition : condition(input);
+    if (!flag) return input;
+    if (isFunction$1(whenTrue)) return whenTrue(input);
+    return whenTrue;
+  };
+}
+
+function createThenable$1(x) {
+  return async function (input) {
+    return x(input);
+  };
+}
+
+function whenAsync(condition, whenTrueFn) {
+  if (arguments.length === 1) {
+    return whenTrueFnHolder => whenAsync(condition, whenTrueFnHolder);
+  }
+
+  return input => new Promise((resolve, reject) => {
+    const whenTrueFnPromise = createThenable$1(whenTrueFn);
+
+    if (typeof condition === 'boolean') {
+      if (condition === false) {
+        return resolve(input);
+      }
+
+      whenTrueFnPromise(input).then(resolve).catch(reject);
+    } else {
+      const conditionPromise = createThenable$1(condition);
+      conditionPromise(input).then(conditionResult => {
+        if (conditionResult === false) {
+          return resolve(input);
+        }
+
+        whenTrueFnPromise(input).then(resolve).catch(reject);
+      }).catch(reject);
+    }
+  });
+}
+
+function where(conditions, obj) {
+  if (obj === undefined) {
+    return objHolder => where(conditions, objHolder);
+  }
+
+  let flag = true;
+
+  for (const prop in conditions) {
+    const result = conditions[prop](obj[prop]);
+
+    if (flag && result === false) {
+      flag = false;
+    }
+  }
+
+  return flag;
+}
+
+function filter(fn, list) {
+  if (arguments.length === 1) return _list => filter(fn, _list);
+
+  if (list === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(list)) {
+    return filterObject(fn, list);
+  }
+
+  let index = -1;
+  let resIndex = 0;
+  const len = list.length;
+  const willReturn = [];
+
+  while (++index < len) {
+    const value = list[index];
+
+    if (fn(value, index)) {
+      willReturn[resIndex++] = value;
+    }
+  }
+
+  return willReturn;
+}
+
+function filterObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    if (fn(obj[prop], prop, obj)) {
+      willReturn[prop] = obj[prop];
+    }
+  }
+
+  return willReturn;
+}
+
+function whereEq(rule, input) {
+  if (arguments.length === 1) {
+    return inputHolder => whereEq(rule, inputHolder);
+  }
+
+  if (type(input) !== 'Object') return false;
+  const result = filter((ruleValue, ruleProp) => equals(ruleValue, input[ruleProp]), rule);
+  return Object.keys(result).length === Object.keys(rule).length;
+}
+
+function add(a, b) {
+  if (arguments.length === 1) return _b => add(a, _b);
+  return a + b;
+}
+
+function adjustRaw(fn, idx, list) {
+  const clone = list.slice();
+  const actualIndex = idx < 0 ? clone.length + idx : idx;
+  clone[actualIndex] = fn(clone[actualIndex]);
+  return clone;
+}
+
+const adjust = curry(adjustRaw);
+
+function allPass(predicates, list) {
+  if (arguments.length === 1) return _list => allPass(predicates, _list);
+  return !any(fn => !fn(list), predicates);
+}
+
+function always(val) {
+  return () => val;
+}
+
+function anyPass(predicates, list) {
+  if (arguments.length === 1) return _list => anyPass(predicates, _list);
+  return any(fn => fn(list))(predicates);
+}
+
+function append(el, list) {
+  if (arguments.length === 1) return _list => append(el, _list);
+  if (typeof list === 'string') return `${list}${el}`;
+  const clone = list.concat();
+  clone.push(el);
+  return clone;
+}
+
+function assocRaw(prop, val, obj) {
+  return Object.assign({}, obj, {
+    [prop]: val
+  });
+}
+
+const assoc = curry(assocRaw);
+
+function both(f, g) {
+  if (arguments.length === 1) return _g => both(f, _g);
+  return input => f(input) && g(input);
+}
+
+function complement(fn) {
+  return input => !fn(input);
+}
+
+function concat(left, right) {
+  if (arguments.length === 1) return _right => concat(left, _right);
+  return typeof left === 'string' ? `${left}${right}` : [...left, ...right];
+}
+
+const dec = n => n - 1;
+
+function defaultTo(defaultArgument, ...inputArgument) {
+  if (arguments.length === 1) {
+    return _inputArgument => defaultTo(defaultArgument, _inputArgument);
+  } else if (arguments.length === 2) {
+    return flagIs$1(inputArgument[0]) ? defaultArgument : inputArgument[0];
+  }
+
+  const limit = inputArgument.length - 1;
+  let len = limit + 1;
+  let ready = false;
+  let holder;
+
+  while (!ready) {
+    const instance = inputArgument[limit - len + 1];
+
+    if (len === 0) {
+      ready = true;
+    } else if (flagIs$1(instance)) {
+      len -= 1;
+    } else {
+      holder = instance;
+      ready = true;
+    }
+  }
+
+  return holder === undefined ? defaultArgument : holder;
+}
+
+function flagIs$1(inputArgument) {
+  return inputArgument === undefined || inputArgument === null || Number.isNaN(inputArgument) === true;
+}
+
+function dissoc(prop, obj) {
+  if (arguments.length === 1) return _obj => dissoc(prop, _obj);
+  if (obj === null || obj === undefined) return {};
+  const willReturn = {};
+
+  for (const p in obj) {
+    willReturn[p] = obj[p];
+  }
+
+  delete willReturn[prop];
+  return willReturn;
+}
+
+function divide(a, b) {
+  if (arguments.length === 1) return _b => divide(a, _b);
+  return a / b;
+}
+
+function drop(n, list) {
+  if (arguments.length === 1) return _list => drop(n, _list);
+  return list.slice(n);
+}
+
+function dropLast(n, list) {
+  if (arguments.length === 1) return _list => dropLast(n, _list);
+  return list.slice(0, -n);
+}
+
+function either(f, g) {
+  if (arguments.length === 1) return _g => either(f, _g);
+  return input => f(input) || g(input);
+}
+
+function endsWith(suffix, list) {
+  if (arguments.length === 1) return _list => endsWith(suffix, _list);
+  return list.endsWith(suffix);
+}
+
+function F() {
+  return false;
+}
+
+function find(fn, list) {
+  if (arguments.length === 1) return _list => find(fn, _list);
+  return list.find(fn);
+}
+
+function findIndex(fn, list) {
+  if (arguments.length === 1) return _list => findIndex(fn, _list);
+  const len = list.length;
+  let index = -1;
+
+  while (++index < len) {
+    if (fn(list[index], index)) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function flatten(list, willReturn) {
+  willReturn = willReturn === undefined ? [] : willReturn;
+
+  for (let i = 0; i < list.length; i++) {
+    if (Array.isArray(list[i])) {
+      flatten(list[i], willReturn);
+    } else {
+      willReturn.push(list[i]);
+    }
+  }
+
+  return willReturn;
+}
+
+function flip(fn) {
+  return flipExport(fn);
+}
+
+function flipExport(fn) {
+  return (...input) => {
+    if (input.length === 1) {
+      return holder => fn(holder, input[0]);
+    } else if (input.length === 2) {
+      return fn(input[1], input[0]);
+    }
+
+    return undefined;
+  };
+}
+
+function toPairs(obj) {
+  return Object.entries(obj);
+}
+
+function fromPairs(list) {
+  const toReturn = {};
+  list.forEach(([prop, value]) => toReturn[prop] = value);
+  return toReturn;
+}
+
+function clone(val) {
+  const out = Array.isArray(val) ? Array(val.length) : {};
+
+  for (const key in val) {
+    const v = val[key];
+    out[key] = typeof v === 'object' && v !== null ? v.getTime ? new Date(v.getTime()) : clone(v) : v;
+  }
+
+  return out;
+}
+
+function forEach(fn, list) {
+  if (arguments.length === 1) return _list => forEach(fn, _list);
+  map(fn, list);
+  return list;
+}
+
+function groupBy(fn, list) {
+  if (arguments.length === 1) return _list => groupBy(fn, _list);
+  const result = {};
+
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    const key = fn(item);
+
+    if (!result[key]) {
+      result[key] = [];
+    }
+
+    result[key].push(item);
+  }
+
+  return result;
+}
+
+function groupWith(predicate, list) {
+  const toReturn = [];
+  let holder = [];
+  list.reduce((prev, current, i) => {
+    if (i > 0 && predicate(prev, current)) {
+      if (holder.length === 0) {
+        holder.push(prev);
+        holder.push(current);
+      } else {
+        holder.push(current);
+      }
+    } else if (i > 0) {
+      if (holder.length === 0) {
+        toReturn.push([prev]);
+        if (i === list.length - 1) holder.push(current);
+      } else {
+        toReturn.push(holder);
+        holder = [];
+      }
+    }
+
+    return current;
+  }, undefined);
+  return holder.length === 0 ? toReturn : [...toReturn, holder];
+}
+
+function has(prop, obj) {
+  if (arguments.length === 1) return _obj => has(prop, _obj);
+  return obj[prop] !== undefined;
+}
+
+function identity(x) {
+  return x;
+}
+
+function ifElse(condition, onTrue, onFalse) {
+  if (onTrue === undefined) {
+    return (_onTrue, _onFalse) => ifElse(condition, _onTrue, _onFalse);
+  } else if (onFalse === undefined) {
+    return _onFalse => ifElse(condition, onTrue, _onFalse);
+  }
+
+  return input => {
+    const conditionResult = typeof condition === 'boolean' ? condition : condition(input);
+
+    if (conditionResult === true) {
+      return onTrue(input);
+    }
+
+    return onFalse(input);
+  };
+}
+
+const inc = n => n + 1;
+
+function includes(target, list) {
+  if (arguments.length === 1) return _list => includes(target, _list);
+  const ok = Array.isArray(list) || typeof list === 'string';
+  if (!ok) return false;
+  return list.includes(target);
+}
+
+function indexBy(fn, list) {
+  if (arguments.length === 1) return _list => indexBy(fn, _list);
+  const result = {};
+
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    result[fn(item)] = item;
+  }
+
+  return result;
+}
+
+function indexOf(target, list) {
+  if (arguments.length === 1) return _list => indexOf(target, _list);
+  let index = -1;
+  const {
+    length
+  } = list;
+
+  while (++index < length) {
+    if (list[index] === target) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function is$1(ctor, val) {
+  if (arguments.length === 1) return _val => is$1(ctor, _val);
+  return val != null && val.constructor === ctor || val instanceof ctor;
+}
+
+function isNil(x) {
+  return x === undefined || x === null;
+}
+
+function join(separator, list) {
+  if (arguments.length === 1) return _list => join(separator, _list);
+  return list.join(separator);
+}
+
+function keys(obj) {
+  return Object.keys(obj);
+}
+
+function lastIndexOf(target, list) {
+  if (arguments.length === 1) return _list => lastIndexOf(target, _list);
+  let index = list.length;
+
+  while (--index > 0) {
+    if (equals(list[index], target)) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+function length(list) {
+  return list.length;
+}
+
+function match(pattern, str) {
+  if (arguments.length === 1) return _str => match(pattern, _str);
+  const willReturn = str.match(pattern);
+  return willReturn === null ? [] : willReturn;
+}
+
+function max(a, b) {
+  if (arguments.length === 1) return _b => max(a, _b);
+  return b > a ? b : a;
+}
+
+function maxBy(fn, a, b) {
+  if (arguments.length === 2) {
+    return _b => maxBy(fn, a, _b);
+  } else if (arguments.length === 1) {
+    return (_a, _b) => maxBy(fn, _a, _b);
+  }
+
+  return fn(b) > fn(a) ? b : a;
+}
+
+function min(a, b) {
+  if (arguments.length === 1) return _b => min(a, _b);
+  return b < a ? b : a;
+}
+
+function minBy(fn, a, b) {
+  if (arguments.length === 2) {
+    return _b => minBy(fn, a, _b);
+  } else if (arguments.length === 1) {
+    return (_a, _b) => minBy(fn, _a, _b);
+  }
+
+  return fn(b) < fn(a) ? b : a;
+}
+
+function modulo(a, b) {
+  if (arguments.length === 1) return _b => modulo(a, _b);
+  return a % b;
+}
+
+function multiply(a, b) {
+  if (arguments.length === 1) return _b => multiply(a, _b);
+  return a * b;
+}
+
+function none(fn, list) {
+  if (arguments.length === 1) return _list => none(fn, _list);
+  return list.filter(fn).length === 0;
+}
+
+function not(a) {
+  return !a;
+}
+
+function nth(offset, list) {
+  if (arguments.length === 1) return _list => nth(offset, _list);
+  const idx = offset < 0 ? list.length + offset : offset;
+  return Object.prototype.toString.call(list) === '[object String]' ? list.charAt(idx) : list[idx];
+}
+
+function partial(fn, ...args) {
+  const len = fn.length;
+  return (...rest) => {
+    if (args.length + rest.length >= len) {
+      return fn(...args, ...rest);
+    }
+
+    return partial(fn, ...[...args, ...rest]);
+  };
+}
+
+function partialCurry(fn, args = {}) {
+  return rest => {
+    if (type(fn) === 'Async' || type(fn) === 'Promise') {
+      return new Promise((resolve, reject) => {
+        fn(merge(rest, args)).then(resolve).catch(reject);
+      });
+    }
+
+    return fn(merge(rest, args));
+  };
+}
+
+function pathOrRaw(defaultValue, list, obj) {
+  return defaultTo(defaultValue, path(list, obj));
+}
+
+const pathOr = curry(pathOrRaw);
+
+function pickAll(keys, obj) {
+  if (arguments.length === 1) return _obj => pickAll(keys, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
+  const willReturn = {};
+  let counter = 0;
+
+  while (counter < keysValue.length) {
+    if (keysValue[counter] in obj) {
+      willReturn[keysValue[counter]] = obj[keysValue[counter]];
+    } else {
+      willReturn[keysValue[counter]] = undefined;
+    }
+
+    counter++;
+  }
+
+  return willReturn;
+}
+
+function pluck(key, list) {
+  if (arguments.length === 1) return _list => pluck(key, _list);
+  const willReturn = [];
+  map(val => {
+    if (!(val[key] === undefined)) {
+      willReturn.push(val[key]);
+    }
+  }, list);
+  return willReturn;
+}
+
+function prepend(el, list) {
+  if (arguments.length === 1) return _list => prepend(el, _list);
+  if (typeof list === 'string') return `${el}${list}`;
+  const clone = [el].concat(list);
+  return clone;
+}
+
+function prop(key, obj) {
+  if (arguments.length === 1) return _obj => prop(key, _obj);
+  if (!obj) return undefined;
+  return obj[key];
+}
+
+function propEq(key, val, obj) {
+  if (val === undefined) {
+    return (_val, _obj) => propEq(key, _val, _obj);
+  } else if (obj === undefined) {
+    return _obj => propEq(key, val, _obj);
+  }
+
+  return obj[key] === val;
+}
+
+function reduce(fn, acc, list) {
+  if (acc === undefined) {
+    return (_acc, _list) => reduce(fn, _acc, _list);
+  } else if (list === undefined) {
+    return _list => reduce(fn, acc, _list);
+  }
+
+  return list.reduce(fn, acc);
+}
+
+function reject(fn, list) {
+  if (arguments.length === 1) return _list => reject(fn, _list);
+  return filter((x, i) => !fn(x, i), list);
+}
+
+function repeat(val, n) {
+  if (arguments.length === 1) return _n => repeat(val, _n);
+  const willReturn = Array(n);
+  return willReturn.fill(val);
+}
+
+function reverse(list) {
+  const clone = list.concat();
+  return clone.reverse();
+}
+
+function sortBy(fn, list) {
+  if (arguments.length === 1) return _list => sortBy(fn, _list);
+  const arrClone = list.concat();
+  return arrClone.sort((a, b) => {
+    const fnA = fn(a);
+    const fnB = fn(b);
+    return fnA < fnB ? -1 : fnA > fnB ? 1 : 0;
+  });
+}
+
+function split(separator, str) {
+  if (arguments.length === 1) return _str => split(separator, _str);
+  return str.split(separator);
+}
+
+function splitEvery(n, list) {
+  if (arguments.length === 1) return _list => splitEvery(n, _list);
+  const numValue = n > 1 ? n : 1;
+  const willReturn = [];
+  let counter = 0;
+
+  while (counter < list.length) {
+    willReturn.push(list.slice(counter, counter += numValue));
+  }
+
+  return willReturn;
+}
+
+function startsWith(prefix, list) {
+  if (arguments.length === 1) return _list => startsWith(prefix, _list);
+  return list.startsWith(prefix);
+}
+
+function subtract(a, b) {
+  if (arguments.length === 1) return _b => subtract(a, _b);
+  return a - b;
+}
+
+function T() {
+  return true;
+}
+
+function tail(list) {
+  return drop(1, list);
+}
+
+function takeLast(n, list) {
+  if (arguments.length === 1) return _list => takeLast(n, _list);
+  const len = list.length;
+  let numValue = n > len ? len : n;
+  if (typeof list === 'string') return list.slice(len - numValue);
+  numValue = len - numValue;
+  return baseSlice(list, numValue, len);
+}
+
+function tap(fn, x) {
+  if (arguments.length === 1) return _x => tap(fn, _x);
+  fn(x);
+  return x;
+}
+
+function times(fn, n) {
+  if (arguments.length === 1) return _n => times(fn, _n);
+  return map(fn, range(0, n));
+}
+
+function toString$1(val) {
+  return val.toString();
+}
+
+function toUpper(str) {
+  return str.toUpperCase();
+}
+
+function trim(str) {
+  return str.trim();
+}
+
+function uniq(list) {
+  let index = -1;
+  const willReturn = [];
+
+  while (++index < list.length) {
+    const value = list[index];
+
+    if (!contains(value, willReturn)) {
+      willReturn.push(value);
+    }
+  }
+
+  return willReturn;
+}
+
+function uniqWith(fn, list) {
+  if (arguments.length === 1) return _list => uniqWith(fn, _list);
+  let index = -1;
+  const len = list.length;
+  const willReturn = [];
+
+  while (++index < len) {
+    const value = list[index];
+    const flag = any(willReturnInstance => fn(value, willReturnInstance), willReturn);
+
+    if (!flag) {
+      willReturn.push(value);
+    }
+  }
+
+  return willReturn;
+}
+
+function update(idx, val, list) {
+  if (val === undefined) {
+    return (_val, _list) => update(idx, _val, _list);
+  } else if (list === undefined) {
+    return _list => update(idx, val, _list);
+  }
+
+  const arrClone = list.concat();
+  return arrClone.fill(val, idx, idx + 1);
+}
+
+function values(obj) {
+  return Object.values(obj);
+}
+
+function without(left, right) {
+  return reduce((accum, item) => !contains(item, left) ? accum.concat(item) : accum, [], right);
+}
+
+function zip(left, right) {
+  if (arguments.length === 1) return _right => zip(left, _right);
+  const result = [];
+  const length = Math.min(left.length, right.length);
+
+  for (let i = 0; i < length; i++) {
+    result[i] = [left[i], right[i]];
+  }
+
+  return result;
+}
+
+function zipObj(keys, values) {
+  if (arguments.length === 1) return yHolder => zipObj(keys, yHolder);
+  return keys.reduce((prev, xInstance, i) => {
+    prev[xInstance] = values[i];
+    return prev;
+  }, {});
+}
+
+const DELAY = 'RAMBDAX_DELAY';
+
+export { DELAY, ok, complement as opposite, complement, allFalse, allTrue, allType, anyFalse, anyTrue, anyType, change, compact, composeAsync, composed, count, debounce, defaultToStrict, defaultToWhen, delay, findInObject, findModify, flatMap, getter, setter, reset, glue, hasPath, headObject, ifElseAsync, includesAny, includesType, inject, interval, isAttach, isFunction$1 as isFunction, isFalsy, isPromise, isType, isPrototype, prototypeToString, isValid, logHolder, logInit, log, mapAsync, mapFastAsync, mapToObject, maybe, memoize$1 as memoize, mergeAll, mergeRight, mergeDeep, nextIndex, pass, once, otherwise, partition, pathEq, piped, pipedAsync, prevIndex, produce, promiseAllObject, pushUniq, random, remove, renameProps, resolve, runTests, s, shuffle, switcher, tapAsync, template, throttle, toDecimal, toggle, tryCatch, unless, uuid$1 as uuid, wait, waitFor, when, whenAsync, where, whereEq, add, adjust, all, allPass, always, any, anyPass, append, assoc, both, compose, concat, contains, curry, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, equals, F, filter, find, findIndex, flatten, flip, toPairs, fromPairs, clone, forEach, groupBy, groupWith, has, head, identity, ifElse, inc, includes, indexBy, indexOf, init, is$1 as is, isNil, join, keys, last, lastIndexOf, length, map, match, merge, max, maxBy, min, minBy, modulo, multiply, none, not, nth, omit, partial, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, T, tail, take, takeLast, tap, test$1 as test, times, toLower, toString$1 as toString, toUpper, trim, type, uniq, uniqWith, update, values, without, zip, zipObj };

@@ -1,6 +1,8 @@
 # CHANGELOG
 
-2.12.1 Add `R.mapToObject` typings
+2.12.3 Add 'dist' directory to `files`
+
+2.12.2 Add `R.mapToObject` typings
 
 2.12.0 Sync with Rambda
 
