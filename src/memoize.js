@@ -26,7 +26,7 @@ const stringify = a => {
 
     return replace(/\s/g, '_', take(15, compacted))
   } else if (type(a) === 'Object'){
-    a = normalizeObject(a)
+    return JSON.stringify(normalizeObject(a))
   }
 
   return JSON.stringify(a)

@@ -46,10 +46,6 @@ test('immediate debounce', async () => {
     counter++
   }
 
-  const delay = ms =>
-    new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
   const incWrapped = debounce(inc, 500, true)
   incWrapped()
   expect(counter).toBe(1)

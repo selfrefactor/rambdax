@@ -1,7 +1,7 @@
-export function glue(input, glue){
+export function glue(input, glueChar){
   return input
     .split('\n')
     .filter(x => x.trim().length > 0)
     .map(x => x.trim())
-    .join(glue !== undefined ? glue : ' ')
+    .join(glue === undefined ? ' ' : glueChar)
 }

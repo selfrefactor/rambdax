@@ -6,7 +6,7 @@ import { tapAsync } from './tapAsync'
 import { mapAsync } from './mapAsync'
 import { delay as delayModule } from './delay'
 
-test('', async () => {
+test('1', async () => {
   const fn = input =>
     new Promise(resolve => {
       setTimeout(() => {
@@ -22,16 +22,14 @@ test('', async () => {
   const result = await composeAsync(
     map(prop('payload')),
     async inputs =>
-      Promise.all(inputs.map(async input => fn(input))),
+      await Promise.all(inputs.map(async input => await fn(input))),
     map(prop('payload'))
   )(await Promise.all(list))
 
   expect(result).toEqual([ 'foo', 'bar' ])
 })
 
-test('', async () => {
-  const delayAsync = async ms => delay(ms)
-
+test('2', async () => {
   const delay = ms =>
     new Promise(resolve => {
       setTimeout(() => {
@@ -39,38 +37,41 @@ test('', async () => {
       }, ms)
     })
 
+  const delayAsync = async ms => delay(ms)
+
   const result = await composeAsync(
     a => a - 1000,
     a => a,
-    async a => delayAsync(a),
+    async a => await delayAsync(a),
     a => a + 11
   )(await delay(20))
   expect(result).toEqual(-749)
 })
 
-test('', async () => {
+test('3', async () => {
   try {
-    const delayAsync = async ms => delay(ms)
-
     const delay = ms =>
       new Promise((_, reject) => {
         setTimeout(() => {
           reject('error')
         }, ms)
       })
+
+    const delayAsync = async ms => await delay(ms)
+
     await composeAsync(a => a - 1000, delayAsync)(20)
   } catch (err){
     expect(err).toEqual('error')
   }
 })
 
-test('', async () => {
+test('4', async () => {
   let sideEffect
   const result = await composeAsync(
     tapAsync(async x => {
       sideEffect = equals(x, [ 2, 4, 6 ])
 
-      return await delayModule(x * 3)
+      return delayModule(x * 3)
     }),
     mapAsync(async x => {
       await delayModule(x * 100)
@@ -95,25 +96,25 @@ test('inside compose explicit `async` keyword', async () => {
   const result = await composeAsync(
     a => a,
     a => a + 1000,
-    async a => delay(a),
+    async a => await delay(a),
     a => a + 11
   )(20)
 
   expect(result).toEqual(1038)
 })
 
+const delayFn = ms =>
+  new Promise((res, rej) => {
+    const b = ms + 7
+
+    res(b)
+  })
+
 test('known issue - function returning promise', async () => {
-  const delay = ms =>
-    new Promise((res, rej) => {
-      const b = ms + 7
-
-      res(b)
-    })
-
   const result = await composeAsync(
     a => a,
     a => a + 1000,
-    delay,
+    delayFn,
     a => a + 11
   )(20)
 
@@ -121,11 +122,14 @@ test('known issue - function returning promise', async () => {
 })
 
 test('throw error', async () => {
-  const delay = async ms => JSON.parse('{foo')
+  const delay = async () => {
+    await delayFn(1)
+    JSON.parse('{foo')
+  }
 
   let flag = true
   try {
-    const result = await composeAsync(
+    await composeAsync(
       a => a,
       a => a + 1000,
       async a => delay(a),

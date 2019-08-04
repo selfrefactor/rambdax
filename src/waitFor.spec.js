@@ -1,3 +1,4 @@
+import { delay } from './delay'
 import { waitFor } from './waitFor'
 
 const howLong = 1000
@@ -30,6 +31,7 @@ test('async condition | true', async () => {
   let counter = 0
   const condition = async x => {
     counter++
+    await delay(10)
 
     return counter > x
   }
@@ -42,6 +44,7 @@ test('async condition | false', async () => {
   let counter = 0
   const condition = async x => {
     counter++
+    await delay(10)
 
     return counter > x
   }

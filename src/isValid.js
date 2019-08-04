@@ -158,8 +158,8 @@ export function isValid({ input, schema }){
          * 1. array of type | rule is like a: ['number']
          * 2. rule is like a: [{foo: 'string', bar: 'number'}]
          */
-        const currentRule = rule[ 0 ]
-        const currentRuleType = type(rule[ 0 ])
+        const [ currentRule ] = rule
+        const currentRuleType = type(currentRule)
 
         //Check if rule is invalid
         boom(

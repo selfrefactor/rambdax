@@ -65,7 +65,11 @@ test('when async + fallback is async', async () => {
 
     return JSON.parse('{a:')
   }
-  const fallback = async input => input + 1
+  const fallback = async input => {
+    await delay(10)
+
+    return input + 1
+  }
 
   expect(await tryCatch(fn, fallback)(100)).toBe(101)
   expect(called).toBe(true)

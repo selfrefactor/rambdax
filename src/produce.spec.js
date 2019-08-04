@@ -36,7 +36,7 @@ test('async with error', async () => {
   }
 })
 
-test('sync', async () => {
+test('sync', () => {
   const fn = produce({
     foo : x => x + 1,
     bar : inputArgument => inputArgument === 5,

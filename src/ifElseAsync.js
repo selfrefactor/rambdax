@@ -1,6 +1,6 @@
 function createThenable(x){
   return async function(input){
-    return x(input)
+    return await x(input)
   }
 }
 

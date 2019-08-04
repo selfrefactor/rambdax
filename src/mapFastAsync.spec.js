@@ -30,7 +30,7 @@ test('happy path', async () => {
 
 test('composeAsync', async () => {
   const result = await composeAsync(
-    mapFastAsync(async a => await delay(a)),
+    mapFastAsync(async a => delay(a)),
     mapFastAsync(delay),
     map(a => a * 10)
   )(await tap([ 1, 2, 3 ]))

@@ -1,7 +1,7 @@
 import { where } from './where'
 import { equals } from './rambda/equals'
 
-test('', () => {
+test('1', () => {
   const pred = where({
     a : equals('foo'),
     b : equals('bar'),
@@ -16,7 +16,7 @@ test('', () => {
   ).toEqual(true)
 })
 
-test('', () => {
+test('2', () => {
   const pred = where({
     a : equals('foo'),
     b : equals('baz'),

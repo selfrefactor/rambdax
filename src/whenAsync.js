@@ -1,6 +1,6 @@
 function createThenable(x){
   return async function(input){
-    return x(input)
+    return await x(input)
   }
 }
 
@@ -12,14 +12,12 @@ export function whenAsync(condition, whenTrueFn){
 
   return input =>
     new Promise((resolve, reject) => {
-      const whenTrueFnPromise = createThenable(whenTrueFn)
-
       if (typeof condition === 'boolean'){
         if (condition === false){
           return resolve(input)
         }
 
-        whenTrueFnPromise(input)
+        whenTrueFn(input)
           .then(resolve)
           .catch(reject)
       } else {
@@ -31,7 +29,7 @@ export function whenAsync(condition, whenTrueFn){
               return resolve(input)
             }
 
-            whenTrueFnPromise(input)
+            whenTrueFn(input)
               .then(resolve)
               .catch(reject)
           })
