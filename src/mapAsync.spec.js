@@ -44,7 +44,7 @@ test('with object', async () => {
 test('composeAsync', async () => {
   const result = await composeAsync(
     mapAsync(delay),
-    mapAsync(async a => await delay(a)),
+    mapAsync(async a => delay(a)),
     map(a => a * 10)
   )(await tap([ 1, 2, 3 ]))
   expect(result).toEqual([ 50, 60, 70 ])
@@ -52,7 +52,7 @@ test('composeAsync', async () => {
 
 test('error', async () => {
   try {
-    const result = await mapAsync(rejectDelay)([ 1, 2, 3 ])
+    await mapAsync(rejectDelay)([ 1, 2, 3 ])
   } catch (err){
     expect(err).toBe(21)
   }

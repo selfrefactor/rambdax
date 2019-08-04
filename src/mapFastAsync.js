@@ -6,7 +6,7 @@ async function mapFastAsyncFn(fn, arr){
 
 export function mapFastAsync(fn, arr){
   if (arguments.length === 1){
-    return async holder => await mapFastAsyncFn(fn, holder)
+    return async holder => mapFastAsyncFn(fn, holder)
   }
 
   return new Promise((resolve, reject) => {

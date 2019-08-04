@@ -83,7 +83,8 @@
       "prepublish",
       "typescript",
       "sync",
-      "todo"
+      "todo",
+      "script"
     ],
     "docs": [
       "method",

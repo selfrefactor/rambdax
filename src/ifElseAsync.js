@@ -1,6 +1,7 @@
+// todo move to internals
 function createThenable(x){
   return async function(input){
-    return await x(input)
+    return x(input)
   }
 }
 

@@ -21,8 +21,7 @@ test('1', async () => {
 
   const result = await composeAsync(
     map(prop('payload')),
-    async inputs =>
-      await Promise.all(inputs.map(async input => await fn(input))),
+    async inputs => Promise.all(inputs.map(async input => fn(input))),
     map(prop('payload'))
   )(await Promise.all(list))
 
@@ -42,7 +41,7 @@ test('2', async () => {
   const result = await composeAsync(
     a => a - 1000,
     a => a,
-    async a => await delayAsync(a),
+    async a => delayAsync(a),
     a => a + 11
   )(await delay(20))
   expect(result).toEqual(-749)
@@ -57,7 +56,7 @@ test('3', async () => {
         }, ms)
       })
 
-    const delayAsync = async ms => await delay(ms)
+    const delayAsync = async ms => delay(ms)
 
     await composeAsync(a => a - 1000, delayAsync)(20)
   } catch (err){
@@ -96,7 +95,7 @@ test('inside compose explicit `async` keyword', async () => {
   const result = await composeAsync(
     a => a,
     a => a + 1000,
-    async a => await delay(a),
+    async a => delay(a),
     a => a + 11
   )(20)
 
@@ -132,7 +131,7 @@ test('throw error', async () => {
     await composeAsync(
       a => a,
       a => a + 1000,
-      async a => delay(a),
+      async () => delay(),
       a => a + 11
     )(20)
   } catch (e){

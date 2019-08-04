@@ -13,7 +13,7 @@ test('when promise', () => {
 })
 
 test('when async', () => {
-  const fn = async x => await x
+  const fn = async x => x
 
   expect(isFunction(fn)).toEqual(true)
 })
