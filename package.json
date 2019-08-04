@@ -45,6 +45,7 @@
     "babel-jest": "^24.1.0",
     "docsify-cli": "^4.3.0",
     "fs-extra": "^7.0.0",
+    "helpers": "https://github.com/selfrefactor/helpers#1.5.1",
     "jest": "^24.1.0",
     "ramda": "^0.26.1",
     "rollup": "^1.1.2",
