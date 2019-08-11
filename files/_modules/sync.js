@@ -3,8 +3,8 @@ const {
   copySync
 } = require('fs-extra') 
 
-const SOURCE = '/home/s/repos/rambda/src'
-const OUTPUT = '/home/s/repos/rambdax/src/rambda'
+const SOURCE = `${process.env.HOME}/repos/rambda/src`
+const OUTPUT = `${process.env.HOME}/repos/rambdax/src/rambda` 
 
 emptyDirSync(OUTPUT)
 
