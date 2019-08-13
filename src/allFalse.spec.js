@@ -1,5 +1,5 @@
 import { allFalse } from './allFalse'
-import { runTests } from './runTests'
+import { runTests } from 'helpers'
 
 const OBJ = { c : 1 }
 

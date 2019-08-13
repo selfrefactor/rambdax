@@ -1005,8 +1005,8 @@ function reset() {
   holder = {};
 }
 
-function glue(input, glue) {
-  return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue !== undefined ? glue : ' ');
+function glue(input, glueChar) {
+  return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue === undefined ? ' ' : glueChar);
 }
 
 function path(list, obj) {
@@ -1193,8 +1193,8 @@ function contains(val, list) {
   return false;
 }
 
-function test$1(pattern, str) {
-  if (arguments.length === 1) return str => test$1(pattern, str);
+function test(pattern, str) {
+  if (arguments.length === 1) return _str => test(pattern, _str);
   return str.search(pattern) !== -1;
 }
 
@@ -1322,8 +1322,8 @@ function isValid({
       } else if (ruleType === 'Array' && inputPropType === 'String') {
         boom(contains(inputProp, rule));
       } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
-        const currentRule = rule[0];
-        const currentRuleType = type(rule[0]);
+        const [currentRule] = rule;
+        const currentRuleType = type(currentRule);
         boom(currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule));
 
         if (currentRuleType === 'Object' && flag) {
@@ -1338,7 +1338,7 @@ function isValid({
           boom(!isInvalidResult);
         }
       } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-        boom(test$1(rule, inputProp));
+        boom(test(rule, inputProp));
       } else {
         boom(false);
       }
@@ -1394,38 +1394,6 @@ function isType(xType, x) {
   return type(x) === xType;
 }
 
-let logHolder = [];
-let shouldLog = false;
-let shouldPush = false;
-let initPassed = false;
-
-function init$1() {
-  if (initPassed) return;
-  initPassed = true;
-  if (!process) return;
-  if (!process.env) return;
-
-  if (process.env.RAMBDAX_LOG === 'true') {
-    shouldLog = true;
-  }
-}
-
-function logInit({
-  logFlag = true,
-  pushFlag = false
-} = {}) {
-  shouldLog = Boolean(logFlag);
-  shouldPush = Boolean(pushFlag);
-  logHolder = [];
-  initPassed = true;
-}
-function log(...inputs) {
-  init$1();
-  if (shouldPush) logHolder.push(inputs);
-  if (!shouldLog) return;
-  console.log(...inputs);
-}
-
 async function mapAsyncFn(fn, arr) {
   if (Array.isArray(arr)) {
     const willReturn = [];
@@ -1458,7 +1426,7 @@ function mapAsync(fn, arr) {
 
 async function mapFastAsyncFn(fn, arr) {
   const promised = arr.map(a => fn(a));
-  return await Promise.all(promised);
+  return Promise.all(promised);
 }
 
 function mapFastAsync(fn, arr) {
@@ -1469,6 +1437,16 @@ function mapFastAsync(fn, arr) {
   return new Promise((resolve, reject) => {
     mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
   });
+}
+
+function mapObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    willReturn[prop] = fn(obj[prop], prop, obj);
+  }
+
+  return willReturn;
 }
 
 function map(fn, list) {
@@ -1488,16 +1466,6 @@ function map(fn, list) {
 
   while (++index < len) {
     willReturn[index] = fn(list[index], index);
-  }
-
-  return willReturn;
-}
-
-function mapObject(fn, obj) {
-  const willReturn = {};
-
-  for (const prop in obj) {
-    willReturn[prop] = fn(obj[prop], prop, obj);
   }
 
   return willReturn;
@@ -1580,7 +1548,7 @@ const stringify = a => {
     const compacted = replace(/\s{1,}/g, ' ', a.toString());
     return replace(/\s/g, '_', take(15, compacted));
   } else if (type(a) === 'Object') {
-    a = normalizeObject(a);
+    return JSON.stringify(normalizeObject(a));
   }
 
   return JSON.stringify(a);
@@ -1887,94 +1855,6 @@ function resolve(afterResolve, toResolve) {
   });
 }
 
-const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
-
-const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
-
-const replace$1 = ({
-  inputHolder,
-  prop,
-  replacer
-}) => inputHolder.replace(`{{${prop}}}`, replacer);
-
-function template(input, templateInput) {
-  if (arguments.length === 1) {
-    return templateInputHolder => template(input, templateInputHolder);
-  }
-
-  const occurances = getOccurances(input);
-  if (occurances === null) return input;
-  let inputHolder = input;
-
-  for (const occurance of occurances) {
-    const prop = getOccuranceProp(occurance);
-    const replacer = templateInput[prop];
-    if (replacer === undefined) continue;
-    inputHolder = replace$1({
-      inputHolder,
-      prop,
-      replacer
-    });
-  }
-
-  return inputHolder;
-}
-
-function headObject$1(x) {
-  if (type(x) !== 'Object') throw new Error('R.headObject.type');
-  const [tag, no] = Object.keys(x);
-  if (tag === undefined) throw new Error('R.headObject.less');
-  if (no !== undefined) throw new Error('R.headObject.more');
-  return {
-    prop: tag,
-    value: x[tag]
-  };
-}
-
-const evaluationsSchema = {
-  label: 'string'
-};
-function runTests(input) {
-  const pass$$1 = pass(input)({
-    testSuite: 'string',
-    evaluations: [evaluationsSchema]
-  });
-
-  if (describe === undefined || !pass$$1) {
-    throw new Error('R.runTests.init');
-  }
-
-  try {
-    const {
-      testSuite,
-      evaluations,
-      data
-    } = input;
-    describe(testSuite, () => {
-      evaluations.forEach(singleEvaluation => {
-        data.forEach(dataInstance => {
-          const {
-            prop: tag,
-            value: x
-          } = headObject$1(dataInstance);
-          const {
-            value: evaluationFunction
-          } = headObject$1(omit('label', singleEvaluation));
-          const label = template(singleEvaluation.label, {
-            tag
-          });
-          test(label, () => {
-            evaluationFunction(x);
-          });
-        });
-      });
-    });
-  } catch (err) {
-    console.log(err);
-    throw new Error('R.runTestsCatch');
-  }
-}
-
 function s() {
   if (Object.prototype.s === undefined) {
     Object.defineProperty(Object.prototype, 's', {
@@ -2065,6 +1945,39 @@ function tapAsync(fn, input) {
 
   fn(input);
   return input;
+}
+
+const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
+
+const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
+
+const replace$1 = ({
+  inputHolder,
+  prop,
+  replacer
+}) => inputHolder.replace(`{{${prop}}}`, replacer);
+
+function template(input, templateInput) {
+  if (arguments.length === 1) {
+    return templateInputHolder => template(input, templateInputHolder);
+  }
+
+  const occurances = getOccurances(input);
+  if (occurances === null) return input;
+  let inputHolder = input;
+
+  for (const occurance of occurances) {
+    const prop = getOccuranceProp(occurance);
+    const replacer = templateInput[prop];
+    if (replacer === undefined) continue;
+    inputHolder = replace$1({
+      inputHolder,
+      prop,
+      replacer
+    });
+  }
+
+  return inputHolder;
 }
 
 function throttle(fn, ms) {
@@ -2158,7 +2071,7 @@ function uuid$1() {
 
 function wait(fn) {
   return new Promise(resolve => {
-    fn.then(result => resolve([result])).catch(e => resolve([, e]));
+    fn.then(result => resolve([result, undefined])).catch(e => resolve([undefined, e]));
   });
 }
 
@@ -2173,7 +2086,7 @@ function waitFor(condition, howLong, loops = 10) {
   }
 
   return async (...inputs) => {
-    for (const i of range(0, loops)) {
+    for (const _ of range(0, loops)) {
       const resultCondition = await condition(...inputs);
 
       if (resultCondition === false) {
@@ -2212,14 +2125,12 @@ function whenAsync(condition, whenTrueFn) {
   }
 
   return input => new Promise((resolve, reject) => {
-    const whenTrueFnPromise = createThenable$1(whenTrueFn);
-
     if (typeof condition === 'boolean') {
       if (condition === false) {
         return resolve(input);
       }
 
-      whenTrueFnPromise(input).then(resolve).catch(reject);
+      whenTrueFn(input).then(resolve).catch(reject);
     } else {
       const conditionPromise = createThenable$1(condition);
       conditionPromise(input).then(conditionResult => {
@@ -2227,7 +2138,7 @@ function whenAsync(condition, whenTrueFn) {
           return resolve(input);
         }
 
-        whenTrueFnPromise(input).then(resolve).catch(reject);
+        whenTrueFn(input).then(resolve).catch(reject);
       }).catch(reject);
     }
   });
@@ -2251,6 +2162,18 @@ function where(conditions, obj) {
   return flag;
 }
 
+function filterObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    if (fn(obj[prop], prop, obj)) {
+      willReturn[prop] = obj[prop];
+    }
+  }
+
+  return willReturn;
+}
+
 function filter(fn, list) {
   if (arguments.length === 1) return _list => filter(fn, _list);
 
@@ -2272,18 +2195,6 @@ function filter(fn, list) {
 
     if (fn(value, index)) {
       willReturn[resIndex++] = value;
-    }
-  }
-
-  return willReturn;
-}
-
-function filterObject(fn, obj) {
-  const willReturn = {};
-
-  for (const prop in obj) {
-    if (fn(obj[prop], prop, obj)) {
-      willReturn[prop] = obj[prop];
     }
   }
 
@@ -2360,6 +2271,10 @@ function concat(left, right) {
 
 const dec = n => n - 1;
 
+function flagIs$1(inputArgument) {
+  return inputArgument === undefined || inputArgument === null || Number.isNaN(inputArgument) === true;
+}
+
 function defaultTo(defaultArgument, ...inputArgument) {
   if (arguments.length === 1) {
     return _inputArgument => defaultTo(defaultArgument, _inputArgument);
@@ -2386,10 +2301,6 @@ function defaultTo(defaultArgument, ...inputArgument) {
   }
 
   return holder === undefined ? defaultArgument : holder;
-}
-
-function flagIs$1(inputArgument) {
-  return inputArgument === undefined || inputArgument === null || Number.isNaN(inputArgument) === true;
 }
 
 function dissoc(prop, obj) {
@@ -2453,8 +2364,8 @@ function findIndex(fn, list) {
   return -1;
 }
 
-function flatten(list, willReturn) {
-  willReturn = willReturn === undefined ? [] : willReturn;
+function flatten(list, input) {
+  const willReturn = input === undefined ? [] : input;
 
   for (let i = 0; i < list.length; i++) {
     if (Array.isArray(list[i])) {
@@ -2467,10 +2378,6 @@ function flatten(list, willReturn) {
   return willReturn;
 }
 
-function flip(fn) {
-  return flipExport(fn);
-}
-
 function flipExport(fn) {
   return (...input) => {
     if (input.length === 1) {
@@ -2481,6 +2388,10 @@ function flipExport(fn) {
 
     return undefined;
   };
+}
+
+function flip(fn) {
+  return flipExport(fn);
 }
 
 function toPairs(obj) {
@@ -2771,7 +2682,7 @@ function pluck(key, list) {
   if (arguments.length === 1) return _list => pluck(key, _list);
   const willReturn = [];
   map(val => {
-    if (!(val[key] === undefined)) {
+    if (val[key] !== undefined) {
       willReturn.push(val[key]);
     }
   }, list);
@@ -2801,15 +2712,11 @@ function propEq(key, val, obj) {
   return obj[key] === val;
 }
 
-function reduce(fn, acc, list) {
-  if (acc === undefined) {
-    return (_acc, _list) => reduce(fn, _acc, _list);
-  } else if (list === undefined) {
-    return _list => reduce(fn, acc, _list);
-  }
-
+function reduceFn(fn, acc, list) {
   return list.reduce(fn, acc);
 }
+
+const reduce = curry(reduceFn);
 
 function reject(fn, list) {
   if (arguments.length === 1) return _list => reject(fn, _list);
@@ -2833,7 +2740,8 @@ function sortBy(fn, list) {
   return arrClone.sort((a, b) => {
     const fnA = fn(a);
     const fnB = fn(b);
-    return fnA < fnB ? -1 : fnA > fnB ? 1 : 0;
+    if (fnA === fnB) return 0;
+    return fnA < fnB ? -1 : 1;
   });
 }
 
@@ -2954,7 +2862,11 @@ function values(obj) {
 }
 
 function without(left, right) {
-  return reduce((accum, item) => !contains(item, left) ? accum.concat(item) : accum, [], right);
+  if (right === undefined) {
+    return _right => without(left, _right);
+  }
+
+  return reduce((accum, item) => contains(item, left) ? accum : accum.concat(item), [], right);
 }
 
 function zip(left, right) {
@@ -2979,4 +2891,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, ok, complement as opposite, complement, allFalse, allTrue, allType, anyFalse, anyTrue, anyType, change, compact, composeAsync, composed, count, debounce, defaultToStrict, defaultToWhen, delay, findInObject, findModify, flatMap, getter, setter, reset, glue, hasPath, headObject, ifElseAsync, includesAny, includesType, inject, interval, isAttach, isFunction$1 as isFunction, isFalsy, isPromise, isType, isPrototype, prototypeToString, isValid, logHolder, logInit, log, mapAsync, mapFastAsync, mapToObject, maybe, memoize$1 as memoize, mergeAll, mergeRight, mergeDeep, nextIndex, pass, once, otherwise, partition, pathEq, piped, pipedAsync, prevIndex, produce, promiseAllObject, pushUniq, random, remove, renameProps, resolve, runTests, s, shuffle, switcher, tapAsync, template, throttle, toDecimal, toggle, tryCatch, unless, uuid$1 as uuid, wait, waitFor, when, whenAsync, where, whereEq, add, adjust, all, allPass, always, any, anyPass, append, assoc, both, compose, concat, contains, curry, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, equals, F, filter, find, findIndex, flatten, flip, toPairs, fromPairs, clone, forEach, groupBy, groupWith, has, head, identity, ifElse, inc, includes, indexBy, indexOf, init, is$1 as is, isNil, join, keys, last, lastIndexOf, length, map, match, merge, max, maxBy, min, minBy, modulo, multiply, none, not, nth, omit, partial, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, T, tail, take, takeLast, tap, test$1 as test, times, toLower, toString$1 as toString, toUpper, trim, type, uniq, uniqWith, update, values, without, zip, zipObj };
+export { DELAY, ok, complement as opposite, complement, allFalse, allTrue, allType, anyFalse, anyTrue, anyType, change, compact, composeAsync, composed, count, debounce, defaultToStrict, defaultToWhen, delay, findInObject, findModify, flatMap, getter, setter, reset, glue, hasPath, headObject, ifElseAsync, includesAny, includesType, inject, interval, isAttach, isFunction$1 as isFunction, isFalsy, isPromise, isType, isPrototype, prototypeToString, isValid, mapAsync, mapFastAsync, mapToObject, maybe, memoize$1 as memoize, mergeAll, mergeRight, mergeDeep, nextIndex, pass, once, otherwise, partition, pathEq, piped, pipedAsync, prevIndex, produce, promiseAllObject, pushUniq, random, remove, renameProps, resolve, s, shuffle, switcher, tapAsync, template, throttle, toDecimal, toggle, tryCatch, unless, uuid$1 as uuid, wait, waitFor, when, whenAsync, where, whereEq, add, adjust, all, allPass, always, any, anyPass, append, assoc, both, compose, concat, contains, curry, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, equals, F, filter, find, findIndex, flatten, flip, toPairs, fromPairs, clone, forEach, groupBy, groupWith, has, head, identity, ifElse, inc, includes, indexBy, indexOf, init, is$1 as is, isNil, join, keys, last, lastIndexOf, length, map, match, merge, max, maxBy, min, minBy, modulo, multiply, none, not, nth, omit, partial, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, T, tail, take, takeLast, tap, test, times, toLower, toString$1 as toString, toUpper, trim, type, uniq, uniqWith, update, values, without, zip, zipObj };

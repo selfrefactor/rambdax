@@ -1,5 +1,5 @@
 import { isAttach } from './isAttach'
-import { runTests } from './runTests'
+import { runTests } from 'helpers'
 
 test('only one initialization', () => {
   expect(isAttach()).toBe(false)

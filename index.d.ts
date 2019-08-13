@@ -268,10 +268,6 @@ declare namespace R {
       maybePromiseFunctionOrAsync: any
     ): boolean
 
-    log(...inputs: any[]): void  
-    logInput(input?:{logFlag: boolean, pushFlag: boolean}): void
-    logHolder: Array<Array<any>>
-
     maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
 
     mapAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
