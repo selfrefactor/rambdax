@@ -556,28 +556,6 @@ const result = R.isValid({
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/isValid.js)
 
-#### log
-
-> log(...inputs: any[]): void
-
-It conditionally logs to `console.log` depending on the input of `R.logInit`
-
-```
-logInit()
-
-R.log(1,2,3)  // => 1,2,3
-
-logInit({logFlag: false})
-
-R.log(1,2,3)  // => void
-
-logInit({pushFlag: true})
-
-R.log(1,2,3) // => 1,2,3
-R.log(null)  // => null
-R.logHolder  // => [ [1,2,3], [null] ]
-```
-
 #### maybe
 
 > maybe<T>(ifRule: Boolean, whenIf: T, whenElse: T): T

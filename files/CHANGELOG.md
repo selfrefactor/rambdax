@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.13.0 Deprecate `R.log` and `R.runTests`
+
 2.12.3 Add 'dist' directory to `files`
 
 2.12.2 Add `R.mapToObject` typings

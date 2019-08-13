@@ -73,7 +73,8 @@
   "commitMessage": {
     "feature": [
       "method",
-      "sync"
+      "sync",
+      "deprecate"
     ],
     "support": [
       "build",
