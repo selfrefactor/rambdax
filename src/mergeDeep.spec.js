@@ -1,6 +1,6 @@
 import { mergeDeep } from './mergeDeep'
 
-const aBase = {
+const slave = {
   name    : 'evilMe',
   age     : 10,
   contact : {
@@ -8,15 +8,15 @@ const aBase = {
     email : 'foo@example.com',
   },
 }
-const bBase = {
+const master = {
   age     : 40,
   contact : { email : 'baz@example.com' },
   songs   : { title : 'Remains the same' },
 }
 
 test('', () => {
-  const result = mergeDeep(aBase, bBase)
-  const curryResult = mergeDeep(aBase)(bBase)
+  const result = mergeDeep(slave, master)
+  const curryResult = mergeDeep(slave)(master)
   const expected = {
     age     : 40,
     name    : 'evilMe',
