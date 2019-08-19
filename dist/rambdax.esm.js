@@ -1180,12 +1180,18 @@ function toLower(str) {
   return str.toLowerCase();
 }
 
-function contains(val, list) {
-  if (arguments.length === 1) return _list => contains(val, _list);
+function includes(target, list) {
+  if (arguments.length === 1) return _input => includes(target, _input);
+
+  if (typeof list === 'string') {
+    return list.includes(target);
+  }
+
+  if (!Array.isArray(list)) return false;
   let index = -1;
 
   while (++index < list.length) {
-    if (equals(list[index], val)) {
+    if (equals(list[index], target)) {
       return true;
     }
   }
@@ -1320,7 +1326,7 @@ function isValid({
       } else if (typeof rule === 'function') {
         boom(rule(inputProp));
       } else if (ruleType === 'Array' && inputPropType === 'String') {
-        boom(contains(inputProp, rule));
+        boom(includes(inputProp, rule));
       } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
         const [currentRule] = rule;
         const currentRuleType = type(currentRule);
@@ -1609,7 +1615,8 @@ function mergeDeep(target, source) {
 }
 
 function nextIndex(index, list) {
-  const newIndex = index >= list.length - 1 ? 0 : index + 1;
+  const base = typeof list === 'number' ? list : list.length;
+  const newIndex = index >= base - 1 ? 0 : index + 1;
   return newIndex;
 }
 
@@ -1655,12 +1662,12 @@ function otherwise(fallback, toResolve) {
   });
 }
 
-function pathEq(path$$1, target, obj) {
+function pathEq(path$1, target, obj) {
   if (arguments.length === 2) {
-    return objHolder => pathEq(path$$1, target, objHolder);
+    return objHolder => pathEq(path$1, target, objHolder);
   }
 
-  return path(path$$1, obj) === target;
+  return path(path$1, obj) === target;
 }
 
 function pipe(...fns) {
@@ -1691,7 +1698,8 @@ async function pipedAsync(...inputs) {
 }
 
 function prevIndex(index, list) {
-  const newIndex = index === 0 ? list.length - 1 : index - 1;
+  const base = typeof list === 'number' ? list : list.length;
+  const newIndex = index === 0 ? base - 1 : index - 1;
   return newIndex;
 }
 
@@ -2494,13 +2502,6 @@ function ifElse(condition, onTrue, onFalse) {
 
 const inc = n => n + 1;
 
-function includes(target, list) {
-  if (arguments.length === 1) return _list => includes(target, _list);
-  const ok = Array.isArray(list) || typeof list === 'string';
-  if (!ok) return false;
-  return list.includes(target);
-}
-
 function indexBy(fn, list) {
   if (arguments.length === 1) return _list => indexBy(fn, _list);
   const result = {};
@@ -2820,7 +2821,7 @@ function uniq(list) {
   while (++index < list.length) {
     const value = list[index];
 
-    if (!contains(value, willReturn)) {
+    if (!includes(value, willReturn)) {
       willReturn.push(value);
     }
   }
@@ -2866,7 +2867,7 @@ function without(left, right) {
     return _right => without(left, _right);
   }
 
-  return reduce((accum, item) => contains(item, left) ? accum : accum.concat(item), [], right);
+  return reduce((accum, item) => includes(item, left) ? accum : accum.concat(item), [], right);
 }
 
 function zip(left, right) {
@@ -2891,4 +2892,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, ok, complement as opposite, complement, allFalse, allTrue, allType, anyFalse, anyTrue, anyType, change, compact, composeAsync, composed, count, debounce, defaultToStrict, defaultToWhen, delay, findInObject, findModify, flatMap, getter, setter, reset, glue, hasPath, headObject, ifElseAsync, includesAny, includesType, inject, interval, isAttach, isFunction$1 as isFunction, isFalsy, isPromise, isType, isPrototype, prototypeToString, isValid, mapAsync, mapFastAsync, mapToObject, maybe, memoize$1 as memoize, mergeAll, mergeRight, mergeDeep, nextIndex, pass, once, otherwise, partition, pathEq, piped, pipedAsync, prevIndex, produce, promiseAllObject, pushUniq, random, remove, renameProps, resolve, s, shuffle, switcher, tapAsync, template, throttle, toDecimal, toggle, tryCatch, unless, uuid$1 as uuid, wait, waitFor, when, whenAsync, where, whereEq, add, adjust, all, allPass, always, any, anyPass, append, assoc, both, compose, concat, contains, curry, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, equals, F, filter, find, findIndex, flatten, flip, toPairs, fromPairs, clone, forEach, groupBy, groupWith, has, head, identity, ifElse, inc, includes, indexBy, indexOf, init, is$1 as is, isNil, join, keys, last, lastIndexOf, length, map, match, merge, max, maxBy, min, minBy, modulo, multiply, none, not, nth, omit, partial, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, T, tail, take, takeLast, tap, test, times, toLower, toString$1 as toString, toUpper, trim, type, uniq, uniqWith, update, values, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesAny, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid$1 as uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };

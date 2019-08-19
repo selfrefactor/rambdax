@@ -1186,12 +1186,18 @@
     return str.toLowerCase();
   }
 
-  function contains(val, list) {
-    if (arguments.length === 1) return _list => contains(val, _list);
+  function includes(target, list) {
+    if (arguments.length === 1) return _input => includes(target, _input);
+
+    if (typeof list === 'string') {
+      return list.includes(target);
+    }
+
+    if (!Array.isArray(list)) return false;
     let index = -1;
 
     while (++index < list.length) {
-      if (equals(list[index], val)) {
+      if (equals(list[index], target)) {
         return true;
       }
     }
@@ -1326,7 +1332,7 @@
         } else if (typeof rule === 'function') {
           boom(rule(inputProp));
         } else if (ruleType === 'Array' && inputPropType === 'String') {
-          boom(contains(inputProp, rule));
+          boom(includes(inputProp, rule));
         } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
           const [currentRule] = rule;
           const currentRuleType = type(currentRule);
@@ -1615,7 +1621,8 @@
   }
 
   function nextIndex(index, list) {
-    const newIndex = index >= list.length - 1 ? 0 : index + 1;
+    const base = typeof list === 'number' ? list : list.length;
+    const newIndex = index >= base - 1 ? 0 : index + 1;
     return newIndex;
   }
 
@@ -1661,12 +1668,12 @@
     });
   }
 
-  function pathEq(path$$1, target, obj) {
+  function pathEq(path$1, target, obj) {
     if (arguments.length === 2) {
-      return objHolder => pathEq(path$$1, target, objHolder);
+      return objHolder => pathEq(path$1, target, objHolder);
     }
 
-    return path(path$$1, obj) === target;
+    return path(path$1, obj) === target;
   }
 
   function pipe(...fns) {
@@ -1697,7 +1704,8 @@
   }
 
   function prevIndex(index, list) {
-    const newIndex = index === 0 ? list.length - 1 : index - 1;
+    const base = typeof list === 'number' ? list : list.length;
+    const newIndex = index === 0 ? base - 1 : index - 1;
     return newIndex;
   }
 
@@ -2500,13 +2508,6 @@
 
   const inc = n => n + 1;
 
-  function includes(target, list) {
-    if (arguments.length === 1) return _list => includes(target, _list);
-    const ok = Array.isArray(list) || typeof list === 'string';
-    if (!ok) return false;
-    return list.includes(target);
-  }
-
   function indexBy(fn, list) {
     if (arguments.length === 1) return _list => indexBy(fn, _list);
     const result = {};
@@ -2826,7 +2827,7 @@
     while (++index < list.length) {
       const value = list[index];
 
-      if (!contains(value, willReturn)) {
+      if (!includes(value, willReturn)) {
         willReturn.push(value);
       }
     }
@@ -2872,7 +2873,7 @@
       return _right => without(left, _right);
     }
 
-    return reduce((accum, item) => contains(item, left) ? accum : accum.concat(item), [], right);
+    return reduce((accum, item) => includes(item, left) ? accum : accum.concat(item), [], right);
   }
 
   function zip(left, right) {
@@ -2898,103 +2899,40 @@
   const DELAY = 'RAMBDAX_DELAY';
 
   exports.DELAY = DELAY;
-  exports.ok = ok;
-  exports.opposite = complement;
-  exports.complement = complement;
-  exports.allFalse = allFalse;
-  exports.allTrue = allTrue;
-  exports.allType = allType;
-  exports.anyFalse = anyFalse;
-  exports.anyTrue = anyTrue;
-  exports.anyType = anyType;
-  exports.change = change;
-  exports.compact = compact;
-  exports.composeAsync = composeAsync;
-  exports.composed = composed;
-  exports.count = count;
-  exports.debounce = debounce;
-  exports.defaultToStrict = defaultToStrict;
-  exports.defaultToWhen = defaultToWhen;
-  exports.delay = delay;
-  exports.findInObject = findInObject;
-  exports.findModify = findModify;
-  exports.flatMap = flatMap;
-  exports.getter = getter;
-  exports.setter = setter;
-  exports.reset = reset;
-  exports.glue = glue;
-  exports.hasPath = hasPath;
-  exports.headObject = headObject;
-  exports.ifElseAsync = ifElseAsync;
-  exports.includesAny = includesAny;
-  exports.includesType = includesType;
-  exports.inject = inject;
-  exports.interval = interval;
-  exports.isAttach = isAttach;
-  exports.isFunction = isFunction$1;
-  exports.isFalsy = isFalsy;
-  exports.isPromise = isPromise;
-  exports.isType = isType;
-  exports.isPrototype = isPrototype;
-  exports.prototypeToString = prototypeToString;
-  exports.isValid = isValid;
-  exports.mapAsync = mapAsync;
-  exports.mapFastAsync = mapFastAsync;
-  exports.mapToObject = mapToObject;
-  exports.maybe = maybe;
-  exports.memoize = memoize$1;
-  exports.mergeAll = mergeAll;
-  exports.mergeRight = mergeRight;
-  exports.mergeDeep = mergeDeep;
-  exports.nextIndex = nextIndex;
-  exports.pass = pass;
-  exports.once = once;
-  exports.otherwise = otherwise;
-  exports.partition = partition;
-  exports.pathEq = pathEq;
-  exports.piped = piped;
-  exports.pipedAsync = pipedAsync;
-  exports.prevIndex = prevIndex;
-  exports.produce = produce;
-  exports.promiseAllObject = promiseAllObject;
-  exports.pushUniq = pushUniq;
-  exports.random = random;
-  exports.remove = remove;
-  exports.renameProps = renameProps;
-  exports.resolve = resolve;
-  exports.s = s;
-  exports.shuffle = shuffle;
-  exports.switcher = switcher;
-  exports.tapAsync = tapAsync;
-  exports.template = template;
-  exports.throttle = throttle;
-  exports.toDecimal = toDecimal;
-  exports.toggle = toggle;
-  exports.tryCatch = tryCatch;
-  exports.unless = unless;
-  exports.uuid = uuid$1;
-  exports.wait = wait;
-  exports.waitFor = waitFor;
-  exports.when = when;
-  exports.whenAsync = whenAsync;
-  exports.where = where;
-  exports.whereEq = whereEq;
+  exports.F = F;
+  exports.T = T;
   exports.add = add;
   exports.adjust = adjust;
   exports.all = all;
+  exports.allFalse = allFalse;
   exports.allPass = allPass;
+  exports.allTrue = allTrue;
+  exports.allType = allType;
   exports.always = always;
   exports.any = any;
+  exports.anyFalse = anyFalse;
   exports.anyPass = anyPass;
+  exports.anyTrue = anyTrue;
+  exports.anyType = anyType;
   exports.append = append;
   exports.assoc = assoc;
   exports.both = both;
+  exports.change = change;
+  exports.clone = clone;
+  exports.compact = compact;
+  exports.complement = complement;
   exports.compose = compose;
+  exports.composeAsync = composeAsync;
+  exports.composed = composed;
   exports.concat = concat;
-  exports.contains = contains;
+  exports.count = count;
   exports.curry = curry;
+  exports.debounce = debounce;
   exports.dec = dec;
   exports.defaultTo = defaultTo;
+  exports.defaultToStrict = defaultToStrict;
+  exports.defaultToWhen = defaultToWhen;
+  exports.delay = delay;
   exports.dissoc = dissoc;
   exports.divide = divide;
   exports.drop = drop;
@@ -3002,86 +2940,148 @@
   exports.either = either;
   exports.endsWith = endsWith;
   exports.equals = equals;
-  exports.F = F;
   exports.filter = filter;
   exports.find = find;
+  exports.findInObject = findInObject;
   exports.findIndex = findIndex;
+  exports.findModify = findModify;
+  exports.flatMap = flatMap;
   exports.flatten = flatten;
   exports.flip = flip;
-  exports.toPairs = toPairs;
-  exports.fromPairs = fromPairs;
-  exports.clone = clone;
   exports.forEach = forEach;
+  exports.fromPairs = fromPairs;
+  exports.getter = getter;
+  exports.glue = glue;
   exports.groupBy = groupBy;
   exports.groupWith = groupWith;
   exports.has = has;
+  exports.hasPath = hasPath;
   exports.head = head;
+  exports.headObject = headObject;
   exports.identity = identity;
   exports.ifElse = ifElse;
+  exports.ifElseAsync = ifElseAsync;
   exports.inc = inc;
   exports.includes = includes;
+  exports.includesAny = includesAny;
+  exports.includesType = includesType;
   exports.indexBy = indexBy;
   exports.indexOf = indexOf;
   exports.init = init;
+  exports.inject = inject;
+  exports.interval = interval;
   exports.is = is$1;
+  exports.isAttach = isAttach;
+  exports.isFalsy = isFalsy;
+  exports.isFunction = isFunction$1;
   exports.isNil = isNil;
+  exports.isPromise = isPromise;
+  exports.isPrototype = isPrototype;
+  exports.isType = isType;
+  exports.isValid = isValid;
   exports.join = join;
   exports.keys = keys;
   exports.last = last;
   exports.lastIndexOf = lastIndexOf;
   exports.length = length;
   exports.map = map;
+  exports.mapAsync = mapAsync;
+  exports.mapFastAsync = mapFastAsync;
+  exports.mapToObject = mapToObject;
   exports.match = match;
-  exports.merge = merge;
   exports.max = max;
   exports.maxBy = maxBy;
+  exports.maybe = maybe;
+  exports.memoize = memoize$1;
+  exports.merge = merge;
+  exports.mergeAll = mergeAll;
+  exports.mergeDeep = mergeDeep;
+  exports.mergeRight = mergeRight;
   exports.min = min;
   exports.minBy = minBy;
   exports.modulo = modulo;
   exports.multiply = multiply;
+  exports.nextIndex = nextIndex;
   exports.none = none;
   exports.not = not;
   exports.nth = nth;
+  exports.ok = ok;
   exports.omit = omit;
+  exports.once = once;
+  exports.opposite = complement;
+  exports.otherwise = otherwise;
   exports.partial = partial;
   exports.partialCurry = partialCurry;
+  exports.partition = partition;
+  exports.pass = pass;
   exports.path = path;
+  exports.pathEq = pathEq;
   exports.pathOr = pathOr;
   exports.pick = pick;
   exports.pickAll = pickAll;
   exports.pipe = pipe;
+  exports.piped = piped;
+  exports.pipedAsync = pipedAsync;
   exports.pluck = pluck;
   exports.prepend = prepend;
+  exports.prevIndex = prevIndex;
+  exports.produce = produce;
+  exports.promiseAllObject = promiseAllObject;
   exports.prop = prop;
   exports.propEq = propEq;
+  exports.prototypeToString = prototypeToString;
+  exports.pushUniq = pushUniq;
+  exports.random = random;
   exports.range = range;
   exports.reduce = reduce;
   exports.reject = reject;
+  exports.remove = remove;
+  exports.renameProps = renameProps;
   exports.repeat = repeat;
   exports.replace = replace;
+  exports.reset = reset;
+  exports.resolve = resolve;
   exports.reverse = reverse;
+  exports.s = s;
+  exports.setter = setter;
+  exports.shuffle = shuffle;
   exports.sort = sort;
   exports.sortBy = sortBy;
   exports.split = split;
   exports.splitEvery = splitEvery;
   exports.startsWith = startsWith;
   exports.subtract = subtract;
-  exports.T = T;
+  exports.switcher = switcher;
   exports.tail = tail;
   exports.take = take;
   exports.takeLast = takeLast;
   exports.tap = tap;
+  exports.tapAsync = tapAsync;
+  exports.template = template;
   exports.test = test;
+  exports.throttle = throttle;
   exports.times = times;
+  exports.toDecimal = toDecimal;
   exports.toLower = toLower;
+  exports.toPairs = toPairs;
   exports.toString = toString$1;
   exports.toUpper = toUpper;
+  exports.toggle = toggle;
   exports.trim = trim;
+  exports.tryCatch = tryCatch;
   exports.type = type;
   exports.uniq = uniq;
   exports.uniqWith = uniqWith;
+  exports.unless = unless;
   exports.update = update;
+  exports.uuid = uuid$1;
   exports.values = values;
+  exports.wait = wait;
+  exports.waitFor = waitFor;
+  exports.when = when;
+  exports.whenAsync = whenAsync;
+  exports.where = where;
+  exports.whereEq = whereEq;
   exports.without = without;
   exports.zip = zip;
   exports.zipObj = zipObj;

@@ -1,6 +1,6 @@
 import { type } from './rambda/type'
 import { toLower } from './rambda/toLower'
-import { contains } from './rambda/contains'
+import { includes } from './rambda/includes'
 import { test } from './rambda/testModule'
 import { any } from './rambda/any'
 import { all } from './rambda/all'
@@ -148,7 +148,7 @@ export function isValid({ input, schema }){
         /**
          * Enum case | rule is like a: ['foo', 'bar']
          */
-        boom(contains(inputProp, rule))
+        boom(includes(inputProp, rule))
       } else if (
         ruleType === 'Array' &&
         rule.length === 1 &&
