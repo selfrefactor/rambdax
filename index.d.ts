@@ -290,7 +290,9 @@ declare namespace R {
     mergeDeep<T>(slave: object, master: object): T
 
     nextIndex(index: number, list: any[]): number
+    nextIndex(index: number, list: number): number
     prevIndex(index: number, list: any[]): number
+    prevIndex(index: number, list: number): number
 
     opposite<Out>(fn: Fn<any, Out>): Fn<any, Out>
     
@@ -504,11 +506,6 @@ add(a: number, b: number): number
     concat(first: string, second: string): string
     concat(first: string): (second: string) => string
 
-    contains(target: string, list: string): boolean
-    contains<T>(target: T, list: T[]): boolean
-    contains(target: string): (list: string) => boolean
-    contains<T>(target: T): (list: T[]) => boolean
-
     curry<T1, T2, TResult extends T2>(fn: (a: T1, b: T2) => b is TResult): CurriedTypeGuard2<T1, T2, TResult>
     curry<T1, T2, T3, TResult extends T3>(fn: (a: T1, b: T2, c: T3) => c is TResult): CurriedTypeGuard3<T1, T2, T3, TResult>
     curry<T1, T2, T3, T4, TResult extends T4>(fn: (a: T1, b: T2, c: T3, d: T4) => d is TResult): CurriedTypeGuard4<T1, T2, T3, T4, TResult>
@@ -603,8 +600,10 @@ add(a: number, b: number): number
 
     inc(n: number): number
 
-    includes(target: any, input: string|any[]): boolean
-    includes(target: any) : (input: string|any[]) => boolean
+    includes(target: string, list: string): boolean
+    includes<T>(target: T, list: T[]): boolean
+    includes(target: string): (list: string) => boolean
+    includes<T>(target: T): (list: T[]) => boolean
 
     indexBy<T>(fn: (x: T) => string, list: T[]): { [key: string]: T }
     indexBy<T>(fn: (x: T) => string): (list: T[]) => { [key: string]: T }
