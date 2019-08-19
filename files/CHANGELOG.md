@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.14.0 `R.nextIndex` and `R.prevIndex` work also with number as second argument
+
 2.13.0 Deprecate `R.log` and `R.runTests`
 
 2.12.3 Add 'dist' directory to `files`
