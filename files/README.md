@@ -801,16 +801,48 @@ const result = R.pass(1,['foo','bar'])('number',['string'])
 
 #### partition
 
-> partition<T>(rule: Function,input: T): [T, T]
+> partition<T>(predicate: Function, input: Array|Object): [Array|Object, Array|Object]
 
 It is similar to `R.filter` but it will return also the instances that are not passing the predicate function.
 
-In regards to the typing definition above, `T` can be either array of object.
+It works also with object as input. Please check the example below:
 
 ```
-import { partition } from './partition'
+import { partition } from 'rambdax'
 
-test('with list', () =>{
+test('with object', () => {
+  const predicate = (value, prop) => {
+    expect(
+      typeof prop
+    ).toBe('string')
+
+    return value > 2
+  }
+  const input = {
+    a : 1,
+    b : 2,
+    c : 3,
+    d : 4,
+  }
+
+  const result = partition(predicate, input)
+  const expectedResult = [
+    {
+      c : 3,
+      d : 4,
+    },
+    {
+      a : 1,
+      b : 2,
+    },
+  ]
+
+  expect(
+    result
+  ).toEqual(expectedResult)
+})
+
+test('with array', () =>{
   const rule = (x, i) => {
     expect(
       typeof i
@@ -827,7 +859,6 @@ test('with list', () =>{
     result
   ).toEqual(expectedResult)
 })
-
 ```
 
 #### piped

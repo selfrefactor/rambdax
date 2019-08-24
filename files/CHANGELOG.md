@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.14.1 Improve typing of `R.partition`
+
 2.14.0 `R.nextIndex` and `R.prevIndex` work also with number as second argument
 
 2.13.0 Deprecate `R.log` and `R.runTests`

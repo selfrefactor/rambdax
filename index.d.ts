@@ -20,6 +20,7 @@ declare namespace R {
   type MapFn<In, Out> = (x: In, index: number) => Out  
   
   type FilterFunction<T> = (x: T, prop?: string, inputObj?: object) => boolean
+  type PartitionPredicate<T> = (x: T, prop?: string) => boolean
   type MapFunction<In, Out> = (x: In, prop?: string, inputObj?: object) => Out
   type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -310,12 +311,12 @@ declare namespace R {
     then<T>(toResolve: Function) : (toResolve: Promise<any>) => Promise<T>
 
     partition<T>(
-      rule: FilterFunction<T>,
-      input: Object
+      rule: PartitionPredicate<T>,
+      input: {[key: string]: T}
     ): [Object, Object]
     partition<T>(
-      rule: FilterFunction<T>
-    ): (input: Object) => [Object, Object]
+      rule: PartitionPredicate<T>
+    ): (input: {[key: string]: T}) => [Object, Object]
     
     partition<T>(
       rule: Predicate<T>,

@@ -567,11 +567,11 @@
     return object == null ? object : baseSet(object, path, value);
   }
 
-  function whenObject(rule, hash) {
+  function whenObject(predicate, input) {
     const yes = {};
     const no = {};
-    Object.entries(hash).forEach(([prop, value]) => {
-      if (rule(value, prop)) {
+    Object.entries(input).forEach(([prop, value]) => {
+      if (predicate(value, prop)) {
         yes[prop] = value;
       } else {
         no[prop] = value;
@@ -580,21 +580,21 @@
     return [yes, no];
   }
 
-  function partition(rule, list) {
+  function partition(predicate, input) {
     if (arguments.length === 1) {
-      return listHolder => partition(rule, listHolder);
+      return listHolder => partition(predicate, listHolder);
     }
 
-    if (!Array.isArray(list)) return whenObject(rule, list);
+    if (!Array.isArray(input)) return whenObject(predicate, input);
     const yes = [];
     const no = [];
     let counter = -1;
 
-    while (counter++ < list.length - 1) {
-      if (rule(list[counter], counter)) {
-        yes.push(list[counter]);
+    while (counter++ < input.length - 1) {
+      if (predicate(input[counter], counter)) {
+        yes.push(input[counter]);
       } else {
-        no.push(list[counter]);
+        no.push(input[counter]);
       }
     }
 

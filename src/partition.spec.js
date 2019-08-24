@@ -1,7 +1,7 @@
 import { partition } from './partition'
 
-test('with list', () => {
-  const rule = (x, i) => {
+test('with array', () => {
+  const predicate = (x, i) => {
     expect(
       typeof i
     ).toBe('number')
@@ -10,7 +10,7 @@ test('with list', () => {
   }
   const list = [ 1, 2, 3, 4 ]
 
-  const result = partition(rule, list)
+  const result = partition(predicate, list)
   const expectedResult = [ [ 3, 4 ], [ 1, 2 ] ]
 
   expect(
@@ -19,7 +19,7 @@ test('with list', () => {
 })
 
 test('with object', () => {
-  const rule = (value, prop) => {
+  const predicate = (value, prop) => {
     expect(
       typeof prop
     ).toBe('string')
@@ -33,7 +33,7 @@ test('with object', () => {
     d : 4,
   }
 
-  const result = partition(rule)(hash)
+  const result = partition(predicate)(hash)
   const expectedResult = [
     {
       c : 3,
