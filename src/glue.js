@@ -3,5 +3,5 @@ export function glue(input, glueChar){
     .split('\n')
     .filter(x => x.trim().length > 0)
     .map(x => x.trim())
-    .join(glue === undefined ? ' ' : glueChar)
+    .join(glueChar === undefined ? ' ' : glueChar)
 }
