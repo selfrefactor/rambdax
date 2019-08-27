@@ -1006,7 +1006,7 @@ function reset() {
 }
 
 function glue(input, glueChar) {
-  return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glue === undefined ? ' ' : glueChar);
+  return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glueChar === undefined ? ' ' : glueChar);
 }
 
 function path(list, obj) {
@@ -1086,28 +1086,6 @@ function any(fn, list) {
   return false;
 }
 
-function expensiveIncludes(target, source) {
-  return any(singleSource => equals(target, singleSource), source);
-}
-
-function includesAny(targets, source) {
-  if (arguments.length === 1) {
-    return sourceHolder => includesAny(targets, sourceHolder);
-  }
-
-  const sourceType = type(source);
-
-  if (['Array', 'String'].includes(sourceType) === false) {
-    return false;
-  }
-
-  if (sourceType === 'String') {
-    return any(x => source.includes(x), targets);
-  }
-
-  return any(x => expensiveIncludes(x, source), targets);
-}
-
 function includesType(targetType, list) {
   if (arguments.length === 1) {
     return listHolder => includesType(targetType, listHolder);
@@ -1130,10 +1108,21 @@ function inject(injection, marker, content) {
   return replace(marker, `${marker}${injection}`, content);
 }
 
-function take(n, list) {
-  if (arguments.length === 1) return _list => take(n, _list);
-  if (typeof list === 'string') return list.slice(0, n);
-  return baseSlice(list, 0, n);
+function range(from, to) {
+  if (arguments.length === 1) return _to => range(from, _to);
+  const len = to - from;
+  const willReturn = Array(len);
+
+  for (let i = 0; i < len; i++) {
+    willReturn[i] = from + i;
+  }
+
+  return willReturn;
+}
+
+function head(list) {
+  if (typeof list === 'string') return list[0] || '';
+  return list[0];
 }
 
 function shuffle(arrayRaw) {
@@ -1151,22 +1140,22 @@ function shuffle(arrayRaw) {
   return array;
 }
 
-const uuidList = '0123456789qwertyuiopasdfghjklzxcvbnm'.split('');
-
+const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
+const loops = range(0, 8);
 function uuid() {
-  return take(5, shuffle(uuidList).join(''));
+  return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
 }
 
 const holder$1 = {};
 function interval({
   fn,
   ms,
-  whenStop
+  stopWhen
 }) {
   const key = uuid();
   return new Promise(resolve => {
     holder$1[key] = setInterval(() => {
-      if (whenStop() === true) {
+      if (stopWhen() === true) {
         clearInterval(holder$1[key]);
         resolve();
       } else {
@@ -1537,6 +1526,12 @@ function sort(fn, list) {
   return arrClone.sort(fn);
 }
 
+function take(n, list) {
+  if (arguments.length === 1) return _list => take(n, _list);
+  if (typeof list === 'string') return list.slice(0, n);
+  return baseSlice(list, 0, n);
+}
+
 const cache = {};
 
 const normalizeObject = obj => {
@@ -1662,12 +1657,12 @@ function otherwise(fallback, toResolve) {
   });
 }
 
-function pathEq(path$1, target, obj) {
+function pathEq(path$$1, target, obj) {
   if (arguments.length === 2) {
-    return objHolder => pathEq(path$1, target, objHolder);
+    return objHolder => pathEq(path$$1, target, objHolder);
   }
 
-  return path(path$1, obj) === target;
+  return path(path$$1, obj) === target;
 }
 
 function pipe(...fns) {
@@ -2052,29 +2047,6 @@ function unless(condition, whenFalse) {
     if (isFunction$1(whenFalse)) return whenFalse(input);
     return whenFalse;
   };
-}
-
-function range(from, to) {
-  if (arguments.length === 1) return _to => range(from, _to);
-  const len = to - from;
-  const willReturn = Array(len);
-
-  for (let i = 0; i < len; i++) {
-    willReturn[i] = from + i;
-  }
-
-  return willReturn;
-}
-
-function head(list) {
-  if (typeof list === 'string') return list[0] || '';
-  return list[0];
-}
-
-const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
-const loops = range(0, 8);
-function uuid$1() {
-  return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
 }
 
 function wait(fn) {
@@ -2892,4 +2864,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesAny, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid$1 as uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, ok, complement as opposite, complement, allFalse, allTrue, allType, anyFalse, anyTrue, anyType, change, compact, composeAsync, composed, count, debounce, defaultToStrict, defaultToWhen, delay, findInObject, findModify, flatMap, getter, setter, reset, glue, hasPath, headObject, ifElseAsync, includesType, inject, interval, isAttach, isFunction$1 as isFunction, isFalsy, isPromise, isType, isPrototype, prototypeToString, isValid, mapAsync, mapFastAsync, mapToObject, maybe, memoize$1 as memoize, mergeAll, mergeRight, mergeDeep, nextIndex, pass, once, otherwise, partition, pathEq, piped, pipedAsync, prevIndex, produce, promiseAllObject, pushUniq, random, remove, renameProps, resolve, s, shuffle, switcher, tapAsync, template, throttle, toDecimal, toggle, tryCatch, unless, uuid, wait, waitFor, when, whenAsync, where, whereEq, add, adjust, all, allPass, always, any, anyPass, append, assoc, both, compose, concat, curry, dec, defaultTo, dissoc, divide, drop, dropLast, either, endsWith, equals, F, filter, find, findIndex, flatten, flip, toPairs, fromPairs, clone, forEach, groupBy, groupWith, has, head, identity, ifElse, inc, includes, indexBy, indexOf, init, is$1 as is, isNil, join, keys, last, lastIndexOf, length, map, match, merge, max, maxBy, min, minBy, modulo, multiply, none, not, nth, omit, partial, partialCurry, path, pathOr, pick, pickAll, pipe, pluck, prepend, prop, propEq, range, reduce, reject, repeat, replace, reverse, sort, sortBy, split, splitEvery, startsWith, subtract, T, tail, take, takeLast, tap, test, times, toLower, toString$1 as toString, toUpper, trim, type, uniq, uniqWith, update, values, without, zip, zipObj };
