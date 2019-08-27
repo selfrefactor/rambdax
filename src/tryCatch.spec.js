@@ -11,13 +11,13 @@ test('throws when fn is not function', () => {
 })
 
 test('when fallback is used', () => {
-  const fn = prop('x')
+  const fn = x => x.x
 
   expect(tryCatch(fn, false)(null)).toBe(false)
 })
 
 test('when fallback is function', () => {
-  const fn = prop('x')
+  const fn = x => x.x  
 
   expect(tryCatch(fn, x => x)(null)).toBe(null)
 })
@@ -28,7 +28,7 @@ test('when fn is used', () => {
   expect(tryCatch(fn, false)({})).toBe(undefined)
   expect(tryCatch(fn, false)({ x : 1 })).toBe(1)
 })
-
+ 
 test('when async + fallback', async () => {
   let called = false
 
