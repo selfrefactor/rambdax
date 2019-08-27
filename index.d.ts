@@ -239,14 +239,6 @@ declare namespace R {
       input: string
     ): string
 
-    includesAny(
-      targets:any[], 
-      stringOrList: string|any[]
-    ): boolean
-    includesAny(
-      targets:any[]
-    ): (stringOrList: string|any[]) => boolean
-
     includesType(
       targetType: RambdaTypes, 
     ): (list: any[]) => boolean

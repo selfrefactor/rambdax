@@ -1,6 +1,6 @@
 import { includesAny } from './includesAny'
 
-test('list of any as target and source - cheap - true', () => {
+test('list of any as target and source - true', () => {
   const targets = [ { a : 1 }, { d : 4 }, { b : { c : 2 } }, 2, 1 ]
   const source = [ { a : 2 }, { d : 5 }, { b : { c : 20 } }, 1 ]
 
@@ -10,7 +10,7 @@ test('list of any as target and source - cheap - true', () => {
   ).toBeTruthy()
 })
 
-test('list of any as target and source - cheap - false', () => {
+test('list of any as target and source - false', () => {
   const targets = [ { a : 1 }, { d : 4 }, 1, 2 ]
   const source = [ { a : 2 }, { d : 5 }, 3 ]
 
@@ -20,7 +20,7 @@ test('list of any as target and source - cheap - false', () => {
   ).toBeFalsy()
 })
 
-test('list of any as target and source - expensive - true', () => {
+test('list of any as target and source - true', () => {
   const targets = [ 1, 2, { a : 1 }, { d : 4 }, { b : { c : 2 } } ]
   const source = [ 3, 4, { a : 2 }, { d : 5 }, { b : { c : 2 } } ]
 
@@ -30,7 +30,7 @@ test('list of any as target and source - expensive - true', () => {
   ).toBeTruthy()
 })
 
-test('list of any as target and source - expensive - false', () => {
+test('list of any as target and source - false', () => {
   const targets = [ 1, 2, { a : 1 }, { d : 4 }, { b : { c : 2 } } ]
   const source = [ 3, 4, { a : 2 }, { d : 5 }, { b : { c : 20 } } ]
 

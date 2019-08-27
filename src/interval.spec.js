@@ -4,16 +4,15 @@ import { delay } from './delay'
 test('', async () => {
   let counter = 0
   const fn = () => {
-    console.log({ counter })
     counter++
   }
   const ms = 300
-  const whenStop = () => counter > 8
+  const stopWhen = () => counter > 8
 
   await interval({
     fn,
     ms,
-    whenStop,
+    stopWhen,
   })
 
   expect(counter).toBe(9)
@@ -21,19 +20,19 @@ test('', async () => {
   expect(counter).toBe(9)
 })
 
-test('whenStop returns initially true', async () => {
+test('stopWhen returns initially true', async () => {
   let counter = 0
   const fn = () => {
     console.log({ counter })
     counter++
   }
   const ms = 500
-  const whenStop = () => counter < 8
+  const stopWhen = () => counter < 8
 
   await interval({
     fn,
     ms,
-    whenStop,
+    stopWhen,
   })
 
   expect(counter).toBe(0)

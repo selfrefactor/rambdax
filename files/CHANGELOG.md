@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.15.0 Remove `R.includesAny`
+
 2.14.1 Improve typing of `R.partition`
 
 2.14.0 `R.nextIndex` and `R.prevIndex` work also with number as second argument

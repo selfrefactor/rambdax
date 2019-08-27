@@ -412,17 +412,6 @@ const bar = x => x * 8
   })
 ```
 
-#### includesAny(targets:any[], source: string|any[]): boolean
-
-It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
-
-```
-R.includesAny(
-  ['foo','baz', {a:1}]
-)([1,2,{a:1}])
-// => true
-```
-
 #### includesType
 
 > includesType(targetType: string, list: any[]): boolean

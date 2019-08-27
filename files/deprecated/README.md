@@ -1,5 +1,17 @@
-[![CircleCI](https://img.shields.io/circleci/project/github/selfrefactor/rambdax.svg)](https://circleci.com/gh/selfrefactor/rambdax)
-[![codecov](https://codecov.io/gh/selfrefactor/rambdax/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambdax)
+# DEPRECATED METHODS
+
+#### includesAny(targets:any[], source: string|any[]): boolean
+
+It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
+
+```
+R.includesAny(
+  ['foo','baz', {a:1}]
+)([1,2,{a:1}])
+// => true
+```
+
+====
 
 # Rambdax
 

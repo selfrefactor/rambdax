@@ -15,7 +15,7 @@
     "readme": "node files/_modules/createReadme",
     "docs": "docsify init ./docs",
     "test": "jest src",
-    "prove": "jest src --jest",
+    "prove": "jest src --json",
     "jest": "jest --watch -o",
     "cover": "jest src --coverage",
     "build:main": "rollup -c files/rollup.config.js",
