@@ -487,20 +487,6 @@ const bar = x => x * 8
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/headObject.spec.js)
 
 ---
-#### includesAny(targets:any[], source: string|any[]): boolean
-
-It returns `true` if any of the `targets` is part of `source`. Note that you can pass objects as part of both `targets` ans `source` list and it will work as you expected, because it uses `R.equals` for equality comparison.
-
-```
-R.includesAny(
-  ['foo','baz', {a:1}]
-)([1,2,{a:1}])
-// => true
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/includesAny(targets:any[], source: string|any[]): boolean.spec.js)
-
----
 #### includesType
 
 > includesType(targetType: string, list: any[]): boolean
