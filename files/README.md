@@ -428,16 +428,32 @@ const result = R.includesType(
 
 #### inject
 
-> inject(injection: string, marker: string, str: string): string
+> inject(injection: string, marker: string, str: string, beforeFlag: boolean): string
 
 ```
-const result = R.inject(
+const resultDefault = R.inject(
   ' INJECTION',
   'MARKER',
   'foo bar MARKER baz'
 )
+const expectedResultDefault = 'foo bar MARKER INJECTION baz'
 
-const expectedResult = 'foo bar MARKER INJECTION baz'
+const resultWithBeforeFlag = R.inject(
+  'INJECTION ',
+  'MARKER',
+  'foo bar MARKER baz',
+  true
+)
+const expectedResultWithBeforeFlag = 'foo bar INJECTION MARKER baz'
+
+const result = [
+  resultDefault,
+  resultWithBeforeFlag
+]
+const expectedResult = [
+  expectedResultDefault,
+  expectedResultWithBeforeFlag
+]
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/inject.js)

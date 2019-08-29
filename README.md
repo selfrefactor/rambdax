@@ -506,23 +506,39 @@ const result = R.includesType(
 ---
 #### inject
 
-> inject(injection: string, marker: string, str: string): string
+> inject(injection: string, marker: string, str: string, beforeFlag: boolean): string
 
 ```
-const result = R.inject(
+const resultDefault = R.inject(
   ' INJECTION',
   'MARKER',
   'foo bar MARKER baz'
 )
+const expectedResultDefault = 'foo bar MARKER INJECTION baz'
 
-const expectedResult = 'foo bar MARKER INJECTION baz'
+const resultWithBeforeFlag = R.inject(
+  'INJECTION ',
+  'MARKER',
+  'foo bar MARKER baz',
+  true
+)
+const expectedResultWithBeforeFlag = 'foo bar INJECTION MARKER baz'
+
+const result = [
+  resultDefault,
+  resultWithBeforeFlag
+]
+const expectedResult = [
+  expectedResultDefault,
+  expectedResultWithBeforeFlag
+]
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/inject.js)
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/inject.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0A%0Aconst%20expectedResult%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20resultDefault%20%3D%20R.inject(%0A%20%20'%20INJECTION'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%0A)%0Aconst%20expectedResultDefault%20%3D%20'foo%20bar%20MARKER%20INJECTION%20baz'%0A%0Aconst%20resultWithBeforeFlag%20%3D%20R.inject(%0A%20%20'INJECTION%20'%2C%0A%20%20'MARKER'%2C%0A%20%20'foo%20bar%20MARKER%20baz'%2C%0A%20%20true%0A)%0Aconst%20expectedResultWithBeforeFlag%20%3D%20'foo%20bar%20INJECTION%20MARKER%20baz'%0A%0Aconst%20result%20%3D%20%5B%0A%20%20resultDefault%2C%0A%20%20resultWithBeforeFlag%0A%5D%0Aconst%20expectedResult%20%3D%20%5B%0A%20%20expectedResultDefault%2C%0A%20%20expectedResultWithBeforeFlag%0A%5D">Try in REPL</a>
 
 ---
 #### isAttach

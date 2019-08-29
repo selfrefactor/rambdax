@@ -236,7 +236,8 @@ declare namespace R {
     inject(
       toInjectAfterMarker: string, 
       marker: string, 
-      input: string
+      input: string,
+      beforeFlag?: boolean
     ): string
 
     includesType(
