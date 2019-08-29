@@ -1,12 +1,16 @@
 # CHANGELOG
 
-2.15.0 Remove `R.includesAny`
+2.14.0 Several changes:
 
-2.14.1 Improve typing of `R.partition`
+- `R.inject` accept before flag as fourth argument
 
-2.14.0 `R.nextIndex` and `R.prevIndex` work also with number as second argument
+- Remove `R.includesAny`
 
-2.13.0 Deprecate `R.log` and `R.runTests`
+- Improve typing of `R.partition`
+
+- `R.nextIndex` and `R.prevIndex` work also with number as second argument
+
+2.13.1 Deprecate `R.log` and `R.runTests`
 
 2.12.3 Add 'dist' directory to `files`
 
