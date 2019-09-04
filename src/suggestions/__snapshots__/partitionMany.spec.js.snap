@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`happy 1`] = `
+Array [
+  Array [
+    Object {
+      "a": 1,
+      "b": 2,
+    },
+  ],
+  Array [
+    Object {
+      "a": 1,
+    },
+  ],
+  Array [
+    Object {
+      "d": 3,
+    },
+    Object {
+      "r": 3,
+    },
+  ],
+]
+`;
