@@ -165,6 +165,14 @@ declare namespace R {
   // RAMDA_END
   interface X {
     // RAMBDAX_START
+
+    // R.contains will be deprecated
+    // ============================================
+    contains(target: string, list: string): boolean
+    contains<T>(target: T, list: T[]): boolean
+    contains(target: string): (list: string) => boolean
+    contains<T>(target: T): (list: T[]) => boolean
+
     allFalse(...input: Array<any>): boolean
     anyFalse(...input: Array<any>): boolean
 

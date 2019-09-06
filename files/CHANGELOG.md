@@ -1,5 +1,7 @@
 # CHANGELOG
 
+2.14.1 Restore `R.contains`
+
 2.14.0 Several changes:
 
 - `R.inject` accept before flag as fourth argument

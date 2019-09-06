@@ -30,6 +30,75 @@ function type(val) {
   return 'Object';
 }
 
+function equals(a, b) {
+  if (arguments.length === 1) return _b => equals(a, _b);
+
+  if (a === b) {
+    return true;
+  }
+
+  const aType = type(a);
+
+  if (aType !== type(b)) {
+    return false;
+  }
+
+  if (aType === 'Array') {
+    const aClone = Array.from(a);
+    const bClone = Array.from(b);
+
+    if (aClone.toString() !== bClone.toString()) {
+      return false;
+    }
+
+    let loopArrayFlag = true;
+    aClone.forEach((aCloneInstance, aCloneIndex) => {
+      if (loopArrayFlag) {
+        if (aCloneInstance !== bClone[aCloneIndex] && !equals(aCloneInstance, bClone[aCloneIndex])) {
+          loopArrayFlag = false;
+        }
+      }
+    });
+    return loopArrayFlag;
+  }
+
+  if (aType === 'Object') {
+    const aKeys = Object.keys(a);
+
+    if (aKeys.length !== Object.keys(b).length) {
+      return false;
+    }
+
+    let loopObjectFlag = true;
+    aKeys.forEach(aKeyInstance => {
+      if (loopObjectFlag) {
+        const aValue = a[aKeyInstance];
+        const bValue = b[aKeyInstance];
+
+        if (aValue !== bValue && !equals(aValue, bValue)) {
+          loopObjectFlag = false;
+        }
+      }
+    });
+    return loopObjectFlag;
+  }
+
+  return false;
+}
+
+function contains(val, list) {
+  if (arguments.length === 1) return _list => contains(val, _list);
+  let index = -1;
+
+  while (++index < list.length) {
+    if (equals(list[index], val)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function allFalse(...inputs) {
   let counter = 0;
 
@@ -646,62 +715,6 @@ function change(origin, pathRaw, rules) {
   }
 
   return willReturn;
-}
-
-function equals(a, b) {
-  if (arguments.length === 1) return _b => equals(a, _b);
-
-  if (a === b) {
-    return true;
-  }
-
-  const aType = type(a);
-
-  if (aType !== type(b)) {
-    return false;
-  }
-
-  if (aType === 'Array') {
-    const aClone = Array.from(a);
-    const bClone = Array.from(b);
-
-    if (aClone.toString() !== bClone.toString()) {
-      return false;
-    }
-
-    let loopArrayFlag = true;
-    aClone.forEach((aCloneInstance, aCloneIndex) => {
-      if (loopArrayFlag) {
-        if (aCloneInstance !== bClone[aCloneIndex] && !equals(aCloneInstance, bClone[aCloneIndex])) {
-          loopArrayFlag = false;
-        }
-      }
-    });
-    return loopArrayFlag;
-  }
-
-  if (aType === 'Object') {
-    const aKeys = Object.keys(a);
-
-    if (aKeys.length !== Object.keys(b).length) {
-      return false;
-    }
-
-    let loopObjectFlag = true;
-    aKeys.forEach(aKeyInstance => {
-      if (loopObjectFlag) {
-        const aValue = a[aKeyInstance];
-        const bValue = b[aKeyInstance];
-
-        if (aValue !== bValue && !equals(aValue, bValue)) {
-          loopObjectFlag = false;
-        }
-      }
-    });
-    return loopObjectFlag;
-  }
-
-  return false;
 }
 
 const forbidden = ['Null', 'Undefined', 'RegExp'];
@@ -2864,4 +2877,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, contains, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
