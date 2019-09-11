@@ -1,4 +1,4 @@
-const {map} = require('rambda')
+import { map } from 'rambda'
 
 function createRecord(collectionMethods, instanceMethods){
   const recordCreator = input => {
