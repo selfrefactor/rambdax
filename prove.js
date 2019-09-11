@@ -1,41 +1,34 @@
 const {map} = require('rambda')
-console.log(1)
-function createFactory(collectionMethods, instanceMethods){
-  const recordHandler = {
-    get: function(obj, prop) {
-      console.log(1,obj,prop)
-      if(Object.keys(instanceMethods).includes(prop)){
-        return instanceMethods[prop](obj[prop])
-      }
 
-      if(obj[prop] !== undefined) return obj[prop]
+function createRecord(collectionMethods, instanceMethods){
+  const recordCreator = input => {
+    const queries = map(method=> {
+      return () => method(input)
+    })(instanceMethods)
 
-      return undefined
-    }
+    return Object.assign(input, queries);
   };
 
   return collection => {
     const handler = {
       get: function(obj, prop) {
-        // if(collectionMethods[prop] !== undefined){
-        //   return collectionMethods[prop](collection)
-        // }
-        // console.log(obj,prop)
-        if(obj[prop] !== undefined) return new Proxy(obj[prop], recordHandler)
-
+        if(collectionMethods[prop] !== undefined){
+          return () => collectionMethods[prop](collection)
+        }
+        if(obj[prop] !== undefined) return recordCreator(obj[prop])
         return undefined
       }
+
     };
 
     return new Proxy(collection, handler)
   }
 }
 
-const created = createFactory(
-  {filter: list => list.filter(x => x > 2)},
-  {increase: x => x+1}
-)([1,2,3])
-console.log(created[0])
-// console.log(created[2])
-// console.log(created)
-// console.log(created[2])
+const created = createRecord(
+  {filter: list => list.filter(({a}) => a > 2)},
+  {increase: ({a}) => a+1}
+)([{a:1}, {a:2}, {a:22}])
+
+console.log(created.filter())
+console.log(created[1].increase()) 
