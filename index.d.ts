@@ -412,7 +412,7 @@ declare namespace R {
       ruleFalse: Func<boolean> | boolean
     ): (ruleTrue: any) => IdentityFunction<T>
 
-    uuid() :string  
+    uuid(length?: number) :string  
 
     whereEq(rule: Object, input: any): Boolean  
     whereEq(rule: Object) : (input: any) => Boolean  

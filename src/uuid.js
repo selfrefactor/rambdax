@@ -8,9 +8,9 @@ const charCodes = [
   ...range(97, 122),
 ]
 
-const loops = range(0, 8)
+export function uuid(length = 8){
+  const loops = range(0, length)
 
-export function uuid(){
   return loops.map(
     x => String.fromCharCode(head(shuffle(charCodes)))
   ).join('')

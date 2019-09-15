@@ -1,11 +1,12 @@
-const { map } = require('ramda')
+const { map } = require('ramda') 
+import { add } from 'rambdax'
 function createRecord(collectionMethods, instanceMethods){
   const recordCreator = input => {
     const queries = map(method => () => method(input))(instanceMethods)
 
     return Object.assign(input, queries)
   }
-
+  
   return collection => {
     const handler = {
       get : function(obj, prop){
@@ -30,5 +31,4 @@ const created = createRecord(
 const afterMap = created.map(x => x)
 
 console.log(created.filterList)
-console.log(afterMap.filterList) // => undefined
-   
+console.log(afterMap.filterList ) // => undefined
