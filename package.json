@@ -94,7 +94,8 @@
       "method",
       "build",
       "docsify",
-      "changelog"
+      "changelog",
+      "fix"
     ],
     "test": [
       "method"

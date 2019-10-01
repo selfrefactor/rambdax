@@ -1303,9 +1303,9 @@ It provides `Golang`-like interface for handling promises.
 
 ```
 void async function wait(){
-  const [err, ok] = await R.wait(R.delay(1000))
+  const [result, err] = await R.wait(R.delay(1000))
   // => err is undefined
-  // => ok is `RAMBDAX_DELAY`
+  // => result is `RAMBDAX_DELAY`
 }()
 ```
 

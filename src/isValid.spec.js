@@ -11,7 +11,6 @@ test('is prototype', () => {
 
 test('prototype inside array', () => {
   const input = { a : [ 1, 2, 3, 4 ] }
-  // const schema = { a : [ 'number' ] }
   const schema = { a : [ Number ] }
   expect(
     isValid({
