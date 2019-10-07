@@ -1,5 +1,11 @@
 # CHANGELOG
 
+2.15.0 Several changes
+
+- Typescript definitions have been updated and typings tests are introduced
+
+- `R.mapAsync` and `R.mapFastAsync` pass index as second argument
+
 2.14.1 Restore `R.contains`
 
 2.14.0 Several changes:

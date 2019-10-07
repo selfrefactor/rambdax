@@ -157,6 +157,7 @@ declare namespace R {
   }
 
   type Async<T> = (x: any) => Promise<T>
+  type AsyncWithMap<T> = (x: any, i?: number) => Promise<T>
   type AsyncWithProp<T> = (x: any, prop?: string) => Promise<T>
 
   interface TypedObject<T> {
@@ -272,13 +273,13 @@ declare namespace R {
 
     maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
 
-    mapAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>, obj: object): Promise<Array<T>>
-    mapAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
+    mapAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>): (obj: object) => Promise<Array<T>>
 
-    mapFastAsync<T>(fn: Async<any>, list: any[]): Promise<Array<T>>
-    mapFastAsync<T>(fn: Async<any>): (list: any[]) => Promise<Array<T>>
+    mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>
+    mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
 
     mapToObject<T, U>(fn: (input: T) => object, list: T[]): U  
     mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U  
@@ -423,7 +424,7 @@ declare namespace R {
     ): Async<T>
     // RAMBDAX_END
     // RAMBDA_MARKER
-add(a: number, b: number): number
+    add(a: number, b: number): number
     add(first: string, second: string): string
     add(a: number): (b: number) => number
     add(first: string): (second: string) => string

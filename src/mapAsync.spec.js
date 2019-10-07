@@ -41,6 +41,13 @@ test('with object', async () => {
   })
 })
 
+test('with array', async () => {
+  await mapAsync((x, i) => {
+    expect(x % 10).toBe(0)
+    expect(typeof i).toBe('number')
+  }, [ 10, 20, 30 ])
+})
+
 test('composeAsync', async () => {
   const result = await composeAsync(
     mapAsync(delay),

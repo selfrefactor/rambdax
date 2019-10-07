@@ -1,5 +1,5 @@
 async function mapFastAsyncFn(fn, arr){
-  const promised = arr.map(a => fn(a))
+  const promised = arr.map((a, i) => fn(a, i))
 
   return Promise.all(promised)
 }

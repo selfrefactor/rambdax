@@ -1,8 +1,9 @@
 async function mapAsyncFn(fn, arr){
   if (Array.isArray(arr)){
     const willReturn = []
+    let i = 0
     for (const a of arr){
-      willReturn.push(await fn(a))
+      willReturn.push(await fn(a, i++))
     }
 
     return willReturn

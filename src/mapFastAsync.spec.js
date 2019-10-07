@@ -44,3 +44,11 @@ test('error', async () => {
     expect(err).toBe(21)
   }
 })
+
+test('with array', async () => {
+  await mapFastAsync((x, i) => {
+    expect(x % 10).toBe(0)
+    expect(typeof i).toBe('number')
+  }, [ 10, 20, 30 ])
+})
+
