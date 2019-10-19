@@ -104,6 +104,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "typings tests"
   }
 }
