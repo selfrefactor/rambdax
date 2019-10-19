@@ -6,6 +6,7 @@ declare namespace R {
     | "Function"
     | "Null"
     | "Number"
+    | "NaN"
     | "Object"
     | "Promise"
     | "RegExp"
@@ -188,6 +189,12 @@ declare namespace R {
       path: string, 
       changeData: any
     ): object
+
+    change<Input, Output>(
+      origin: Input, 
+      path: string, 
+      changeData: any
+    ): Output
 
     compact<T>(x: any[]): T[]
 
