@@ -800,22 +800,26 @@ test('should return false with invalid schema rule', () => {
 
 test('array of schemas', () => {
   const input = {
-    b: [
+    b : [
       {
-        a: 'led', b: 1
+        a : 'led',
+        b : 1,
       },
       {
-        a: 'dancing', b: 1
+        a : 'dancing',
+        b : 1,
       },
-    ]
+    ],
   }
   const basicSchema = {
-    a: String, b: Number
+    a : String,
+    b : Number,
   }
-  const schema = {
-    b: [basicSchema],
-  }  
-  const result = isValid({ input, schema})
+  const schema = { b : [ basicSchema ] }
+  const result = isValid({
+    input,
+    schema,
+  })
 
   expect(result).toBeTruthy()
 })
