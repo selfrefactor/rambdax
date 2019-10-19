@@ -797,3 +797,25 @@ test('should return false with invalid schema rule', () => {
     })
   ).toBeFalsy()
 })
+
+test('array of schemas', () => {
+  const input = {
+    b: [
+      {
+        a: 'led', b: 1
+      },
+      {
+        a: 'dancing', b: 1
+      },
+    ]
+  }
+  const basicSchema = {
+    a: String, b: Number
+  }
+  const schema = {
+    b: [basicSchema],
+  }  
+  const result = isValid({ input, schema})
+
+  expect(result).toBeTruthy()
+})
