@@ -316,8 +316,10 @@ declare namespace R {
     otherwise<T>(fallback: Function, toResolve: Promise<any>): Promise<T>
     otherwise<T>(fallback: Function) : (toResolve: Promise<any>) => Promise<T>
     
-    then<T>(afterResolve: Function, toResolve: Promise<any>): Promise<T>
-    then<T>(toResolve: Function) : (toResolve: Promise<any>) => Promise<T>
+    // It was originally R.then, but changed due to Ramda export issue 
+    // ============================================
+    resolve<T>(afterResolve: Function, toResolve: Promise<any>): Promise<T>
+    resolve<T>(toResolve: Function) : (toResolve: Promise<any>) => Promise<T>
 
     partition<T>(
       rule: PartitionPredicate<T>,

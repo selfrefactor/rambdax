@@ -201,7 +201,7 @@ const expectedResult = {
 
 It is same as `R.compose` but with support for asynchronous functions.
 
-Note that it doesn't work with promises or function retunring promises such as `const foo = input => new Promise(...)`.
+Note that it doesn't work with promises or function returning promises such as `const foo = input => new Promise(...)`.
 
 ```
 const fn = async x => {
@@ -1201,6 +1201,42 @@ const expectedResult = {
 <a href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20f%3A%20%22foo%22%2C%0A%20%20b%3A%20%22bar%22%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20f%3A1%2C%0A%20%20b%3A2%0A%7D%0Aconst%20result%20%3D%20R.renameProps(rules%2C%20input)%0Aconst%20expectedResult%20%3D%20%7B%0A%20%20foo%3A1%2C%0A%20%20bar%3A2%0A%7D%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
 
 ---
+#### resolve
+
+> resolve(afterResolve: Function, toResolve: Promise): Promise
+
+Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
+
+The example should explain it better:
+
+```
+const expected = {
+  firstName : 'FIRST_NAME_FOO',
+  lastName  : 'LAST_NAME_FOO',
+}
+
+const fetchMember = async x => {
+  await R.delay(200)
+
+  return {
+    a         : 1,
+    firstName : `FIRST_NAME_${ x.query }`,
+    lastName  : `LAST_NAME_${ x.query }`,
+  }
+}
+
+const getMemberName = pipe(
+  email => ({ query : email }),
+  fetchMember,
+  resolve(pick('firstName,lastName'))
+)
+const result = await getMemberName('FOO')
+// result === expected
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/resolve.spec.js)
+
+---
 #### s
 
 > s(): undefined
@@ -1325,42 +1361,6 @@ const expectedResult = 'foo is BAR even 1 more'
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/template.spec.js)
 
 <a href="https://rambda.now.sh?const%20input%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateInput%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.template(input%2CtemplateInput)%0Aconst%20expectedResult%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
-
----
-#### then
-
-> then(afterResolve: Function, toResolve: Promise): Promise
-
-Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
-
-The example should explain it better:
-
-```
-const expected = {
-  firstName : 'FIRST_NAME_FOO',
-  lastName  : 'LAST_NAME_FOO',
-}
-
-const fetchMember = async x => {
-  await R.delay(200)
-
-  return {
-    a         : 1,
-    firstName : `FIRST_NAME_${ x.query }`,
-    lastName  : `LAST_NAME_${ x.query }`,
-  }
-}
-
-const getMemberName = pipe(
-  email => ({ query : email }),
-  fetchMember,
-  then(pick('firstName,lastName'))
-)
-const result = await getMemberName('FOO')
-// result === expected
-```
-
-[Test](https://github.com/selfrefactor/rambdax/blob/master/src/then.spec.js)
 
 ---
 #### toDecimal

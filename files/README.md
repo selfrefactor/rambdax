@@ -175,7 +175,7 @@ const expectedResult = {
 
 It is same as `R.compose` but with support for asynchronous functions.
 
-Note that it doesn't work with promises or function retunring promises such as `const foo = input => new Promise(...)`.
+Note that it doesn't work with promises or function returning promises such as `const foo = input => new Promise(...)`.
 
 ```
 const fn = async x => {
@@ -1007,6 +1007,39 @@ const expectedResult = {
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/renameProps.js)
 
+#### resolve
+
+> resolve(afterResolve: Function, toResolve: Promise): Promise
+
+Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
+
+The example should explain it better:
+
+```
+const expected = {
+  firstName : 'FIRST_NAME_FOO',
+  lastName  : 'LAST_NAME_FOO',
+}
+
+const fetchMember = async x => {
+  await R.delay(200)
+
+  return {
+    a         : 1,
+    firstName : `FIRST_NAME_${ x.query }`,
+    lastName  : `LAST_NAME_${ x.query }`,
+  }
+}
+
+const getMemberName = pipe(
+  email => ({ query : email }),
+  fetchMember,
+  resolve(pick('firstName,lastName'))
+)
+const result = await getMemberName('FOO')
+// result === expected
+```
+
 #### s
 
 > s(): undefined
@@ -1109,39 +1142,6 @@ const expectedResult = 'foo is BAR even 1 more'
 ```
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/template.js)
-
-#### then
-
-> then(afterResolve: Function, toResolve: Promise): Promise
-
-Its purpose is to be used with **pipe** or **compose** methods in order to turn the composition to asynchronous.
-
-The example should explain it better:
-
-```
-const expected = {
-  firstName : 'FIRST_NAME_FOO',
-  lastName  : 'LAST_NAME_FOO',
-}
-
-const fetchMember = async x => {
-  await R.delay(200)
-
-  return {
-    a         : 1,
-    firstName : `FIRST_NAME_${ x.query }`,
-    lastName  : `LAST_NAME_${ x.query }`,
-  }
-}
-
-const getMemberName = pipe(
-  email => ({ query : email }),
-  fetchMember,
-  then(pick('firstName,lastName'))
-)
-const result = await getMemberName('FOO')
-// result === expected
-```
 
 #### toDecimal
 
