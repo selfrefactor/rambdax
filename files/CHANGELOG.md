@@ -6,6 +6,8 @@ Read more about it in `Rambda` changelog
 
 Also with this versions, typings tests are provided and several definitions are changed.
 
+2.16.0 Restore `R.runTests` with `src/extra/` folder
+
 2.15.0 Several changes
 
 - Typescript definitions have been updated and typings tests are introduced

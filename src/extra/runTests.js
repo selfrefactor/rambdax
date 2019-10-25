@@ -1,7 +1,7 @@
-import { omit } from './rambda/omit'
-import { template } from './template'
-import { headObject } from './_internals/headObject'
-import { pass as passMethod } from './pass'
+import { omit } from '../rambda/omit'
+import { template } from '../template'
+import { headObject } from '../_internals/headObject'
+import { pass as passMethod } from '../pass'
 
 const evaluationsSchema = { label : 'string' }
 
