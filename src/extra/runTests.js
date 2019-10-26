@@ -78,9 +78,9 @@ const parseData = map(
 
 export function runTests(input, optionsInput = {}){
   const options = {
-    logFlag: false,
-    async: false,
-    ...optionsInput
+    logFlag : false,
+    async   : false,
+    ...optionsInput,
   }
 
   const pass = passMethod(input)({
@@ -100,6 +100,7 @@ export function runTests(input, optionsInput = {}){
     describe(suiteLabel, () => {
       parseData(data).forEach(dataInstanceInput => {
         const keys = Object.keys(dataInstanceInput)
+        const withAsync = options.async
         const withLabel = keys.includes('label')
         const withMatch = keys.includes('match')
         const dataInstance = withLabel || withMatch ?
@@ -123,20 +124,38 @@ export function runTests(input, optionsInput = {}){
           dataInstanceInput.label :
           `${ testMode }${ appendLabel }`
 
-          
-        if (testMode === 'ok' && !withMatch){
+        if (testMode === 'ok' && !withMatch && !withAsync){
           test(testLabel, () => {
             const result = fn(x)
-            if(options.logFlag) console.log({result, testLabel})
+            if (options.logFlag) console.log({
+              result,
+              testLabel,
+            })
 
             expect(result).toBeTruthy()
           })
         }
 
-        if (testMode === 'ok' && withMatch){
+        if (testMode === 'ok' && !withMatch && withAsync){
+          test(testLabel, async () => {
+            const result = await fn(x)
+            if (options.logFlag) console.log({
+              result,
+              testLabel,
+            })
+
+            expect(result).toBeTruthy()
+          })
+        }
+
+        if (testMode === 'ok' && withMatch && !withAsync){
           test(testLabel, () => {
             const result = fn(x)
-            if(options.logFlag) console.log({result, match: dataInstanceInput.match, testLabel})
+            if (options.logFlag) console.log({
+              result,
+              match : dataInstanceInput.match,
+              testLabel,
+            })
 
             expect(
               equals(result, dataInstanceInput.match)
@@ -144,19 +163,56 @@ export function runTests(input, optionsInput = {}){
           })
         }
 
-        if (testMode === 'fail' && !withMatch){
+        /*
+          TODO handle long timeout
+        */
+        if (testMode === 'ok' && withMatch && withAsync){
+          test(testLabel, async () => {
+            const result = await fn(x)
+            if (options.logFlag) console.log({
+              result,
+              match : dataInstanceInput.match,
+              testLabel,
+            })
+
+            expect(
+              equals(result, dataInstanceInput.match)
+            ).toBeTruthy()
+          })
+        }
+
+        if (testMode === 'fail' && !withMatch && !withAsync){
           test(testLabel, () => {
             const result = fn(x)
-            if(options.logFlag) console.log({result, testLabel})
+            if (options.logFlag) console.log({
+              result,
+              testLabel,
+            })
 
             expect(result).toBeFalsy()
           })
         }
 
-        if (testMode === 'fail' && withMatch){
+        if (testMode === 'fail' && !withMatch && withAsync){
+          test(testLabel, async () => {
+            const result = await fn(x)
+            if (options.logFlag) console.log({
+              result,
+              testLabel,
+            })
+
+            expect(result).toBeFalsy()
+          })
+        }
+
+        if (testMode === 'fail' && withMatch && !withAsync){
           test(testLabel, () => {
             const result = fn(x)
-            if(options.logFlag) console.log({result, match: dataInstanceInput.match, testLabel})
+            if (options.logFlag) console.log({
+              result,
+              match : dataInstanceInput.match,
+              testLabel,
+            })
 
             expect(
               equals(result, dataInstanceInput.match)
@@ -164,13 +220,81 @@ export function runTests(input, optionsInput = {}){
           })
         }
 
-        if (testMode === 'danger' && !withMatch){
+        if (testMode === 'fail' && withMatch && withAsync){
+          test(testLabel, async () => {
+            const result = await fn(x)
+            if (options.logFlag) console.log({
+              result,
+              match : dataInstanceInput.match,
+              testLabel,
+            })
+
+            expect(
+              equals(result, dataInstanceInput.match)
+            ).toBeFalsy()
+          })
+        }
+
+        if (testMode === 'danger' && !withMatch && !withAsync){
           test(testLabel, () => {
-            if(options.logFlag) console.log({x, testLabel})
+            if (options.logFlag) console.log({
+              x,
+              testLabel,
+            })
 
             expect(
               () => fn(x)
             ).toThrow()
+          })
+        }
+
+        if (testMode === 'danger' && !withMatch && withAsync){
+          test(testLabel, async () => {
+            if (options.logFlag) console.log({
+              x,
+              testLabel,
+            })
+
+            try {
+              await fn(x)
+              expect('danger should throw but it didn\'t').toBe('')
+
+            } catch (error){
+              expect('danger should throw and it did').toBe('danger should throw and it did')
+            }
+          })
+        }
+
+        if (testMode === 'danger' && withMatch && !withAsync){
+          test(testLabel, () => {
+            if (options.logFlag) console.log({
+              x,
+              testLabel,
+              match : dataInstanceInput.match,
+            })
+
+            expect(
+              () => fn(x)
+            ).toThrow(dataInstanceInput.match)
+          })
+        }
+
+        if (testMode === 'danger' && withMatch && withAsync){
+          test(testLabel, async () => {
+            console.log(334)
+            if (options.logFlag) console.log({
+              x,
+              testLabel,
+              match : dataInstanceInput.match,
+            })
+
+            try {
+              const a = await fn(x)
+              console.log({ a })
+              // expect('danger should throw but it didn\'t').toBe('')
+            } catch (error){
+              expect(error).toEqual(dataInstanceInput.match)
+            }
           })
         }
       })
