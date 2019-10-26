@@ -75,18 +75,18 @@ runTests(withGetEvaluations)
 
 const evaluations = [
   getPositiveEvaluation({
-    label: 'positive',
-    fn: x => typeof x
+    label : 'positive',
+    fn    : x => typeof x,
   }),
   getNegativeEvaluation({
-    label: 'negative',
-    fn: x => typeof x
+    label : 'negative',
+    fn    : x => typeof x,
   }),
 ]
 
 const withGetPositiveEvaluation = {
-  testSuite   : 'foo',
-  data        : [ { singleCase } ],
+  testSuite : 'foo',
+  data      : [ { singleCase } ],
   evaluations,
 }
 
