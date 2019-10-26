@@ -107,6 +107,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "r.run.tests new api"
   }
 }
