@@ -59,7 +59,7 @@ const withObject = {
 
 const withAsyncFn = async x => {
   await delay(100)
-  if(!x) throw new Error('foo.error')
+  if (!x) throw new Error('foo.error')
 
   return x + 1
 }

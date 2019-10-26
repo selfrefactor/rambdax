@@ -281,7 +281,6 @@ export function runTests(input, optionsInput = {}){
 
         if (testMode === 'danger' && withMatch && withAsync){
           test(testLabel, async () => {
-            console.log(334)
             if (options.logFlag) console.log({
               x,
               testLabel,
@@ -289,9 +288,8 @@ export function runTests(input, optionsInput = {}){
             })
 
             try {
-              const a = await fn(x)
-              console.log({ a })
-              // expect('danger should throw but it didn\'t').toBe('')
+              await fn(x)
+              expect('danger test mode should throw but it didn\'t').toBe('')
             } catch (error){
               expect(error).toEqual(dataInstanceInput.match)
             }
