@@ -1,7 +1,7 @@
 import { type } from './rambda/type'
 import { toLower } from './rambda/toLower'
 import { includes } from './rambda/includes'
-import { test } from './rambda/testModule'
+import { test } from './rambda/testMethod.js'
 import { any } from './rambda/any'
 import { all } from './rambda/all'
 import { init } from './rambda/init'

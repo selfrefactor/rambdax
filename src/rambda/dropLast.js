@@ -1,8 +1,6 @@
 /**
  * Returns a list containing all but the last `n` elements of the given `list`.
  *
- * Acts as a transducer if a transformer is given in list position.
- *
  * @func
  * @category List
  * @sig Number -> [a] -> [a]
@@ -21,5 +19,5 @@
 export function dropLast(n, list){
   if (arguments.length === 1) return _list => dropLast(n, _list)
 
-  return list.slice(0, -n)
+  return n > 0 ? list.slice(0, -n) : list.slice()
 }

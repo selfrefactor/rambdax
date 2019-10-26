@@ -1,11 +1,20 @@
 import { type } from './type'
 
+function parseError(maybeError){
+  const typeofError = maybeError.__proto__.toString()
+  if (![ 'Error', 'TypeError' ].includes(typeofError)) return []
+
+  return [ typeofError, maybeError.message ]
+}
+
+function parseDate(maybeDate){
+  if (!maybeDate.toDateString) return [ false ]
+
+  return [ true, maybeDate.getTime() ]
+}
+
 /**
- * Returns `true` if its arguments are equivalent, `false` otherwise. Handles
- * cyclical data structures.
- *
- * Dispatches symmetrically to the `equals` methods of both arguments, if
- * present.
+ * Returns `true` if its arguments are equivalent, `false` otherwise.
  *
  * @func
  * @category Relation
@@ -26,15 +35,11 @@ import { type } from './type'
 export function equals(a, b){
   if (arguments.length === 1) return _b => equals(a, _b)
 
-  if (a === b){
-    return true
-  }
-
   const aType = type(a)
-
-  if (aType !== type(b)){
-    return false
-  }
+  if (aType !== type(b)) return false
+  if ([ 'NaN', 'Undefined', 'Null' ].includes(aType)) return true
+  if (aType === 'String') return a === b
+  if ([ 'Boolean', 'Number' ].includes(aType)) return a.toString() === b.toString()
 
   if (aType === 'Array'){
     const aClone = Array.from(a)
@@ -57,6 +62,24 @@ export function equals(a, b){
     })
 
     return loopArrayFlag
+  }
+
+  const aDate = parseDate(a)
+  const bDate = parseDate(b)
+
+  if (aDate[ 0 ]){
+    return bDate[ 0 ] ? aDate[ 1 ] === bDate[ 1 ] : false
+  } else if (bDate[ 0 ]) return false
+
+  const aError = parseError(a)
+  const bError = parseError(b)
+
+  if (
+    aError[ 0 ]
+  ){
+    return bError[ 0 ] ?
+      aError[ 0 ] === bError[ 0 ] && aError[ 1 ] === bError[ 1 ] :
+      false
   }
 
   if (aType === 'Object'){

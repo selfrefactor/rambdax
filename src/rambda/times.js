@@ -5,9 +5,6 @@ import { range } from './range'
  * Calls an input function `n` times, returning an array containing the results
  * of those function calls.
  *
- * `fn` is passed one argument: The current value of `n`, which begins at `0`
- * and is gradually incremented to `n - 1`.
- *
  * @func
  * @category List
  * @sig (Number -> a) -> Number -> [a]
@@ -23,6 +20,7 @@ import { range } from './range'
  */
 export function times(fn, n){
   if (arguments.length === 1) return _n => times(fn, _n)
+  if (!Number.isInteger(n) || n < 0) throw new RangeError('n must be an integer')
 
   return map(fn, range(0, n))
 }

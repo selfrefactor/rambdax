@@ -15,15 +15,13 @@ import baseSlice from './internal/baseSlice'
  *
  *      R.takeLast(1, ['foo', 'bar', 'baz']); //=> ['baz']
  *      R.takeLast(2, ['foo', 'bar', 'baz']); //=> ['bar', 'baz']
- *      R.takeLast(3, ['foo', 'bar', 'baz']); //=> ['foo', 'bar', 'baz']
- *      R.takeLast(4, ['foo', 'bar', 'baz']); //=> ['foo', 'bar', 'baz']
  *      R.takeLast(3, 'ramda');               //=> 'mda'
  */
 export function takeLast(n, list){
   if (arguments.length === 1) return _list => takeLast(n, _list)
 
   const len = list.length
-
+  if (n < 0) return list.slice()
   let numValue = n > len ? len : n
 
   if (typeof list === 'string') return list.slice(len - numValue)

@@ -1,32 +1,29 @@
-import { runTests, getEvaluations } from 'rambdax'
-
-const numberCase = {
-  foo: 1,
-  t: 'number',
-  f: 'boolean',
-}
-const stringCase = {
-  fo: '123',
-  t: 'string',
-  f: 'boolean',
-}
+import { runTests } from 'rambdax'
 
 describe('runTests', () => {
-  it('data property fallback to object', () => {
-    const evaluations = getEvaluations({
-      label: 'BAR',
-      fn: (x:any) => typeof x
-    })
+  it('happy', () => {
+    const testFn = (x:any) => typeof x.a === 'number'
 
-    const data = [
-      {numberCase},
-      {stringCase},
+    const testData = [
+      {
+        ok    : { a : 1 },
+        label : 'happy',
+        match : true,
+      },
+      { fail : { a : true } },
+      { fail : { b : true } },
+      { danger : null },
+      {
+        danger : null,
+        match  : 'Cannot read property \'a\' of null',
+      },
     ]
-    const result = runTests({
-      testSuite: 'Foo',
-      data,
-      evaluations
-    }); 
-    result // $ExpectType any
+    
+    const runTestsInput = {
+      label : 'foo',
+      data  : testData,
+      fn    : testFn,
+    }
+    runTests(runTestsInput) 
   });
 });

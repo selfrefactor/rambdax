@@ -13,15 +13,11 @@
  *      hasName({name: 'alice'});   //=> true
  *      hasName({name: 'bob'});     //=> true
  *      hasName({});                //=> false
- *
- *      const point = {x: 0, y: 0};
- *      const pointHas = R.has(R.__, point);
- *      pointHas('x');  //=> true
- *      pointHas('y');  //=> true
- *      pointHas('z');  //=> false
  */
 export function has(prop, obj){
   if (arguments.length === 1) return _obj => has(prop, _obj)
+
+  if (!obj) return false
 
   return obj[ prop ] !== undefined
 }

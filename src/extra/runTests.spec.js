@@ -1,4 +1,3 @@
-import { omit } from '../rambda/omit'
 import { delay } from '../delay'
 import { runTests } from './runTests'
 
@@ -25,7 +24,7 @@ const runTestsInput = {
   data  : testData,
   fn    : testFn,
 }
-// runTests(runTestsInput)
+runTests(runTestsInput)
 
 const withObjectFn = x => ({
   ...x,
@@ -55,7 +54,7 @@ const withObject = {
   data  : withObjectData,
   fn    : withObjectFn,
 }
-// runTests(withObject, {logFlag: false})
+runTests(withObject, { logFlag : false })
 
 const withAsyncFn = async x => {
   await delay(100)
@@ -65,19 +64,23 @@ const withAsyncFn = async x => {
 }
 
 const withAsyncData = [
-  // {
-  //   ok    : 1,
-  //   match : 2,
-  // },
-  // {
-  //   fail  : 1,
-  //   match : 3,
-  //   label : 'tea for one',
-  // },
-  // { danger : null },
+  {
+    ok    : 1,
+    match : 2,
+  },
+  {
+    fail  : 1,
+    match : 3,
+    label : 'tea for one',
+  },
+  { danger : null },
   {
     danger : null,
     match  : 'foo.error',
+  },
+  {
+    danger : null,
+    match  : new Error('foo.error'),
   },
 ]
 
@@ -89,18 +92,12 @@ const withAsync = {
 
 runTests(withAsync, { async : true })
 
-// test('undefined throws', () => {
-//   expect(() => runTests()).toThrow()
-// })
+test('undefined throws', () => {
+  expect(() => runTests()).toThrow()
+})
 
-// test('missing `testSuite`', () => {
-//   expect(() =>
-//     runTests(omit('testSuite', runTestsInput))
-//   ).toThrow()
-// })
-
-//   whenTrue : async x => {
-//     const result = await delay(x.foo)
-
-//     expect(result).toBe(x.t)
-//   },
+test('missing `testSuite`', () => {
+  expect(() =>
+    runTests(omit('testSuite', runTestsInput))
+  ).toThrow()
+})

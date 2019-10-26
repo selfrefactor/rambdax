@@ -291,7 +291,12 @@ export function runTests(input, optionsInput = {}){
               await fn(x)
               expect('danger test mode should throw but it didn\'t').toBe('')
             } catch (error){
-              expect(error).toEqual(dataInstanceInput.match)
+              const matchError = equals(error, dataInstanceInput.match)
+              const messageError = equals(error, new Error(dataInstanceInput.match))
+
+              expect(
+                matchError || messageError
+              ).toBeTruthy()
             }
           })
         }

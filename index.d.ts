@@ -161,20 +161,17 @@ declare namespace R {
   interface TypedObject<T> {
     [key: string]: T
   }
-  interface RunTestEvaluation{
-    label: string,
-    [fnToEvaluateKey: string]: function
+
+  interface SingleRunTest {
+    label?: string
+    match?: any
+    [testMode: 'ok' | 'fail' | 'danger']: any
   }
   interface X {
-    getEvaluations({
-      label: string,
-      fn: Function
-    }) : [RunTestEvaluation, RunTestEvaluation]
-    
     runTests(input: {
-      testSuite: string,
-      data: Object[],
-      evaluations: Array<RunTestEvaluation>,
+      label: string,
+      data: Array<SingleRunTest>,
+      fn: Function<any>,
     })
 
     // R.contains will be deprecated
