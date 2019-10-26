@@ -1,19 +1,20 @@
 import { omit } from '../rambda/omit'
 import { delay } from '../delay'
-import { runTests } from './runTests'
+import { runTests, getEvaluations, getPositiveEvaluation, getNegativeEvaluation } from './runTests'
 
 const whenTrue = {
-  label    : '{{tag}} my sweet lord',
+  label    : '{{tag}} - when true',
   whenTrue : x => {
-    expect(typeof x.foo).toBe(x.t)
+    expect(typeof x.foo).toEqual(x.t)
   },
 }
 const whenFalse = {
-  label     : '{{tag}} under my thumb',
+  label     : '{{tag}} - when false',
   whenFalse : x => {
-    expect(typeof x.foo).not.toBe(x.f)
+    expect(typeof x.foo).not.toEqual(x.f)
   },
 }
+
 const singleCase = {
   foo : 1,
   t   : 'number',
@@ -60,3 +61,33 @@ const runTestsInputAsync = {
 }
 
 runTests(runTestsInputAsync)
+
+const withGetEvaluations = {
+  testSuite   : 'foo',
+  data        : [ { singleCase } ],
+  evaluations : getEvaluations({
+    label : 'BAR',
+    fn    : x => typeof x,
+  }),
+}
+
+runTests(withGetEvaluations)
+
+const evaluations = [
+  getPositiveEvaluation({
+    label: 'positive',
+    fn: x => typeof x
+  }),
+  getNegativeEvaluation({
+    label: 'negative',
+    fn: x => typeof x
+  }),
+]
+
+const withGetPositiveEvaluation = {
+  testSuite   : 'foo',
+  data        : [ { singleCase } ],
+  evaluations,
+}
+
+runTests(withGetPositiveEvaluation)

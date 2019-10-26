@@ -38,3 +38,28 @@ export function runTests(input){
     throw new Error('R.runTestsCatch')
   }
 }
+
+export const getPositiveEvaluation = ({ label, fn }) => ({
+  label : `{{tag}} - ${ label }`,
+  fn    : x => {
+    expect(fn(x.foo)).toEqual(x.t)
+  },
+})
+
+export const getNegativeEvaluation = ({ label, fn }) => ({
+  label : `{{tag}} - ${ label }`,
+  fn    : x => {
+    expect(fn(x.foo)).not.toEqual(x.f)
+  },
+})
+
+export const getEvaluations = ({ label, fn }) => [
+  getPositiveEvaluation({
+    label,
+    fn,
+  }),
+  getNegativeEvaluation({
+    label,
+    fn,
+  }),
+]

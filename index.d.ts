@@ -1,5 +1,4 @@
 declare namespace R {
-  // RAMBDA_START
   type RambdaTypes = "Async"
     | "Array"
     | "Boolean"
@@ -45,8 +44,6 @@ declare namespace R {
   interface Dictionary<T> {
     [index: string]: T
   }
-  // RAMBDA_END
-  // RAMBDAX_START
   type ArgumentTypes<T> = T extends (... args: infer U ) => infer R ? U: never;
   type ReplaceReturnType<T, TNewReturn> = (...a: ArgumentTypes<T>) => TNewReturn;
 
@@ -56,8 +53,8 @@ declare namespace R {
     is: isfn<Switchem<T>>
     default: IdentityFunction<T>
   }
-  // RAMBDAX_END
-  // RAMDA_START
+  // MARKER
+  // ============================================
   type Ord = number | string | boolean
 
   type Path = Array<number | string>
@@ -164,9 +161,21 @@ declare namespace R {
   interface TypedObject<T> {
     [key: string]: T
   }
-  // RAMDA_END
+  interface RunTestEvaluation{
+    label: string,
+    [fnToEvaluateKey: string]: function
+  }
   interface X {
-    // RAMBDAX_START
+    getEvaluations({
+      label: string,
+      fn: Function
+    }) : [RunTestEvaluation, RunTestEvaluation]
+    
+    runTests(input: {
+      testSuite: string,
+      data: Object[],
+      evaluations: Array<RunTestEvaluation>,
+    })
 
     // R.contains will be deprecated
     // ============================================
@@ -431,8 +440,6 @@ declare namespace R {
       rule: Async<boolean> | Func<boolean> | boolean,
       ruleTrueFn: Async<any> | Function
     ): Async<T>
-    // RAMBDAX_END
-    // RAMBDA_MARKER
     add(a: number, b: number): number
     add(first: string, second: string): string
     add(a: number): (b: number) => number

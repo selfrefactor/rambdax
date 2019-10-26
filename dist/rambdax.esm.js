@@ -882,6 +882,372 @@ function defaultToStrict(defaultArgument, ...inputArguments) {
   return holder === undefined ? defaultArgument : holder;
 }
 
+function omit(keys, obj) {
+  if (arguments.length === 1) return _obj => omit(keys, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
+  const willReturn = {};
+
+  for (const key in obj) {
+    if (!keysValue.includes(key)) {
+      willReturn[key] = obj[key];
+    }
+  }
+
+  return willReturn;
+}
+
+const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
+
+const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
+
+const replace = ({
+  inputHolder,
+  prop,
+  replacer
+}) => inputHolder.replace(`{{${prop}}}`, replacer);
+
+function template(input, templateInput) {
+  if (arguments.length === 1) {
+    return templateInputHolder => template(input, templateInputHolder);
+  }
+
+  const occurances = getOccurances(input);
+  if (occurances === null) return input;
+  let inputHolder = input;
+
+  for (const occurance of occurances) {
+    const prop = getOccuranceProp(occurance);
+    const replacer = templateInput[prop];
+    if (replacer === undefined) continue;
+    inputHolder = replace({
+      inputHolder,
+      prop,
+      replacer
+    });
+  }
+
+  return inputHolder;
+}
+
+function headObject(x) {
+  if (type(x) !== 'Object') throw new Error('R.headObject.type');
+  const [tag, no] = Object.keys(x);
+  if (tag === undefined) throw new Error('R.headObject.less');
+  if (no !== undefined) throw new Error('R.headObject.more');
+  return {
+    prop: tag,
+    value: x[tag]
+  };
+}
+
+function any(fn, list) {
+  if (arguments.length === 1) return _list => any(fn, _list);
+  let counter = 0;
+
+  while (counter < list.length) {
+    if (fn(list[counter], counter)) {
+      return true;
+    }
+
+    counter++;
+  }
+
+  return false;
+}
+
+function toLower(str) {
+  return str.toLowerCase();
+}
+
+function includes(target, list) {
+  if (arguments.length === 1) return _input => includes(target, _input);
+
+  if (typeof list === 'string') {
+    return list.includes(target);
+  }
+
+  if (!Array.isArray(list)) return false;
+  let index = -1;
+
+  while (++index < list.length) {
+    if (equals(list[index], target)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function test$1(pattern, str) {
+  if (arguments.length === 1) return _str => test$1(pattern, _str);
+  return str.search(pattern) !== -1;
+}
+
+function all(fn, list) {
+  if (arguments.length === 1) return _list => all(fn, _list);
+
+  for (let i = 0; i < list.length; i++) {
+    if (!fn(list[i], i)) return false;
+  }
+
+  return true;
+}
+
+function isPrototype(input) {
+  const currentPrototype = input.prototype;
+  const list = [Number, String, Boolean, Promise];
+  let toReturn = false;
+  let counter = -1;
+
+  while (++counter < list.length && !toReturn) {
+    if (currentPrototype === list[counter].prototype) toReturn = true;
+  }
+
+  return toReturn;
+}
+function prototypeToString(input) {
+  const currentPrototype = input.prototype;
+  const list = [Number, String, Boolean, Promise];
+  const translatedList = ['Number', 'String', 'Boolean', 'Promise'];
+  let found;
+  let counter = -1;
+
+  while (++counter < list.length) {
+    if (currentPrototype === list[counter].prototype) found = counter;
+  }
+
+  return translatedList[found];
+}
+const typesWithoutPrototype = ['any', 'promise', 'async', 'function'];
+
+function fromPrototypeToString(rule) {
+  if (Array.isArray(rule) || rule === undefined || rule === null || rule.prototype === undefined || typesWithoutPrototype.includes(rule)) {
+    return {
+      rule,
+      parsed: false
+    };
+  }
+
+  if (String.prototype === rule.prototype) {
+    return {
+      rule: 'string',
+      parsed: true
+    };
+  }
+
+  if (Boolean.prototype === rule.prototype) {
+    return {
+      rule: 'boolean',
+      parsed: true
+    };
+  }
+
+  if (Number.prototype === rule.prototype) {
+    return {
+      rule: 'number',
+      parsed: true
+    };
+  }
+
+  return {
+    rule: type(rule.prototype).toLowerCase(),
+    parsed: true
+  };
+}
+
+function getRuleAndType(schema, requirementRaw) {
+  const ruleRaw = schema[requirementRaw];
+  const typeIs = type(ruleRaw);
+  const {
+    rule,
+    parsed
+  } = fromPrototypeToString(ruleRaw);
+  return {
+    rule: rule,
+    ruleType: parsed ? 'String' : typeIs
+  };
+}
+
+function isValid({
+  input,
+  schema
+}) {
+  if (input === undefined || schema === undefined) return false;
+  let flag = true;
+
+  const boom = boomFlag => {
+    if (!boomFlag) {
+      flag = false;
+    }
+  };
+
+  for (const requirementRaw in schema) {
+    if (flag) {
+      const isOptional = requirementRaw.endsWith('?');
+      const requirement = isOptional ? init(requirementRaw) : requirementRaw;
+      const {
+        rule,
+        ruleType
+      } = getRuleAndType(schema, requirementRaw);
+      const inputProp = input[requirement];
+      const inputPropType = type(input[requirement]);
+      const ok = isOptional && inputProp !== undefined || !isOptional;
+      if (!ok || rule === 'any' && inputProp != null || rule === inputProp) continue;
+
+      if (ruleType === 'Object') {
+        const isValidResult = isValid({
+          input: inputProp,
+          schema: rule
+        });
+        boom(isValidResult);
+      } else if (ruleType === 'String') {
+        boom(toLower(inputPropType) === rule);
+      } else if (typeof rule === 'function') {
+        boom(rule(inputProp));
+      } else if (ruleType === 'Array' && inputPropType === 'String') {
+        boom(includes(inputProp, rule));
+      } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
+        const [currentRule] = rule;
+        const currentRuleType = type(currentRule);
+        boom(currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule));
+
+        if (currentRuleType === 'Object' && flag) {
+          const isValidResult = all(inputPropInstance => isValid({
+            input: inputPropInstance,
+            schema: currentRule
+          }), inputProp);
+          boom(isValidResult);
+        } else if (flag) {
+          const actualRule = currentRuleType === 'String' ? currentRule : prototypeToString(currentRule);
+          const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(), inputProp);
+          boom(!isInvalidResult);
+        }
+      } else if (ruleType === 'RegExp' && inputPropType === 'String') {
+        boom(test$1(rule, inputProp));
+      } else {
+        boom(false);
+      }
+    }
+  }
+
+  return flag;
+}
+
+function check(singleInput, schema) {
+  return isValid({
+    input: {
+      singleInput
+    },
+    schema: {
+      singleInput: schema
+    }
+  });
+}
+function ok(...inputs) {
+  return (...schemas) => {
+    let failedSchema;
+    const pass = any((singleInput, i) => {
+      const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+      const checked = check(singleInput, schema);
+
+      if (!checked) {
+        failedSchema = JSON.stringify({
+          input: singleInput,
+          schema
+        });
+      }
+
+      return !checked;
+    }, inputs) === false;
+    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
+    return true;
+  };
+}
+
+function pass(...inputs) {
+  return (...schemas) => any((x, i) => {
+    const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+    return !check(x, schema);
+  }, inputs) === false;
+}
+
+const evaluationsSchema = {
+  label: 'string'
+};
+function runTests(input) {
+  const pass$1 = pass(input)({
+    testSuite: 'string',
+    evaluations: [evaluationsSchema]
+  });
+
+  if (describe === undefined || !pass$1) {
+    throw new Error('R.runTests.init');
+  }
+
+  try {
+    const {
+      testSuite,
+      evaluations,
+      data
+    } = input;
+    describe(testSuite, () => {
+      evaluations.forEach(singleEvaluation => {
+        data.forEach(dataInstance => {
+          const {
+            prop: tag,
+            value: x
+          } = headObject(dataInstance);
+          const {
+            value: evaluationFunction
+          } = headObject(omit('label', singleEvaluation));
+          const label = template(singleEvaluation.label, {
+            tag
+          });
+          test(label, () => {
+            evaluationFunction(x);
+          });
+        });
+      });
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error('R.runTestsCatch');
+  }
+}
+const getPositiveEvaluation = ({
+  label,
+  fn
+}) => ({
+  label: `{{tag}} - ${label}`,
+  fn: x => {
+    expect(fn(x.foo)).toEqual(x.t);
+  }
+});
+const getNegativeEvaluation = ({
+  label,
+  fn
+}) => ({
+  label: `{{tag}} - ${label}`,
+  fn: x => {
+    expect(fn(x.foo)).not.toEqual(x.f);
+  }
+});
+const getEvaluations = ({
+  label,
+  fn
+}) => [getPositiveEvaluation({
+  label,
+  fn
+}), getNegativeEvaluation({
+  label,
+  fn
+})];
+
 function defaultToWhen(defaultArgument, fn, ...inputArguments) {
   if (arguments.length === 2) {
     return (...inputArgumentsHolder) => defaultToWhen(defaultArgument, fn, ...inputArgumentsHolder);
@@ -1053,7 +1419,7 @@ function hasPath(maybePath, obj) {
   return path(maybePath, obj) !== undefined;
 }
 
-function headObject(input) {
+function headObject$1(input) {
   const [head, _] = Object.entries(input);
   if (!head) return {
     prop: undefined,
@@ -1084,21 +1450,6 @@ function ifElseAsync(condition, ifFn, elseFn) {
   });
 }
 
-function any(fn, list) {
-  if (arguments.length === 1) return _list => any(fn, _list);
-  let counter = 0;
-
-  while (counter < list.length) {
-    if (fn(list[counter], counter)) {
-      return true;
-    }
-
-    counter++;
-  }
-
-  return false;
-}
-
 function includesType(targetType, list) {
   if (arguments.length === 1) {
     return listHolder => includesType(targetType, listHolder);
@@ -1107,18 +1458,18 @@ function includesType(targetType, list) {
   return any(x => type(x) === targetType, list);
 }
 
-function replace(pattern, replacer, str) {
+function replace$1(pattern, replacer, str) {
   if (replacer === undefined) {
-    return (_replacer, _str) => replace(pattern, _replacer, _str);
+    return (_replacer, _str) => replace$1(pattern, _replacer, _str);
   } else if (str === undefined) {
-    return _str => replace(pattern, replacer, _str);
+    return _str => replace$1(pattern, replacer, _str);
   }
 
   return str.replace(pattern, replacer);
 }
 
 function inject(injection, marker, content, beforeFlag = false) {
-  return replace(marker, beforeFlag ? `${injection}${marker}` : `${marker}${injection}`, content);
+  return replace$1(marker, beforeFlag ? `${injection}${marker}` : `${marker}${injection}`, content);
 }
 
 function range(from, to) {
@@ -1154,8 +1505,8 @@ function shuffle(arrayRaw) {
 }
 
 const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
-const loops = range(0, 8);
-function uuid() {
+function uuid(length = 8) {
+  const loops = range(0, length);
   return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
 }
 
@@ -1176,184 +1527,6 @@ function interval({
       }
     }, ms);
   });
-}
-
-function toLower(str) {
-  return str.toLowerCase();
-}
-
-function includes(target, list) {
-  if (arguments.length === 1) return _input => includes(target, _input);
-
-  if (typeof list === 'string') {
-    return list.includes(target);
-  }
-
-  if (!Array.isArray(list)) return false;
-  let index = -1;
-
-  while (++index < list.length) {
-    if (equals(list[index], target)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function test(pattern, str) {
-  if (arguments.length === 1) return _str => test(pattern, _str);
-  return str.search(pattern) !== -1;
-}
-
-function all(fn, list) {
-  if (arguments.length === 1) return _list => all(fn, _list);
-
-  for (let i = 0; i < list.length; i++) {
-    if (!fn(list[i], i)) return false;
-  }
-
-  return true;
-}
-
-function isPrototype(input) {
-  const currentPrototype = input.prototype;
-  const list = [Number, String, Boolean, Promise];
-  let toReturn = false;
-  let counter = -1;
-
-  while (++counter < list.length && !toReturn) {
-    if (currentPrototype === list[counter].prototype) toReturn = true;
-  }
-
-  return toReturn;
-}
-function prototypeToString(input) {
-  const currentPrototype = input.prototype;
-  const list = [Number, String, Boolean, Promise];
-  const translatedList = ['Number', 'String', 'Boolean', 'Promise'];
-  let found;
-  let counter = -1;
-
-  while (++counter < list.length) {
-    if (currentPrototype === list[counter].prototype) found = counter;
-  }
-
-  return translatedList[found];
-}
-const typesWithoutPrototype = ['any', 'promise', 'async', 'function'];
-
-function fromPrototypeToString(rule) {
-  if (Array.isArray(rule) || rule === undefined || rule === null || rule.prototype === undefined || typesWithoutPrototype.includes(rule)) {
-    return {
-      rule,
-      parsed: false
-    };
-  }
-
-  if (String.prototype === rule.prototype) {
-    return {
-      rule: 'string',
-      parsed: true
-    };
-  }
-
-  if (Boolean.prototype === rule.prototype) {
-    return {
-      rule: 'boolean',
-      parsed: true
-    };
-  }
-
-  if (Number.prototype === rule.prototype) {
-    return {
-      rule: 'number',
-      parsed: true
-    };
-  }
-
-  return {
-    rule: type(rule.prototype).toLowerCase(),
-    parsed: true
-  };
-}
-
-function getRuleAndType(schema, requirementRaw) {
-  const ruleRaw = schema[requirementRaw];
-  const typeIs = type(ruleRaw);
-  const {
-    rule,
-    parsed
-  } = fromPrototypeToString(ruleRaw);
-  return {
-    rule: rule,
-    ruleType: parsed ? 'String' : typeIs
-  };
-}
-
-function isValid({
-  input,
-  schema
-}) {
-  if (input === undefined || schema === undefined) return false;
-  let flag = true;
-
-  const boom = boomFlag => {
-    if (!boomFlag) {
-      flag = false;
-    }
-  };
-
-  for (const requirementRaw in schema) {
-    if (flag) {
-      const isOptional = requirementRaw.endsWith('?');
-      const requirement = isOptional ? init(requirementRaw) : requirementRaw;
-      const {
-        rule,
-        ruleType
-      } = getRuleAndType(schema, requirementRaw);
-      const inputProp = input[requirement];
-      const inputPropType = type(input[requirement]);
-      const ok = isOptional && inputProp !== undefined || !isOptional;
-      if (!ok || rule === 'any' && inputProp != null || rule === inputProp) continue;
-
-      if (ruleType === 'Object') {
-        const isValidResult = isValid({
-          input: inputProp,
-          schema: rule
-        });
-        boom(isValidResult);
-      } else if (ruleType === 'String') {
-        boom(toLower(inputPropType) === rule);
-      } else if (typeof rule === 'function') {
-        boom(rule(inputProp));
-      } else if (ruleType === 'Array' && inputPropType === 'String') {
-        boom(includes(inputProp, rule));
-      } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array') {
-        const [currentRule] = rule;
-        const currentRuleType = type(currentRule);
-        boom(currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule));
-
-        if (currentRuleType === 'Object' && flag) {
-          const isValidResult = all(inputPropInstance => isValid({
-            input: inputPropInstance,
-            schema: currentRule
-          }), inputProp);
-          boom(isValidResult);
-        } else if (flag) {
-          const actualRule = currentRuleType === 'String' ? currentRule : prototypeToString(currentRule);
-          const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(), inputProp);
-          boom(!isInvalidResult);
-        }
-      } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-        boom(test(rule, inputProp));
-      } else {
-        boom(false);
-      }
-    }
-  }
-
-  return flag;
 }
 
 function isAttach() {
@@ -1405,9 +1578,10 @@ function isType(xType, x) {
 async function mapAsyncFn(fn, arr) {
   if (Array.isArray(arr)) {
     const willReturn = [];
+    let i = 0;
 
     for (const a of arr) {
-      willReturn.push((await fn(a)));
+      willReturn.push((await fn(a, i++)));
     }
 
     return willReturn;
@@ -1433,7 +1607,7 @@ function mapAsync(fn, arr) {
 }
 
 async function mapFastAsyncFn(fn, arr) {
-  const promised = arr.map(a => fn(a));
+  const promised = arr.map((a, i) => fn(a, i));
   return Promise.all(promised);
 }
 
@@ -1487,37 +1661,6 @@ function mergeAll(arr) {
   return willReturn;
 }
 
-function check(singleInput, schema) {
-  return isValid({
-    input: {
-      singleInput
-    },
-    schema: {
-      singleInput: schema
-    }
-  });
-}
-function ok(...inputs) {
-  return (...schemas) => {
-    let failedSchema;
-    const pass = any((singleInput, i) => {
-      const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
-      const checked = check(singleInput, schema);
-
-      if (!checked) {
-        failedSchema = JSON.stringify({
-          input: singleInput,
-          schema
-        });
-      }
-
-      return !checked;
-    }, inputs) === false;
-    if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
-    return true;
-  };
-}
-
 function mapToObject(fn, list) {
   if (arguments.length === 1) {
     return listHolder => mapToObject(fn, listHolder);
@@ -1559,8 +1702,8 @@ const stringify = a => {
   if (type(a) === 'String') {
     return a;
   } else if (['Function', 'Async'].includes(type(a))) {
-    const compacted = replace(/\s{1,}/g, ' ', a.toString());
-    return replace(/\s/g, '_', take(15, compacted));
+    const compacted = replace$1(/\s{1,}/g, ' ', a.toString());
+    return replace$1(/\s/g, '_', take(15, compacted));
   } else if (type(a) === 'Object') {
     return JSON.stringify(normalizeObject(a));
   }
@@ -1626,13 +1769,6 @@ function nextIndex(index, list) {
   const base = typeof list === 'number' ? list : list.length;
   const newIndex = index >= base - 1 ? 0 : index + 1;
   return newIndex;
-}
-
-function pass(...inputs) {
-  return (...schemas) => any((x, i) => {
-    const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
-    return !check(x, schema);
-  }, inputs) === false;
 }
 
 function curry(fn, args = []) {
@@ -1818,33 +1954,14 @@ function remove(inputs, text) {
   }
 
   if (type(inputs) !== 'Array') {
-    return replace(inputs, '', text).trim();
+    return replace$1(inputs, '', text).trim();
   }
 
   let textCopy = text;
   inputs.forEach(singleInput => {
-    textCopy = replace(singleInput, '', textCopy).trim();
+    textCopy = replace$1(singleInput, '', textCopy).trim();
   });
   return textCopy;
-}
-
-function omit(keys, obj) {
-  if (arguments.length === 1) return _obj => omit(keys, _obj);
-
-  if (obj === null || obj === undefined) {
-    return undefined;
-  }
-
-  const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
-  const willReturn = {};
-
-  for (const key in obj) {
-    if (!keysValue.includes(key)) {
-      willReturn[key] = obj[key];
-    }
-  }
-
-  return willReturn;
 }
 
 function renameProps(conditions, inputObject) {
@@ -1961,39 +2078,6 @@ function tapAsync(fn, input) {
 
   fn(input);
   return input;
-}
-
-const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
-
-const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
-
-const replace$1 = ({
-  inputHolder,
-  prop,
-  replacer
-}) => inputHolder.replace(`{{${prop}}}`, replacer);
-
-function template(input, templateInput) {
-  if (arguments.length === 1) {
-    return templateInputHolder => template(input, templateInputHolder);
-  }
-
-  const occurances = getOccurances(input);
-  if (occurances === null) return input;
-  let inputHolder = input;
-
-  for (const occurance of occurances) {
-    const prop = getOccuranceProp(occurance);
-    const replacer = templateInput[prop];
-    if (replacer === undefined) continue;
-    inputHolder = replace$1({
-      inputHolder,
-      prop,
-      replacer
-    });
-  }
-
-  return inputHolder;
 }
 
 function throttle(fn, ms) {
@@ -2877,4 +2961,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, contains, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, contains, count, curry, debounce, dec, defaultTo, defaultToStrict, defaultToWhen, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getEvaluations, getNegativeEvaluation, getPositiveEvaluation, getter, glue, groupBy, groupWith, has, hasPath, head, headObject$1 as headObject, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace$1 as replace, reset, resolve, reverse, runTests, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test$1 as test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
