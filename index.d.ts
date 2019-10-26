@@ -172,6 +172,9 @@ declare namespace R {
       label: string,
       data: Array<SingleRunTest>,
       fn: Function<any>,
+    }, options?: {
+      async?: boolean,
+      logFlag?: boolean
     })
 
     // R.contains will be deprecated

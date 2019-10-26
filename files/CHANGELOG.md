@@ -6,6 +6,8 @@ Read more about it in `Rambda` changelog
 
 Also with this versions, typings tests are provided and several definitions are changed.
 
+2.17.0 Big change in `R.runTests` logic. It will be removed from Rambdax to `helpers` repo.
+
 2.16.0 Restore `R.runTests` but without documentation
 
 - export `getEvaluations`, `getPositiveEvaluation`, `getNegativeEvaluation` in the context of `R.runTests`

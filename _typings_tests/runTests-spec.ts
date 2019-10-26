@@ -26,4 +26,31 @@ describe('runTests', () => {
     }
     runTests(runTestsInput) 
   });
+
+  it('with options', () => {
+    const testFn = (x:any) => typeof x.a === 'number'
+
+    const testData = [
+      {
+        ok    : { a : 1 },
+        label : 'happy',
+        match : true,
+      },
+      { fail : { a : true } },
+      { fail : { b : true } },
+      { danger : null },
+      {
+        danger : null,
+        match  : 'Cannot read property \'a\' of null',
+      },
+    ]
+    
+    const runTestsInput = {
+      label : 'foo',
+      data  : testData,
+      fn    : testFn,
+    }
+    runTests(runTestsInput, {async: false}) 
+    runTests(runTestsInput, {logFlag: false}) 
+  });
 });
