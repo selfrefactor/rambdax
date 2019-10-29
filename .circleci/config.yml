@@ -27,6 +27,8 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
+	# needed for dtslint
+      - run: mkdir /home/circleci/.dts/perf -p   
 
       - save_cache:
           paths:
