@@ -1,39 +1,35 @@
 import { allFalse } from './allFalse'
 import { runTests } from 'helpers'
 
-const OBJ = { c : 1 }
-
-const case1 = {
-  foo : false,
-  t   : () => 2 > 10,
-  f   : () => 2 < 10,
-}
-const case2 = {
-  foo : OBJ.a,
-  t   : OBJ.b,
-  f   : OBJ.c,
-}
-
-const trueEvaluation = x => {
-  expect(allFalse(false, x.foo, x.t)).toBeTruthy()
-}
-
-const falseEvaluation = x => {
-  expect(allFalse(x.foo, x.f)).toBeFalsy()
-}
-
-runTests({
-  data        : [ { case1 }, { case2 } ],
-  evaluations : [
+const testData = {
+  label : 'foo',
+  data  : [
     {
-      label : '{{tag}} - true',
-      trueEvaluation,
+      ok : [
+        () => 2 > 10,
+        () => [],
+        () => {},
+        null,
+        [],
+      ],
     },
     {
-      label : '{{tag}} - false',
-      falseEvaluation,
+      fail : [
+        () => 2 > 10,
+        () => [],
+        () => ({ a : 1 }),
+      ],
+    },
+    {
+      fail : [
+        () => 2 > 10,
+        () => [],
+        true,
+      ],
     },
   ],
-  testSuite : 'allFalse',
-})
+  fn : input => allFalse(...input),
+
+}
+runTests(testData)
 
