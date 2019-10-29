@@ -75,11 +75,9 @@
       "!src/shuffle.*",
       "!_internals"
     ],
-    "jest": {
       "testPathIgnorePatterns" : [
         "<rootDir>/src/_typings.spec.js" 
       ]
-    }
   },
   "files": [
     "_ts-toolbelt",
