@@ -12,10 +12,10 @@ const OUTPUT_PATH = resolve(
   __dirname,
   '../index.d.ts'
 )
-const SOURCE_PATH_INTERFACES = `${__dirname}/typings/interfaces.ts`
-const SOURCE_PATH_METHODS = `${__dirname}/typings/methods.ts`
+const SOURCE_PATH_INTERFACES = `${ __dirname }/typings/interfaces.ts`
+const SOURCE_PATH_METHODS = `${ __dirname }/typings/methods.ts`
 
-async function createTypes() {
+async function createTypes(){
   const rambda = readFileSync(PATH).toString()
   const methods = readFileSync(SOURCE_PATH_METHODS).toString()
   const interfaces = readFileSync(SOURCE_PATH_INTERFACES).toString()
@@ -30,18 +30,18 @@ async function createTypes() {
     methods,
     '// METHODS_MARKER\n',
     withInterfaces,
-   )
+  )
 
   writeFileSync(OUTPUT_PATH, withMethods)
   await exec({
-    cwd: process.cwd(),
-    command: 'yarn tslint'
+    cwd     : process.cwd(),
+    command : 'yarn tslint',
   })
   await exec({
-    cwd: process.cwd(),
-    command: 'yarn tsformat'
+    cwd     : process.cwd(),
+    command : 'yarn tsformat',
   })
   console.log('done')
 }
 
-createTypes() 
+createTypes()
