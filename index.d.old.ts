@@ -161,11 +161,13 @@ declare namespace R {
   interface TypedObject<T> {
     [key: string]: T
   }
-
+  
   interface SingleRunTest {
     label?: string
     match?: any
-    [testMode: 'ok' | 'fail' | 'danger']: any
+    ok?: any
+    fail?: any
+    danger?: any
   }
   interface X {
     runTests(input: {

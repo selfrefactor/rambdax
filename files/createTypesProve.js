@@ -30,7 +30,7 @@ async function createTypes() {
     methods,
     '// METHODS_MARKER\n',
     withInterfaces,
-  )
+   )
 
   writeFileSync(OUTPUT_PATH, withMethods)
   await exec({
@@ -44,4 +44,4 @@ async function createTypes() {
   console.log('done')
 }
 
-createTypes()
+createTypes() 
