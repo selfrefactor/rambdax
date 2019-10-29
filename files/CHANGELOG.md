@@ -6,6 +6,8 @@ Read more about it in `Rambda` changelog
 
 Also with this versions, typings tests are provided and several definitions are changed.
 
+- R.anyTrue, R.anyFalse, R.allTrue, R.allFalse use internal `isTruthy` and `isFalsy` methods. Empty array and object with zero length are considered falsy.
+
 - Deprecate `R.contains`
 
 - Deprecate `R.defaultToWhen`
