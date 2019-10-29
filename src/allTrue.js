@@ -1,4 +1,5 @@
 import { type } from './rambda/type'
+import { isFalsy } from './_internals/isFalsy.js'
 
 export function allTrue(...inputs){
   let counter = 0
@@ -6,10 +7,10 @@ export function allTrue(...inputs){
     const x = inputs[ counter ]
 
     if (type(x) === 'Function'){
-      if (!inputs[ counter ]()){
+      if (isFalsy(x())){
         return false
       }
-    } else if (!inputs[ counter ]){
+    } else if (isFalsy(x)){
       return false
     }
 

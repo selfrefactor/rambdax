@@ -7,22 +7,22 @@ test('only one initialization', () => {
 
 isAttach()
 
-const arrayInArray = {ok: [ [[1 ], [ 2 ]], ['array']]}
-const numArray = {ok: [[1, 2 ], ['number']]}
+const arrayInArray = { ok : [ [ [ 1 ], [ 2 ] ], [ 'array' ] ] }
+const numArray = { ok : [ [ 1, 2 ], [ 'number' ] ] }
 const fns = [
-  {ok: [() => {}, Function]},
-  {ok: [[ () => {}, () => {} ], ['function']]}
+  { ok : [ () => {}, Function ] },
+  { ok : [ [ () => {}, () => {} ], [ 'function' ] ] },
 ]
 
 const conditional = [
-  {ok: [5,x => x > 2]},
-  {fail: [5,x => x < 2]},
+  { ok : [ 5, x => x > 2 ] },
+  { fail : [ 5, x => x < 2 ] },
 ]
 
 const regex = [
-  {ok: ['foo',String]},
-  {ok: ['foo',/fo/]},
-  {fail: ['foo',/ba/]},
+  { ok : [ 'foo', String ] },
+  { ok : [ 'foo', /fo/ ] },
+  { fail : [ 'foo', /ba/ ] },
 ]
 
 const testData = [
@@ -30,13 +30,13 @@ const testData = [
   numArray,
   ...fns,
   ...conditional,
-  ...regex
+  ...regex,
 ]
 
 runTests({
-  data        : testData,
+  data  : testData,
   label : 'isAttach',
-  fn: ([x,y]) => x.is(y)
+  fn    : ([ x, y ]) => x.is(y),
 })
 
 test('null throws', () => {
