@@ -1,9 +1,8 @@
 import { s } from './s'
 import { toUpper } from './rambda/toUpper'
 import { take } from './rambda/take'
-import { add } from './rambda/add'
 
-test('', () => {
+test('happy', () => {
   expect(s()).toBe(true)
   expect(s()).toBe(false)
 
@@ -11,9 +10,8 @@ test('', () => {
   const result = input
     .s(toUpper)
     .s(take(2))
-    .s(add('bar'))
 
-  const expectedResult = 'barFO'
+  const expectedResult = 'FO'
 
   expect(result).toEqual(expectedResult)
 })

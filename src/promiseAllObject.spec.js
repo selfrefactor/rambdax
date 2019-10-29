@@ -1,6 +1,6 @@
 import { promiseAllObject } from './promiseAllObject'
 
-test('promiseAllObject', async () => {
+test('happy', async () => {
   const delay = ms =>
     new Promise(res => {
       setTimeout(() => {

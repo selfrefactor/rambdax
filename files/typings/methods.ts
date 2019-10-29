@@ -37,12 +37,6 @@
       ...inputs: Array<T>
     ): T
 
-    defaultToWhen<T>(
-      fallback: T, 
-      fn: Pred<T>, 
-      ...inputs: Array<T>
-    ): T
-
     delay(ms: Number): Promise<'RAMBDAX_DELAY'>
 
     DELAY: 'RAMBDAX_DELAY'
