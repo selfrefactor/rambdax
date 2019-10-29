@@ -10,7 +10,9 @@ Also with this versions, typings tests are provided and several definitions are 
 
 - Deprecate `R.defaultToWhen`
 
-2.17.0 Big change in `R.runTests` logic. It will be removed from Rambdax to `helpers` repo.
+- Moved `R.runTests` to `helpers` repo
+
+2.17.0 Change in `R.runTests` logic. It will be removed from Rambdax to `helpers` repo.
 
 2.16.0 Restore `R.runTests` but without documentation
 
