@@ -13,6 +13,12 @@ function parseDate(maybeDate){
   return [ true, maybeDate.getTime() ]
 }
 
+function parseRegex(maybeRegex){
+  if (maybeRegex.constructor !== RegExp) return [ false ]
+
+  return [ true, maybeRegex.toString() ]
+}
+
 /**
  * Returns `true` if its arguments are equivalent, `false` otherwise.
  *
@@ -36,10 +42,10 @@ export function equals(a, b){
   if (arguments.length === 1) return _b => equals(a, _b)
 
   const aType = type(a)
+
   if (aType !== type(b)) return false
   if ([ 'NaN', 'Undefined', 'Null' ].includes(aType)) return true
-  if (aType === 'String') return a === b
-  if ([ 'Boolean', 'Number' ].includes(aType)) return a.toString() === b.toString()
+  if ([ 'Boolean', 'Number', 'String' ].includes(aType)) return a.toString() === b.toString()
 
   if (aType === 'Array'){
     const aClone = Array.from(a)
@@ -63,6 +69,13 @@ export function equals(a, b){
 
     return loopArrayFlag
   }
+
+  const aRegex = parseRegex(a)
+  const bRegex = parseRegex(b)
+
+  if (aRegex[ 0 ]){
+    return bRegex[ 0 ] ? aRegex[ 1 ] === bRegex[ 1 ] : false
+  } else if (bRegex[ 0 ]) return false
 
   const aDate = parseDate(a)
   const bDate = parseDate(b)

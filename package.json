@@ -8,6 +8,8 @@
   "typings": "./index.d.ts",
   "sideEffects": false,
   "scripts": {
+    "tslint": "tslint --fix index.d.ts",
+    "tsformat": "tsfmt -r index.d.ts",
     "sync": "yarn sync:work&&yarn sync:after",
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
@@ -47,10 +49,11 @@
     "@types/jest": "24.0.17",
     "babel-jest": "24.9.0",
     "docsify-cli": "4.3.0",
-    "dtslint": "^0.9.8",
-    "fs-extra": "^7.0.0",
+    "dtslint": "0.9.8",
+    "fs-extra": "7.0.0",
     "helpers": "https://github.com/selfrefactor/helpers#1.7.1",
     "jest": "24.9.0",
+    "rambda": "4.0.1",
     "rambdax": "2.13.0",
     "ramda": "0.26.1",
     "rollup": "1.19.4",
@@ -61,8 +64,10 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-replace": "2.1.0",
     "rollup-plugin-sourcemaps": "0.4.2",
-    "string-fn": "^2.0.0",
-    "typescript": "^3.6.4"
+    "string-fn": "2.0.0",
+    "tslint": "^5.20.0",
+    "typescript": "3.6.4",
+    "typescript-formatter": "^7.2.2"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -72,6 +77,7 @@
     ]
   },
   "files": [
+    "_ts-toolbelt",
     "dist",
     "src",
     "index.d.ts"
@@ -107,6 +113,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "restore create types script"
   }
 }

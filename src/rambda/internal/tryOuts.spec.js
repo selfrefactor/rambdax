@@ -1,10 +1,23 @@
-import { runTests, getEvaluations } from 'rambdax'
+const { runTests } = require('rambdax')
+const T = require('./tryOuts.js')
 
-import * as T from './tryOuts.js'
+const isNumberData = [
+  { ok : 1 },
+  { ok : -1 },
+  { ok : -1.1 },
+  { fail : null },
+  { fail : {} },
+  { fail : new Error('foo') },
+]
 
 runTests({
-  testSuite:'is.number',
-  data: [
-    {foo: 1, t: }
-  ]
+  label : 'is.number.b',
+  data  : isNumberData,
+  fn    : T.isNumberB,
+})
+
+runTests({
+  label : 'is.number.c',
+  data  : isNumberData,
+  fn    : T.isNumberC,
 })
