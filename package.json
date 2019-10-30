@@ -75,9 +75,9 @@
       "!src/shuffle.*",
       "!_internals"
     ],
-      "testPathIgnorePatterns" : [
-        "<rootDir>/src/_typings.spec.js" 
-      ]
+    "testPathIgnorePatternsx": [
+      "<rootDir>/src/_typings.spec.js"
+    ]
   },
   "files": [
     "_ts-toolbelt",
@@ -110,7 +110,8 @@
       "fix"
     ],
     "test": [
-      "method"
+      "method",
+      "typings"
     ],
     "typings": [
       "rambda",
