@@ -30,7 +30,6 @@ jobs:
       # needed for dtslint
       - run: mkdir /home/circleci/.dts/perf -p   	  
       # run tests!
-      - run: yarn typings
       - run: yarn cover
 
       - run: bash <(curl -s https://codecov.io/bash)
