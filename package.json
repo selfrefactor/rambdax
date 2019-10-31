@@ -20,7 +20,7 @@
     "prove": "jest src --json",
     "jest": "jest --watch -o",
     "typings": "dtslint --localTs ./node_modules/typescript/lib --expectOnly ./_typings_tests",
-    "cover": "jest src --coverage",
+    "cover": "jest src --coverage --maxWorkers=1 --maxConcurrency=1",
     "build:main": "rollup -c files/rollup.config.js",
     "build:web": "rollup -c files/rollup.web.config.js",
     "build": "yarn build:main&&yarn build:web"

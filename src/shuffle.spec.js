@@ -2,9 +2,9 @@ import { shuffle } from './shuffle'
 import { range } from './rambda/range'
 import { uniq } from './rambda/uniq'
 
-test.skip('', () => {
+test('happy', () => {
   const list = range(0, 7)
-  const sk = range(0, 3000).map(() => shuffle(list))
-  const love = uniq(sk)
-  console.log(love.length)
+  const result = range(0, 300).map(() => shuffle(list))
+  const allUniq = uniq(result)
+  expect(allUniq.length > 150).toBe(true)
 })
