@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
   (global = global || self, factory(global.R = {}));
-}(this, function (exports) { 'use strict';
+}(this, (function (exports) { 'use strict';
 
   function type(input) {
     const typeOf = typeof input;
@@ -33,94 +33,16 @@
     return 'Object';
   }
 
-  function parseError(maybeError) {
-    const typeofError = maybeError.__proto__.toString();
-
-    if (!['Error', 'TypeError'].includes(typeofError)) return [];
-    return [typeofError, maybeError.message];
-  }
-
-  function parseDate(maybeDate) {
-    if (!maybeDate.toDateString) return [false];
-    return [true, maybeDate.getTime()];
-  }
-
-  function equals(a, b) {
-    if (arguments.length === 1) return _b => equals(a, _b);
-    const aType = type(a);
-    if (aType !== type(b)) return false;
-    if (['NaN', 'Undefined', 'Null'].includes(aType)) return true;
-    if (aType === 'String') return a === b;
-    if (['Boolean', 'Number'].includes(aType)) return a.toString() === b.toString();
-
-    if (aType === 'Array') {
-      const aClone = Array.from(a);
-      const bClone = Array.from(b);
-
-      if (aClone.toString() !== bClone.toString()) {
-        return false;
-      }
-
-      let loopArrayFlag = true;
-      aClone.forEach((aCloneInstance, aCloneIndex) => {
-        if (loopArrayFlag) {
-          if (aCloneInstance !== bClone[aCloneIndex] && !equals(aCloneInstance, bClone[aCloneIndex])) {
-            loopArrayFlag = false;
-          }
-        }
-      });
-      return loopArrayFlag;
+  function isTruthy(x) {
+    if (Array.isArray(x)) {
+      return x.length > 0;
     }
 
-    const aDate = parseDate(a);
-    const bDate = parseDate(b);
-
-    if (aDate[0]) {
-      return bDate[0] ? aDate[1] === bDate[1] : false;
-    } else if (bDate[0]) return false;
-
-    const aError = parseError(a);
-    const bError = parseError(b);
-
-    if (aError[0]) {
-      return bError[0] ? aError[0] === bError[0] && aError[1] === bError[1] : false;
+    if (type(x) === 'Object') {
+      return Object.keys(x).length > 0;
     }
 
-    if (aType === 'Object') {
-      const aKeys = Object.keys(a);
-
-      if (aKeys.length !== Object.keys(b).length) {
-        return false;
-      }
-
-      let loopObjectFlag = true;
-      aKeys.forEach(aKeyInstance => {
-        if (loopObjectFlag) {
-          const aValue = a[aKeyInstance];
-          const bValue = b[aKeyInstance];
-
-          if (aValue !== bValue && !equals(aValue, bValue)) {
-            loopObjectFlag = false;
-          }
-        }
-      });
-      return loopObjectFlag;
-    }
-
-    return false;
-  }
-
-  function contains(val, list) {
-    if (arguments.length === 1) return _list => contains(val, _list);
-    let index = -1;
-
-    while (++index < list.length) {
-      if (equals(list[index], val)) {
-        return true;
-      }
-    }
-
-    return false;
+    return Boolean(x);
   }
 
   function allFalse(...inputs) {
@@ -130,10 +52,10 @@
       const x = inputs[counter];
 
       if (type(x) === 'Function') {
-        if (inputs[counter]()) {
+        if (isTruthy(x())) {
           return false;
         }
-      } else if (inputs[counter]) {
+      } else if (isTruthy(x)) {
         return false;
       }
 
@@ -143,6 +65,18 @@
     return true;
   }
 
+  function isFalsy(x) {
+    if (Array.isArray(x)) {
+      return x.length === 0;
+    }
+
+    if (type(x) === 'Object') {
+      return Object.keys(x).length === 0;
+    }
+
+    return !x;
+  }
+
   function allTrue(...inputs) {
     let counter = 0;
 
@@ -150,10 +84,10 @@
       const x = inputs[counter];
 
       if (type(x) === 'Function') {
-        if (!inputs[counter]()) {
+        if (isFalsy(x())) {
           return false;
         }
-      } else if (!inputs[counter]) {
+      } else if (isFalsy(x)) {
         return false;
       }
 
@@ -183,7 +117,7 @@
     let counter = 0;
 
     while (counter < inputs.length) {
-      if (!inputs[counter]) {
+      if (isFalsy(inputs[counter])) {
         return true;
       }
 
@@ -197,7 +131,7 @@
     let counter = 0;
 
     while (counter < inputs.length) {
-      if (inputs[counter]) {
+      if (isTruthy(inputs[counter])) {
         return true;
       }
 
@@ -741,6 +675,94 @@
     return willReturn;
   }
 
+  function parseError(maybeError) {
+    const typeofError = maybeError.__proto__.toString();
+
+    if (!['Error', 'TypeError'].includes(typeofError)) return [];
+    return [typeofError, maybeError.message];
+  }
+
+  function parseDate(maybeDate) {
+    if (!maybeDate.toDateString) return [false];
+    return [true, maybeDate.getTime()];
+  }
+
+  function parseRegex(maybeRegex) {
+    if (maybeRegex.constructor !== RegExp) return [false];
+    return [true, maybeRegex.toString()];
+  }
+
+  function equals(a, b) {
+    if (arguments.length === 1) return _b => equals(a, _b);
+    const aType = type(a);
+    if (aType !== type(b)) return false;
+    if (['NaN', 'Undefined', 'Null'].includes(aType)) return true;
+    if (['Boolean', 'Number', 'String'].includes(aType)) return a.toString() === b.toString();
+
+    if (aType === 'Array') {
+      const aClone = Array.from(a);
+      const bClone = Array.from(b);
+
+      if (aClone.toString() !== bClone.toString()) {
+        return false;
+      }
+
+      let loopArrayFlag = true;
+      aClone.forEach((aCloneInstance, aCloneIndex) => {
+        if (loopArrayFlag) {
+          if (aCloneInstance !== bClone[aCloneIndex] && !equals(aCloneInstance, bClone[aCloneIndex])) {
+            loopArrayFlag = false;
+          }
+        }
+      });
+      return loopArrayFlag;
+    }
+
+    const aRegex = parseRegex(a);
+    const bRegex = parseRegex(b);
+
+    if (aRegex[0]) {
+      return bRegex[0] ? aRegex[1] === bRegex[1] : false;
+    } else if (bRegex[0]) return false;
+
+    const aDate = parseDate(a);
+    const bDate = parseDate(b);
+
+    if (aDate[0]) {
+      return bDate[0] ? aDate[1] === bDate[1] : false;
+    } else if (bDate[0]) return false;
+
+    const aError = parseError(a);
+    const bError = parseError(b);
+
+    if (aError[0]) {
+      return bError[0] ? aError[0] === bError[0] && aError[1] === bError[1] : false;
+    }
+
+    if (aType === 'Object') {
+      const aKeys = Object.keys(a);
+
+      if (aKeys.length !== Object.keys(b).length) {
+        return false;
+      }
+
+      let loopObjectFlag = true;
+      aKeys.forEach(aKeyInstance => {
+        if (loopObjectFlag) {
+          const aValue = a[aKeyInstance];
+          const bValue = b[aKeyInstance];
+
+          if (aValue !== bValue && !equals(aValue, bValue)) {
+            loopObjectFlag = false;
+          }
+        }
+      });
+      return loopObjectFlag;
+    }
+
+    return false;
+  }
+
   const forbidden = ['Null', 'Undefined', 'RegExp'];
   const allowed = ['Number', 'Boolean'];
   const notEmpty = ['Array', 'String'];
@@ -908,57 +930,65 @@
     return holder === undefined ? defaultArgument : holder;
   }
 
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
+  function delay(ms) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve('RAMBDAX_DELAY');
+      }, ms);
+    });
   }
 
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly) symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-      keys.push.apply(keys, symbols);
+  function findInObject(fn, obj) {
+    if (arguments.length === 1) {
+      return objHolder => findInObject(fn, objHolder);
     }
 
-    return keys;
+    let willReturn = {
+      fallback: true
+    };
+    Object.entries(obj).forEach(([prop, value]) => {
+      if (willReturn.fallback) {
+        if (fn(value, prop)) {
+          willReturn = {
+            prop,
+            value
+          };
+        }
+      }
+    });
+    return willReturn;
   }
 
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
+  function findModify(fn, list) {
+    if (arguments.length === 1) {
+      return listHolder => findModify(fn, listHolder);
+    }
 
-      if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(source).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
+    const len = list.length;
+    if (len === 0) return false;
+    let index = -1;
+
+    while (++index < len) {
+      const result = fn(list[index], index);
+
+      if (result !== false) {
+        return result;
       }
     }
 
-    return target;
+    return false;
   }
 
-  function omit(keys, obj) {
-    if (arguments.length === 1) return _obj => omit(keys, _obj);
+  function flatMap(fn, xs) {
+    if (arguments.length === 1) {
+      return xsHolder => flatMap(fn, xsHolder);
+    }
+
+    return [].concat(...xs.map(fn));
+  }
+
+  function pick(keys, obj) {
+    if (arguments.length === 1) return _obj => pick(keys, _obj);
 
     if (obj === null || obj === undefined) {
       return undefined;
@@ -966,102 +996,114 @@
 
     const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
     const willReturn = {};
+    let counter = 0;
 
-    for (const key in obj) {
-      if (!keysValue.includes(key)) {
-        willReturn[key] = obj[key];
+    while (counter < keysValue.length) {
+      if (keysValue[counter] in obj) {
+        willReturn[keysValue[counter]] = obj[keysValue[counter]];
       }
+
+      counter++;
     }
 
     return willReturn;
   }
 
-  function mapObject(fn, obj) {
-    const willReturn = {};
-
-    for (const prop in obj) {
-      willReturn[prop] = fn(obj[prop], prop, obj);
-    }
-
-    return willReturn;
+  function merge(obj, props) {
+    if (arguments.length === 1) return _props => merge(obj, _props);
+    return Object.assign({}, obj || {}, props || {});
   }
 
-  function map(fn, list) {
-    if (arguments.length === 1) return _list => map(fn, _list);
-
-    if (list === undefined) {
-      return [];
-    }
-
-    if (!Array.isArray(list)) {
-      return mapObject(fn, list);
-    }
-
-    let index = -1;
-    const len = list.length;
-    const willReturn = Array(len);
-
-    while (++index < len) {
-      willReturn[index] = fn(list[index], index);
-    }
-
-    return willReturn;
+  let holder = {};
+  function getter(key) {
+    const typeKey = type(key);
+    if (typeKey === 'String') return holder[key];
+    if (typeKey === 'Array') return pick(key, holder);
+    return holder;
   }
+  function setter(maybeKey, maybeValue) {
+    const typeKey = type(maybeKey);
+    const typeValue = type(maybeValue);
 
-  function filterObject(fn, obj) {
-    const willReturn = {};
-
-    for (const prop in obj) {
-      if (fn(obj[prop], prop, obj)) {
-        willReturn[prop] = obj[prop];
+    if (typeKey === 'String') {
+      if (typeValue === 'Function') {
+        return holder[maybeKey] = maybeValue(holder[maybeKey]);
       }
+
+      return holder[maybeKey] = maybeValue;
     }
 
-    return willReturn;
+    if (typeKey !== 'Object') return;
+    holder = merge(holder, maybeKey);
+  }
+  function reset() {
+    holder = {};
   }
 
-  function filter(fn, list) {
-    if (arguments.length === 1) return _list => filter(fn, _list);
+  function glue(input, glueChar) {
+    return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glueChar === undefined ? ' ' : glueChar);
+  }
 
-    if (list === undefined) {
-      return [];
+  function path(list, obj) {
+    if (arguments.length === 1) return _obj => path(list, _obj);
+
+    if (obj === null || obj === undefined) {
+      return undefined;
     }
 
-    if (!Array.isArray(list)) {
-      return filterObject(fn, list);
-    }
+    let willReturn = obj;
+    let counter = 0;
+    const pathArrValue = typeof list === 'string' ? list.split('.') : list;
 
-    let index = -1;
-    let resIndex = 0;
-    const len = list.length;
-    const willReturn = [];
-
-    while (++index < len) {
-      const value = list[index];
-
-      if (fn(value, index)) {
-        willReturn[resIndex++] = value;
+    while (counter < pathArrValue.length) {
+      if (willReturn === null || willReturn === undefined) {
+        return undefined;
       }
+
+      willReturn = willReturn[pathArrValue[counter]];
+      counter++;
     }
 
     return willReturn;
   }
 
-  function maybe(ifRule, whenIfRaw, whenElseRaw) {
-    const whenIf = ifRule && type(whenIfRaw) === 'Function' ? whenIfRaw() : whenIfRaw;
-    const whenElse = !ifRule && type(whenElseRaw) === 'Function' ? whenElseRaw() : whenElseRaw;
-    return ifRule ? whenIf : whenElse;
+  function hasPath(maybePath, obj) {
+    if (arguments.length === 1) {
+      return objHolder => hasPath(maybePath, objHolder);
+    }
+
+    return path(maybePath, obj) !== undefined;
   }
 
-  function headObject(x) {
-    if (type(x) !== 'Object') throw new Error('R.headObject.type');
-    const [tag, no] = Object.keys(x);
-    if (tag === undefined) throw new Error('R.headObject.less');
-    if (no !== undefined) throw new Error('R.headObject.more');
-    return {
-      prop: tag,
-      value: x[tag]
+  function headObject(input) {
+    const [head, _] = Object.entries(input);
+    if (!head) return {
+      prop: undefined,
+      value: undefined
     };
+    if (_) throw new Error('R.headObject expects object with only one key');
+    return {
+      prop: head[0],
+      value: head[1]
+    };
+  }
+
+  function createThenable(x) {
+    return async function (input) {
+      return x(input);
+    };
+  }
+
+  function ifElseAsync(condition, ifFn, elseFn) {
+    return input => new Promise((resolve, reject) => {
+      const conditionPromise = createThenable(condition);
+      const ifFnPromise = createThenable(ifFn);
+      const elseFnPromise = createThenable(elseFn);
+      conditionPromise(input).then(conditionResult => {
+        const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
+        promised(input).then(resolve).catch(reject);
+      }).catch(reject);
+    });
   }
 
   function any(fn, list) {
@@ -1077,6 +1119,91 @@
     }
 
     return false;
+  }
+
+  function includesType(targetType, list) {
+    if (arguments.length === 1) {
+      return listHolder => includesType(targetType, listHolder);
+    }
+
+    return any(x => type(x) === targetType, list);
+  }
+
+  function replace(pattern, replacer, str) {
+    if (replacer === undefined) {
+      return (_replacer, _str) => replace(pattern, _replacer, _str);
+    } else if (str === undefined) {
+      return _str => replace(pattern, replacer, _str);
+    }
+
+    return str.replace(pattern, replacer);
+  }
+
+  function inject(injection, marker, content, beforeFlag = false) {
+    return replace(marker, beforeFlag ? `${injection}${marker}` : `${marker}${injection}`, content);
+  }
+
+  function range(from, to) {
+    if (arguments.length === 1) return _to => range(from, _to);
+
+    if (Number.isNaN(Number(from)) || Number.isNaN(Number(to))) {
+      throw new TypeError('Both arguments to range must be numbers');
+    }
+
+    if (to < from) return [];
+    const len = to - from;
+    const willReturn = Array(len);
+
+    for (let i = 0; i < len; i++) {
+      willReturn[i] = from + i;
+    }
+
+    return willReturn;
+  }
+
+  function head(list) {
+    if (typeof list === 'string') return list[0] || '';
+    return list[0];
+  }
+
+  function shuffle(arrayRaw) {
+    const array = arrayRaw.concat();
+    let counter = array.length;
+
+    while (counter > 0) {
+      const index = Math.floor(Math.random() * counter);
+      counter--;
+      const temp = array[counter];
+      array[counter] = array[index];
+      array[index] = temp;
+    }
+
+    return array;
+  }
+
+  const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
+  function uuid(length = 8) {
+    const loops = range(0, length);
+    return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
+  }
+
+  const holder$1 = {};
+  function interval({
+    fn,
+    ms,
+    stopWhen
+  }) {
+    const key = uuid();
+    return new Promise(resolve => {
+      holder$1[key] = setInterval(() => {
+        if (stopWhen() === true) {
+          clearInterval(holder$1[key]);
+          resolve();
+        } else {
+          fn();
+        }
+      }, ms);
+    });
   }
 
   function toLower(str) {
@@ -1102,8 +1229,8 @@
     return false;
   }
 
-  function test$1(pattern, str) {
-    if (arguments.length === 1) return _str => test$1(pattern, _str);
+  function test(pattern, str) {
+    if (arguments.length === 1) return _str => test(pattern, _str);
 
     if (typeof pattern === 'string') {
       throw new TypeError(`‘test’ requires a value of type RegExp as its first argument; received "${pattern}"`);
@@ -1252,7 +1379,7 @@
             boom(!isInvalidResult);
           }
         } else if (ruleType === 'RegExp' && inputPropType === 'String') {
-          boom(test$1(rule, inputProp));
+          boom(test(rule, inputProp));
         } else {
           boom(false);
         }
@@ -1260,595 +1387,6 @@
     }
 
     return flag;
-  }
-
-  function check(singleInput, schema) {
-    return isValid({
-      input: {
-        singleInput
-      },
-      schema: {
-        singleInput: schema
-      }
-    });
-  }
-  function ok(...inputs) {
-    return (...schemas) => {
-      let failedSchema;
-      const pass = any((singleInput, i) => {
-        const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
-        const checked = check(singleInput, schema);
-
-        if (!checked) {
-          failedSchema = JSON.stringify({
-            input: singleInput,
-            schema
-          });
-        }
-
-        return !checked;
-      }, inputs) === false;
-      if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
-      return true;
-    };
-  }
-
-  function pass(...inputs) {
-    return (...schemas) => any((x, i) => {
-      const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
-      return !check(x, schema);
-    }, inputs) === false;
-  }
-
-  const TEST_MODES = ['ok', 'fail', 'danger'];
-
-  const dataPredicate = data => {
-    const filtered = filter(x => {
-      if (type(x) !== 'Object') return true;
-      const keys = Object.keys(x);
-      const len = keys.length;
-      if (len === 1) return true;
-      if (len === 2 && typeof x.label === 'string') return true;
-      if (len === 2 && keys.includes('match')) return true;
-      if (len === 3 && keys.includes('match') && typeof x.label === 'string') return true;
-      return false;
-    }, data);
-    return Object.keys(filtered).length === Object.keys(data).length;
-  };
-
-  const parseData = map(x => {
-    if (type(x) !== 'Object') return {
-      ok: x
-    };
-    const keys = Object.keys(x);
-    const len = keys.length;
-
-    if (len === 1) {
-      const {
-        prop
-      } = headObject(x);
-      return TEST_MODES.includes(prop) ? x : {
-        ok: x
-      };
-    }
-
-    if (len === 2 && keys.includes('label')) {
-      const {
-        prop
-      } = headObject(omit('label', x));
-      return TEST_MODES.includes(prop) ? x : {
-        ok: x
-      };
-    }
-
-    if (len === 2 && keys.includes('match')) {
-      const {
-        prop
-      } = headObject(omit('match', x));
-      return TEST_MODES.includes(prop) ? x : {
-        ok: x
-      };
-    }
-
-    if (len === 3 && keys.includes('match') && keys.includes('label')) {
-      const {
-        prop
-      } = headObject(omit('match,label', x));
-      return TEST_MODES.includes(prop) ? x : {
-        ok: x
-      };
-    }
-
-    return {
-      ok: x
-    };
-  });
-  function runTests(input, optionsInput = {}) {
-    const options = _objectSpread2({
-      logFlag: false,
-      async: false
-    }, optionsInput);
-
-    const pass$1 = pass(input)({
-      label: 'string',
-      data: dataPredicate
-    });
-
-    if (describe === undefined || !pass$1) {
-      throw new Error('R.runTests.init');
-    }
-
-    try {
-      const {
-        label: suiteLabel,
-        fn,
-        data
-      } = input;
-      const counters = {
-        ok: -1,
-        fail: -1,
-        danger: -1
-      };
-      describe(suiteLabel, () => {
-        parseData(data).forEach(dataInstanceInput => {
-          const keys = Object.keys(dataInstanceInput);
-          const withAsync = options.async;
-          const withLabel = keys.includes('label');
-          const withMatch = keys.includes('match');
-          const dataInstance = withLabel || withMatch ? omit('label,match', dataInstanceInput) : dataInstanceInput;
-          const {
-            prop: testMode,
-            value: x
-          } = headObject(dataInstance);
-          if (!TEST_MODES.includes(testMode)) return;
-
-          if (!withLabel) {
-            counters[testMode] = counters[testMode] + 1;
-          }
-
-          const appendLabel = maybe(withLabel, '', counters[testMode] > 0 ? ` - ${counters[testMode]}` : '');
-          const testLabel = withLabel ? dataInstanceInput.label : `${testMode}${appendLabel}`;
-
-          if (testMode === 'ok' && !withMatch && !withAsync) {
-            test(testLabel, () => {
-              const result = fn(x);
-              if (options.logFlag) console.log({
-                result,
-                testLabel
-              });
-              expect(result).toBeTruthy();
-            });
-          }
-
-          if (testMode === 'ok' && !withMatch && withAsync) {
-            test(testLabel, async () => {
-              const result = await fn(x);
-              if (options.logFlag) console.log({
-                result,
-                testLabel
-              });
-              expect(result).toBeTruthy();
-            });
-          }
-
-          if (testMode === 'ok' && withMatch && !withAsync) {
-            test(testLabel, () => {
-              const result = fn(x);
-              if (options.logFlag) console.log({
-                result,
-                match: dataInstanceInput.match,
-                testLabel
-              });
-              expect(equals(result, dataInstanceInput.match)).toBeTruthy();
-            });
-          }
-
-          if (testMode === 'ok' && withMatch && withAsync) {
-            test(testLabel, async () => {
-              const result = await fn(x);
-              if (options.logFlag) console.log({
-                result,
-                match: dataInstanceInput.match,
-                testLabel
-              });
-              expect(equals(result, dataInstanceInput.match)).toBeTruthy();
-            });
-          }
-
-          if (testMode === 'fail' && !withMatch && !withAsync) {
-            test(testLabel, () => {
-              const result = fn(x);
-              if (options.logFlag) console.log({
-                result,
-                testLabel
-              });
-              expect(result).toBeFalsy();
-            });
-          }
-
-          if (testMode === 'fail' && !withMatch && withAsync) {
-            test(testLabel, async () => {
-              const result = await fn(x);
-              if (options.logFlag) console.log({
-                result,
-                testLabel
-              });
-              expect(result).toBeFalsy();
-            });
-          }
-
-          if (testMode === 'fail' && withMatch && !withAsync) {
-            test(testLabel, () => {
-              const result = fn(x);
-              if (options.logFlag) console.log({
-                result,
-                match: dataInstanceInput.match,
-                testLabel
-              });
-              expect(equals(result, dataInstanceInput.match)).toBeFalsy();
-            });
-          }
-
-          if (testMode === 'fail' && withMatch && withAsync) {
-            test(testLabel, async () => {
-              const result = await fn(x);
-              if (options.logFlag) console.log({
-                result,
-                match: dataInstanceInput.match,
-                testLabel
-              });
-              expect(equals(result, dataInstanceInput.match)).toBeFalsy();
-            });
-          }
-
-          if (testMode === 'danger' && !withMatch && !withAsync) {
-            test(testLabel, () => {
-              if (options.logFlag) console.log({
-                x,
-                testLabel
-              });
-              expect(() => fn(x)).toThrow();
-            });
-          }
-
-          if (testMode === 'danger' && !withMatch && withAsync) {
-            test(testLabel, async () => {
-              if (options.logFlag) console.log({
-                x,
-                testLabel
-              });
-
-              try {
-                await fn(x);
-                expect('danger should throw but it didn\'t').toBe('');
-              } catch (error) {
-                expect('danger should throw and it did').toBe('danger should throw and it did');
-              }
-            });
-          }
-
-          if (testMode === 'danger' && withMatch && !withAsync) {
-            test(testLabel, () => {
-              if (options.logFlag) console.log({
-                x,
-                testLabel,
-                match: dataInstanceInput.match
-              });
-              expect(() => fn(x)).toThrow(dataInstanceInput.match);
-            });
-          }
-
-          if (testMode === 'danger' && withMatch && withAsync) {
-            test(testLabel, async () => {
-              if (options.logFlag) console.log({
-                x,
-                testLabel,
-                match: dataInstanceInput.match
-              });
-
-              try {
-                await fn(x);
-                expect('danger test mode should throw but it didn\'t').toBe('');
-              } catch (error) {
-                const matchError = equals(error, dataInstanceInput.match);
-                const messageError = equals(error, new Error(dataInstanceInput.match));
-                expect(matchError || messageError).toBeTruthy();
-              }
-            });
-          }
-        });
-      });
-    } catch (err) {
-      console.log(err);
-      throw new Error('R.runTestsCatch');
-    }
-  }
-
-  function defaultToWhen(defaultArgument, fn, ...inputArguments) {
-    if (arguments.length === 2) {
-      return (...inputArgumentsHolder) => defaultToWhen(defaultArgument, fn, ...inputArgumentsHolder);
-    }
-
-    const limit = inputArguments.length - 1;
-    let len = limit + 1;
-    let ready = false;
-    let holder;
-
-    while (!ready) {
-      const instance = inputArguments[limit - len + 1];
-
-      if (len === 0) {
-        ready = true;
-      } else if (fn(instance) === true) {
-        holder = instance;
-        ready = true;
-      } else {
-        len -= 1;
-      }
-    }
-
-    return holder === undefined ? defaultArgument : holder;
-  }
-
-  function delay(ms) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve('RAMBDAX_DELAY');
-      }, ms);
-    });
-  }
-
-  function findInObject(fn, obj) {
-    if (arguments.length === 1) {
-      return objHolder => findInObject(fn, objHolder);
-    }
-
-    let willReturn = {
-      fallback: true
-    };
-    Object.entries(obj).forEach(([prop, value]) => {
-      if (willReturn.fallback) {
-        if (fn(value, prop)) {
-          willReturn = {
-            prop,
-            value
-          };
-        }
-      }
-    });
-    return willReturn;
-  }
-
-  function findModify(fn, list) {
-    if (arguments.length === 1) {
-      return listHolder => findModify(fn, listHolder);
-    }
-
-    const len = list.length;
-    if (len === 0) return false;
-    let index = -1;
-
-    while (++index < len) {
-      const result = fn(list[index], index);
-
-      if (result !== false) {
-        return result;
-      }
-    }
-
-    return false;
-  }
-
-  function flatMap(fn, xs) {
-    if (arguments.length === 1) {
-      return xsHolder => flatMap(fn, xsHolder);
-    }
-
-    return [].concat(...xs.map(fn));
-  }
-
-  function pick(keys, obj) {
-    if (arguments.length === 1) return _obj => pick(keys, _obj);
-
-    if (obj === null || obj === undefined) {
-      return undefined;
-    }
-
-    const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
-    const willReturn = {};
-    let counter = 0;
-
-    while (counter < keysValue.length) {
-      if (keysValue[counter] in obj) {
-        willReturn[keysValue[counter]] = obj[keysValue[counter]];
-      }
-
-      counter++;
-    }
-
-    return willReturn;
-  }
-
-  function merge(obj, props) {
-    if (arguments.length === 1) return _props => merge(obj, _props);
-    return Object.assign({}, obj || {}, props || {});
-  }
-
-  let holder = {};
-  function getter(key) {
-    const typeKey = type(key);
-    if (typeKey === 'String') return holder[key];
-    if (typeKey === 'Array') return pick(key, holder);
-    return holder;
-  }
-  function setter(maybeKey, maybeValue) {
-    const typeKey = type(maybeKey);
-    const typeValue = type(maybeValue);
-
-    if (typeKey === 'String') {
-      if (typeValue === 'Function') {
-        return holder[maybeKey] = maybeValue(holder[maybeKey]);
-      }
-
-      return holder[maybeKey] = maybeValue;
-    }
-
-    if (typeKey !== 'Object') return;
-    holder = merge(holder, maybeKey);
-  }
-  function reset() {
-    holder = {};
-  }
-
-  function glue(input, glueChar) {
-    return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glueChar === undefined ? ' ' : glueChar);
-  }
-
-  function path(list, obj) {
-    if (arguments.length === 1) return _obj => path(list, _obj);
-
-    if (obj === null || obj === undefined) {
-      return undefined;
-    }
-
-    let willReturn = obj;
-    let counter = 0;
-    const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-    while (counter < pathArrValue.length) {
-      if (willReturn === null || willReturn === undefined) {
-        return undefined;
-      }
-
-      willReturn = willReturn[pathArrValue[counter]];
-      counter++;
-    }
-
-    return willReturn;
-  }
-
-  function hasPath(maybePath, obj) {
-    if (arguments.length === 1) {
-      return objHolder => hasPath(maybePath, objHolder);
-    }
-
-    return path(maybePath, obj) !== undefined;
-  }
-
-  function headObject$1(input) {
-    const [head, _] = Object.entries(input);
-    if (!head) return {
-      prop: undefined,
-      value: undefined
-    };
-    if (_) throw new Error('R.headObject expects object with only one key');
-    return {
-      prop: head[0],
-      value: head[1]
-    };
-  }
-
-  function createThenable(x) {
-    return async function (input) {
-      return x(input);
-    };
-  }
-
-  function ifElseAsync(condition, ifFn, elseFn) {
-    return input => new Promise((resolve, reject) => {
-      const conditionPromise = createThenable(condition);
-      const ifFnPromise = createThenable(ifFn);
-      const elseFnPromise = createThenable(elseFn);
-      conditionPromise(input).then(conditionResult => {
-        const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
-        promised(input).then(resolve).catch(reject);
-      }).catch(reject);
-    });
-  }
-
-  function includesType(targetType, list) {
-    if (arguments.length === 1) {
-      return listHolder => includesType(targetType, listHolder);
-    }
-
-    return any(x => type(x) === targetType, list);
-  }
-
-  function replace(pattern, replacer, str) {
-    if (replacer === undefined) {
-      return (_replacer, _str) => replace(pattern, _replacer, _str);
-    } else if (str === undefined) {
-      return _str => replace(pattern, replacer, _str);
-    }
-
-    return str.replace(pattern, replacer);
-  }
-
-  function inject(injection, marker, content, beforeFlag = false) {
-    return replace(marker, beforeFlag ? `${injection}${marker}` : `${marker}${injection}`, content);
-  }
-
-  function range(from, to) {
-    if (arguments.length === 1) return _to => range(from, _to);
-
-    if (Number.isNaN(Number(from)) || Number.isNaN(Number(to))) {
-      throw new TypeError('Both arguments to range must be numbers');
-    }
-
-    if (to < from) return [];
-    const len = to - from;
-    const willReturn = Array(len);
-
-    for (let i = 0; i < len; i++) {
-      willReturn[i] = from + i;
-    }
-
-    return willReturn;
-  }
-
-  function head(list) {
-    if (typeof list === 'string') return list[0] || '';
-    return list[0];
-  }
-
-  function shuffle(arrayRaw) {
-    const array = arrayRaw.concat();
-    let counter = array.length;
-
-    while (counter > 0) {
-      const index = Math.floor(Math.random() * counter);
-      counter--;
-      const temp = array[counter];
-      array[counter] = array[index];
-      array[index] = temp;
-    }
-
-    return array;
-  }
-
-  const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
-  function uuid(length = 8) {
-    const loops = range(0, length);
-    return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
-  }
-
-  const holder$1 = {};
-  function interval({
-    fn,
-    ms,
-    stopWhen
-  }) {
-    const key = uuid();
-    return new Promise(resolve => {
-      holder$1[key] = setInterval(() => {
-        if (stopWhen() === true) {
-          clearInterval(holder$1[key]);
-          resolve();
-        } else {
-          fn();
-        }
-      }, ms);
-    });
   }
 
   function isAttach() {
@@ -1877,7 +1415,7 @@
     return ['Async', 'Promise', 'Function'].includes(type(fn));
   }
 
-  function isFalsy(x) {
+  function isFalsy$1(x) {
     const typeIs = type(x);
     if (['Array', 'String'].includes(typeIs)) return x.length === 0;
     if (typeIs === 'Object') return Object.keys(x).length === 0;
@@ -1943,12 +1481,75 @@
     });
   }
 
+  function mapObject(fn, obj) {
+    const willReturn = {};
+
+    for (const prop in obj) {
+      willReturn[prop] = fn(obj[prop], prop, obj);
+    }
+
+    return willReturn;
+  }
+
+  function map(fn, list) {
+    if (arguments.length === 1) return _list => map(fn, _list);
+
+    if (list === undefined) {
+      return [];
+    }
+
+    if (!Array.isArray(list)) {
+      return mapObject(fn, list);
+    }
+
+    let index = -1;
+    const len = list.length;
+    const willReturn = Array(len);
+
+    while (++index < len) {
+      willReturn[index] = fn(list[index], index);
+    }
+
+    return willReturn;
+  }
+
   function mergeAll(arr) {
     let willReturn = {};
     map(val => {
       willReturn = merge(willReturn, val);
     }, arr);
     return willReturn;
+  }
+
+  function check(singleInput, schema) {
+    return isValid({
+      input: {
+        singleInput
+      },
+      schema: {
+        singleInput: schema
+      }
+    });
+  }
+  function ok(...inputs) {
+    return (...schemas) => {
+      let failedSchema;
+      const pass = any((singleInput, i) => {
+        const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+        const checked = check(singleInput, schema);
+
+        if (!checked) {
+          failedSchema = JSON.stringify({
+            input: singleInput,
+            schema
+          });
+        }
+
+        return !checked;
+      }, inputs) === false;
+      if (!pass) throw new Error(`Failed R.ok with schema ${failedSchema}`);
+      return true;
+    };
   }
 
   function mapToObject(fn, list) {
@@ -1960,9 +1561,15 @@
     return mergeAll(map(fn, list));
   }
 
+  function maybe(ifRule, whenIfRaw, whenElseRaw) {
+    const whenIf = ifRule && type(whenIfRaw) === 'Function' ? whenIfRaw() : whenIfRaw;
+    const whenElse = !ifRule && type(whenElseRaw) === 'Function' ? whenElseRaw() : whenElseRaw;
+    return ifRule ? whenIf : whenElse;
+  }
+
   function sort(fn, list) {
     if (arguments.length === 1) return _list => sort(fn, _list);
-    const arrClone = list.concat();
+    const arrClone = list.slice();
     return arrClone.sort(fn);
   }
 
@@ -2056,6 +1663,13 @@
     return newIndex;
   }
 
+  function pass(...inputs) {
+    return (...schemas) => any((x, i) => {
+      const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
+      return !check(x, schema);
+    }, inputs) === false;
+  }
+
   function curry(fn, args = []) {
     return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
   }
@@ -2100,6 +1714,7 @@
   }
 
   function pipe(...fns) {
+    if (fns.length === 0) throw new Error('pipe requires at least one argument');
     return compose(...fns.reverse());
   }
 
@@ -2247,6 +1862,25 @@
       textCopy = replace(singleInput, '', textCopy).trim();
     });
     return textCopy;
+  }
+
+  function omit(keys, obj) {
+    if (arguments.length === 1) return _obj => omit(keys, _obj);
+
+    if (obj === null || obj === undefined) {
+      return undefined;
+    }
+
+    const keysValue = typeof keys === 'string' ? keys.split(',') : keys;
+    const willReturn = {};
+
+    for (const key in obj) {
+      if (!keysValue.includes(key)) {
+        willReturn[key] = obj[key];
+      }
+    }
+
+    return willReturn;
   }
 
   function renameProps(conditions, inputObject) {
@@ -2557,6 +2191,45 @@
     return flag;
   }
 
+  function filterObject(fn, obj) {
+    const willReturn = {};
+
+    for (const prop in obj) {
+      if (fn(obj[prop], prop, obj)) {
+        willReturn[prop] = obj[prop];
+      }
+    }
+
+    return willReturn;
+  }
+
+  function filter(fn, list) {
+    if (arguments.length === 1) return _list => filter(fn, _list);
+
+    if (list === undefined) {
+      return [];
+    }
+
+    if (!Array.isArray(list)) {
+      return filterObject(fn, list);
+    }
+
+    let index = -1;
+    let resIndex = 0;
+    const len = list.length;
+    const willReturn = [];
+
+    while (++index < len) {
+      const value = list[index];
+
+      if (fn(value, index)) {
+        willReturn[resIndex++] = value;
+      }
+    }
+
+    return willReturn;
+  }
+
   function whereEq(rule, input) {
     if (arguments.length === 1) {
       return inputHolder => whereEq(rule, inputHolder);
@@ -2575,7 +2248,7 @@
   function adjustRaw(index, fn, list) {
     const actualIndex = index < 0 ? list.length + index : index;
     if (index >= list.length || actualIndex < 0) return list;
-    const clone = list.concat();
+    const clone = list.slice();
     clone[actualIndex] = fn(clone[actualIndex]);
     return clone;
   }
@@ -2621,7 +2294,7 @@
   function append(el, list) {
     if (arguments.length === 1) return _list => append(el, _list);
     if (typeof list === 'string') return `${list}${el}`;
-    const clone = list.concat();
+    const clone = list.slice();
     clone.push(el);
     return clone;
   }
@@ -3108,7 +2781,7 @@
 
   function sortBy(fn, list) {
     if (arguments.length === 1) return _list => sortBy(fn, _list);
-    const arrClone = list.concat();
+    const arrClone = list.slice();
     return arrClone.sort((a, b) => {
       const fnA = fn(a);
       const fnB = fn(b);
@@ -3227,13 +2900,12 @@
       return _list => update(idx, val, _list);
     }
 
-    const arrClone = list.concat();
+    const arrClone = list.slice();
     return arrClone.fill(val, idx, idx + 1);
   }
 
   function values(obj) {
     if (type(obj) !== 'Object') return [];
-    console.log(obj);
     return Object.values(obj);
   }
 
@@ -3294,14 +2966,12 @@
   exports.composeAsync = composeAsync;
   exports.composed = composed;
   exports.concat = concat;
-  exports.contains = contains;
   exports.count = count;
   exports.curry = curry;
   exports.debounce = debounce;
   exports.dec = dec;
   exports.defaultTo = defaultTo;
   exports.defaultToStrict = defaultToStrict;
-  exports.defaultToWhen = defaultToWhen;
   exports.delay = delay;
   exports.dissoc = dissoc;
   exports.divide = divide;
@@ -3327,7 +2997,7 @@
   exports.has = has;
   exports.hasPath = hasPath;
   exports.head = head;
-  exports.headObject = headObject$1;
+  exports.headObject = headObject;
   exports.identity = identity;
   exports.ifElse = ifElse;
   exports.ifElseAsync = ifElseAsync;
@@ -3341,7 +3011,7 @@
   exports.interval = interval;
   exports.is = is$1;
   exports.isAttach = isAttach;
-  exports.isFalsy = isFalsy;
+  exports.isFalsy = isFalsy$1;
   exports.isFunction = isFunction$1;
   exports.isNil = isNil;
   exports.isPromise = isPromise;
@@ -3411,7 +3081,6 @@
   exports.reset = reset;
   exports.resolve = resolve;
   exports.reverse = reverse;
-  exports.runTests = runTests;
   exports.s = s;
   exports.setter = setter;
   exports.shuffle = shuffle;
@@ -3428,7 +3097,7 @@
   exports.tap = tap;
   exports.tapAsync = tapAsync;
   exports.template = template;
-  exports.test = test$1;
+  exports.test = test;
   exports.throttle = throttle;
   exports.times = times;
   exports.toDecimal = toDecimal;
@@ -3458,4 +3127,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
