@@ -350,7 +350,7 @@ declare namespace R {
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,
-      ruleTrueFn: Async<any> | Function,
+      ruleTrueFn: Async<T> | Func<T>,
     ): Async<T>;
     // METHODS_MARKER_END
     add(a: number, b: number): number;

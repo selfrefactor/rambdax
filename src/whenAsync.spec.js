@@ -12,7 +12,7 @@ const secondFn = async x => {
   return x * 2
 }
 
-test('', async () => {
+test('happy', async () => {
   const fn = await whenAsync(firstFn, secondFn)
 
   expect(await fn(1)).toEqual(1)

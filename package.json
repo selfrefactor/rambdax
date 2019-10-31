@@ -118,6 +118,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "fix tslint errors"
   }
 }

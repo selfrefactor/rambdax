@@ -246,5 +246,5 @@
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,
-      ruleTrueFn: Async<any> | Function
-    ): Async<T>
+      ruleTrueFn: Async<T> | Func<T>
+    ): Async<T>;
