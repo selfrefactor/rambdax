@@ -21,9 +21,9 @@
 
     compact<T>(x: any[]): T[]
 
-    composeAsync<T>(
-      ...fns: Array<Async<T> | Function>
-    ): (input: any) => Promise<T>
+    composeAsync<Out>(
+      ...fns: Array<Async<any> | Func<any>>
+    ): (input: any) => Promise<Out>
 
     composed<T>(...fnList: any[]): T
 
@@ -37,20 +37,17 @@
       ...inputs: Array<T>
     ): T
 
-    delay(ms: Number): Promise<'RAMBDAX_DELAY'>
+    delay(ms: number): Promise<'RAMBDAX_DELAY'>
 
     DELAY: 'RAMBDAX_DELAY'
-
-    findInObject(fn: Function, obj: object): object  
-    findInObject(fn: Function) : (obj: object) => object  
 
     glue(input: string, glueString?: string): string
 
     getter<T>(keyOrKeys: string|string[]|undefined): T
-    setter(keyOrObject: string|object, value?: any): void
+    setter(keyOrobject: string|object, value?: any): void
     reset(): void
     
-    headObject<T>(input: object) :HeadObject<T>   
+    headobject<T>(input: object) :Headobject<T>   
     
     hasPath<T>(
       path: string|string[], 
@@ -61,9 +58,9 @@
     ) : (input: object) => boolean
 
     ifElseAsync<T>(
-      condition: Async<any> | Function,
-      ifFn: Async<any> | Function,
-      elseFn: Async<any> | Function
+      condition: Async<any> | Func<any>,
+      ifFn: Async<any> | Func<any>,
+      elseFn: Async<any> | Func<any>
     ): Async<T>
 
     inject(
@@ -83,7 +80,7 @@
 
     isArray(input: any): boolean
     isFalsy(input: any): boolean
-    isObject(input: any): boolean
+    isobject(input: any): boolean
     isString(input: any): boolean
     isType(targetType: RambdaTypes, input: any): boolean
 
@@ -105,10 +102,10 @@
     mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
 
-    mapToObject<T, U>(fn: (input: T) => object, list: T[]): U  
-    mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U  
+    mapToobject<T, U>(fn: (input: T) => object, list: T[]): U  
+    mapToobject<T, U>(fn: (input: T) => object): (list: T[]) => U  
 
-    memoize<T>(fn: Function | Async<any>): T
+    memoize<T>(fn: Func<any> | Async<any>): T
 
     mergeRight(x: object, y: object): object
     mergeRight(x: object): (y: object) => object
@@ -128,23 +125,23 @@
     isValid(x: IsValid): boolean 
     isAttach() : boolean
 
-    once(fn: Function): Function
+    once(fn: Func<any>): Func<any>
 
-    otherwise<T>(fallback: Function, toResolve: Promise<any>): Promise<T>
-    otherwise<T>(fallback: Function) : (toResolve: Promise<any>) => Promise<T>
+    otherwise<T>(fallback: Func<any>, toResolve: Promise<any>): Promise<T>
+    otherwise<T>(fallback: Func<any>) : (toResolve: Promise<any>) => Promise<T>
     
     // It was originally R.then, but changed due to Ramda export issue 
     // ============================================
-    resolve<T>(afterResolve: Function, toResolve: Promise<any>): Promise<T>
-    resolve<T>(toResolve: Function) : (toResolve: Promise<any>) => Promise<T>
+    resolve<T>(afterResolve: Func<any>, toResolve: Promise<any>): Promise<T>
+    resolve<T>(toResolve: Func<any>) : (toResolve: Promise<any>) => Promise<T>
 
     partition<T>(
       rule: PartitionPredicate<T>,
       input: {[key: string]: T}
-    ): [Object, Object]
+    ): [object, object]
     partition<T>(
       rule: PartitionPredicate<T>
-    ): (input: {[key: string]: T}) => [Object, Object]
+    ): (input: {[key: string]: T}) => [object, object]
     
     partition<T>(
       rule: Predicate<T>,
@@ -157,11 +154,11 @@
     pathEq(path:string|string[], target: any, obj: object): boolean
     pathEq(path:string|string[], target: any): (obj: object) => boolean
 
-    piped<T>(input: any, ...fnList: Function[]): T
+    piped<T>(input: any, ...fnList: Array<Func<any>>): T
 
     pipedAsync<T>(
       input: any, 
-      ...fns: Array< Function | Async<any> >
+      ...fns: Array< Func<any> | Async<any> >
     ): Promise<T>  
 
     produce<T>(
@@ -172,8 +169,8 @@
       conditions: any,
     ): (input: any) => T
 
-    promiseAllObject<T>(
-      input: ObjectWithPromises
+    promiseAllobject<T>(
+      input: objectWithPromises
     ): Promise<T>
 
     random(minInclusive: number, maxInclusive: number): number
@@ -196,8 +193,8 @@
 
     switcher<T>(valueToMatch: any): Switchem<T>
 
-    tapAsync<T>(fn: Function | Promise<any>, input: T): T
-    tapAsync<T>(fn: Function | Promise<any>): (input: T) => T
+    tapAsync<T>(fn: Func<any> | Promise<any>, input: T): T
+    tapAsync<T>(fn: Func<any> | Promise<any>): (input: T) => T
 
     then<Out>(
       createResultFn: Fn<any, Out>
@@ -221,7 +218,7 @@
     wait<T>(fn: Async<T>): Promise<[T, Error]>
 
     waitFor(
-      waitForTrueCondition: Function|Promise<any>, 
+      waitForTrueCondition: () => any|Promise<any>, 
       msHowLong: number
     ): (input?: any) => Promise<boolean>
 
@@ -241,8 +238,8 @@
 
     uuid(length?: number) :string  
 
-    whereEq(rule: Object, input: any): Boolean  
-    whereEq(rule: Object) : (input: any) => Boolean  
+    whereEq(rule: object, input: any): boolean  
+    whereEq(rule: object) : (input: any) => boolean  
 
     whenAsync<T>(
       rule: Async<boolean> | Func<boolean> | boolean,

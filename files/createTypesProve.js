@@ -44,4 +44,4 @@ async function createTypes(){
   console.log('done')
 }
 
-createTypes()
+createTypes() 
