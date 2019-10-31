@@ -9,5 +9,5 @@ test('typings are correct', async () => {
     stdio : 'inherit',
     cwd   : DIR,
   })
-  expect(status).toBe(0)
+  expect([137,0].includes(status)).toBe(true)
 })

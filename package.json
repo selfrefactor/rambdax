@@ -112,7 +112,8 @@
     ],
     "test": [
       "method",
-      "typings"
+      "typings",
+      "fix"
     ],
     "typings": [
       "rambda",
