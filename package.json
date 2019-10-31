@@ -72,11 +72,12 @@
   "jest": {
     "collectCoverageFrom": [
       "src/*.js",
+      "!_tryOuts.js",
       "!src/shuffle.*",
       "!_internals"
     ],
-    "testPathIgnorePatternsx": [
-      "<rootDir>/src/_typings.spec.js"
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/_tryOuts.spec.js"
     ]
   },
   "files": [

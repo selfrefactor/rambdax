@@ -29,7 +29,7 @@ test('false', async () => {
 
 test('async condition | true', async () => {
   let counter = 0
-  const condition = async x => {
+  const condition = async x => { 
     counter++
     await delay(10)
 
