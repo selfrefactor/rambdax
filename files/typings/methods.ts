@@ -47,7 +47,7 @@
     setter(keyOrobject: string|object, value?: any): void
     reset(): void
     
-    headobject<T>(input: object) :Headobject<T>   
+    headObject<T>(input: object) :HeadObject<T>   
     
     hasPath<T>(
       path: string|string[], 
@@ -144,11 +144,11 @@
     ): (input: {[key: string]: T}) => [object, object]
     
     partition<T>(
-      rule: Predicate<T>,
+      rule: Predicatex<T>,
       input: Array<T>
     ): [Array<T>, Array<T>]
     partition<T>(
-      rule: Predicate<T>
+      rule: Predicatex<T>
     ): (input: Array<T>) => [Array<T>, Array<T>]
 
     pathEq(path:string|string[], target: any, obj: object): boolean
@@ -170,7 +170,7 @@
     ): (input: any) => T
 
     promiseAllobject<T>(
-      input: objectWithPromises
+      input: ObjectWithPromises
     ): Promise<T>
 
     random(minInclusive: number, maxInclusive: number): number

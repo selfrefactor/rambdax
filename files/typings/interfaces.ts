@@ -1,6 +1,5 @@
 type Func<T> = (input: any) => T  
-  type Pred<T> = (input: T) => boolean
-  type Predicate<T> = (input: T, index: number) => boolean
+  type Predicatex<T> = (input: T, index: number) => boolean
   type Fn<In, Out> = (x: In) => Out
   type FnTwo<In, Out> = (x: In, y: In) => Out
   type MapFn<In, Out> = (x: In, index: number) => Out  

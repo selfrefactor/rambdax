@@ -14,8 +14,8 @@ const OUTPUT_PACKAGE_JSON = `${ process.env.HOME }/repos/rambdax/package.json`
 emptyDirSync(OUTPUT)
 
 copySync(SOURCE, OUTPUT)
- 
-const {devDependencies} = readJsonSync(SOURCE_PACKAGE_JSON)
+
+const { devDependencies } = readJsonSync(SOURCE_PACKAGE_JSON)
 const sourcePackageJson = readJsonSync(OUTPUT_PACKAGE_JSON)
 
 const toOmit = glue(`
@@ -26,18 +26,19 @@ const toOmit = glue(`
 `, ',')
 
 const rambdaxDevDependencies = {
-  "fs-extra": "7.0.0",
-  "rambda": "4.0.1",
+  'fs-extra' : '7.0.0',
+  'rambda'   : 'https://github.com/selfrefactor/rambda#4.0.1',
+  // 'rambda'   : '4.0.1',
 }
 
 outputJsonSync(
   OUTPUT_PACKAGE_JSON,
   {
     ...sourcePackageJson,
-    devDependencies: {
-      ...(omit(toOmit, devDependencies)),
-      ...rambdaxDevDependencies
-    }
+    devDependencies : {
+      ...omit(toOmit, devDependencies),
+      ...rambdaxDevDependencies,
+    },
   },
-  {spaces: 2}
-) 
+  { spaces : 2 }
+)

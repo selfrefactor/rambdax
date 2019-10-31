@@ -37,8 +37,7 @@ declare namespace R {
   type Merge<Primary, Secondary> = { [K in keyof Primary]: Primary[K] } & { [K in Exclude<keyof Secondary, CommonKeys<Primary, Secondary>>]: Secondary[K] };
 
   type Func<T> = (input: any) => T;
-  type Pred<T> = (input: T) => boolean;
-  type Predicate<T> = (input: T, index: number) => boolean;
+  type Predicatex<T> = (input: T, index: number) => boolean;
   type Fn<In, Out> = (x: In) => Out;
   type FnTwo<In, Out> = (x: In, y: In) => Out;
   type MapFn<In, Out> = (x: In, index: number) => Out;
@@ -151,7 +150,7 @@ declare namespace R {
     setter(keyOrobject: string | object, value?: any): void;
     reset(): void;
 
-    headobject<T>(input: object): Headobject<T>;
+    headObject<T>(input: object): HeadObject<T>;
 
     hasPath<T>(
       path: string | string[],
@@ -248,11 +247,11 @@ declare namespace R {
     ): (input: { [key: string]: T }) => [object, object];
 
     partition<T>(
-      rule: Predicate<T>,
+      rule: Predicatex<T>,
       input: T[],
     ): [T[], T[]];
     partition<T>(
-      rule: Predicate<T>,
+      rule: Predicatex<T>,
     ): (input: T[]) => [T[], T[]];
 
     pathEq(path: string | string[], target: any, obj: object): boolean;
@@ -274,7 +273,7 @@ declare namespace R {
     ): (input: any) => T;
 
     promiseAllobject<T>(
-      input: objectWithPromises,
+      input: ObjectWithPromises,
     ): Promise<T>;
 
     random(minInclusive: number, maxInclusive: number): number;

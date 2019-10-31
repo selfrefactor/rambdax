@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.0.1 Fix typings
+
 3.0.0 Breaking change as `Rambda` also has breaking changes
 
 Read more about it in `Rambda` changelog
