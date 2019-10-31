@@ -1,7 +1,7 @@
 import { interval } from './interval'
 import { delay } from './delay'
 
-test('', async () => {
+test('happy', async () => {
   let counter = 0
   const fn = () => {
     counter++
