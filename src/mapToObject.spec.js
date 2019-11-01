@@ -1,6 +1,6 @@
 import { mapToObject } from './mapToObject'
 
-test('', () => {
+test('happy', () => {
   const list = 'auto?bar=false?foo?baz=1.5?s=more?k=2'.split('?')
   const fn = x => {
     const [ key, value ] = x.split('=')

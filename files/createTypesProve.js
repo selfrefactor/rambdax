@@ -17,7 +17,6 @@ const SOURCE_PATH_METHODS = `${ __dirname }/typings/methods.ts`
 
 async function createTypes(){
   const rambda = readFileSync(PATH).toString()
-  console.log(rambda)
   const methods = readFileSync(SOURCE_PATH_METHODS).toString()
   const interfaces = readFileSync(SOURCE_PATH_INTERFACES).toString()
 
@@ -27,11 +26,11 @@ async function createTypes(){
     rambda,
     true
   )
-  const withMethods = inject(
+  const withMethods = inject( 
     methods,
     '// METHODS_MARKER\n',
     withInterfaces,
-  )
+  ) 
 
   writeFileSync(OUTPUT_PATH, withMethods)
   await exec({

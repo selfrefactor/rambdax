@@ -205,8 +205,8 @@ declare namespace R {
     mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<T[]>;
     mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<T[]>;
 
-    mapToobject<T, U>(fn: (input: T) => object, list: T[]): U;
-    mapToobject<T, U>(fn: (input: T) => object): (list: T[]) => U;
+    mapToObject<T, U>(fn: (input: T) => object, list: T[]): U;
+    mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U;
 
     memoize<T>(fn: Func<any> | Async<any>): T;
 

@@ -102,8 +102,8 @@
     mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
 
-    mapToobject<T, U>(fn: (input: T) => object, list: T[]): U  
-    mapToobject<T, U>(fn: (input: T) => object): (list: T[]) => U  
+    mapToObject<T, U>(fn: (input: T) => object, list: T[]): U  
+    mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U  
 
     memoize<T>(fn: Func<any> | Async<any>): T
 
