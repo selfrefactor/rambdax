@@ -91,7 +91,7 @@
     isFunction(
       maybePromiseFunctionOrAsync: any
     ): boolean
-
+    
     maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T
 
     mapAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>

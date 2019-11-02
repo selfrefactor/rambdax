@@ -25,12 +25,12 @@ async function createTypes(){
     '// INTERFACES_MARKER_END\n',
     rambda,
     true
-  )
-  const withMethods = inject( 
+  ) 
+  const withMethods = inject(
     methods,
     '// METHODS_MARKER\n',
     withInterfaces,
-  ) 
+  )
 
   writeFileSync(OUTPUT_PATH, withMethods)
   await exec({

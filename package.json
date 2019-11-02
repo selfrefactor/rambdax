@@ -53,7 +53,7 @@
     "helpers": "https://github.com/selfrefactor/helpers#2.0.0",
     "jest": "24.9.0",
     "ramda": "0.26.1",
-    "rollup": "1.26.0",
+    "rollup": "1.26.2",
     "string-fn": "2.10.2",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-cleanup": "3.1.1",

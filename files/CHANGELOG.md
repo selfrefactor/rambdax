@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.1.0 Add `R.isEmpty` method - close issue#38
+
 3.0.2 Add typings for `R.mapToObject`
 
 3.0.1 Fix typings
