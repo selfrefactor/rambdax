@@ -14,6 +14,7 @@ const testData = {
       ],
     },
     {
+      // only : true,
       fail : [
         () => 2 > 10,
         () => [],

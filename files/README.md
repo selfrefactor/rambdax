@@ -43,12 +43,14 @@ Several methods are dropped between versions `0.24.0` and `1.0.0`. The older ver
 
 #### allFalse
 
-> allFalse(...inputs: any[]): boolean
+> allFalse(...inputs: any|predicate[]): boolean
 
 It returns `true` if all passed elements return `false` when passed to `Boolean`.
 
+If single input element is a function, then it will be evaluated.
+
 ```
-R.allFalse(null, undefined, '')
+R.allFalse(null, undefined, '', () => false)
 //=> true
 ```
 
@@ -56,14 +58,15 @@ R.allFalse(null, undefined, '')
 
 #### allTrue
 
-> allTrue(...inputs: any[]): boolean
+> allTrue(...inputs:  any|predicate[]): boolean
 
 It returns `true` if all passed elements return `true` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
 const x = 2
 
-const result = R.allTrue([1,2], x > 1, {})
+const result = R.allTrue([1,2], x > 1, {}, () => true)
 //=> true
 ```
 
@@ -82,23 +85,25 @@ const result = R.allType('String')('foo','bar','baz')
 
 #### anyFalse
 
-> anyFalse(...inputs: any[]): boolean
+> anyFalse(...inputs: any|predicate[]): boolean
 
 It returns `true` if any of the passed elements returns `false` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
-R.anyFalse(1, {}, '')
+R.anyFalse(1, {a:1}, 'foo', () => false)
 //=> true
 ```
 
 #### anyTrue
 
-> anyTrue(...inputs: any[]): boolean
+> anyTrue(...inputs:  any|predicate[]): boolean
 
 It returns `true` if any of the passed elements returns `true` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
-R.anyTrue(1, {}, '')
+R.anyTrue(0, {}, '', () => true)
 //=> true
 ```
 

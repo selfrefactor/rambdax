@@ -44,12 +44,14 @@ Several methods are dropped between versions `0.24.0` and `1.0.0`. The older ver
 ---
 #### allFalse
 
-> allFalse(...inputs: any[]): boolean
+> allFalse(...inputs: any|predicate[]): boolean
 
 It returns `true` if all passed elements return `false` when passed to `Boolean`.
 
+If single input element is a function, then it will be evaluated.
+
 ```
-R.allFalse(null, undefined, '')
+R.allFalse(null, undefined, '', () => false)
 //=> true
 ```
 
@@ -57,19 +59,20 @@ R.allFalse(null, undefined, '')
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/allFalse.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.allFalse(null%2C%20undefined%2C%20'')%0A%2F%2F%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.allFalse(null%2C%20undefined%2C%20''%2C%20()%20%3D%3E%20false)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
 #### allTrue
 
-> allTrue(...inputs: any[]): boolean
+> allTrue(...inputs:  any|predicate[]): boolean
 
 It returns `true` if all passed elements return `true` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
 const x = 2
 
-const result = R.allTrue([1,2], x > 1, {})
+const result = R.allTrue([1,2], x > 1, {}, () => true)
 //=> true
 ```
 
@@ -77,7 +80,7 @@ const result = R.allTrue([1,2], x > 1, {})
 
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/allTrue.spec.js)
 
-<a href="https://rambda.now.sh?const%20x%20%3D%202%0A%0Aconst%20result%20%3D%20R.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20x%20%3D%202%0A%0Aconst%20result%20%3D%20R.allTrue(%5B1%2C2%5D%2C%20x%20%3E%201%2C%20%7B%7D%2C%20()%20%3D%3E%20true)%0A%2F%2F%3D%3E%20true">Try in REPL</a>
 
 ---
 #### allType
@@ -96,12 +99,13 @@ const result = R.allType('String')('foo','bar','baz')
 ---
 #### anyFalse
 
-> anyFalse(...inputs: any[]): boolean
+> anyFalse(...inputs: any|predicate[]): boolean
 
 It returns `true` if any of the passed elements returns `false` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
-R.anyFalse(1, {}, '')
+R.anyFalse(1, {a:1}, 'foo', () => false)
 //=> true
 ```
 
@@ -110,12 +114,13 @@ R.anyFalse(1, {}, '')
 ---
 #### anyTrue
 
-> anyTrue(...inputs: any[]): boolean
+> anyTrue(...inputs:  any|predicate[]): boolean
 
 It returns `true` if any of the passed elements returns `true` when passed to `Boolean`.
+If argument is function, it will be evaluated.
 
 ```
-R.anyTrue(1, {}, '')
+R.anyTrue(0, {}, '', () => true)
 //=> true
 ```
 

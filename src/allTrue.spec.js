@@ -2,8 +2,9 @@ import { allTrue } from './allTrue'
 
 test('with functions', () => {
   const foo = () => 1
-  const baz = () => false
-  const result = allTrue(foo, baz)
+  const bar = () => false
+  const baz = () => JSON.parse('{sda')
+  const result = allTrue(foo, bar, baz)
   expect(result).toBe(false)
 })
 
