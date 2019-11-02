@@ -1,6 +1,6 @@
 # CHANGELOG
 
-3.1.0 Add `R.isEmpty` method - close issue#38
+3.0.3 Sync with Rambda - fixed `R.isEmpty`
 
 3.0.2 Add typings for `R.mapToObject`
 
