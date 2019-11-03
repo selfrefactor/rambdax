@@ -35,15 +35,14 @@ function appendTestLink(input){
   }
 
   const link = glue(`
-    https://github.com
-  replace,
-    selfrefactor
-    ${ rambdaFlag ? 'rambda' : 'rambdax' }
-    blob
-    master
-    src
-    ${ method }.spec.js
-  `, '/')
+  https://github.com
+  selfrefactor
+  ${ rambdaFlag ? 'rambda' : 'rambdax' }
+  blob
+  master
+  src
+  ${ method }.spec.js
+`, '/')
 
   const testLink = `\n\n[Test](${ link })\n\n`
 
