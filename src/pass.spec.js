@@ -22,7 +22,7 @@ test('false when single schema', () => {
 
 test('array of schemas', () => {
   const result = pass(
-    [{a:1}, {a:2}, {a:3}]
-  )([{a:Number}])
+    [ { a : 1 }, { a : 2 }, { a : 3 } ]
+  )([ { a : Number } ])
   expect(result).toBeTruthy()
 })
