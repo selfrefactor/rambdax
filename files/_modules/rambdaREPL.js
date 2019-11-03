@@ -4,7 +4,7 @@ const {
   when,
 } = require('../../dist/rambdax')
 const REPL_URL = 'https://rambda.now.sh'
-
+ 
 const getConsoleLog = includes('console.log')
 const getResultVariableLog = either(
   includes('const result ='),
