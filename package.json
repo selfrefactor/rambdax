@@ -14,7 +14,7 @@
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
     "sync:work": "node files/_modules/sync",
     "do": "node files/_modules/do",
-    "readme": "node files/_modules/createReadme",
+    "readme": "node files/_modules/createReadmeProve",
     "docs": "docsify init ./docs",
     "test": "jest src --bail=true",
     "prove": "jest src --json",
