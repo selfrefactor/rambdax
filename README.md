@@ -2646,14 +2646,14 @@ It returns `true` is `x` is `empty`.
 
 ```
 R.isEmpty('')  // => true
-R.isEmpty({})  // => false
+R.isEmpty({ x : 0 })  // => false
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/isEmpty.js)
 
 [Test](https://github.com/replace,/selfrefactor/rambda/blob/master/src/isEmpty.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.isEmpty('')%20%20%2F%2F%20%3D%3E%20true%0AR.isEmpty(%7B%7D)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.isEmpty('')%20%20%2F%2F%20%3D%3E%20true%0AR.isEmpty(%7B%20x%20%3A%200%20%7D)%20%20%2F%2F%20%3D%3E%20false">Try in REPL</a>
 
 ---
 #### join
