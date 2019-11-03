@@ -2234,6 +2234,14 @@ function whereEq(rule, input) {
   return Object.keys(result).length === Object.keys(rule).length;
 }
 
+function F() {
+  return false;
+}
+
+function T() {
+  return true;
+}
+
 function add(a, b) {
   if (arguments.length === 1) return _b => add(a, _b);
   return Number(a) + Number(b);
@@ -2301,9 +2309,52 @@ function assocFn(prop, val, obj) {
 
 const assoc = curry(assocFn);
 
+function _isInteger(n) {
+  return n << 0 === n;
+}
+var _isInteger$1 = Number.isInteger || _isInteger;
+
+function assocPathFn(list, val, input) {
+  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
+
+  if (pathArrValue.length === 0) {
+    return val;
+  }
+
+  const index = pathArrValue[0];
+
+  if (pathArrValue.length > 1) {
+    const condition = typeof input !== 'object' || input === null || !input.hasOwnProperty(index);
+    const nextinput = condition ? _isInteger(parseInt(pathArrValue[1], 10)) ? [] : {} : input[index];
+    val = assocPathFn(Array.prototype.slice.call(pathArrValue, 1), val, nextinput);
+  }
+
+  if (_isInteger(parseInt(index, 10)) && Array.isArray(input)) {
+    const arr = input.slice();
+    arr[index] = val;
+    return arr;
+  }
+
+  return assoc(index, val, input);
+}
+
+const assocPath = curry(assocPathFn);
+
 function both(f, g) {
   if (arguments.length === 1) return _g => both(f, _g);
   return (...input) => f(...input) && g(...input);
+}
+
+function clone(val) {
+  const out = Array.isArray(val) ? Array(val.length) : {};
+  if (val && val.getTime) return new Date(val.getTime());
+
+  for (const key in val) {
+    const v = val[key];
+    out[key] = typeof v === 'object' && v !== null ? v.getTime ? new Date(v.getTime()) : clone(v) : v;
+  }
+
+  return out;
 }
 
 function complement(fn) {
@@ -2349,6 +2400,26 @@ function defaultTo(defaultArgument, ...inputArguments) {
   return holder === undefined ? defaultArgument : holder;
 }
 
+function uniq(list) {
+  let index = -1;
+  const willReturn = [];
+
+  while (++index < list.length) {
+    const value = list[index];
+
+    if (!includes(value, willReturn)) {
+      willReturn.push(value);
+    }
+  }
+
+  return willReturn;
+}
+
+function difference(list1, list2) {
+  if (arguments.length === 1) return _list => difference(list1, _list);
+  return uniq(list1).filter(x1 => !includes(x1, list2));
+}
+
 function dissoc(prop, obj) {
   if (arguments.length === 1) return _obj => dissoc(prop, _obj);
   if (obj === null || obj === undefined) return {};
@@ -2385,10 +2456,6 @@ function either(f, g) {
 function endsWith(suffix, list) {
   if (arguments.length === 1) return _list => endsWith(suffix, _list);
   return list.endsWith(suffix);
-}
-
-function F() {
-  return false;
 }
 
 function find(fn, list) {
@@ -2440,32 +2507,16 @@ function flip(fn) {
   return flipExport(fn);
 }
 
-function toPairs(obj) {
-  return Object.entries(obj);
+function forEach(fn, list) {
+  if (arguments.length === 1) return _list => forEach(fn, _list);
+  map(fn, list);
+  return list;
 }
 
 function fromPairs(list) {
   const toReturn = {};
   list.forEach(([prop, value]) => toReturn[prop] = value);
   return toReturn;
-}
-
-function clone(val) {
-  const out = Array.isArray(val) ? Array(val.length) : {};
-  if (val && val.getTime) return new Date(val.getTime());
-
-  for (const key in val) {
-    const v = val[key];
-    out[key] = typeof v === 'object' && v !== null ? v.getTime ? new Date(v.getTime()) : clone(v) : v;
-  }
-
-  return out;
-}
-
-function forEach(fn, list) {
-  if (arguments.length === 1) return _list => forEach(fn, _list);
-  map(fn, list);
-  return list;
 }
 
 function groupBy(fn, list) {
@@ -2518,6 +2569,20 @@ function has(prop, obj) {
   return obj[prop] !== undefined;
 }
 
+function _objectIs(a, b) {
+  if (a === b) {
+    return a !== 0 || 1 / a === 1 / b;
+  }
+
+  return a !== a && b !== b;
+}
+var _objectIs$1 = Object.is || _objectIs;
+
+function identical(a, b) {
+  if (arguments.length === 1) return _b => identical(a, _b);
+  return _objectIs$1(a, b);
+}
+
 function identity(x) {
   return x;
 }
@@ -2566,9 +2631,47 @@ function indexOf(target, list) {
   return -1;
 }
 
+function intersection(list1, list2) {
+  if (arguments.length === 1) return _list => intersection(list1, _list);
+  return filter(value => includes(value, list2), list1);
+}
+
+function intersperse(separator, list) {
+  if (arguments.length === 1) return _list => intersperse(separator, _list);
+  let index = -1;
+  const len = list.length;
+  const willReturn = [];
+
+  while (++index < len) {
+    if (index === len - 1) {
+      willReturn.push(list[index]);
+    } else {
+      willReturn.push(list[index], separator);
+    }
+  }
+
+  return willReturn;
+}
+
 function is$1(ctor, val) {
   if (arguments.length === 1) return _val => is$1(ctor, _val);
   return val != null && val.constructor === ctor || val instanceof ctor;
+}
+
+function isEmpty(input) {
+  const inputType = type(input);
+  if (['Undefined', 'NaN', 'Number', 'Null'].includes(inputType)) return false;
+  if (!input) return true;
+
+  if (inputType === 'Object') {
+    return Object.keys(input).length === 0;
+  }
+
+  if (inputType === 'Array') {
+    return input.length === 0;
+  }
+
+  return false;
 }
 
 function isNil(x) {
@@ -2608,6 +2711,12 @@ function match(pattern, str) {
   return willReturn === null ? [] : willReturn;
 }
 
+function mathMod(m, p) {
+  if (arguments.length === 1) return p => mathMod(_m, p);
+  if (!_isInteger$1(m) || !_isInteger$1(p) || p < 1) return NaN;
+  return (m % p + p) % p;
+}
+
 function max(a, b) {
   if (arguments.length === 1) return _b => max(a, _b);
   return b > a ? b : a;
@@ -2621,6 +2730,25 @@ function maxBy(fn, a, b) {
   }
 
   return fn(b) > fn(a) ? b : a;
+}
+
+function sum(list) {
+  return list.reduce((prev, current) => prev + current, 0);
+}
+
+function mean(list) {
+  return sum(list) / list.length;
+}
+
+function median(list) {
+  const len = list.length;
+  if (len === 0) return NaN;
+  const width = 2 - len % 2;
+  const idx = (len - width) / 2;
+  return mean(Array.prototype.slice.call(list, 0).sort((a, b) => {
+    if (a === b) return 0;
+    return a < b ? -1 : 1;
+  }).slice(idx, idx + width));
 }
 
 function min(a, b) {
@@ -2646,6 +2774,10 @@ function modulo(a, b) {
 function multiply(a, b) {
   if (arguments.length === 1) return _b => multiply(a, _b);
   return a * b;
+}
+
+function negate(n) {
+  return -n;
 }
 
 function none(fn, list) {
@@ -2734,6 +2866,14 @@ function prepend(el, list) {
   return clone;
 }
 
+function reduceFn(fn, acc, list) {
+  return list.reduce(fn, acc);
+}
+
+const reduce = curry(reduceFn);
+
+const product = reduce(multiply, 1);
+
 function prop(key, obj) {
   if (arguments.length === 1) return _obj => prop(key, _obj);
   if (!obj) return undefined;
@@ -2747,11 +2887,18 @@ function propEqFn(key, val, obj) {
 
 const propEq = curry(propEqFn);
 
-function reduceFn(fn, acc, list) {
-  return list.reduce(fn, acc);
+function propIsFn(type, name, obj) {
+  return is$1(type, obj[name]);
 }
 
-const reduce = curry(reduceFn);
+const propIs = curry(propIsFn);
+
+function propOr(defaultValue, p, obj) {
+  if (arguments.length === 2) return _obj => propOr(defaultValue, p, _obj);
+  if (arguments.length === 1) return (_p, _obj) => propOr(defaultValue, _p, _obj);
+  if (!obj) return defaultValue;
+  return defaultTo(defaultValue, obj[p]);
+}
 
 function reject(fn, list) {
   if (arguments.length === 1) return _list => reject(fn, _list);
@@ -2771,6 +2918,12 @@ function reverse(input) {
 
   const clone = input.slice();
   return clone.reverse();
+}
+
+function slice(fromIndex, toIndex, list) {
+  if (arguments.length === 2) return (_toIndex, _list) => slice(fromIndex, _toIndex, _list);
+  if (arguments.length === 1) return _list => slice(fromIndex, toIndex, _list);
+  return list.slice(fromIndex, toIndex);
 }
 
 function sortBy(fn, list) {
@@ -2812,8 +2965,9 @@ function subtract(a, b) {
   return a - b;
 }
 
-function T() {
-  return true;
+function symmetricDifference(list1, list2) {
+  if (arguments.length === 1) return _list => symmetricDifference(list1, _list);
+  return concat(filter(value => !includes(value, list2), list1), filter(value => !includes(value, list1), list2));
 }
 
 function tail(list) {
@@ -2842,6 +2996,10 @@ function times(fn, n) {
   return map(fn, range(0, n));
 }
 
+function toPairs(obj) {
+  return Object.entries(obj);
+}
+
 function toString$1(val) {
   return val.toString();
 }
@@ -2852,21 +3010,6 @@ function toUpper(str) {
 
 function trim(str) {
   return str.trim();
-}
-
-function uniq(list) {
-  let index = -1;
-  const willReturn = [];
-
-  while (++index < list.length) {
-    const value = list[index];
-
-    if (!includes(value, willReturn)) {
-      willReturn.push(value);
-    }
-  }
-
-  return willReturn;
 }
 
 function uniqWith(fn, list) {
@@ -2933,4 +3076,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, interval, is$1 as is, isAttach, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, max, maxBy, maybe, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, promiseAllObject, prop, propEq, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, sort, sortBy, split, splitEvery, startsWith, subtract, switcher, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, assocPath, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identical, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, intersection, intersperse, interval, is$1 as is, isAttach, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, mathMod, max, maxBy, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, slice, sort, sortBy, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };

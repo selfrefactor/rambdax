@@ -12,7 +12,7 @@
     "tsformat": "tsfmt -r index.d.ts",
     "sync": "yarn sync:work&&yarn sync:after",
     "sync:after": "rm -rf -d src/rambda/*.spec.js",
-    "sync:work": "node files/_modules/sync",
+    "sync:work": "node files/_modules/syncProve.js",
     "do": "node files/_modules/do",
     "readme": "node files/_modules/createReadmeProve",
     "docs": "docsify init ./docs",
