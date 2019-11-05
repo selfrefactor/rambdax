@@ -1,7 +1,0 @@
-checks:
-  - name: build-size-watcher
-    options:
-      gzip: false
-      files:
-        - path: "./dist/*.js"
-          maxSize: 145KB
