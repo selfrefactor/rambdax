@@ -1,9 +1,25 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
+  codechecks:
+    docker:
+      - image: circleci/node:8.11.2-stretch
+    steps:
+      - run:
+          name: Update
+          working_directory: /
+          command: |
+            sudo apt-get update -y
+      - run:
+          name: Update
+          working_directory: /
+          command: |
+            sudo apt-get upgrade -y
+      - checkout
+      - restore_cache:
+            keys:
+            - v3-dependencies-{{ checksum "package.json" }}
+      - run: PUBLIC_URL=. ENV=dev yarn build
+      - run: yarn codechecks
   build:
     docker:
       # specify the version you desire here
