@@ -25,9 +25,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       # needed for dtslint
       - run: mkdir /home/circleci/.dts/perf -p   	  
-      
-      - run: yarn build
-      - run: yarn codechecks
       # run tests!
       - run: yarn cover
 
