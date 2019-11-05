@@ -3,7 +3,7 @@ import { map } from './rambda/map'
 
 function helper({ condition, inputArgument, prop }){
   return new Promise((resolve, reject) => {
-    if (!(type(condition) === 'Async')){
+    if (type(condition) !== 'Async'){
       return resolve({
         type    : prop,
         payload : condition(inputArgument),
