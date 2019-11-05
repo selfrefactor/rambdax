@@ -28,4 +28,6 @@ jobs:
       # run tests!
       - run: yarn cover
 
+      - run: echo $FOO
+
       - run: bash <(curl -s https://codecov.io/bash)
