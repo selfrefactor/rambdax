@@ -2,8 +2,6 @@ import { delay } from './delay'
 import { prop } from './rambda/prop'
 import { tryCatch } from './tryCatch'
 
-// with bad good json parse
-
 test('throws when fn is not function', () => {
   const fn = 'foo'
 
@@ -19,9 +17,11 @@ test('when fallback is used', () => {
 })
 
 test('with json parse', () => {
-  const fn = () => JSON.parse(`{a:a`)
+  const good = () => JSON.parse(JSON.stringify({a:1}))
+  const bad = () => JSON.parse("a{a")
 
-  expect(tryCatch(fn, false)(null)).toBe(false)
+  expect(tryCatch(good, 1)(null)).toEqual({a:1})
+  expect(tryCatch(bad, 1)(null)).toBe(1)
 })
 
 test('when fallback is function', () => {
