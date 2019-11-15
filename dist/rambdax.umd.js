@@ -1181,10 +1181,12 @@
     return array;
   }
 
-  const charCodes = [...range(49, 57), ...range(65, 90), ...range(97, 122)];
-  function uuid(length = 8) {
+  const charCodesString = [...range(65, 90), ...range(97, 122)];
+  const charCodes = [...charCodesString, ...range(49, 57)];
+  function uuid(length = 8, stringTag = false) {
     const loops = range(0, length);
-    return loops.map(x => String.fromCharCode(head(shuffle(charCodes)))).join('');
+    const charSet = stringTag ? charCodesString : charCodes;
+    return loops.map(x => String.fromCharCode(head(shuffle(charSet)))).join('');
   }
 
   const holder$1 = {};
@@ -1753,7 +1755,7 @@
     prop
   }) {
     return new Promise((resolve, reject) => {
-      if (!(type(condition) === 'Async')) {
+      if (type(condition) !== 'Async') {
         return resolve({
           type: prop,
           payload: condition(inputArgument)

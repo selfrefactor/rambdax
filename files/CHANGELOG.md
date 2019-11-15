@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.2.0 `R.uuid` accept second argument in order to return string only uuid
+
 3.1.0 Dynamic set of exports lead to adding previously ommited Rambda exports such as `R.identical`
 
 3.0.3 Sync with Rambda - new functionality of `R.isEmpty`

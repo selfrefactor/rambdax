@@ -236,7 +236,7 @@
       ruleFalse: Func<boolean> | boolean
     ): (ruleTrue: any) => IdentityFunction<T>
 
-    uuid(length?: number) :string  
+    uuid(length?: number, stringOnlyFlag?: boolean): string;
 
     whereEq(rule: object, input: any): boolean  
     whereEq(rule: object) : (input: any) => boolean  

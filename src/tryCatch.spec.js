@@ -5,9 +5,7 @@ import { tryCatch } from './tryCatch'
 test('throws when fn is not function', () => {
   const fn = 'foo'
 
-  expect(
-    () => tryCatch(fn, false)(null)
-  ).toThrow('R.tryCatch | fn \'foo\'')
+  expect(() => tryCatch(fn, false)(null)).toThrow('R.tryCatch | fn \'foo\'')
 })
 
 test('when fallback is used', () => {
@@ -17,10 +15,10 @@ test('when fallback is used', () => {
 })
 
 test('with json parse', () => {
-  const good = () => JSON.parse(JSON.stringify({a:1}))
-  const bad = () => JSON.parse("a{a")
+  const good = () => JSON.parse(JSON.stringify({ a : 1 }))
+  const bad = () => JSON.parse('a{a')
 
-  expect(tryCatch(good, 1)(null)).toEqual({a:1})
+  expect(tryCatch(good, 1)(null)).toEqual({ a : 1 })
   expect(tryCatch(bad, 1)(null)).toBe(1)
 })
 
