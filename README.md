@@ -29,17 +29,13 @@ Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods
 
 The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** compatibility.
 
-- `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
-
 ## Typescript
 
 You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 ## API
 
-Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
-
-Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located [/files/deprecated/README.md](here.)
+Methods between `allFalse` and `whenAsync` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 ---
 #### allFalse
@@ -2275,6 +2271,48 @@ const result = R.findIndex(findFn, arr)
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/findIndex.spec.js)
 
 <a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.findIndex(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
+
+---
+#### findLast
+
+> findLast(findFn: Function, arr: T[]): T|undefined
+
+It returns `undefined` or the last element of `arr` satisfying `findFn`.
+
+```
+const findFn = a => R.type(a.foo) === 'Number'
+const arr = [{foo: 'bar'}, {foo: 1}]
+
+const result = R.findLast(findFn, arr)
+// => {foo: 1}
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/find.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/findLast.spec.js)
+
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.findLast(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%201%7D">Try in REPL</a>
+
+---
+#### findLastIndex
+
+> findLastIndex(findFn: Function, arr: T[]): number
+
+It returns `-1` or the last index of the first element of `arr` satisfying `findFn`.
+
+```
+const findFn = a => R.type(a.foo) === 'Number'
+const arr = [{foo: 'bar'}, {foo: 1}]
+
+const result = R.findLastIndex(findFn, arr)
+// => 1
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/findIndex.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/findLastIndex.spec.js)
+
+<a href="https://rambda.now.sh?const%20findFn%20%3D%20a%20%3D%3E%20R.type(a.foo)%20%3D%3D%3D%20'Number'%0Aconst%20arr%20%3D%20%5B%7Bfoo%3A%20'bar'%7D%2C%20%7Bfoo%3A%201%7D%5D%0A%0Aconst%20result%20%3D%20R.findLastIndex(findFn%2C%20arr)%0A%2F%2F%20%3D%3E%201">Try in REPL</a>
 
 ---
 #### flatten

@@ -29,17 +29,13 @@ Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods
 
 The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** compatibility.
 
-- `Rambdax` replaces `Rambda`'s `is` with very different method. Check the API below for further details.
-
 ## Typescript
 
 You will need at least version `3.0.0` for `Rambdax` versions after `0.12.0`.
 
 ## API
 
-Methods between `allFalse` and `when` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
-
-Several methods are dropped between versions `0.24.0` and `1.0.0`. The older version of the API is located [/files/deprecated/README.md](here.)
+Methods between `allFalse` and `whenAsync` belong to **Rambdax**, while methods between `add` and `without` are inherited from **Rambda**.
 
 #### allFalse
 
