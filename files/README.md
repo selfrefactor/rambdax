@@ -292,6 +292,21 @@ const result = R.delay(1000)
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/delay.js)
 
+#### filterAsync
+
+> findAsync(predicate: Async, iterateOver: object|array): Promise
+
+It will return object or array `iterateOver` filtered according to asynchronous function `predicate`
+
+```
+const predicate = async x => {
+  await delay(100)
+  return x%2 === 1
+}
+const result = await filterAsync(predicate, [ 1, 2, 3 ])
+// => [ 1, 3 ]
+```
+
 #### findInObject
 
 > findInObject(fn: Function, obj: object): object

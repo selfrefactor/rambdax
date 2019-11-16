@@ -197,6 +197,11 @@ declare namespace R {
 
     maybe<T>(ifRule: any, whenIf: any, whenElse: any, maybeInput?: any): T;
 
+    filterAsync<T>(fn: (x: T) => Promise<boolean>, list: T[]): Promise<T[]>;
+    filterAsync<T>(fn: (x: T) => Promise<boolean>, obj: object): Promise<{
+      [prop: string]: T,
+    }>;
+
     mapAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<T[]>;
     mapAsync<T>(fn: AsyncWithProp<any>, obj: object): Promise<T[]>;
     mapAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<T[]>;
