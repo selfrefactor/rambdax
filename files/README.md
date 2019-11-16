@@ -1079,6 +1079,19 @@ const expectedResult = 'barFO'
 
 [Source](https://github.com/selfrefactor/rambdax/tree/master/src/promiseAllSecure.js)
 
+#### sortObject
+
+> sortObject(predicate: Function, obj: Object): Object
+
+It returns sorted version of an object.
+
+```
+const predicate = (propA, propB, valueA, valueB) => valueA > valueB ? -1 : 1
+
+const sorted = R.sortObject(predicate, {a:1, b: 4, c: 2})
+// => {b:4, c: 2, a:1}
+```
+
 #### shuffle
 
 > shuffle(arr: T[]): T[]

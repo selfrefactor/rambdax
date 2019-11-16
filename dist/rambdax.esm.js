@@ -932,6 +932,94 @@ function delay(ms) {
   });
 }
 
+function filterObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    if (fn(obj[prop], prop, obj)) {
+      willReturn[prop] = obj[prop];
+    }
+  }
+
+  return willReturn;
+}
+
+function filter(fn, list) {
+  if (arguments.length === 1) return _list => filter(fn, _list);
+
+  if (list === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(list)) {
+    return filterObject(fn, list);
+  }
+
+  let index = -1;
+  let resIndex = 0;
+  const len = list.length;
+  const willReturn = [];
+
+  while (++index < len) {
+    const value = list[index];
+
+    if (fn(value, index)) {
+      willReturn[resIndex++] = value;
+    }
+  }
+
+  return willReturn;
+}
+
+async function mapAsyncFn(fn, arr) {
+  if (Array.isArray(arr)) {
+    const willReturn = [];
+    let i = 0;
+
+    for (const a of arr) {
+      willReturn.push((await fn(a, i++)));
+    }
+
+    return willReturn;
+  }
+
+  const willReturn = {};
+
+  for (const prop in arr) {
+    willReturn[prop] = await fn(arr[prop], prop);
+  }
+
+  return willReturn;
+}
+
+function mapAsync(fn, arr) {
+  if (arguments.length === 1) {
+    return async holder => mapAsyncFn(fn, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  });
+}
+
+function filterAsync(predicate, iterateOver) {
+  if (arguments.length === 1) {
+    return async holder => filterAsync(predicate, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapAsync(predicate, iterateOver).then(predicateResult => {
+      if (Array.isArray(predicateResult)) {
+        const filtered = iterateOver.filter((_, i) => predicateResult[i]);
+        return resolve(filtered);
+      }
+
+      const filtered = filter((_, prop) => predicateResult[prop])(iterateOver);
+      return resolve(filtered);
+    }).catch(reject);
+  });
+}
+
 function findInObject(fn, obj) {
   if (arguments.length === 1) {
     return objHolder => findInObject(fn, objHolder);
@@ -1429,37 +1517,6 @@ function isType(xType, x) {
   }
 
   return type(x) === xType;
-}
-
-async function mapAsyncFn(fn, arr) {
-  if (Array.isArray(arr)) {
-    const willReturn = [];
-    let i = 0;
-
-    for (const a of arr) {
-      willReturn.push((await fn(a, i++)));
-    }
-
-    return willReturn;
-  }
-
-  const willReturn = {};
-
-  for (const prop in arr) {
-    willReturn[prop] = await fn(arr[prop], prop);
-  }
-
-  return willReturn;
-}
-
-function mapAsync(fn, arr) {
-  if (arguments.length === 1) {
-    return async holder => mapAsyncFn(fn, holder);
-  }
-
-  return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject);
-  });
 }
 
 async function mapFastAsyncFn(fn, arr) {
@@ -1978,6 +2035,20 @@ function switcher(input) {
   return new Switchem(input);
 }
 
+function sortObject(predicate, obj) {
+  if (arguments.length === 1) {
+    return _obj => sortObject(predicate, _obj);
+  }
+
+  const keys = Object.keys(obj);
+  const sortedKeys = sort((a, b) => predicate(a, b, obj[a], obj[b]), keys);
+  const toReturn = {};
+  sortedKeys.forEach(singleKey => {
+    toReturn[singleKey] = obj[singleKey];
+  });
+  return toReturn;
+}
+
 function tapAsync(fn, input) {
   if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder);
@@ -2185,45 +2256,6 @@ function where(conditions, obj) {
   }
 
   return flag;
-}
-
-function filterObject(fn, obj) {
-  const willReturn = {};
-
-  for (const prop in obj) {
-    if (fn(obj[prop], prop, obj)) {
-      willReturn[prop] = obj[prop];
-    }
-  }
-
-  return willReturn;
-}
-
-function filter(fn, list) {
-  if (arguments.length === 1) return _list => filter(fn, _list);
-
-  if (list === undefined) {
-    return [];
-  }
-
-  if (!Array.isArray(list)) {
-    return filterObject(fn, list);
-  }
-
-  let index = -1;
-  let resIndex = 0;
-  const len = list.length;
-  const willReturn = [];
-
-  while (++index < len) {
-    const value = list[index];
-
-    if (fn(value, index)) {
-      willReturn[resIndex++] = value;
-    }
-  }
-
-  return willReturn;
 }
 
 function whereEq(rule, input) {
@@ -3078,4 +3110,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, assocPath, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identical, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, intersection, intersperse, interval, is$1 as is, isAttach, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, mathMod, max, maxBy, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, slice, sort, sortBy, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, assocPath, both, change, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identical, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, intersection, intersperse, interval, is$1 as is, isAttach, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, join, keys, last, lastIndexOf, length, map, mapAsync, mapFastAsync, mapToObject, match, mathMod, max, maxBy, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };

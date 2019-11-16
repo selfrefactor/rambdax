@@ -342,6 +342,24 @@ const result = R.delay(1000)
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.delay(1000)%0A%2F%2F%20%60result%60%20resolves%20to%20%60'RAMBDAX_DELAY'%60">Try in REPL</a>
 
 ---
+#### filterAsync
+
+> findAsync(predicate: Async, iterateOver: object|array): Promise
+
+It will return object or array `iterateOver` filtered according to asynchronous function `predicate`
+
+```
+const predicate = async x => {
+  await delay(100)
+  return x%2 === 1
+}
+const result = await filterAsync(predicate, [ 1, 2, 3 ])
+// => [ 1, 3 ]
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/filterAsync.spec.js)
+
+---
 #### findInObject
 
 > findInObject(fn: Function, obj: object): object
@@ -1264,6 +1282,22 @@ const expectedResult = 'barFO'
 [Test](https://github.com/selfrefactor/rambdax/blob/master/src/s.spec.js)
 
 <a href="https://rambda.now.sh?%2F%2F%20To%20turn%20it%20on%0AR.s()%0A%0A%2F%2F%20Then%0Aconst%20result%20%3D%20'foo'%0A%20%20.s(R.toUpper)%0A%20%20.s(R.take(2))%0A%20%20.s(R.add('bar'))%0A%0Aconst%20expectedResult%20%3D%20'barFO'%0A%2F%2F%20result%20%3D%3D%3D%20expectedResult">Try in REPL</a>
+
+---
+#### sortObject
+
+> sortObject(predicate: Function, obj: Object): Object
+
+It returns sorted version of an object.
+
+```
+const predicate = (propA, propB, valueA, valueB) => valueA > valueB ? -1 : 1
+
+const sorted = R.sortObject(predicate, {a:1, b: 4, c: 2})
+// => {b:4, c: 2, a:1}
+```
+
+[Test](https://github.com/selfrefactor/rambdax/blob/master/src/sortObject.spec.js)
 
 ---
 #### shuffle

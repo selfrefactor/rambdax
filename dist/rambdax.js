@@ -936,6 +936,94 @@ function delay(ms) {
   });
 }
 
+function filterObject(fn, obj) {
+  const willReturn = {};
+
+  for (const prop in obj) {
+    if (fn(obj[prop], prop, obj)) {
+      willReturn[prop] = obj[prop];
+    }
+  }
+
+  return willReturn;
+}
+
+function filter(fn, list) {
+  if (arguments.length === 1) return _list => filter(fn, _list);
+
+  if (list === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(list)) {
+    return filterObject(fn, list);
+  }
+
+  let index = -1;
+  let resIndex = 0;
+  const len = list.length;
+  const willReturn = [];
+
+  while (++index < len) {
+    const value = list[index];
+
+    if (fn(value, index)) {
+      willReturn[resIndex++] = value;
+    }
+  }
+
+  return willReturn;
+}
+
+async function mapAsyncFn(fn, arr) {
+  if (Array.isArray(arr)) {
+    const willReturn = [];
+    let i = 0;
+
+    for (const a of arr) {
+      willReturn.push((await fn(a, i++)));
+    }
+
+    return willReturn;
+  }
+
+  const willReturn = {};
+
+  for (const prop in arr) {
+    willReturn[prop] = await fn(arr[prop], prop);
+  }
+
+  return willReturn;
+}
+
+function mapAsync(fn, arr) {
+  if (arguments.length === 1) {
+    return async holder => mapAsyncFn(fn, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapAsyncFn(fn, arr).then(resolve).catch(reject);
+  });
+}
+
+function filterAsync(predicate, iterateOver) {
+  if (arguments.length === 1) {
+    return async holder => filterAsync(predicate, holder);
+  }
+
+  return new Promise((resolve, reject) => {
+    mapAsync(predicate, iterateOver).then(predicateResult => {
+      if (Array.isArray(predicateResult)) {
+        const filtered = iterateOver.filter((_, i) => predicateResult[i]);
+        return resolve(filtered);
+      }
+
+      const filtered = filter((_, prop) => predicateResult[prop])(iterateOver);
+      return resolve(filtered);
+    }).catch(reject);
+  });
+}
+
 function findInObject(fn, obj) {
   if (arguments.length === 1) {
     return objHolder => findInObject(fn, objHolder);
@@ -1433,37 +1521,6 @@ function isType(xType, x) {
   }
 
   return type(x) === xType;
-}
-
-async function mapAsyncFn(fn, arr) {
-  if (Array.isArray(arr)) {
-    const willReturn = [];
-    let i = 0;
-
-    for (const a of arr) {
-      willReturn.push((await fn(a, i++)));
-    }
-
-    return willReturn;
-  }
-
-  const willReturn = {};
-
-  for (const prop in arr) {
-    willReturn[prop] = await fn(arr[prop], prop);
-  }
-
-  return willReturn;
-}
-
-function mapAsync(fn, arr) {
-  if (arguments.length === 1) {
-    return async holder => mapAsyncFn(fn, holder);
-  }
-
-  return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr).then(resolve).catch(reject);
-  });
 }
 
 async function mapFastAsyncFn(fn, arr) {
@@ -1982,6 +2039,20 @@ function switcher(input) {
   return new Switchem(input);
 }
 
+function sortObject(predicate, obj) {
+  if (arguments.length === 1) {
+    return _obj => sortObject(predicate, _obj);
+  }
+
+  const keys = Object.keys(obj);
+  const sortedKeys = sort((a, b) => predicate(a, b, obj[a], obj[b]), keys);
+  const toReturn = {};
+  sortedKeys.forEach(singleKey => {
+    toReturn[singleKey] = obj[singleKey];
+  });
+  return toReturn;
+}
+
 function tapAsync(fn, input) {
   if (arguments.length === 1) {
     return inputHolder => tapAsync(fn, inputHolder);
@@ -2189,45 +2260,6 @@ function where(conditions, obj) {
   }
 
   return flag;
-}
-
-function filterObject(fn, obj) {
-  const willReturn = {};
-
-  for (const prop in obj) {
-    if (fn(obj[prop], prop, obj)) {
-      willReturn[prop] = obj[prop];
-    }
-  }
-
-  return willReturn;
-}
-
-function filter(fn, list) {
-  if (arguments.length === 1) return _list => filter(fn, _list);
-
-  if (list === undefined) {
-    return [];
-  }
-
-  if (!Array.isArray(list)) {
-    return filterObject(fn, list);
-  }
-
-  let index = -1;
-  let resIndex = 0;
-  const len = list.length;
-  const willReturn = [];
-
-  while (++index < len) {
-    const value = list[index];
-
-    if (fn(value, index)) {
-      willReturn[resIndex++] = value;
-    }
-  }
-
-  return willReturn;
 }
 
 function whereEq(rule, input) {
@@ -3126,6 +3158,7 @@ exports.either = either;
 exports.endsWith = endsWith;
 exports.equals = equals;
 exports.filter = filter;
+exports.filterAsync = filterAsync;
 exports.find = find;
 exports.findInObject = findInObject;
 exports.findIndex = findIndex;
@@ -3243,6 +3276,7 @@ exports.shuffle = shuffle;
 exports.slice = slice;
 exports.sort = sort;
 exports.sortBy = sortBy;
+exports.sortObject = sortObject;
 exports.split = split;
 exports.splitEvery = splitEvery;
 exports.startsWith = startsWith;

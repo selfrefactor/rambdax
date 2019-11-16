@@ -45,7 +45,8 @@ declare namespace R {
   type FilterFunction<T> = (x: T, prop?: string, inputObj?: object) => boolean;
   type PartitionPredicate<T> = (x: T, prop?: string) => boolean;
   type MapFunction<In, Out> = (x: In, prop?: string, inputObj?: object) => Out;
-  type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+  type Omitx<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+  type SortObjectPredicate<T> = (aProp: string, bProp: string, aValue: ?T, bValue?: T) => number;
 
   interface MapInterface<T> {
     (list: T[]): T[];
@@ -298,6 +299,9 @@ declare namespace R {
     s(): boolean;
 
     shuffle<T>(arr: T[]): T[];
+
+    sortObject<T>(predicate: SortObjectPredicate<T>, obj: { [key: string]: T }): { [keyOutput: string]: T };
+    sortObject<T>(predicate: SortObjectPredicate<T>): (obj: { [key: string]: T }) => { [keyOutput: string]: T };
 
     switcher<T>(valueToMatch: any): Switchem<T>;
 

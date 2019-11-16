@@ -1,6 +1,6 @@
 # CHANGELOG
 
-3.3.0 Add `R.filterAsync`
+3.3.0 Add `R.filterAsync` and `R.sortObject` methods
 
 3.2.0 `R.uuid` accept second argument in order to return string only uuid
 

@@ -196,6 +196,9 @@
     s(): boolean
 
     shuffle<T>(arr: T[]): T[]
+    
+    sortObject<T>(predicate: SortObjectPredicate<T>, obj: { [key: string]: T}): { [keyOutput: string]: T}
+    sortObject<T>(predicate: SortObjectPredicate<T>): (obj : { [key: string] : T }) => { [keyOutput: string] : T }
 
     switcher<T>(valueToMatch: any): Switchem<T>
 
