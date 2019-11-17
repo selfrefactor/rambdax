@@ -19,7 +19,7 @@ async function createTypes(){
     '// INTERFACES_MARKER_END\n',
     rambda,
     true
-  )
+  ) 
   const withMethods = inject(
     methods,
     '// METHODS_MARKER\n',

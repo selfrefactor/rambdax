@@ -7,8 +7,7 @@ type Func<T> = (input: any) => T
   type FilterFunction<T> = (x: T, prop?: string, inputObj?: object) => boolean
   type PartitionPredicate<T> = (x: T, prop?: string) => boolean
   type MapFunction<In, Out> = (x: In, prop?: string, inputObj?: object) => Out
-  type Omitx<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-  type SortObjectPredicate<T> = (aProp:string,bProp:string, aValue:?T, bValue?:T) => number
+  type SortObjectPredicate<T> = (aProp:string,bProp:string, aValue?:T, bValue?:T) => number
 
   interface MapInterface<T> {
     (list: T[]): T[]
