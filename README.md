@@ -1,5 +1,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/selfrefactor/rambdax.svg)](https://circleci.com/gh/selfrefactor/rambdax)
 [![codecov](https://codecov.io/gh/selfrefactor/rambdax/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambdax)
+![Normal size](https://img.badgesize.io/ngryman/badge-size/master/dist/rambdax.js)
+![Gzip size](https://img.badgesize.io/ngryman/badge-size/master/dist/rambdax.js?compression=gzip)
 
 # Rambdax
 
