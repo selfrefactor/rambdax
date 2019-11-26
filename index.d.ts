@@ -89,10 +89,18 @@ declare namespace R {
   interface Schema {
     [key: string]: any;
   }
+  interface SchemaAsync {
+    [key: string]: Promise<boolean>;
+  }
 
   interface IsValid {
     input: object;
     schema: Schema;
+  }
+
+  interface IsValidAsync {
+    input: object;
+    schema: Schema | SchemaAsync;
   }
 
   type Async<T> = (x: any) => Promise<T>;
@@ -228,6 +236,7 @@ declare namespace R {
     ok(...inputs: any[]): (...rules: any[]) => true | never;
     pass(...inputs: any[]): (...rules: any[]) => boolean;
     isValid(x: IsValid): boolean;
+    isValidAsync(x: IsValidAsync): Promise<boolean>;
     isAttach(): boolean;
 
     once(fn: Func<any>): Func<any>;

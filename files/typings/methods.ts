@@ -126,6 +126,7 @@
     ok(...inputs: any[]): (...rules: any[]) => true | never 
     pass(...inputs: any[]): (...rules: any[]) => boolean 
     isValid(x: IsValid): boolean 
+    isValidAsync(x: IsValidAsync): Promise<boolean> 
     isAttach() : boolean
 
     once(fn: Func<any>): Func<any>

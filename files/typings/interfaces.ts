@@ -1,4 +1,4 @@
-type Func<T> = (input: any) => T  
+  type Func<T> = (input: any) => T  
   type Predicatex<T> = (input: T, index: number) => boolean
   type Fn<In, Out> = (x: In) => Out
   type FnTwo<In, Out> = (x: In, y: In) => Out
@@ -51,10 +51,18 @@ interface ObjectWithPromises {
 interface Schema {
   [key: string]: any
 }
+interface SchemaAsync {
+  [key: string]: Promise<boolean>
+}
 
 interface IsValid {
   input: object
   schema: Schema
+}
+
+interface IsValidAsync {
+  input: object
+  schema: Schema | SchemaAsync 
 }
 
 type Async<T> = (x: any) => Promise<T>
