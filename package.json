@@ -1,6 +1,6 @@
 {
   "name": "rambdax",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "Lightweight alternative to Ramda - extended version",
   "main": "./dist/rambdax.js",
   "module": "./dist/rambdax.esm.js",
