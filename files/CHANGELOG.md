@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.5.0 Sync with `Rambda` - add methods descriptions to Typescript definitions
+
 3.4.0 Sync with `Rambda` and close [Issue #42](https://github.com/selfrefactor/rambdax/pull/42)
 
 3.3.0 Fix `R.sortObject` typing

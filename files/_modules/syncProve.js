@@ -48,8 +48,8 @@ const toOmit = glue(`
 
 const rambdaxDevDependencies = {
   'fs-extra' : '7.0.0',
-  'rambda'   : 'https://github.com/selfrefactor/rambda#4.0.1',
-  // 'rambda'   : '4.0.1',
+  // 'rambda'   : 'https://github.com/selfrefactor/rambda#4.0.1',
+  'rambda'   : '4.4.0',
 }
 
 outputJsonSync(

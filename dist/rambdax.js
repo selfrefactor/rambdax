@@ -951,7 +951,7 @@ function filterObject(fn, obj) {
 function filter(fn, list) {
   if (arguments.length === 1) return _list => filter(fn, _list);
 
-  if (list === undefined) {
+  if (list == undefined) {
     return [];
   }
 
@@ -2285,7 +2285,7 @@ function add(a, b) {
   return Number(a) + Number(b);
 }
 
-function adjustRaw(index, fn, list) {
+function adjustFn(index, fn, list) {
   const actualIndex = index < 0 ? list.length + index : index;
   if (index >= list.length || actualIndex < 0) return list;
   const clone = list.slice();
@@ -2293,7 +2293,7 @@ function adjustRaw(index, fn, list) {
   return clone;
 }
 
-const adjust = curry(adjustRaw);
+const adjust = curry(adjustFn);
 
 function allPass(predicates) {
   return input => {
@@ -2311,8 +2311,13 @@ function allPass(predicates) {
   };
 }
 
-function always(val) {
-  return () => val;
+function always(x) {
+  return () => x;
+}
+
+function and(a, b) {
+  if (arguments.length === 1) return _b => and(a, _b);
+  return a && b;
 }
 
 function anyPass(predicates) {
@@ -2641,16 +2646,34 @@ const ifElse = curry(ifElseFn);
 
 const inc = n => n + 1;
 
-function indexBy(fn, list) {
-  if (arguments.length === 1) return _list => indexBy(fn, _list);
-  const result = {};
+function indexByPath(pathInput, list) {
+  const toReturn = {};
 
   for (let i = 0; i < list.length; i++) {
     const item = list[i];
-    result[fn(item)] = item;
+    toReturn[path(pathInput, item)] = item;
   }
 
-  return result;
+  return toReturn;
+}
+
+function indexBy(fnOrPath, list) {
+  if (arguments.length === 1) {
+    return _list => indexBy(fnOrPath, _list);
+  }
+
+  if (typeof fnOrPath === 'string') {
+    return indexByPath(fnOrPath, list);
+  }
+
+  const toReturn = {};
+
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i];
+    toReturn[fnOrPath(item)] = item;
+  }
+
+  return toReturn;
 }
 
 function indexOf(target, list) {
@@ -2750,7 +2773,7 @@ function match(pattern, str) {
 }
 
 function mathMod(m, p) {
-  if (arguments.length === 1) return p => mathMod(_m, p);
+  if (arguments.length === 1) return _p => mathMod(m, _p);
   if (!_isInteger$1(m) || !_isInteger$1(p) || p < 1) return NaN;
   return (m % p + p) % p;
 }
@@ -2958,11 +2981,11 @@ function reverse(input) {
   return clone.reverse();
 }
 
-function slice(fromIndex, toIndex, list) {
-  if (arguments.length === 2) return (_toIndex, _list) => slice(fromIndex, _toIndex, _list);
-  if (arguments.length === 1) return _list => slice(fromIndex, toIndex, _list);
+function sliceFn(fromIndex, toIndex, list) {
   return list.slice(fromIndex, toIndex);
 }
+
+const slice = curry(sliceFn);
 
 function sortBy(fn, list) {
   if (arguments.length === 1) return _list => sortBy(fn, _list);
@@ -3046,6 +3069,13 @@ function toUpper(str) {
   return str.toUpperCase();
 }
 
+function transpose(array) {
+  return array.reduce((acc, el) => {
+    el.forEach((nestedEl, i) => Array.isArray(acc[i]) ? acc[i].push(nestedEl) : acc.push([nestedEl]));
+    return acc;
+  }, []);
+}
+
 function trim(str) {
   return str.trim();
 }
@@ -3125,6 +3155,7 @@ exports.allPass = allPass;
 exports.allTrue = allTrue;
 exports.allType = allType;
 exports.always = always;
+exports.and = and;
 exports.any = any;
 exports.anyFalse = anyFalse;
 exports.anyPass = anyPass;
@@ -3299,6 +3330,7 @@ exports.toPairs = toPairs;
 exports.toString = toString$1;
 exports.toUpper = toUpper;
 exports.toggle = toggle;
+exports.transpose = transpose;
 exports.trim = trim;
 exports.tryCatch = tryCatch;
 exports.type = type;

@@ -24,7 +24,7 @@ async function createTypes(){
     methods,
     '// METHODS_MARKER\n',
     withInterfaces
-  )
+  ) 
 
   writeFileSync(OUTPUT_PATH, withMethods)
   await exec({
