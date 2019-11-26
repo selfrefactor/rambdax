@@ -78,10 +78,7 @@
       list: any[]
     ): boolean
 
-    isArray(input: any): boolean
     isFalsy(input: any): boolean
-    isobject(input: any): boolean
-    isString(input: any): boolean
     isType(targetType: RambdaTypes, input: any): boolean
 
     isPromise(
