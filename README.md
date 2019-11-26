@@ -1772,14 +1772,14 @@ R.add(2, 3) // =>  5
 ---
 #### adjust
 
-> adjust(replaceFn: Function, i: number, arr: T[]): T[]
+> adjust(i: number, replaceFn: Function, arr: T[]): T[]
 
 It replaces `i` index in `arr` with the result of `replaceFn(arr[i])`.
 
 ```
 R.adjust(
-  a => a + 1,
   0,
+  a => a + 1,
   [0, 100]
 ) // => [1, 100]
 ```
@@ -1788,7 +1788,7 @@ R.adjust(
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/adjust.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.adjust(%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%200%2C%0A%20%20%5B0%2C%20100%5D%0A)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.adjust(%0A%20%200%2C%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%20%5B0%2C%20100%5D%0A)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try in REPL</a>
 
 ---
 #### all
@@ -1854,6 +1854,20 @@ console.log(fn())// => 7
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/always.spec.js)
 
 <a href="https://rambda.now.sh?const%20fn%20%3D%20R.always(7)%0A%0Aconsole.log(fn())%2F%2F%20%3D%3E%207">Try in REPL</a>
+
+---
+#### and
+
+Returns `true` if both arguments are `true`; `false` otherwise.
+
+```
+R.and(true, true); // => true
+R.and(true, false); // => false
+R.and(false, true); // => false
+R.and(false, false); // => false
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/and.spec.js)
 
 ---
 #### any
@@ -2246,25 +2260,16 @@ const filterFn = a => a % 2 === 0
 
 const result = R.filter(filterFn, [1, 2, 3, 4])
 // => [2, 4]
-```
 
-The method works with objects as well.
-
-Note that unlike Ramda's `filter`, here object keys are passed as second argument to `filterFn`.
-
-```
-const result = R.filter((val, prop)=>{
-  return prop === 'a' || val === 2
-}, {a: 1, b: 2, c: 3})
-
-// => {a: 1, b: 2}
+const objResult = R.filter(filterFn, {a: 1, b: 2})
+// => {b: 2}
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/filter.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/filter.spec.js)
 
-<a href="https://rambda.now.sh?const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0Aconst%20result%20%3D%20R.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20filterFn%20%3D%20a%20%3D%3E%20a%20%25%202%20%3D%3D%3D%200%0A%0Aconst%20result%20%3D%20R.filter(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D%0A%0Aconst%20objResult%20%3D%20R.filter(filterFn%2C%20%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%7Bb%3A%202%7D">Try in REPL</a>
 
 ---
 #### find
@@ -2389,9 +2394,9 @@ const result = subtractFlip(1,7)
 ---
 #### forEach
 
-> forEach(fn: Function, arr: Array): Array
+> forEach(fn: Function, x: Array|Object): Array|Object
 
-It applies function `fn` over all members of array `arr` and returns `arr`.
+It applies function `fn` over all members of iterable `x` and returns `x`.
 
 ```
 const sideEffect = {}
@@ -2402,8 +2407,6 @@ const result = R.forEach(
 console.log(sideEffect) //=> {foo1 : 1, foo2 : 2}
 console.log(result) //=> [1, 2]
 ```
-
-Note, that unlike `Ramda`'s **forEach**, Rambda's one doesn't dispatch to `forEach` method of `arr` if `arr` has such method.
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/forEach.js)
 
@@ -2558,12 +2561,7 @@ R.identity(7) // => 7
 
 > ifElse(condition: Function|boolean, ifFn: Function, elseFn: Function): Function
 
-It returns function, which expect `input` as argument and returns `finalResult`.
-
-When this function is called, a value `answer` is generated as a result of `condition(input)`.
-
-If `answer` is `true`, then `finalResult` is equal to `ifFn(input)`.
-If `answer` is `false`, then `finalResult` is equal to `elseFn(input)`.
+It returns another function. When this new function is called with `input` argument, it will return either `ifFn(input)` or `elseFn(input)` depending on `condition(input)` evaluation.
 
 ```
 const fn = R.ifElse(
@@ -2621,23 +2619,29 @@ R.includes({a: 1}, [{a: 1}]) // => true
 ---
 #### indexBy
 
-> indexBy(fn: Function, arr: T[]): Object
+> indexBy(condition: Function|String, arr: T[]): Object
 
-It indexes array `arr` as an object with provided selector function `fn`.
+Generates object with properties provided by `condition` and values provided by `arr`. If `condition` is a string, then it is passed to `R.path`.
 
 ```
-R.indexBy(
+const arr = [ {id: 1}, {id: 2} ]
+const result = R.indexBy(
   x => x.id,
-  [ {id: 1}, {id: 2} ]
+  arr
+)
+const pathResult = R.indexBy(
+  'id',
+  arr
 )
 // => { 1: {id: 1}, 2: {id: 2} }
+// pathResult === result
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/indexBy.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/indexBy.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.indexBy(%0A%20%20x%20%3D%3E%20x.id%2C%0A%20%20%5B%20%7Bid%3A%201%7D%2C%20%7Bid%3A%202%7D%20%5D%0A)%0A%2F%2F%20%3D%3E%20%7B%201%3A%20%7Bid%3A%201%7D%2C%202%3A%20%7Bid%3A%202%7D%20%7D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20arr%20%3D%20%5B%20%7Bid%3A%201%7D%2C%20%7Bid%3A%202%7D%20%5D%0Aconst%20result%20%3D%20R.indexBy(%0A%20%20x%20%3D%3E%20x.id%2C%0A%20%20arr%0A)%0Aconst%20pathResult%20%3D%20R.indexBy(%0A%20%20'id'%2C%0A%20%20arr%0A)%0A%2F%2F%20%3D%3E%20%7B%201%3A%20%7Bid%3A%201%7D%2C%202%3A%20%7Bid%3A%202%7D%20%7D%0A%2F%2F%20pathResult%20%3D%3D%3D%20result">Try in REPL</a>
 
 ---
 #### indexOf
@@ -2764,7 +2768,7 @@ R.keys({a:1, b:2})  // => ['a', 'b']
 
 > last(arrOrStr: T[]|string): T|string
 
-- It returns the last element of `arrOrStr`.
+It returns the last element of `arrOrStr`.
 
 ```
 R.last(['foo', 'bar', 'baz']) // => 'baz'
@@ -3072,15 +3076,13 @@ finalFn('bar') // =>  'Hello, Ms. foo bar!'
 ---
 #### partialCurry
 
-> partialCurry(fn: Function|Async, a: Object, b: Object): Function|Promise
+> partialCurry(fn: Function|Async, partialInput: Object, input: Object): Function|Promise
 
-When called with function `fn` and first set of input `a`, it will return a function.
+When called with function `fn` and first set of input `partialInput`, it will return a function.
 
-This function will wait to be called with second set of input `b` and it will invoke `fn` with the merged object of `a` over `b`.
+This function will wait to be called with second set of input `input` and it will invoke `fn` with the merged object of `partialInput` over `input`.
 
 `fn` can be asynchronous function. In that case a `Promise` holding the result of `fn` is returned.
-
-See the example below:
 
 ```
 const fn = ({a, b, c}) => {
@@ -3444,7 +3446,7 @@ R.split('-', 'a-b-c') // => ['a', 'b', 'c']
 
 > splitEvery(sliceLength: number, arrOrString: T[]|string): T[T[]]|string[]
 
-- It splits `arrOrStr` into slices of `sliceLength`.
+It splits `arrOrStr` into slices of `sliceLength`.
 
 ```
 R.splitEvery(2, [1, 2, 3]) // => [[1, 2], [3]]
@@ -3538,7 +3540,7 @@ R.tail('foo')  // => 'oo'
 
 > take(num: number, arrOrStr: T[]|string): T[]|string
 
-- It returns the first `num` elements of `arrOrStr`.
+It returns the first `num` elements of `arrOrStr`.
 
 ```
 R.take(1, ['foo', 'bar']) // => ['foo']
@@ -3556,7 +3558,7 @@ R.take(2, 'foo') // => 'fo'
 
 > takeLast(num: number, arrOrStr: T[]|string): T[]|string
 
-- It returns the last `num` elements of `arrOrStr`.
+It returns the last `num` elements of `arrOrStr`.
 
 ```
 R.takeLast(1, ['foo', 'bar']) // => ['bar']
@@ -3574,7 +3576,7 @@ R.takeLast(2, 'foo') // => 'oo'
 
 > tap(fn: Function, input: T): T
 
-- It applies function to input and pass the input back. Use case is debuging in the middle of `R.compose`.
+It applies function to input and pass the input back. Use case is debuging in the middle of `R.compose`.
 
 ```
 let a = 1
@@ -3595,7 +3597,7 @@ const result = R.tap(sayX, 100)
 
 > test(regExpression: Regex, str: string): boolean
 
-- Determines whether `str` matches `regExpression`
+Determines whether `str` matches `regExpression`
 
 ```
 R.test(/^f/, 'foo')
@@ -3696,6 +3698,21 @@ R.toUpper('foo') // => 'FOO'
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/toUpper.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.toUpper('foo')%20%2F%2F%20%3D%3E%20'FOO'">Try in REPL</a>
+
+---
+#### transpose
+
+> transpose(input: Array): Array
+
+```
+const input = [[10, 11], [20], [], [30, 31, 32]]
+const expected = [[10, 20, 30], [11, 31], [32]]
+
+const result = R.transpose(input)
+// result === expected
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/transpose.spec.js)
 
 ---
 #### trim

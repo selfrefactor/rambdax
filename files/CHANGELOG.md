@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.4.0 Sync with `Rambda` and close [Issue #42](https://github.com/selfrefactor/rambdax/pull/42)
+
 3.3.0 Fix `R.sortObject` typing
 
 3.3.0 Add `R.filterAsync` and `R.sortObject` methods
