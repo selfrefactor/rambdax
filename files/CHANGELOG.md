@@ -1,5 +1,7 @@
 # CHANGELOG
 
+3.7.0 Add `R.toggle` match Ramda upcoming method specification
+
 3.6.0 Add `R.isValidAsync`
 
 3.5.0 Sync with `Rambda` - add methods descriptions to Typescript definitions
