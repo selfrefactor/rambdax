@@ -1,17 +1,18 @@
 import { delay } from './delay'
-import { switcher } from './switcher'
 import { add } from './rambda/add'
-import { trim } from './rambda/trim'
-import { tap } from './rambda/tap'
-import { type } from './rambda/type'
 import { identity } from './rambda/identity'
+import { tap } from './rambda/tap'
+import { trim } from './rambda/trim'
+import { type } from './rambda/type'
+import { switcher } from './switcher'
 
-test('', () => {
+test('happy', () => {
   const result = switcher('foo')
     .is('bar', tap)
     .is('foo', add(1))
     .default(trim)
 
+  console.log(1)
   expect(result(2)).toEqual(3)
 })
 
@@ -60,9 +61,7 @@ test('hits default of no matches', () => {
 })
 
 test('works with function as condition', () => {
-  expect(switchFn([ 0, 1, 2, 3, 4, 5, 6 ])).toEqual(
-    'has length of 7'
-  )
+  expect(switchFn([ 0, 1, 2, 3, 4, 5, 6 ])).toEqual('has length of 7')
 })
 
 test('works with string as condition', () => {

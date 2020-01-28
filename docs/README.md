@@ -1827,14 +1827,14 @@ const rules = [
   x => x.a === 1,
   x => x.b === 2,
 ]
-const result = R.allPass(rules, input) // => true
+const result = R.allPass(rules)(input) // => true
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/allPass.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/allPass.spec.js)
 
-<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%202%2C%0A%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20x%20%3D%3E%20x.a%20%3D%3D%3D%201%2C%0A%20%20x%20%3D%3E%20x.b%20%3D%3D%3D%202%2C%0A%5D%0Aconst%20result%20%3D%20R.allPass(rules%2C%20input)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20input%20%3D%20%7B%0A%20%20a%20%3A%201%2C%0A%20%20b%20%3A%202%2C%0A%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20x%20%3D%3E%20x.a%20%3D%3D%3D%201%2C%0A%20%20x%20%3D%3E%20x.b%20%3D%3D%3D%202%2C%0A%5D%0Aconst%20result%20%3D%20R.allPass(rules)(input)%20%2F%2F%20%3D%3E%20true">Try in REPL</a>
 
 ---
 #### always
@@ -1970,13 +1970,28 @@ console.log(fn(30)) //=> false
 <a href="https://rambda.now.sh?const%20fn%20%3D%20R.both(%0A%20%20a%20%3D%3E%20a%20%3E%2010%2C%0A%20%20a%20%3D%3E%20a%20%3C%2020%0A)%0Aconsole.log(fn(15))%20%2F%2F%3D%3E%20true%0Aconsole.log(fn(30))%20%2F%2F%3D%3E%20false">Try in REPL</a>
 
 ---
+#### clamp
+
+> clamp(min: number, max: number, input:number): number
+
+Restrict a number `input` to be withing `min` and `max` limits.
+If `input` is bigger than `max`, then result is `max`.
+If `input` is smaller than `min`, then result is `min`.
+
+```
+R.clamp(0, 10, 5) //=> 5
+R.clamp(0, 10, -1) //=> 0
+R.clamp(0, 10, 11) //=> 10
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/clamp.spec.js)
+
+---
 #### clone
 
 > clone(objOrArr: T|T[]): T|T[]
-both
-Creates a deep copy of the value which may contain (nested) Arrays and Objects, 
-Numbers, Strings, Booleans and Dates. Functions are assigned by reference rather 
-than copied
+
+Creates a deep copy of the value which may contain (nested) Arrays and Objects, Numbers, Strings, Booleans and Dates.
 
 ```
 const objects = [{}, {}, {}];
@@ -2915,14 +2930,14 @@ R.merge({ 'foo': 0, 'bar': 1 }, { 'foo': 7 })
 > min(x: Number|String, y: Number|String): Number|String
 
 ```
-R.max(5,7) // => 5
+R.min(5,7) // => 5
 ```
 
 [Source](https://github.com/selfrefactor/rambda/tree/master/src/min.js)
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/min.spec.js)
 
-<a href="https://rambda.now.sh?const%20result%20%3D%20R.max(5%2C7)%20%2F%2F%20%3D%3E%205">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20result%20%3D%20R.min(5%2C7)%20%2F%2F%20%3D%3E%205">Try in REPL</a>
 
 ---
 #### minBy
@@ -3289,16 +3304,16 @@ const result = R.reduce(iteratorFn, 1, [1, 2, 3])
 ---
 #### reject
 
-> reject(fn: Function, arr: T[]): T[]
+> reject(filterFn: Function, arr: T[]): T[]
 
 It has the opposite effect of `R.filter`.
 
-It will return those members of `arr` that return `false` when applied to function `fn`.
+It will return those members of `arr` that return `false` when applied to function `filterFn`.
 
 ```
-const fn = x => x % 2 === 1
+const filterFn = x => x % 2 === 1
 
-const result = R.reject(fn, [1, 2, 3, 4])
+const result = R.reject(filterFn, [1, 2, 3, 4])
 // => [2, 4]
 ```
 
@@ -3306,7 +3321,7 @@ const result = R.reject(fn, [1, 2, 3, 4])
 
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/reject.spec.js)
 
-<a href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(fn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
+<a href="https://rambda.now.sh?const%20filterFn%20%3D%20x%20%3D%3E%20x%20%25%202%20%3D%3D%3D%201%0A%0Aconst%20result%20%3D%20R.reject(filterFn%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%204%5D">Try in REPL</a>
 
 ---
 #### repeat
