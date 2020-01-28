@@ -117,6 +117,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "map.async.limit"
   }
 }
