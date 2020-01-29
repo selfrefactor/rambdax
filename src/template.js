@@ -1,4 +1,4 @@
-const escape = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
+const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
 const getOccurances = input => input.match(/{{\s*.+?\s*}}/g)
 
@@ -8,9 +8,9 @@ const replace = ({
   inputHolder,
   prop,
   replacer
-}) => inputHolder.replace(new RegExp(`{{\\s*${escape(prop)}\\s*}}`), replacer)
+}) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer)
 
-function template(input, templateInput) {
+export function template(input, templateInput) {
   if (arguments.length === 1) {
     return templateInputHolder => template(input, templateInputHolder)
   }
@@ -31,3 +31,4 @@ function template(input, templateInput) {
 
   return inputHolder
 }
+
