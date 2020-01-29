@@ -1,6 +1,8 @@
 # CHANGELOG
 
-3.7.0 Add `R.toggle` match Ramda upcoming method specification
+3.8.0 Add `R.mapAsyncLimit`
+
+3.7.0 Add `R.toggle`, match Ramda upcoming method specification
 
 3.6.0 Add `R.isValidAsync`
 
