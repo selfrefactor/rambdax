@@ -18,8 +18,10 @@ export function template(input, templateInput) {
   const occurances = getOccurances(input)
   if (occurances === null) return input
   let inputHolder = input
-    for (const occurance of occurances) {
-      const prop = getOccuranceProp(occurance)
+  for (const occurance of occurances) {
+    const prop = getOccuranceProp(occurance)
+
+    try {
       const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput)
 
       inputHolder = replace({
@@ -27,7 +29,8 @@ export function template(input, templateInput) {
         prop,
         replacer
       })
-    }
+    } catch (e) {}
+  }
 
   return inputHolder
 }
