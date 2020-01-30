@@ -1,33 +1,37 @@
-const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g)
+const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')
 
-const getOccuranceProp = occurance =>
-  occurance.replace(/{{|}}/g, '')
+const getOccurances = input => input.match(/{{\s*.+?\s*}}/g)
 
-const replace = ({ inputHolder, prop, replacer }) =>
-  inputHolder.replace(`{{${ prop }}}`, replacer)
+const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '')
 
-export function template(input, templateInput){
-  if (arguments.length === 1){
-    return templateInputHolder => template(
-      input,
-      templateInputHolder
-    )
+const replace = ({
+  inputHolder,
+  prop,
+  replacer
+}) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer)
+
+export function template(input, templateInput) {
+  if (arguments.length === 1) {
+    return templateInputHolder => template(input, templateInputHolder)
   }
+
   const occurances = getOccurances(input)
   if (occurances === null) return input
-
   let inputHolder = input
-  for (const occurance of occurances){
+  for (const occurance of occurances) {
     const prop = getOccuranceProp(occurance)
-    const replacer = templateInput[ prop ]
 
-    if (replacer === undefined) continue
-    inputHolder = replace({
-      inputHolder,
-      prop,
-      replacer,
-    })
+    try {
+      const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput)
+
+      inputHolder = replace({
+        inputHolder,
+        prop,
+        replacer
+      })
+    } catch (e) {}
   }
 
   return inputHolder
 }
+
