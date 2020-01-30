@@ -23,8 +23,6 @@ console.log(result) // => [3, 4]
 
 Simple `yarn add rambdax` is sufficient
 
-> ES5 compatible version - `yarn add rambdax#0.8.0`
-
 ## Differences between Rambda and Ramdax
 
 Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods and introduce some new functions.
