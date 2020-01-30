@@ -13,7 +13,7 @@ test('within bracets', () => {
   expect(result).toEqual(expectedResult)
 })
 
-test('ok', () => {
+test('happy', () => {
   const input = 'foo is {{bar}} even {{a}} more'
   const templateInput = {
     bar: 'BAR',
