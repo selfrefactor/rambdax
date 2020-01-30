@@ -43,8 +43,18 @@ test('with missing template input', () => {
     a: 1,
   }
 
-  expect(() => {
-    template(input, templateInput)
-  }).toThrowError(ReferenceError, 'bar is not defined')
+  const result = template(input, templateInput)
+  const expectedResult = 'foo is {{bar}} even 1 more'
+
+  expect(result).toEqual(expectedResult)
 })
 
+test('with arbitrary expression', () => {
+  const input = '1 + 2 = {{ 1 + 2 }}'
+  const templateInput = {}
+
+  const expectedResult = '1 + 2 = 3'
+  const result = template(input, templateInput)
+
+  expect(result).toEqual(expectedResult)
+})
