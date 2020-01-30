@@ -1,9 +1,9 @@
 import { mapFastAsync, mapFastAsyncFn } from './mapFastAsync'
 import { splitEvery } from './rambda/splitEvery'
 
-export async function mapAsyncLimit(iterable, limit, list){
+export async function mapFastAsyncLimit(iterable, limit, list){
   if (arguments.length === 2){
-    return _list => mapAsyncLimit(iterable, limit, _list)
+    return _list => mapFastAsyncLimit(iterable, limit, _list)
   }
   if (list.length < limit) return mapFastAsync(iterable, list)
 

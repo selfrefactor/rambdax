@@ -1,10 +1,10 @@
 import { delay } from './delay'
-import { mapAsyncLimit } from './mapAsyncLimit.js'
+import { mapFastAsyncLimit } from './mapFastAsyncLimit.js'
 import { mapAsync } from './mapAsync'
 import { toDecimal } from './toDecimal.js'
 
 jest.setTimeout(30000);
-
+  
 test('happy', async () => {
   const limit = 3
   const startTime = new Date().getTime()
@@ -13,7 +13,7 @@ test('happy', async () => {
     await delay(500)
     return x + 1
   }
-  const result = await mapAsyncLimit(iterable, limit, list)
+  const result = await mapFastAsyncLimit(iterable, limit, list)
   const endTime = new Date().getTime()
   const diffTime = endTime - startTime
 

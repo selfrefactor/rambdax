@@ -102,6 +102,7 @@
     mapAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
     mapAsync<T>(fn: AsyncWithProp<any>): (obj: object) => Promise<Array<T>>
 
+    mapFastAsyncLimit<T, U>(iterable: (x: T) => Promise<U>, limit: number, list: Array<T>): Promise<Array<U>>
     mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<Array<T>>
     mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<Array<T>>
 
