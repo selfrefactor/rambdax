@@ -1,12 +1,14 @@
 # CHANGELOG
 
-3.6.0 
+3.6.0
 
 - Add `R.mapAsyncLimit`
 
 - Add `R.toggle`, match Ramda upcoming method specification
 
 - Add `R.isValidAsync`
+
+- Extend `R.template` without introducing breaking change
 
 3.5.0 Sync with `Rambda` - add methods descriptions to Typescript definitions
 
