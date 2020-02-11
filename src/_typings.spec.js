@@ -5,11 +5,12 @@ jest.setTimeout(3 * 60 * 1000)
 const DIR = resolve(__dirname, '../')
 
 test('typings are correct', async () => {
-  const { status } = spawnSync('yarn', [ 'typings' ], {
-    stdio : 'inherit',
-    cwd   : DIR,
-  })
+  const { status } = spawnSync(
+    'yarn', [ 'typings' ], {
+      stdio : 'inherit',
+      cwd   : DIR,
+    }
+  )
   console.log({ status })
   expect([ 137, 0 ].includes(status)).toBe(true)
 })
- 

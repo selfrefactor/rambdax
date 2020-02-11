@@ -212,9 +212,8 @@ declare namespace R {
     mapAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<T[]>;
     mapAsync<T>(fn: AsyncWithProp<any>): (obj: object) => Promise<T[]>;
 
-    mapFastAsyncLimit<T, U>(iterable: (x: T) => Promise<U>, limit: number, list: T[]): Promise<U[]>;
-    mapFastAsync<T>(fn: AsyncWithMap<any>, list: any[]): Promise<T[]>;
-    mapFastAsync<T>(fn: AsyncWithMap<any>): (list: any[]) => Promise<T[]>;
+    mapAsyncLimit<T, U>(iterable: (x: T) => Promise<U>, limit: number, list: T[]): Promise<U[]>;
+    mapAsyncLimit<T, U>(iterable: (x: T) => Promise<U>, limit: number): (list: T[]) => Promise<U[]>;
 
     mapToObject<T, U>(fn: (input: T) => object, list: T[]): U;
     mapToObject<T, U>(fn: (input: T) => object): (list: T[]) => U;
