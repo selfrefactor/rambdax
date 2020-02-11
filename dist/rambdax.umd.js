@@ -1525,21 +1525,6 @@
     return type(x) === xType;
   }
 
-  async function mapFastAsyncFn(fn, arr) {
-    const promised = arr.map((a, i) => fn(a, i));
-    return Promise.all(promised);
-  }
-
-  function mapFastAsync(fn, arr) {
-    if (arguments.length === 1) {
-      return async holder => mapFastAsyncFn(fn, holder);
-    }
-
-    return new Promise((resolve, reject) => {
-      mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
-    });
-  }
-
   function mapObject(fn, obj) {
     const willReturn = {};
 
@@ -1570,6 +1555,89 @@
     }
 
     return willReturn;
+  }
+
+  function forEach(fn, list) {
+    if (arguments.length === 1) return _list => forEach(fn, _list);
+    map(fn, list);
+    return list;
+  }
+
+  async function isValidAsync({
+    schema,
+    input
+  }) {
+    const asyncSchema = {};
+    const simpleSchema = {};
+    forEach((rule, prop) => {
+      if (isPromise(rule)) {
+        asyncSchema[prop] = rule;
+      } else {
+        simpleSchema[prop] = rule;
+      }
+    }, schema);
+    if (Object.keys(asyncSchema).length === 0) return isValid({
+      input,
+      schema
+    });
+    if (!isValid({
+      input,
+      schema: simpleSchema
+    })) return false;
+    let toReturn = true;
+
+    for (const singleRuleProp in asyncSchema) {
+      if (toReturn) {
+        const validated = await asyncSchema[singleRuleProp](input[singleRuleProp]);
+        if (!validated) toReturn = false;
+      }
+    }
+
+    return toReturn;
+  }
+
+  async function mapFastAsyncFn(fn, arr) {
+    const promised = arr.map((a, i) => fn(a, i));
+    return Promise.all(promised);
+  }
+  function mapFastAsync(fn, arr) {
+    if (arguments.length === 1) {
+      return async holder => mapFastAsyncFn(fn, holder);
+    }
+
+    return new Promise((resolve, reject) => {
+      mapFastAsyncFn(fn, arr).then(resolve).catch(reject);
+    });
+  }
+
+  function splitEvery(n, list) {
+    if (arguments.length === 1) return _list => splitEvery(n, _list);
+    if (n < 1) throw new Error('First argument to splitEvery must be a positive integer');
+    const willReturn = [];
+    let counter = 0;
+
+    while (counter < list.length) {
+      willReturn.push(list.slice(counter, counter += n));
+    }
+
+    return willReturn;
+  }
+
+  async function mapAsyncLimit(iterable, limit, list) {
+    if (arguments.length === 2) {
+      return _list => mapAsyncLimit(iterable, limit, _list);
+    }
+
+    if (list.length < limit) return mapFastAsync(iterable, list);
+    const slices = splitEvery(limit, list);
+    let toReturn = [];
+
+    for (const slice of slices) {
+      const iterableResult = await mapFastAsyncFn(iterable, slice);
+      toReturn = [...toReturn, ...iterableResult];
+    }
+
+    return toReturn;
   }
 
   function mergeAll(arr) {
@@ -2072,15 +2140,17 @@
     return input;
   }
 
-  const getOccurances = input => input.match(/{{[_a-zA-Z0-9]+}}/g);
+  const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-  const getOccuranceProp = occurance => occurance.replace(/{{|}}/g, '');
+  const getOccurances = input => input.match(/{{\s*.+?\s*}}/g);
+
+  const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '');
 
   const replace$1 = ({
     inputHolder,
     prop,
     replacer
-  }) => inputHolder.replace(`{{${prop}}}`, replacer);
+  }) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer);
 
   function template(input, templateInput) {
     if (arguments.length === 1) {
@@ -2093,13 +2163,15 @@
 
     for (const occurance of occurances) {
       const prop = getOccuranceProp(occurance);
-      const replacer = templateInput[prop];
-      if (replacer === undefined) continue;
-      inputHolder = replace$1({
-        inputHolder,
-        prop,
-        replacer
-      });
+
+      try {
+        const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput);
+        inputHolder = replace$1({
+          inputHolder,
+          prop,
+          replacer
+        });
+      } catch (e) {}
     }
 
     return inputHolder;
@@ -2122,8 +2194,10 @@
     return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
   }
 
-  function toggle(input, list) {
-    return input === list[0] ? list[1] : list[0];
+  function toggle(list, input) {
+    const clone = take(2, list);
+    if (!clone.includes(input)) return input;
+    return input === clone[0] ? clone[1] : clone[0];
   }
 
   function tryCatch(fn, fallback) {
@@ -2390,6 +2464,14 @@
     return (...input) => f(...input) && g(...input);
   }
 
+  function clampFn(lowLimit, highLimit, input) {
+    if (input >= lowLimit && input <= highLimit) return input;
+    if (input > highLimit) return highLimit;
+    if (input < lowLimit) return lowLimit;
+  }
+
+  const clamp = curry(clampFn);
+
   function clone(val) {
     const out = Array.isArray(val) ? Array(val.length) : {};
     if (val && val.getTime) return new Date(val.getTime());
@@ -2550,12 +2632,6 @@
 
   function flip(fn) {
     return flipExport(fn);
-  }
-
-  function forEach(fn, list) {
-    if (arguments.length === 1) return _list => forEach(fn, _list);
-    map(fn, list);
-    return list;
   }
 
   function fromPairs(list) {
@@ -3005,19 +3081,6 @@
     return str.split(separator);
   }
 
-  function splitEvery(n, list) {
-    if (arguments.length === 1) return _list => splitEvery(n, _list);
-    if (n < 1) throw new Error('First argument to splitEvery must be a positive integer');
-    const willReturn = [];
-    let counter = 0;
-
-    while (counter < list.length) {
-      willReturn.push(list.slice(counter, counter += n));
-    }
-
-    return willReturn;
-  }
-
   function startsWith(prefix, list) {
     if (arguments.length === 1) return _list => startsWith(prefix, _list);
     return list.startsWith(prefix);
@@ -3168,6 +3231,7 @@
   exports.assocPath = assocPath;
   exports.both = both;
   exports.change = change;
+  exports.clamp = clamp;
   exports.clone = clone;
   exports.compact = compact;
   exports.complement = complement;
@@ -3233,6 +3297,7 @@
   exports.isPrototype = isPrototype;
   exports.isType = isType;
   exports.isValid = isValid;
+  exports.isValidAsync = isValidAsync;
   exports.join = join;
   exports.keys = keys;
   exports.last = last;
@@ -3240,7 +3305,9 @@
   exports.length = length;
   exports.map = map;
   exports.mapAsync = mapAsync;
+  exports.mapAsyncLimit = mapAsyncLimit;
   exports.mapFastAsync = mapFastAsync;
+  exports.mapFastAsyncFn = mapFastAsyncFn;
   exports.mapToObject = mapToObject;
   exports.match = match;
   exports.mathMod = mathMod;
