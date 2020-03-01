@@ -1,8 +1,8 @@
 const { exec } = require('helpers')
 const { inject } = require('../dist/rambdax')
 const { readFileSync, writeFileSync } = require('fs')
-const { resolve } = require('path') 
-
+const { resolve } = require('path')
+ 
 const PATH = resolve(__dirname, '../node_modules/rambda/index.d.ts')
 const OUTPUT_PATH = resolve(__dirname, '../index.d.ts')
 const SOURCE_PATH_INTERFACES = `${ __dirname }/typings/interfaces.ts`
