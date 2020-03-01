@@ -1,5 +1,29 @@
 # CHANGELOG
 
+3.7.0
+
+> Sync with Rambda
+
+Add `R.lens`
+
+Add `R.lensIndex`
+
+Add `R.lensPath`
+
+Add `R.lensProp`
+
+Add `R.over`
+
+Add `R.set`
+
+Add `R.view`
+
+Add `R.paths`
+
+Add `R.xor`
+
+Add `R.cond`
+
 3.6.0
 
 - Add `R.mapAsyncLimit`

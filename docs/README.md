@@ -2866,6 +2866,78 @@ R.length([1, 2, 3]) // => 3
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.length(%5B1%2C%202%2C%203%5D)%20%2F%2F%20%3D%3E%203">Try in REPL</a>
 
 ---
+#### lens
+
+> lens(getter: Function, setter: Function): Lens
+
+Returns a `lens` for the given `getter` and `setter` functions. 
+
+The `getter` "gets" the value of the focus; the `setter` "sets" the value of the focus. 
+
+The setter should not mutate the data structure.
+
+```
+const xLens = R.lens(R.prop('x'), R.assoc('x'));
+
+R.view(xLens, {x: 1, y: 2}) //=> 1
+R.set(xLens, 4, {x: 1, y: 2}) //=> {x: 4, y: 2}
+R.over(xLens, R.negate, {x: 1, y: 2}) //=> {x: -1, y: 2}
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/lens.spec.js)
+
+---
+#### lensIndex
+
+> lensIndex(index: Number): Lens
+
+Returns a lens that focuses on the specified index
+
+```
+const headLens = R.lensIndex(0)
+
+R.view(headLens, ['a', 'b', 'c']) //=> 'a'
+R.set(headLens, 'x', ['a', 'b', 'c']) //=> ['x', 'b', 'c']
+R.over(headLens, R.toUpper, ['a', 'b', 'c']) //=> ['A', 'b', 'c']
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/lensIndex.spec.js)
+
+---
+#### lensPath
+
+> lensPath(path: Array|String): Lens
+
+Returns a lens that focuses on the specified path
+
+```
+const xHeadYLens = R.lensPath(['x', 0, 'y'])
+
+R.view(xHeadYLens, {x: [{y: 2, z: 3}, {y: 4, z: 5}]}) //=> 2
+R.set(xHeadYLens, 1, {x: [{y: 2, z: 3}, {y: 4, z: 5}]}) //=> {x: [{y: 1, z: 3}, {y: 4, z: 5}]}
+R.over(xHeadYLens, R.negate, {x: [{y: 2, z: 3}, {y: 4, z: 5}]}) //=> {x: [{y: -2, z: 3}, {y: 4, z: 5}]}
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/lensPath.spec.js)
+
+---
+#### lensProp
+
+> lensProp(prop: String): Lens
+
+Returns a lens that focuses on the specified property
+
+```
+const xLens = R.lensProp('x');
+
+R.view(xLens, {x: 1, y: 2}) //=> 1
+R.set(xLens, 4, {x: 1, y: 2}) //=> {x: 4, y: 2}
+R.over(xLens, R.negate, {x: 1, y: 2}) //=> {x: -1, y: 2}
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/lensProp.spec.js)
+
+---
 #### map
 
 > map(mapFn: Function, x: Array|Object): Array|Object
@@ -3058,6 +3130,21 @@ R.omit('a,c,d', {a: 1, b: 2, c: 3}) // => {b: 2}
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.omit('a%2Cc%2Cd'%2C%20%7Ba%3A%201%2C%20b%3A%202%2C%20c%3A%203%7D)%20%2F%2F%20%3D%3E%20%7Bb%3A%202%7D">Try in REPL</a>
 
 ---
+#### over
+
+> over(lens: Lens, f: Function, target: Array|Object): Array|Object
+
+Returns a copied `Object` or `Array` with the modified value resulting from the function applying to the lenses focus.
+
+```
+const headLens = R.lensIndex(0)
+ 
+R.over(headLens, R.toUpper, ['foo', 'bar', 'baz']) //=> ['FOO', 'bar', 'baz']
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/over.spec.js)
+
+---
 #### path
 
 > path(pathToSearch: string[]|string, obj: Object): any
@@ -3075,6 +3162,31 @@ R.path('a.b', {a: {b: 1}}) // => 1
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/path.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.path('a.b'%2C%20%7Ba%3A%20%7Bb%3A%201%7D%7D)%20%2F%2F%20%3D%3E%201">Try in REPL</a>
+
+---
+#### paths
+
+> paths(paths: string[][]|string[], obj: Object): Array
+
+Similar to `R.path`, but for multiple object's path queries. 
+
+```
+const obj = {
+  foo: {
+    bar: [10,20],
+    baz: '123'
+  },
+  a: 90
+}
+R.paths(['a.b', 'foo.bar.1', 'foo.baz'])
+// => [ undefined, 20, 90]
+```
+
+[Source](https://github.com/selfrefactor/rambda/tree/master/src/paths.js)
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/paths.spec.js)
+
+<a href="https://rambda.now.sh?const%20result%20%3D%20const%20obj%20%3D%20%7B%0A%20%20foo%3A%20%7B%0A%20%20%20%20bar%3A%20%5B10%2C20%5D%2C%0A%20%20%20%20baz%3A%20'123'%0A%20%20%7D%2C%0A%20%20a%3A%2090%0A%7D%0AR.paths(%5B'a.b'%2C%20'foo.bar.1'%2C%20'foo.baz'%5D)%0A%2F%2F%20%3D%3E%20%5B%20undefined%2C%2020%2C%2090%5D">Try in REPL</a>
 
 ---
 #### pathOr
@@ -3406,6 +3518,22 @@ const result = R.reverse(arr)
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/reverse.spec.js)
 
 <a href="https://rambda.now.sh?const%20arr%20%3D%20%5B1%2C%202%5D%0A%0Aconst%20result%20%3D%20R.reverse(arr)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%5D">Try in REPL</a>
+
+---
+#### set
+
+> set(lens: Lens, x: any, target: Array|Object): Array|Object
+
+Returns a copied `Object` or `Array` with the modified value resulting from the input value replacing that of the lenses focus.
+
+```
+const xLens = R.lensProp('x')
+
+R.set(xLens, 4, {x: 1, y: 2}) //=> {x: 4, y: 2}
+R.set(xLens, 8, {x: 1, y: 2}) //=> {x: 8, y: 2}
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/set.spec.js)
 
 ---
 #### slice
@@ -3897,6 +4025,22 @@ R.values({a: 1, b: 2})
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.values(%7Ba%3A%201%2C%20b%3A%202%7D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try in REPL</a>
 
 ---
+#### view
+
+> view(lens: Lens, target: Array|Object): any
+
+Returns the value at the lenses focus on the target object.
+
+```
+const xLens = R.lensProp('x')
+
+R.view(xLens, {x: 1, y: 2}) //=> 1
+R.view(xLens, {x: 4, y: 2}) //=> 4
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/view.spec.js)
+
+---
 #### without
 
 > without(a: T[], b: T[]): T[]
@@ -3917,6 +4061,23 @@ R.without([1, 2], [1, 2, 3, 4])
 [Test](https://github.com/selfrefactor/rambda/blob/master/src/without.spec.js)
 
 <a href="https://rambda.now.sh?const%20result%20%3D%20R.without(%5B1%2C%202%5D%2C%20%5B1%2C%202%2C%203%2C%204%5D)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Try in REPL</a>
+
+---
+#### xor
+
+> xor(a: boolean, b: boolean): boolean
+
+Logical xor function
+
+```
+R.xor(false, true)
+// => true
+
+R.xor(true, true)
+// => false
+```
+
+[Test](https://github.com/selfrefactor/rambda/blob/master/src/xor.spec.js)
 
 ---
 #### zip

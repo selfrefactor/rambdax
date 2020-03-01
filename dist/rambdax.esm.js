@@ -1,6 +1,5 @@
 function type(input) {
   const typeOf = typeof input;
-  const asStr = input && input.toString ? input.toString() : '';
 
   if (input === null) {
     return 'Null';
@@ -18,6 +17,7 @@ function type(input) {
     return 'RegExp';
   }
 
+  const asStr = input && input.toString ? input.toString() : '';
   if (['true', 'false'].includes(asStr)) return 'Boolean';
   if (!Number.isNaN(Number(asStr))) return 'Number';
   if (asStr.startsWith('async')) return 'Async';
@@ -2487,6 +2487,20 @@ function concat(left, right) {
   return typeof left === 'string' ? `${left}${right}` : [...left, ...right];
 }
 
+function cond(conditions) {
+  return input => {
+    let done = false;
+    let toReturn;
+    conditions.forEach(([predicate, resultClosure]) => {
+      if (!done && predicate(input)) {
+        done = true;
+        toReturn = resultClosure(input);
+      }
+    });
+    return toReturn;
+  };
+}
+
 const dec = n => n - 1;
 
 function flagIs$1(inputArguments) {
@@ -2838,6 +2852,50 @@ function length(list) {
   return list.length;
 }
 
+function lens(getter, setter) {
+  if (arguments.length === 1) return _setter => lens(getter, _setter);
+  return function (functor) {
+    return function (target) {
+      return functor(getter(target)).map(focus => setter(focus, target));
+    };
+  };
+}
+
+function nth(offset, list) {
+  if (arguments.length === 1) return _list => nth(offset, _list);
+  const idx = offset < 0 ? list.length + offset : offset;
+  return Object.prototype.toString.call(list) === '[object String]' ? list.charAt(idx) : list[idx];
+}
+
+function update(idx, val, list) {
+  if (val === undefined) {
+    return (_val, _list) => update(idx, _val, _list);
+  } else if (list === undefined) {
+    return _list => update(idx, val, _list);
+  }
+
+  const arrClone = list.slice();
+  return arrClone.fill(val, idx, idx + 1);
+}
+
+function lensIndex(i) {
+  return lens(nth(i), update(i));
+}
+
+function lensPath(key) {
+  return lens(path(key), assocPath(key));
+}
+
+function prop(key, obj) {
+  if (arguments.length === 1) return _obj => prop(key, _obj);
+  if (!obj) return undefined;
+  return obj[key];
+}
+
+function lensProp(key) {
+  return lens(prop(key), assoc(key));
+}
+
 function match(pattern, str) {
   if (arguments.length === 1) return _str => match(pattern, _str);
   const willReturn = str.match(pattern);
@@ -2922,10 +2980,15 @@ function not(a) {
   return !a;
 }
 
-function nth(offset, list) {
-  if (arguments.length === 1) return _list => nth(offset, _list);
-  const idx = offset < 0 ? list.length + offset : offset;
-  return Object.prototype.toString.call(list) === '[object String]' ? list.charAt(idx) : list[idx];
+const Identity = x => ({
+  x,
+  map: fn => Identity(fn(x))
+});
+
+function over(lens, fn, object) {
+  if (arguments.length === 1) return (_fn, _object) => over(lens, _fn, _object);
+  if (arguments.length === 2) return _object => over(lens, fn, _object);
+  return lens(x => Identity(fn(x)))(object).x;
 }
 
 function partial(fn, ...args) {
@@ -2956,6 +3019,10 @@ function pathOrRaw(defaultValue, list, obj) {
 }
 
 const pathOr = curry(pathOrRaw);
+
+function paths(pathsInput, obj) {
+  return pathsInput.map(singlePath => path(singlePath, obj));
+}
 
 function pickAll(keys, obj) {
   if (arguments.length === 1) return _obj => pickAll(keys, _obj);
@@ -3007,12 +3074,6 @@ const reduce = curry(reduceFn);
 
 const product = reduce(multiply, 1);
 
-function prop(key, obj) {
-  if (arguments.length === 1) return _obj => prop(key, _obj);
-  if (!obj) return undefined;
-  return obj[key];
-}
-
 function propEqFn(key, val, obj) {
   if (obj == null) return false;
   return obj[key] === val;
@@ -3051,6 +3112,12 @@ function reverse(input) {
 
   const clone = input.slice();
   return clone.reverse();
+}
+
+function set$1(lens, v, x) {
+  if (arguments.length === 1) return (_v, _x) => set$1(lens, _v, _x);
+  if (arguments.length === 2) return _x => set$1(lens, v, _x);
+  return over(lens, always(v), x);
 }
 
 function sliceFn(fromIndex, toIndex, list) {
@@ -3157,20 +3224,19 @@ function uniqWith(fn, list) {
   return willReturn;
 }
 
-function update(idx, val, list) {
-  if (val === undefined) {
-    return (_val, _list) => update(idx, _val, _list);
-  } else if (list === undefined) {
-    return _list => update(idx, val, _list);
-  }
-
-  const arrClone = list.slice();
-  return arrClone.fill(val, idx, idx + 1);
-}
-
 function values(obj) {
   if (type(obj) !== 'Object') return [];
   return Object.values(obj);
+}
+
+const Const = x => ({
+  x,
+  map: fn => Const(x)
+});
+
+function view(lens, target) {
+  if (arguments.length === 1) return _target => view(lens, _target);
+  return lens(Const)(target).x;
 }
 
 function without(left, right) {
@@ -3179,6 +3245,11 @@ function without(left, right) {
   }
 
   return reduce((accum, item) => includes(item, left) ? accum : accum.concat(item), [], right);
+}
+
+function xor(a, b) {
+  if (arguments.length === 1) return _b => xor(a, _b);
+  return Boolean(a) && !b || Boolean(b) && !a;
 }
 
 function zip(left, right) {
@@ -3203,4 +3274,4 @@ function zipObj(keys, values) {
 
 const DELAY = 'RAMBDAX_DELAY';
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, assocPath, both, change, clamp, clone, compact, complement, compose, composeAsync, composed, concat, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identical, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, intersection, intersperse, interval, is$1 as is, isAttach, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapToObject, match, mathMod, max, maxBy, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, partial, partialCurry, partition, pass, path, pathEq, pathOr, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, transpose, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, wait, waitFor, when, whenAsync, where, whereEq, without, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, assoc, assocPath, both, change, clamp, clone, compact, complement, compose, composeAsync, composed, concat, cond, count, curry, debounce, dec, defaultTo, defaultToStrict, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findInObject, findIndex, findModify, flatMap, flatten, flip, forEach, fromPairs, getter, glue, groupBy, groupWith, has, hasPath, head, headObject, identical, identity, ifElse, ifElseAsync, inc, includes, includesType, indexBy, indexOf, init, inject, intersection, intersperse, interval, is$1 as is, isAttach, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensIndex, lensPath, lensProp, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapToObject, match, mathMod, max, maxBy, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeep, mergeRight, min, minBy, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, complement as opposite, otherwise, over, partial, partialCurry, partition, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, resolve, reverse, s, set$1 as set, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, toggle, transpose, trim, tryCatch, type, uniq, uniqWith, unless, update, uuid, values, view, wait, waitFor, when, whenAsync, where, whereEq, without, xor, zip, zipObj };

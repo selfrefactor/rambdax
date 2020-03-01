@@ -2,6 +2,7 @@ import { F } from "./_ts-toolbelt/src/index";
 declare let R: R.Static;
 
 declare namespace R {
+
   // INTERFACES_MARKER
   type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise";
 
@@ -16,13 +17,17 @@ declare namespace R {
 
   type Ord = number | string | boolean | Date;
 
-  type Path = ReadonlyArray<(number | string)>;
+  type Path = string | ReadonlyArray<(number | string)>;
+  type RamdaPath = Array<(number | string)>;
 
   interface KeyValuePair<K, V> extends Array<K | V> {
     0: K;
     1: V;
   }
-
+  interface Lens {
+    <T, U>(obj: T): U;
+    set<T, U>(str: string, obj: T): U;
+  }
   type Arity1Fn = (a: any) => any;
 
   type Arity2Fn = (a: any, b: any) => any;
@@ -397,6 +402,9 @@ declare namespace R {
     any<T>(fn: (x: T, i: number) => boolean): (arr: ReadonlyArray<T>) => boolean;
     any<T>(fn: (x: T) => boolean): (arr: ReadonlyArray<T>) => boolean;
 
+    /*
+			It returns `true`, if any of `predicates` return `true` with `input` is their argument.
+		*/
     anyPass<T>(preds: ReadonlyArray<SafePred<T>>): SafePred<T>;
 
     append<T>(el: T, list: ReadonlyArray<T>): T[];
@@ -429,6 +437,9 @@ reference.
 
     either(pred1: Pred, pred2: Pred): Pred;
     either(pred1: Pred): (pred2: Pred) => Pred;
+
+    clamp(min: number, max: number, input: number): number;
+    clamp(min: number, max: number): (input: number) => number;
 
     clone<T>(value: T): T;
     clone<T>(value: ReadonlyArray<T>): T[];
@@ -716,6 +727,31 @@ Value `-1` is returned if no `x` is found in `arr`.
 
     length<T>(list: ReadonlyArray<T>): number;
 
+    lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
+    lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
+
+    lensIndex(n: number): Lens;
+    lensPath(path: RamdaPath): Lens;
+
+    lensProp(str: string): {
+      <T, U>(obj: T): U;
+      set<T, U, V>(val: T, obj: U): V;
+    };
+
+    over<T>(lens: Lens, fn: Arity1Fn, value: T): T;
+    over<T>(lens: Lens, fn: Arity1Fn, value: readonly T[]): T[];
+    over(lens: Lens, fn: Arity1Fn): <T>(value: T) => T;
+    over(lens: Lens, fn: Arity1Fn): <T>(value: readonly T[]) => T[];
+    over(lens: Lens): <T>(fn: Arity1Fn, value: T) => T;
+    over(lens: Lens): <T>(fn: Arity1Fn, value: readonly T[]) => T[];
+
+    set<T, U>(lens: Lens, a: U, obj: T): T;
+    set<U>(lens: Lens, a: U): <T>(obj: T) => T;
+    set(lens: Lens): <T, U>(a: U, obj: T) => T;
+
+    view<T, U>(lens: Lens): (obj: T) => U;
+    view<T, U>(lens: Lens, obj: T): U;
+
     /*
 			It returns the result of looping through iterable `x` with `mapFn`.
 
@@ -825,6 +861,11 @@ It will return `undefined`, if such path is not found.
     path<T>(pathToSearch: string | string[]): (obj: any) => T | undefined;
     path<Input, T>(pathToSearch: string | string[]): (obj: Input) => T | undefined;
 
+    paths<Input, T>(pathsToSearch: Array<string | string[]>, obj: Input): Array<T | undefined>;
+    paths<T>(pathsToSearch: Array<string | string[]>, obj: any): Array<T | undefined>;
+    paths<T>(pathsToSearch: Array<string | string[]>): (obj: any) => Array<T | undefined>;
+    paths<Input, T>(pathsToSearch: Array<string | string[]>): (obj: Input) => Array<T | undefined>;
+
     /*
 			`pathFound` is the result of calling `R.path(pathToSearch, obj)`.
 
@@ -832,9 +873,9 @@ If `pathFound` is `undefined`, `null` or `NaN`, then `defaultValue` will be retu
 
 `pathFound` is returned in any other case.
 		*/
-    pathOr<T>(defaultValue: T, pathToSearch: Path, obj: any): any;
-    pathOr<T>(defaultValue: T, pathToSearch: Path): (obj: any) => any;
-    pathOr<T>(defaultValue: T): F.Curry<(a: Path, b: any) => any>;
+    pathOr<T>(defaultValue: T, pathToSearch: Path, obj: any): T;
+    pathOr<T>(defaultValue: T, pathToSearch: Path): (obj: any) => T;
+    pathOr<T>(defaultValue: T): F.Curry<(a: Path, b: any) => T>;
 
     /*
 			It returns a partial copy of an `obj` containing only `propsToPick` properties.
@@ -1096,10 +1137,12 @@ If `pathFound` is `undefined`, `null` or `NaN`, then `defaultValue` will be retu
     /*
 			It has the opposite effect of `R.filter`.
 
-It will return those members of `arr` that return `false` when applied to function `fn`.
+It will return those members of `arr` that return `false` when applied to function `filterFn`.
 		*/
-    reject<T>(fn: FilterFunctionArray<T>): (arr: T[]) => T[];
-    reject<T>(fn: FilterFunctionArray<T>, arr: T[]): T[];
+    reject<T>(filterFn: FilterFunctionArray<T>): (x: T[]) => T[];
+    reject<T>(filterFn: FilterFunctionArray<T>, x: T[]): T[];
+    reject<T, U>(filterFn: FilterFunctionObject<T>): (x: Dictionary<T>) => Dictionary<T>;
+    reject<T>(filterFn: FilterFunctionObject<T>, x: Dictionary<T>): Dictionary<T>;
 
     repeat<T>(a: T, n: number): T[];
     repeat<T>(a: T): (n: number) => T[];
@@ -1260,6 +1303,9 @@ Method `R.equals` is used to determine the existance of `b` members in `a` array
 		*/
     without<T>(list1: ReadonlyArray<T>, list2: ReadonlyArray<T>): T[];
     without<T>(list1: ReadonlyArray<T>): (list2: ReadonlyArray<T>) => T[];
+
+    xor(a: boolean, b: boolean): boolean;
+    xor(a: boolean): (b: boolean) => boolean;
 
     /*
 			It will return a new array containing tuples of equally positions items from both lists. The returned list will be truncated to match the length of the shortest supplied list.

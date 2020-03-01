@@ -6,7 +6,6 @@
 
   function type(input) {
     const typeOf = typeof input;
-    const asStr = input && input.toString ? input.toString() : '';
 
     if (input === null) {
       return 'Null';
@@ -24,6 +23,7 @@
       return 'RegExp';
     }
 
+    const asStr = input && input.toString ? input.toString() : '';
     if (['true', 'false'].includes(asStr)) return 'Boolean';
     if (!Number.isNaN(Number(asStr))) return 'Number';
     if (asStr.startsWith('async')) return 'Async';
@@ -2493,6 +2493,20 @@
     return typeof left === 'string' ? `${left}${right}` : [...left, ...right];
   }
 
+  function cond(conditions) {
+    return input => {
+      let done = false;
+      let toReturn;
+      conditions.forEach(([predicate, resultClosure]) => {
+        if (!done && predicate(input)) {
+          done = true;
+          toReturn = resultClosure(input);
+        }
+      });
+      return toReturn;
+    };
+  }
+
   const dec = n => n - 1;
 
   function flagIs$1(inputArguments) {
@@ -2844,6 +2858,50 @@
     return list.length;
   }
 
+  function lens(getter, setter) {
+    if (arguments.length === 1) return _setter => lens(getter, _setter);
+    return function (functor) {
+      return function (target) {
+        return functor(getter(target)).map(focus => setter(focus, target));
+      };
+    };
+  }
+
+  function nth(offset, list) {
+    if (arguments.length === 1) return _list => nth(offset, _list);
+    const idx = offset < 0 ? list.length + offset : offset;
+    return Object.prototype.toString.call(list) === '[object String]' ? list.charAt(idx) : list[idx];
+  }
+
+  function update(idx, val, list) {
+    if (val === undefined) {
+      return (_val, _list) => update(idx, _val, _list);
+    } else if (list === undefined) {
+      return _list => update(idx, val, _list);
+    }
+
+    const arrClone = list.slice();
+    return arrClone.fill(val, idx, idx + 1);
+  }
+
+  function lensIndex(i) {
+    return lens(nth(i), update(i));
+  }
+
+  function lensPath(key) {
+    return lens(path(key), assocPath(key));
+  }
+
+  function prop(key, obj) {
+    if (arguments.length === 1) return _obj => prop(key, _obj);
+    if (!obj) return undefined;
+    return obj[key];
+  }
+
+  function lensProp(key) {
+    return lens(prop(key), assoc(key));
+  }
+
   function match(pattern, str) {
     if (arguments.length === 1) return _str => match(pattern, _str);
     const willReturn = str.match(pattern);
@@ -2928,10 +2986,15 @@
     return !a;
   }
 
-  function nth(offset, list) {
-    if (arguments.length === 1) return _list => nth(offset, _list);
-    const idx = offset < 0 ? list.length + offset : offset;
-    return Object.prototype.toString.call(list) === '[object String]' ? list.charAt(idx) : list[idx];
+  const Identity = x => ({
+    x,
+    map: fn => Identity(fn(x))
+  });
+
+  function over(lens, fn, object) {
+    if (arguments.length === 1) return (_fn, _object) => over(lens, _fn, _object);
+    if (arguments.length === 2) return _object => over(lens, fn, _object);
+    return lens(x => Identity(fn(x)))(object).x;
   }
 
   function partial(fn, ...args) {
@@ -2962,6 +3025,10 @@
   }
 
   const pathOr = curry(pathOrRaw);
+
+  function paths(pathsInput, obj) {
+    return pathsInput.map(singlePath => path(singlePath, obj));
+  }
 
   function pickAll(keys, obj) {
     if (arguments.length === 1) return _obj => pickAll(keys, _obj);
@@ -3013,12 +3080,6 @@
 
   const product = reduce(multiply, 1);
 
-  function prop(key, obj) {
-    if (arguments.length === 1) return _obj => prop(key, _obj);
-    if (!obj) return undefined;
-    return obj[key];
-  }
-
   function propEqFn(key, val, obj) {
     if (obj == null) return false;
     return obj[key] === val;
@@ -3057,6 +3118,12 @@
 
     const clone = input.slice();
     return clone.reverse();
+  }
+
+  function set$1(lens, v, x) {
+    if (arguments.length === 1) return (_v, _x) => set$1(lens, _v, _x);
+    if (arguments.length === 2) return _x => set$1(lens, v, _x);
+    return over(lens, always(v), x);
   }
 
   function sliceFn(fromIndex, toIndex, list) {
@@ -3163,20 +3230,19 @@
     return willReturn;
   }
 
-  function update(idx, val, list) {
-    if (val === undefined) {
-      return (_val, _list) => update(idx, _val, _list);
-    } else if (list === undefined) {
-      return _list => update(idx, val, _list);
-    }
-
-    const arrClone = list.slice();
-    return arrClone.fill(val, idx, idx + 1);
-  }
-
   function values(obj) {
     if (type(obj) !== 'Object') return [];
     return Object.values(obj);
+  }
+
+  const Const = x => ({
+    x,
+    map: fn => Const(x)
+  });
+
+  function view(lens, target) {
+    if (arguments.length === 1) return _target => view(lens, _target);
+    return lens(Const)(target).x;
   }
 
   function without(left, right) {
@@ -3185,6 +3251,11 @@
     }
 
     return reduce((accum, item) => includes(item, left) ? accum : accum.concat(item), [], right);
+  }
+
+  function xor(a, b) {
+    if (arguments.length === 1) return _b => xor(a, _b);
+    return Boolean(a) && !b || Boolean(b) && !a;
   }
 
   function zip(left, right) {
@@ -3239,6 +3310,7 @@
   exports.composeAsync = composeAsync;
   exports.composed = composed;
   exports.concat = concat;
+  exports.cond = cond;
   exports.count = count;
   exports.curry = curry;
   exports.debounce = debounce;
@@ -3303,6 +3375,10 @@
   exports.last = last;
   exports.lastIndexOf = lastIndexOf;
   exports.length = length;
+  exports.lens = lens;
+  exports.lensIndex = lensIndex;
+  exports.lensPath = lensPath;
+  exports.lensProp = lensProp;
   exports.map = map;
   exports.mapAsync = mapAsync;
   exports.mapAsyncLimit = mapAsyncLimit;
@@ -3335,6 +3411,7 @@
   exports.once = once;
   exports.opposite = complement;
   exports.otherwise = otherwise;
+  exports.over = over;
   exports.partial = partial;
   exports.partialCurry = partialCurry;
   exports.partition = partition;
@@ -3342,6 +3419,7 @@
   exports.path = path;
   exports.pathEq = pathEq;
   exports.pathOr = pathOr;
+  exports.paths = paths;
   exports.pick = pick;
   exports.pickAll = pickAll;
   exports.pipe = pipe;
@@ -3371,6 +3449,7 @@
   exports.resolve = resolve;
   exports.reverse = reverse;
   exports.s = s;
+  exports.set = set$1;
   exports.setter = setter;
   exports.shuffle = shuffle;
   exports.slice = slice;
@@ -3409,6 +3488,7 @@
   exports.update = update;
   exports.uuid = uuid;
   exports.values = values;
+  exports.view = view;
   exports.wait = wait;
   exports.waitFor = waitFor;
   exports.when = when;
@@ -3416,6 +3496,7 @@
   exports.where = where;
   exports.whereEq = whereEq;
   exports.without = without;
+  exports.xor = xor;
   exports.zip = zip;
   exports.zipObj = zipObj;
 

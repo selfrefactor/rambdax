@@ -24,9 +24,7 @@ const sd = sk.map(singleMethod => `export * from './src/rambda/${ singleMethod }
 
 const injection = sd.join('\n')
 const fixed = replace(
-  './src/rambda/test',
-  './src/rambda/testMethod',
-  injection
+  './src/rambda/test', './src/rambda/testMethod', injection
 )
 const injectionLast = '\nexport { complement as opposite } from \'./src/rambda/complement\'\n'
 
@@ -44,12 +42,13 @@ const toOmit = glue(`
   lodash
   rambdax
   markdown-toc
-`, ',')
+`,
+',')
 
 const rambdaxDevDependencies = {
   'fs-extra' : '7.0.0',
   // 'rambda'   : 'https://github.com/selfrefactor/rambda#4.0.1',
-  'rambda'   : '4.4.0',
+  'rambda'   : '4.6.0',
 }
 
 outputJsonSync(
