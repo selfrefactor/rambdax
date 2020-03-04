@@ -1,5 +1,9 @@
 # CHANGELOG
 
+3.8.0
+
+Rename `R.uuid` to `R.randomString`
+
 3.7.0
 
 > Sync with Rambda
