@@ -51,6 +51,7 @@
     "cross-env": "7.0.0",
     "dtslint": "3.1.0",
     "helpers": "https://github.com/selfrefactor/helpers#2.4.0",
+    "rambda": "https://github.com/selfrefactor/rambda#4.7.0",
     "jest": "24.9.0",
     "ramda": "0.27.0",
     "rollup": "1.31.1",
@@ -65,8 +66,7 @@
     "tslint": "5.20.1",
     "typescript-formatter": "7.2.2",
     "typescript": "3.7.5",
-    "fs-extra": "7.0.0",
-    "rambda": "4.6.0"
+    "fs-extra": "7.0.0"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -118,6 +118,6 @@
       "rambda",
       "fix"
     ],
-    "workInProgress": ""
+    "workInProgress": "create typings with new rambda format"
   }
 }
