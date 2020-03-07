@@ -1,17 +1,17 @@
-    allFalse(...input: Array<any>): boolean
-    anyFalse(...input: Array<any>): boolean
+ export function allFalse(...input: Array<any>): boolean
+ export function anyFalse(...input: Array<any>): boolean
 
-    allTrue(...input: Array<any>): boolean
-    anyTrue(...input: Array<any>): boolean
+ export function allTrue(...input: Array<any>): boolean
+ export function anyTrue(...input: Array<any>): boolean
 
-    allType(targetType: RambdaTypes): (...input: Array<any>) => boolean
-    anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
+ export function allType(targetType: RambdaTypes): (...input: Array<any>) => boolean
+ export function anyType(targetType: RambdaTypes): (...input: Array<any>) => boolean
 
-    change(
+export function change<T>(
       origin: object, 
       path: string, 
       changeData: any
-    ): object
+    ): T
 
     change<Input, Output>(
       origin: Input, 

@@ -1,8 +1,12 @@
 # CHANGELOG
 
-3.8.0
+4.0.0
 
-Rename `R.uuid` to `R.randomString`
+- Change how Typescript definitions are exported(the reason for major bump)
+
+- Rename `R.uuid` to `R.randomString`
+
+- Take `R.partialCurry` from `Rambda` as it is deprecated there
 
 3.7.0
 

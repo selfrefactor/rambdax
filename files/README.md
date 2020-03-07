@@ -824,6 +824,25 @@ test('with promise', async () => {
 })
 ```
 
+#### partialCurry
+
+> partialCurry(fn: Function|Async, partialInput: Object, input: Object): Function|Promise
+
+When called with function `fn` and first set of input `partialInput`, it will return a function.
+
+This function will wait to be called with second set of input `input` and it will invoke `fn` with the merged object of `partialInput` over `input`.
+
+`fn` can be asynchronous function. In that case a `Promise` holding the result of `fn` is returned.
+
+```
+const fn = ({a, b, c}) => {
+  return (a * b) + c
+}
+const curried = R.partialCurry(fn, {a: 2})
+const result = curried({b: 3, c: 10})
+// => 16
+```
+
 #### pathEq
 
 > pathEq(path:string|string[], target: any, obj: object): boolean
