@@ -1,6 +1,6 @@
 import { whereEq } from './whereEq'
 
-test('', () => {
+test('when true', () => {
   const rule = { a : 1 }
   const input = {
     a : 1,
@@ -9,6 +9,18 @@ test('', () => {
 
   const result = whereEq(rule, input)
   const expectedResult = true
+
+  expect(result).toEqual(expectedResult)
+})
+
+test('when false', () => {
+  const rule = { a : 1 }
+  const input = {
+    b : 2,
+  }
+
+  const result = whereEq(rule, input)
+  const expectedResult = false
 
   expect(result).toEqual(expectedResult)
 })

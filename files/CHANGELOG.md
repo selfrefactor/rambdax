@@ -2,7 +2,27 @@
 
 4.0.0
 
-- Change how Typescript definitions are exported(the reason for major bump)
+Deprecate the following methods:
+
+- `R.composed`
+
+- `R.whenAsync`
+
+- `R.opposite`
+
+- `R.inject`
+
+- `R.isAttach`
+
+- `R.otherwise`
+
+- `R.resolve`
+
+Also these chages:
+
+- Add `R.pipeAsync`
+
+- Change how Typescript definitions are exported
 
 - Rename `R.uuid` to `R.randomString`
 
