@@ -15,9 +15,7 @@ test('when true', () => {
 
 test('when false', () => {
   const rule = { a : 1 }
-  const input = {
-    b : 2,
-  }
+  const input = { b : 2 }
 
   const result = whereEq(rule, input)
   const expectedResult = false
