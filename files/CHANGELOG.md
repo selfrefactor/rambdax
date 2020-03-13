@@ -18,7 +18,7 @@ Deprecate the following methods:
 
 - `R.resolve`
 
-Also these chages:
+Also these changes:
 
 - Add `R.pipeAsync`
 

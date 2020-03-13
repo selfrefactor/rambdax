@@ -26,9 +26,8 @@ const injection = sd.join('\n')
 const fixed = replace(
   './src/rambda/test', './src/rambda/testMethod', injection
 )
-const injectionLast = '\nexport { complement as opposite } from \'./src/rambda/complement\'\n'
 
-const c = `${ rambdaxExports }//RAMBDA\n${ fixed }${ injectionLast }`
+const c = `${ rambdaxExports }//RAMBDA\n${ fixed }\n`
 writeFileSync(OUTPUT_EXPORTS_DECLARATION, c)
 emptyDirSync(OUTPUT)
 

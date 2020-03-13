@@ -1,7 +1,7 @@
-import { pipe } from './rambda/pipe'
-import { pick } from './rambda/pick'
+import { pipe } from '../../src/rambda/pipe'
+import { pick } from '../../src/rambda/pick'
 import { resolve } from './resolve'
-import { delay } from './delay'
+import { delay } from '../../src/delay'
 import { otherwise } from './otherwise'
 
 const makeQuery = email => ({ query : email })

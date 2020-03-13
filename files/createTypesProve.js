@@ -1,6 +1,6 @@
 const { exec } = require('helpers')
-const { replace } = require('../dist/rambdax')
 const { readFileSync, writeFileSync } = require('fs')
+const { replace } = require('../dist/rambdax')
 const { resolve } = require('path')
 
 const PATH = resolve(__dirname, '../node_modules/rambda/index.d.ts')
@@ -15,9 +15,7 @@ async function createTypes(){
   const rambdax = readFileSync(SOURCE_PATH).toString()
 
   const output = replace(
-    INJECT_RAMBDAX,
-    `\n${rambdax}`,
-    rambda
+    INJECT_RAMBDAX, `\n${ rambdax }`, rambda
   )
 
   writeFileSync(OUTPUT_PATH, output)

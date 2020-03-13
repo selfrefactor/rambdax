@@ -790,12 +790,6 @@ console.log(addOneOnce(10, 20, 30)) //=> 60
 console.log(addOneOnce(1, 2, 3)) //=> 60
 ```
 
-#### opposite
-
-> opposite(fn: Function): Function
-
-Same as `R.complement`
-
 #### otherwise
 
 > otherwise(fallback: Function, toResolve: Promise): Promise
