@@ -1,10 +1,10 @@
-import { type } from './rambda/type'
-import { toLower } from './rambda/toLower'
-import { includes } from './rambda/includes'
-import { test } from './rambda/testMethod.js'
-import { any } from './rambda/any'
 import { all } from './rambda/all'
+import { any } from './rambda/any'
+import { includes } from './rambda/includes'
 import { init } from './rambda/init'
+import { test } from './rambda/testMethod.js'
+import { toLower } from './rambda/toLower'
+import { type } from './rambda/type'
 
 export function isPrototype(input){
   const currentPrototype = input.prototype
@@ -32,14 +32,9 @@ export function prototypeToString(input){
   return translatedList[ found ]
 }
 
-const typesWithoutPrototype = [
-  'any',
-  'promise',
-  'async',
-  'function',
-]
+const typesWithoutPrototype = [ 'any', 'promise', 'async', 'function' ]
 
-function fromPrototypeToString(rule){
+export function fromPrototypeToString(rule){
   if (
     Array.isArray(rule) ||
     rule === undefined ||
@@ -101,26 +96,15 @@ export function isValid({ input, schema }){
   for (const requirementRaw in schema){
     if (flag){
       const isOptional = requirementRaw.endsWith('?')
-      const requirement = isOptional ?
-        init(requirementRaw) :
-        requirementRaw
+      const requirement = isOptional ? init(requirementRaw) : requirementRaw
 
-      const { rule, ruleType } = getRuleAndType(
-        schema,
-        requirementRaw
-      )
+      const { rule, ruleType } = getRuleAndType(schema, requirementRaw)
       const inputProp = input[ requirement ]
       const inputPropType = type(input[ requirement ])
 
-      const ok =
-        isOptional && inputProp !== undefined || !isOptional
+      const ok = isOptional && inputProp !== undefined || !isOptional
 
-      if (
-        !ok ||
-        rule === 'any' && inputProp != null ||
-        rule === inputProp
-      )
-        continue
+      if (!ok || rule === 'any' && inputProp != null || rule === inputProp) continue
 
       if (ruleType === 'Object'){
         /**
@@ -141,19 +125,12 @@ export function isValid({ input, schema }){
          * Rule is function so we pass to it the input
          */
         boom(rule(inputProp))
-      } else if (
-        ruleType === 'Array' &&
-        inputPropType === 'String'
-      ){
+      } else if (ruleType === 'Array' && inputPropType === 'String'){
         /**
          * Enum case | rule is like a: ['foo', 'bar']
          */
         boom(includes(inputProp, rule))
-      } else if (
-        ruleType === 'Array' &&
-        rule.length === 1 &&
-        inputPropType === 'Array'
-      ){
+      } else if (ruleType === 'Array' && rule.length === 1 && inputPropType === 'Array'){
         /**
          * 1. array of type | rule is like a: ['number']
          * 2. rule is like a: [{foo: 'string', bar: 'number'}]
@@ -162,42 +139,31 @@ export function isValid({ input, schema }){
         const currentRuleType = type(currentRule)
 
         //Check if rule is invalid
-        boom(
-          currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule)
-        )
+        boom(currentRuleType === 'String' || currentRuleType === 'Object' || isPrototype(currentRule))
 
         if (currentRuleType === 'Object' && flag){
           /**
            * 2. rule is like a: [{from: 'string'}]
            */
-          const isValidResult = all(
-            inputPropInstance =>
-              isValid({
-                input  : inputPropInstance,
-                schema : currentRule,
-              }),
-            inputProp
-          )
+          const isValidResult = all(inputPropInstance =>
+            isValid({
+              input  : inputPropInstance,
+              schema : currentRule,
+            }),
+          inputProp)
           boom(isValidResult)
         } else if (flag){
           /**
            * 1. array of type
            */
 
-          const actualRule = currentRuleType === 'String' ?
-            currentRule :
-            prototypeToString(currentRule)
-          const isInvalidResult = any(
-            inputPropInstance =>
-              type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(),
-            inputProp
-          )
+          const actualRule =
+            currentRuleType === 'String' ? currentRule : prototypeToString(currentRule)
+          const isInvalidResult = any(inputPropInstance => type(inputPropInstance).toLowerCase() !== actualRule.toLowerCase(),
+            inputProp)
           boom(!isInvalidResult)
         }
-      } else if (
-        ruleType === 'RegExp' &&
-        inputPropType === 'String'
-      ){
+      } else if (ruleType === 'RegExp' && inputPropType === 'String'){
         boom(test(rule, inputProp))
       } else {
         boom(false)

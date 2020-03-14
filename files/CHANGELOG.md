@@ -20,6 +20,8 @@ Deprecate the following methods:
 
 Also these changes:
 
+- Improve `R.ok` throwed error message
+
 - Add `R.pipeAsync`
 
 - Change how Typescript definitions are exported
