@@ -1,14 +1,12 @@
 import { glue } from './glue'
 
 test('empty string as a glue', () => {
-  const result = glue(
-    `
+  const result = glue(`
     foo
     bar
     baz
   `,
-    ''
-  )
+  '')
 
   const expectedResult = 'foobarbaz'
 
@@ -74,14 +72,12 @@ test('case 3', () => {
 })
 
 test('with glue', () => {
-  const result = glue(
-    `
+  const result = glue(`
     foo
     bar
     baz
   `,
-    '=='
-  )
+  '==')
 
   const expectedResult = 'foo==bar==baz'
 

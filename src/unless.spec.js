@@ -1,6 +1,6 @@
-import { unless } from './unless'
-import { isNil } from './rambda/isNil'
 import { inc } from './rambda/inc'
+import { isNil } from './rambda/isNil'
+import { unless } from './unless'
 
 test('whenFalse can be other than function', () => {
   const result = unless(isNil, 2)('foo')

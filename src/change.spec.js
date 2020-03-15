@@ -43,10 +43,10 @@ test('when rule is not an object', () => {
     },
   }
 
-  const result = change(origin, 'foo.bax.nested', 7)
-  expect(
-    result
-  ).toEqual(expected)
+  const result = change(
+    origin, 'foo.bax.nested', 7
+  )
+  expect(result).toEqual(expected)
 })
 
 test('works with 4 levels deep nesting', () => {
@@ -90,7 +90,9 @@ test('works with 4 levels deep nesting', () => {
       },
     },
   }
-  const result = change(origin, '', changeData)
+  const result = change(
+    origin, '', changeData
+  )
   expect(result).toEqual(expected)
 })
 
@@ -107,7 +109,9 @@ test('simpler', () => {
     bay : 3,
     bax : { baq : 9 },
   }
-  const result = change(localOrigin, 'foo', changeData)
+  const result = change(
+    localOrigin, 'foo', changeData
+  )
 
   const expectedResult = {
     a   : 0,

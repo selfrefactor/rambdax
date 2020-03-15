@@ -6,9 +6,7 @@ test('happy', () => {
 
   pushUniq(x, list)
 
-  expect(
-    list
-  ).toEqual([ 1, 2, 3, 4 ])
+  expect(list).toEqual([ 1, 2, 3, 4 ])
 })
 
 test('when such element already exists', () => {
@@ -17,8 +15,6 @@ test('when such element already exists', () => {
 
   pushUniq(x, list)
 
-  expect(
-    list
-  ).toEqual([ 1, 2, 3 ])
+  expect(list).toEqual([ 1, 2, 3 ])
 })
 

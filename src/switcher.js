@@ -38,7 +38,9 @@ const is = (testValue, matchResult = true) => ({
 })
 
 class Switchem{
-  constructor(defaultValue, cases, willMatch){
+  constructor(
+    defaultValue, cases, willMatch
+  ){
     if (
       defaultValue !== undefined &&
       cases === undefined &&

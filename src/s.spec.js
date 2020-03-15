@@ -1,6 +1,6 @@
-import { s } from './s'
-import { toUpper } from './rambda/toUpper'
 import { take } from './rambda/take'
+import { toUpper } from './rambda/toUpper'
+import { s } from './s'
 
 test('happy', () => {
   expect(s()).toBe(true)

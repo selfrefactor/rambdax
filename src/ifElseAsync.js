@@ -5,7 +5,9 @@ function createThenable(x){
   }
 }
 
-export function ifElseAsync(condition, ifFn, elseFn){
+export function ifElseAsync(
+  condition, ifFn, elseFn
+){
   return input =>
     new Promise((resolve, reject) => {
       const conditionPromise = createThenable(condition)

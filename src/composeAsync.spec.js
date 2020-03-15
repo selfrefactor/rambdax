@@ -1,10 +1,10 @@
+import { composeAsync } from './composeAsync'
+import { delay as delayModule } from './delay'
+import { mapAsync } from './mapAsync'
+import { equals } from './rambda/equals'
 import { map } from './rambda/map'
 import { prop } from './rambda/prop'
-import { equals } from './rambda/equals'
-import { composeAsync } from './composeAsync'
 import { tapAsync } from './tapAsync'
-import { mapAsync } from './mapAsync'
-import { delay as delayModule } from './delay'
 
 test('1', async () => {
   const fn = input =>
@@ -66,18 +66,16 @@ test('3', async () => {
 
 test('4', async () => {
   let sideEffect
-  const result = await composeAsync(
-    tapAsync(async x => {
-      sideEffect = equals(x, [ 2, 4, 6 ])
+  const result = await composeAsync(tapAsync(async x => {
+    sideEffect = equals(x, [ 2, 4, 6 ])
 
-      return delayModule(x * 3)
-    }),
-    mapAsync(async x => {
-      await delayModule(x * 100)
+    return delayModule(x * 3)
+  }),
+  mapAsync(async x => {
+    await delayModule(x * 100)
 
-      return x * 2
-    })
-  )([ 1, 2, 3 ])
+    return x * 2
+  }))([ 1, 2, 3 ])
 
   expect(result).toEqual([ 2, 4, 6 ])
 

@@ -8,10 +8,8 @@ export function whereEq(rule, input){
   }
   if (type(input) !== 'Object') return false
 
-  const result = filter(
-    (ruleValue, ruleProp) => equals(ruleValue, input[ ruleProp ]),
-    rule
-  )
+  const result = filter((ruleValue, ruleProp) => equals(ruleValue, input[ ruleProp ]),
+    rule)
 
   return Object.keys(result).length === Object.keys(rule).length
 }

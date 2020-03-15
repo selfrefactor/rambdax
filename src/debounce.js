@@ -1,4 +1,6 @@
-export function debounce(func, ms, immediate = false){
+export function debounce(
+  func, ms, immediate = false
+){
   let timeout
 
   return function(...input){

@@ -15,9 +15,7 @@ test('prevent type error', () => {
   )
   const expectedResult = 7
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('function as whenElse', () => {
@@ -32,31 +30,29 @@ test('function as whenElse', () => {
   )
   const expectedResult = false
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('when if', () => {
   const x = 5
   const ifRule = x > 3
 
-  const result = maybe(ifRule, whenIf, whenElse)
+  const result = maybe(
+    ifRule, whenIf, whenElse
+  )
   const expectedResult = 7
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('when else', () => {
   const x = 1
   const ifRule = x > 3
 
-  const result = maybe(ifRule, whenIf, whenElse)
+  const result = maybe(
+    ifRule, whenIf, whenElse
+  )
   const expectedResult = 9
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })

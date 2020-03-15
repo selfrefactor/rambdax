@@ -1,5 +1,5 @@
-import { pipedAsync } from './pipedAsync'
 import { delay } from './delay'
+import { pipedAsync } from './pipedAsync'
 import { add } from './rambda/add'
 
 test('', async () => {
@@ -19,7 +19,5 @@ test('', async () => {
   )
   const expectedResult = 'RAMBDAX_DELAY104'
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })

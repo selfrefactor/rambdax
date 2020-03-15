@@ -1,5 +1,5 @@
+import { getter, reset, setter } from './getter'
 import { add } from './rambda/add'
-import { getter, setter, reset } from './getter'
 
 afterEach(() => {
   reset()

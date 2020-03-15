@@ -1,6 +1,6 @@
-import { shuffle } from './shuffle'
 import { range } from './rambda/range'
 import { uniq } from './rambda/uniq'
+import { shuffle } from './shuffle'
 
 test('happy', () => {
   const list = range(0, 7)

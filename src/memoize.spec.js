@@ -15,21 +15,17 @@ test('happy', () => {
     return a + b - c
   }
   const memoized = memoize(fn)
-  expect(
-    memoized({
-      a : 1,
-      c : 3,
-      b : 2,
-    })
-  ).toBe(0)
+  expect(memoized({
+    a : 1,
+    c : 3,
+    b : 2,
+  })).toBe(0)
   expect(counter).toBe(1)
-  expect(
-    memoized({
-      c : 3,
-      a : 1,
-      b : 2,
-    })
-  ).toBe(0)
+  expect(memoized({
+    c : 3,
+    a : 1,
+    b : 2,
+  })).toBe(0)
   expect(counter).toBe(1)
 })
 
@@ -65,13 +61,23 @@ test('async function', async () => {
   }
 
   const memoized = memoize(fn)
-  expect(await memoized(100, 1, 2)).toBe(3)
-  expect(await memoized(100, 1, 2)).toBe(3)
-  expect(await memoized(100, 1, 2)).toBe(3)
+  expect(await memoized(
+    100, 1, 2
+  )).toBe(3)
+  expect(await memoized(
+    100, 1, 2
+  )).toBe(3)
+  expect(await memoized(
+    100, 1, 2
+  )).toBe(3)
   expect(counter).toBe(1)
-  expect(await memoized(100, 2, 2)).toBe(4)
+  expect(await memoized(
+    100, 2, 2
+  )).toBe(4)
   expect(counter).toBe(2)
-  expect(await memoized(100, 1, 2)).toBe(3)
+  expect(await memoized(
+    100, 1, 2
+  )).toBe(3)
   expect(counter).toBe(2)
 })
 

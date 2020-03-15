@@ -1,8 +1,10 @@
+import { delay } from './delay'
 import { range } from './rambda/range'
 import { type } from './rambda/type'
-import { delay } from './delay'
 
-export function waitFor(condition, howLong, loops = 10){
+export function waitFor(
+  condition, howLong, loops = 10
+){
   const typeCondition = type(condition)
 
   const passPromise = typeCondition === 'Async'

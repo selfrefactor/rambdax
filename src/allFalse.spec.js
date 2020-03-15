@@ -1,5 +1,6 @@
-import { allFalse } from './allFalse'
 import { runTests } from 'helpers'
+
+import { allFalse } from './allFalse'
 
 const testData = {
   label : 'foo',

@@ -10,17 +10,13 @@ const fn = x => x + 1 > 10 ?
 test('no element pass the condition function', () => {
   const list = [ 1, 2, 3 ]
 
-  expect(
-    findModify(fn)(list)
-  ).toEqual(false)
+  expect(findModify(fn)(list)).toEqual(false)
 })
 
 test('we have one such fool', () => {
   const list = [ 1, 2, 32, 54 ]
 
-  expect(
-    findModify(fn, list)
-  ).toEqual({
+  expect(findModify(fn, list)).toEqual({
     a : 8,
     x : 32,
   })

@@ -7,9 +7,7 @@ test('when true', () => {
   const result = hasPath(path)(obj)
   const expectedResult = true
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('when false', () => {
@@ -19,8 +17,6 @@ test('when false', () => {
   const result = hasPath(path, obj)
   const expectedResult = false
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 

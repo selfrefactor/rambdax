@@ -29,16 +29,10 @@ test('happy', () => {
   const result = mapToObject(fn, list)
   const resultx = mapToObject(fn)(list)
 
-  expect(
-    result
-  ).toEqual(expectedResult)
-  expect(
-    resultx
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
+  expect(resultx).toEqual(expectedResult)
 })
 
 test('bad path', () => {
-  expect(
-    () => mapToObject(1, null)
-  ).toThrow()
+  expect(() => mapToObject(1, null)).toThrow()
 })

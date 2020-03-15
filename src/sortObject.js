@@ -5,7 +5,9 @@ export function sortObject(predicate, obj){
     return _obj => sortObject(predicate, _obj)
   }
   const keys = Object.keys(obj)
-  const sortedKeys = sort((a, b) => predicate(a, b, obj[ a ], obj[ b ]), keys)
+  const sortedKeys = sort((a, b) => predicate(
+    a, b, obj[ a ], obj[ b ]
+  ), keys)
   const toReturn = {}
   sortedKeys.forEach(singleKey => {
     toReturn[ singleKey ] = obj[ singleKey ]

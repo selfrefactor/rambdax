@@ -1,6 +1,6 @@
-import { type } from './rambda/type'
-import { pick } from './rambda/pick'
 import { merge } from './rambda/merge'
+import { pick } from './rambda/pick'
+import { type } from './rambda/type'
 
 let holder = {}
 

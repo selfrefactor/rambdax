@@ -1,67 +1,73 @@
+import { delay } from './delay'
 import { isValidAsync } from './isValidAsync.js'
-import {delay} from './delay'
 
 const simplePredicate = async x => {
   await delay(100)
+
   return x > 5
 }
 
 test('happy', async () => {
   const input = {
-    a: 1,
-    b: 7,
-    c: 9,
-    additional: 'foo',
+    a          : 1,
+    b          : 7,
+    c          : 9,
+    additional : 'foo',
   }
   const invalidInput = {
-    a: 1,
-    b: 2,
-    c: 9,
+    a : 1,
+    b : 2,
+    c : 9,
   }
   const schema = {
-    a: Number,
-    b: simplePredicate,
-    c: simplePredicate
+    a : Number,
+    b : simplePredicate,
+    c : simplePredicate,
   }
   const invalidSchema = {
-    a: Boolean,
-    b: simplePredicate,
-    c: simplePredicate
+    a : Boolean,
+    b : simplePredicate,
+    c : simplePredicate,
   }
-  const result = await isValidAsync({input, schema})
-  const invalidResult = await isValidAsync({input, schema:invalidSchema})
-  const withInvalidInput = await isValidAsync({input: invalidInput, schema})
-  expect(
-    result
-  ).toBeTruthy()
-  expect(
-    invalidResult
-  ).toBeFalsy()
-  expect(
-    withInvalidInput
-  ).toBeFalsy()
+  const result = await isValidAsync({
+    input,
+    schema,
+  })
+  const invalidResult = await isValidAsync({
+    input,
+    schema : invalidSchema,
+  })
+  const withInvalidInput = await isValidAsync({
+    input : invalidInput,
+    schema,
+  })
+  expect(result).toBeTruthy()
+  expect(invalidResult).toBeFalsy()
+  expect(withInvalidInput).toBeFalsy()
 })
 
 test('without async rules', async () => {
   const input = {
-    a: 1,
-    b: 7,
+    a : 1,
+    b : 7,
   }
   const schema = {
-    a: Number,
-    b: x => x > 2,
+    a : Number,
+    b : x => x > 2,
   }
   const invalidSchema = {
-    a: Number,
-    b: Boolean,
+    a : Number,
+    b : Boolean,
   }
-  const result = await isValidAsync({input, schema})
-  const invalidResult = await isValidAsync({input, schema: invalidSchema})
+  const result = await isValidAsync({
+    input,
+    schema,
+  })
+  const invalidResult = await isValidAsync({
+    input,
+    schema : invalidSchema,
+  })
 
-  expect(
-    result
-  ).toBeTruthy()
-  expect(
-    invalidResult
-  ).toBeFalsy()
+  expect(result).toBeTruthy()
+  expect(invalidResult).toBeFalsy()
 })

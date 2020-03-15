@@ -2,9 +2,7 @@ import { partition } from './partition'
 
 test('with array', () => {
   const predicate = (x, i) => {
-    expect(
-      typeof i
-    ).toBe('number')
+    expect(typeof i).toBe('number')
 
     return x > 2
   }
@@ -13,16 +11,12 @@ test('with array', () => {
   const result = partition(predicate, list)
   const expectedResult = [ [ 3, 4 ], [ 1, 2 ] ]
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('with object', () => {
   const predicate = (value, prop) => {
-    expect(
-      typeof prop
-    ).toBe('string')
+    expect(typeof prop).toBe('string')
 
     return value > 2
   }
@@ -45,7 +39,5 @@ test('with object', () => {
     },
   ]
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })

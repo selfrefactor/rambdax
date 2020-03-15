@@ -1,5 +1,5 @@
-import { any } from './rambda/any'
 import { check } from './ok'
+import { any } from './rambda/any'
 
 export function pass(...inputs){
   return (...schemas) =>

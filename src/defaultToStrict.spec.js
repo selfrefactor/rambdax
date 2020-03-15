@@ -45,9 +45,13 @@ test('when inputArgument is non-empty object', () => {
 })
 
 test('with multiple inputs - case 1', () => {
-  expect(defaultToStrict({ a : 1 }, null, { b : 2 })).toEqual({ b : 2 })
+  expect(defaultToStrict(
+    { a : 1 }, null, { b : 2 }
+  )).toEqual({ b : 2 })
 })
 
 test('with multiple inputs - case 2', () => {
-  expect(defaultToStrict({ a : 1 }, null, false)).toEqual({ a : 1 })
+  expect(defaultToStrict(
+    { a : 1 }, null, false
+  )).toEqual({ a : 1 })
 })

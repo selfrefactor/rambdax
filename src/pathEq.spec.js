@@ -5,7 +5,9 @@ test('when true', () => {
   const obj = { a : { b : 1 } }
   const target = 1
 
-  expect(pathEq(path, target, obj)).toBe(true)
+  expect(pathEq(
+    path, target, obj
+  )).toBe(true)
 })
 
 test('when false', () => {
@@ -21,5 +23,7 @@ test('when wrong path', () => {
   const obj = { a : { b : 1 } }
   const target = 2
 
-  expect(pathEq(path, target, obj)).toBe(false)
+  expect(pathEq(
+    path, target, obj
+  )).toBe(false)
 })

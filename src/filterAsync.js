@@ -1,5 +1,5 @@
-import { filter } from './rambda/filter.js'
 import { mapAsync } from './mapAsync.js'
+import { filter } from './rambda/filter.js'
 
 export function filterAsync(predicate, iterateOver){
   if (arguments.length === 1){
@@ -14,9 +14,7 @@ export function filterAsync(predicate, iterateOver){
 
           return resolve(filtered)
         }
-        const filtered = filter((_, prop) => predicateResult[ prop ])(
-          iterateOver
-        )
+        const filtered = filter((_, prop) => predicateResult[ prop ])(iterateOver)
 
         return resolve(filtered)
       })

@@ -6,10 +6,8 @@ const getOccurances = input => input.match(/{{\s*.+?\s*}}/g)
 const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '')
 
 const replace = ({ inputHolder, prop, replacer }) =>
-  inputHolder.replace(
-    new RegExp(`{{\\s*${ escapeSpecialCharacters(prop) }\\s*}}`),
-    replacer
-  )
+  inputHolder.replace(new RegExp(`{{\\s*${ escapeSpecialCharacters(prop) }\\s*}}`),
+    replacer)
 
 export function template(input, templateInput){
   if (arguments.length === 1){
@@ -23,10 +21,8 @@ export function template(input, templateInput){
     const prop = getOccuranceProp(occurance)
 
     try {
-      const replacer = new Function(
-        'templateInput',
-        `with(templateInput) { return ${ prop } }`
-      )(templateInput)
+      const replacer = new Function('templateInput',
+        `with(templateInput) { return ${ prop } }`)(templateInput)
 
       inputHolder = replace({
         inputHolder,

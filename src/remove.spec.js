@@ -34,9 +34,7 @@ test('text is not string', () => {
   const inputs = [ /foo/g, 'bar' ]
   const text = null
 
-  expect(
-    () => remove(inputs, text)
-  ).toThrow()
+  expect(() => remove(inputs, text)).toThrow()
 })
 
 test('with regexes', () => {

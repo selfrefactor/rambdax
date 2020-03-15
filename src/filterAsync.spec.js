@@ -1,5 +1,5 @@
-import { filterAsync } from './filterAsync'
 import { delay } from './delay'
+import { filterAsync } from './filterAsync'
 
 test('happy', async () => {
   const predicate = async x => {

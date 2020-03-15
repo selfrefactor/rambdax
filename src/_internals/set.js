@@ -93,10 +93,8 @@ const coreJsData = root[ '__core-js_shared__' ]
 
 /**Used to detect methods masquerading as native. */
 const maskSrcKey = (function(){
-  const uid = (/[^.]+$/).exec(
-    coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO ||
-      ''
-  )
+  const uid = (/[^.]+$/).exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO ||
+      '')
 
   return uid ? 'Symbol(src)_1.' + uid : ''
 })()
@@ -115,17 +113,13 @@ const { hasOwnProperty } = objectProto
 const objectToString = objectProto.toString
 
 /**Used to detect if a method is native. */
-const reIsNative = RegExp(
-  '^' +
+const reIsNative = RegExp('^' +
     funcToString
       .call(hasOwnProperty)
       .replace(reRegExpChar, '\\$&')
-      .replace(
-        /hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
-        '$1.*?'
-      ) +
-    '$'
-)
+      .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
+        '$1.*?') +
+    '$')
 
 /**Built-in value references. */
 const { Symbol } = root,
@@ -293,7 +287,9 @@ function listCacheDelete(key){
   if (index == lastIndex){
     data.pop()
   } else {
-    splice.call(data, index, 1)
+    splice.call(
+      data, index, 1
+    )
   }
 
   return true
@@ -463,7 +459,9 @@ MapCache.prototype.set = mapCacheSet
  * @param {string} key The key of the property to assign.
  * @param {*} value The value to assign.
  */
-function assignValue(object, key, value){
+function assignValue(
+  object, key, value
+){
   const objValue = object[ key ]
   if (
     !(hasOwnProperty.call(object, key) && eq(objValue, value)) ||
@@ -522,7 +520,9 @@ function baseIsNative(value){
  * @param {Function} [customizer] The function to customize path creation.
  * @returns {Object} Returns `object`.
  */
-function baseSet(object, path, value, customizer){
+function baseSet(
+  object, path, value, customizer
+){
   if (!isObject(object)){
     return object
   }
@@ -540,7 +540,9 @@ function baseSet(object, path, value, customizer){
     if (index != lastIndex){
       const objValue = nested[ key ]
       newValue = customizer ?
-        customizer(objValue, key, nested) :
+        customizer(
+          objValue, key, nested
+        ) :
         undefined
       if (newValue === undefined){
         newValue = isObject(objValue) ?
@@ -550,7 +552,9 @@ function baseSet(object, path, value, customizer){
             {}
       }
     }
-    assignValue(nested, key, newValue)
+    assignValue(
+      nested, key, newValue
+    )
     nested = nested[ key ]
   }
 
@@ -710,10 +714,10 @@ var stringToPath = memoize(string => {
   if (reLeadingDot.test(string)){
     result.push('')
   }
-  string.replace(rePropName, (match, number, quote, string) => {
-    result.push(
-      quote ? string.replace(reEscapeChar, '$1') : number || match
-    )
+  string.replace(rePropName, (
+    match, number, quote, string
+  ) => {
+    result.push(quote ? string.replace(reEscapeChar, '$1') : number || match)
   })
 
   return result
@@ -1050,6 +1054,10 @@ function toString(value){
  * console.log(object.x[0].y.z);
  * // => 5
  */
-export function set(object, path, value){
-  return object == null ? object : baseSet(object, path, value)
+export function set(
+  object, path, value
+){
+  return object == null ? object : baseSet(
+    object, path, value
+  )
 }

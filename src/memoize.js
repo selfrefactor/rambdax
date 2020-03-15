@@ -10,10 +10,8 @@ const cache = {}
 const normalizeObject = obj => {
   const sortFn = (a, b) => a > b ? 1 : -1
   const willReturn = {}
-  compose(
-    map(prop => willReturn[ prop ] = obj[ prop ]),
-    sort(sortFn)
-  )(Object.keys(obj))
+  compose(map(prop => willReturn[ prop ] = obj[ prop ]),
+    sort(sortFn))(Object.keys(obj))
 
   return willReturn
 }
@@ -22,9 +20,13 @@ const stringify = a => {
   if (type(a) === 'String'){
     return a
   } else if ([ 'Function', 'Async' ].includes(type(a))){
-    const compacted = replace(/\s{1,}/g, ' ', a.toString())
+    const compacted = replace(
+      /\s{1,}/g, ' ', a.toString()
+    )
 
-    return replace(/\s/g, '_', take(15, compacted))
+    return replace(
+      /\s/g, '_', take(15, compacted)
+    )
   } else if (type(a) === 'Object'){
     return JSON.stringify(normalizeObject(a))
   }

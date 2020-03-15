@@ -1,5 +1,5 @@
-import { type } from './rambda/type'
 import { map } from './rambda/map'
+import { type } from './rambda/type'
 
 function helper({ condition, inputArgument, prop }){
   return new Promise((resolve, reject) => {
@@ -48,13 +48,11 @@ export function produce(conditions, inputArgument){
   const promised = []
   for (const prop in conditions){
     const condition = conditions[ prop ]
-    promised.push(
-      helper({
-        inputArgument,
-        condition,
-        prop,
-      })
-    )
+    promised.push(helper({
+      inputArgument,
+      condition,
+      prop,
+    }))
   }
 
   return new Promise((resolve, reject) => {
@@ -62,10 +60,8 @@ export function produce(conditions, inputArgument){
       .then(results => {
         const willReturn = {}
 
-        map(
-          result => willReturn[ result.type ] = result.payload,
-          results
-        )
+        map(result => willReturn[ result.type ] = result.payload,
+          results)
 
         resolve(willReturn)
       })

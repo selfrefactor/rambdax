@@ -13,11 +13,15 @@ const isObject = x => {
   return Object.keys(x).length > 0
 }
 
-export function change(origin, pathRaw, rules){
+export function change(
+  origin, pathRaw, rules
+){
   const willReturn = JSON.parse(JSON.stringify(origin))
 
   if (!isObject(rules)){
-    set(willReturn, pathRaw, rules)
+    set(
+      willReturn, pathRaw, rules
+    )
 
     return willReturn
   }
@@ -26,17 +30,19 @@ export function change(origin, pathRaw, rules){
   for (const ruleKey of Object.keys(rules)){
     const rule = rules[ ruleKey ]
     if (!isObject(rule)){
-      set(willReturn, `${ path }${ ruleKey }`, rule)
+      set(
+        willReturn, `${ path }${ ruleKey }`, rule
+      )
       continue
     }
-    const [ withObjects, withoutObjects ] = partition(
-      subruleKey => isObject(rule[ subruleKey ]),
-      Object.keys(rule)
-    )
+    const [ withObjects, withoutObjects ] = partition(subruleKey => isObject(rule[ subruleKey ]),
+      Object.keys(rule))
 
     withoutObjects.forEach(subruleKey => {
       const subrule = rule[ subruleKey ]
-      set(willReturn, `${ path }${ ruleKey }.${ subruleKey }`, subrule)
+      set(
+        willReturn, `${ path }${ ruleKey }.${ subruleKey }`, subrule
+      )
     })
 
     withObjects.forEach(subruleKey => {

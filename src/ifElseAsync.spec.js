@@ -1,8 +1,8 @@
-import { ifElseAsync } from './ifElseAsync'
-import { type } from './rambda/type'
-import { T } from './rambda/T'
-import { F } from './rambda/F'
 import { delay } from './delay'
+import { ifElseAsync } from './ifElseAsync'
+import { F } from './rambda/F'
+import { T } from './rambda/T'
+import { type } from './rambda/type'
 
 test('ok', async () => {
   const condition = async x => {
@@ -28,7 +28,9 @@ test('ok', async () => {
     return false
   }
 
-  const result = await ifElseAsync(condition, ifFn, elseFn)(7)
+  const result = await ifElseAsync(
+    condition, ifFn, elseFn
+  )(7)
 
   const resultFalse = await ifElseAsync(
     conditionFalse,

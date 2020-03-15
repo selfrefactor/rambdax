@@ -1,5 +1,5 @@
-import { type } from './rambda/type'
 import { isTruthy } from './_internals/isTruthy.js'
+import { type } from './rambda/type'
 
 export function allFalse(...inputs){
   let counter = 0

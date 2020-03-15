@@ -7,9 +7,7 @@ test('when 0', () => {
   const result = count(target, list)
   const expectedResult = 0
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })
 
 test('when 2', () => {
@@ -19,7 +17,5 @@ test('when 2', () => {
   const result = count(target)(list)
   const expectedResult = 2
 
-  expect(
-    result
-  ).toEqual(expectedResult)
+  expect(result).toEqual(expectedResult)
 })

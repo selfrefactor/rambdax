@@ -1,4 +1,5 @@
 import { flatMap } from './flatMap'
+
 test('maps then flattens one level', () => {
   const duplicate = n => [ n, n ]
   expect(flatMap(duplicate, [ 1, 2, 3 ])).toEqual([ 1, 1, 2, 2, 3, 3 ])

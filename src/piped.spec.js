@@ -1,7 +1,7 @@
-import { map } from './rambda/map'
+import { piped } from './piped'
 import { add } from './rambda/add'
 import { filter } from './rambda/filter'
-import { piped } from './piped'
+import { map } from './rambda/map'
 
 test('', () => {
   const result = piped(

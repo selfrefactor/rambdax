@@ -41,15 +41,9 @@ test('ramda test 3', () => {
   expect(toggle([ 'on', 'off', 'neither' ], 'off')).toEqual('on')
   expect(toggle([ 'on', 'off', 'neither' ], 'neither')).toEqual('neither')
 
-  expect(toggle([ 'active', 'inactive', 'neither' ], 'inactive')).toEqual(
-    'active'
-  )
-  expect(toggle([ 'active', 'inactive', 'neither' ], 'active')).toEqual(
-    'inactive'
-  )
-  expect(toggle([ 'active', 'inactive', 'neither' ], 'neither')).toEqual(
-    'neither'
-  )
+  expect(toggle([ 'active', 'inactive', 'neither' ], 'inactive')).toEqual('active')
+  expect(toggle([ 'active', 'inactive', 'neither' ], 'active')).toEqual('inactive')
+  expect(toggle([ 'active', 'inactive', 'neither' ], 'neither')).toEqual('neither')
 
   expect(toggle([ 10, 100, 50 ], 10)).toEqual(100)
   expect(toggle([ 10, 100, 50 ], 100)).toEqual(10)

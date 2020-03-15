@@ -1,5 +1,5 @@
-import { produce } from './produce'
 import { delay } from './delay'
+import { produce } from './produce'
 
 test('async', async () => {
   const fn = produce({

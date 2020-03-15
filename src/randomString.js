@@ -1,5 +1,5 @@
-import { range } from './rambda/range'
 import { head } from './rambda/head'
+import { range } from './rambda/range'
 import { shuffle } from './shuffle'
 
 const charCodesString = [ ...range(65, 90), ...range(97, 122) ]

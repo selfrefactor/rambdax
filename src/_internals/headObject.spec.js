@@ -9,8 +9,7 @@ test('too many keys throws', () => {
     headObject({
       a : 1,
       b : 2,
-    })
-  ).toThrow()
+    })).toThrow()
 })
 
 test('empty object throws', () => {
