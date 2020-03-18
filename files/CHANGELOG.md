@@ -4,6 +4,8 @@
 
 Deprecate the following methods:
 
+- `R.headObject`
+
 - `R.composed`
 
 - `R.whenAsync`
