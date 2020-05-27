@@ -1,4 +1,4 @@
-import { runTests } from 'helpers'
+import { runTests } from 'helpers-fn'
 
 import { equals } from './rambda/equals.js'
 import { sortObject } from './sortObject'

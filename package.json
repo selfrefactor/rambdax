@@ -50,9 +50,11 @@
     "babel-jest": "24.9.0",
     "cross-env": "7.0.2",
     "dtslint": "3.3.0",
-    "helpers": "https://github.com/selfrefactor/helpers#2.4.0",
+    "fs-extra": "7.0.0",
+    "helpers-fn": "^0.3.3",
     "jest": "24.9.0",
     "jest-extended": "0.11.5",
+    "rambda": "4.6.0",
     "ramda": "0.27.0",
     "rollup": "2.0.3",
     "rollup-plugin-babel": "4.4.0",
@@ -65,9 +67,7 @@
     "string-fn": "2.10.2",
     "tslint": "5.20.1",
     "typescript": "3.8.3",
-    "typescript-formatter": "7.2.2",
-    "fs-extra": "7.0.0",
-    "rambda": "4.6.0"
+    "typescript-formatter": "7.2.2"
   },
   "jest": {
     "collectCoverageFrom": [
