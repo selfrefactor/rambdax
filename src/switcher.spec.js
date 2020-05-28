@@ -12,7 +12,6 @@ test('happy', () => {
     .is('foo', add(1))
     .default(trim)
 
-  console.log(1)
   expect(result(2)).toEqual(3)
 })
 

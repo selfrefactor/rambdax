@@ -12,7 +12,7 @@ test('with plain function', () => {
   })).toEqual(6)
   expect(true).toBeTruthy()
 })
-
+ 
 test('with function that throws an error', () => {
   const fn = ({ a, b, c }) => {
     throw new Error('foo')
