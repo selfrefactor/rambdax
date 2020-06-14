@@ -1,8 +1,8 @@
+import { any } from './any'
 import { glue } from './glue'
 import { fromPrototypeToString, isValid } from './isValid'
-import { any } from './rambda/any'
-import { map } from './rambda/map'
-import { type } from './rambda/type'
+import { map } from './map'
+import { type } from './type'
 
 export function schemaToString(schema){
   if (type(schema) !== 'Object'){
@@ -59,6 +59,5 @@ export function ok(...inputs){
       throw new Error(errorMessage)
     }
 
-    return true
   }
 }

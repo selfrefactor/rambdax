@@ -1,4 +1,4 @@
-import { type } from './rambda/type'
+import { type } from './type'
 
 export async function pipedAsync(...inputs){
   const [ input, ...fnList ] = inputs

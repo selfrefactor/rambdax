@@ -1,11 +1,11 @@
-import { equals } from './rambda/equals'
+import { _isArray } from './_internals/_isArray'
+import { equals } from './equals'
 
-// NODOCS
-export function count(target, list){
+export function count(searchFor, list){
   if (arguments.length === 1){
-    return listHolder => count(target, listHolder)
+    return listHolder => count(searchFor, listHolder)
   }
-  if (!Array.isArray(list)) return 0
+  if (!_isArray(list)) return 0
 
-  return list.filter(x => equals(x, target)).length
+  return list.filter(x => equals(x, searchFor)).length
 }

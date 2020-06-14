@@ -1,4 +1,4 @@
-import { path as pathModule } from './rambda/path'
+import { path as pathModule } from './path'
 
 export function pathEq(
   path, target, obj

@@ -1,4 +1,4 @@
-import { type } from './rambda/type'
+import { type } from './type'
 
 export function isFalsy(x){
   const typeIs = type(x)

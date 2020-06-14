@@ -1,5 +1,5 @@
-import { map } from './rambda/map'
-import { merge } from './rambda/merge'
+import { map } from './map'
+import { merge } from './merge'
 
 export function mergeAll(arr){
   let willReturn = {}

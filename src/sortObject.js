@@ -1,4 +1,4 @@
-import { sort } from './rambda/sort.js'
+import { sort } from './sort'
 
 export function sortObject(predicate, obj){
   if (arguments.length === 1){

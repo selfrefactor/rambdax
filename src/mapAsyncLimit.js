@@ -1,5 +1,5 @@
 import { mapFastAsync, mapFastAsyncFn } from './mapFastAsync'
-import { splitEvery } from './rambda/splitEvery'
+import { splitEvery } from './splitEvery'
 
 export async function mapAsyncLimit(
   iterable, limit, list

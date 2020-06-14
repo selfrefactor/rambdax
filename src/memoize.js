@@ -1,9 +1,9 @@
-import { compose } from './rambda/compose'
-import { map } from './rambda/map'
-import { replace } from './rambda/replace'
-import { sort } from './rambda/sort'
-import { take } from './rambda/take'
-import { type } from './rambda/type'
+import { compose } from './compose'
+import { map } from './map'
+import { replace } from './replace'
+import { sort } from './sort'
+import { take } from './take'
+import { type } from './type'
 
 const cache = {}
 
@@ -45,8 +45,7 @@ const generateProp = (fn, ...inputArguments) => {
 // with weakmaps
 export function memoize(fn, ...inputArguments){
   if (arguments.length === 1){
-    return (...inputArgumentsHolder) =>
-      memoize(fn, ...inputArgumentsHolder)
+    return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder)
   }
 
   const prop = generateProp(fn, ...inputArguments)

@@ -1,5 +1,7 @@
+import { _isArray } from './_internals/_isArray'
+
 async function mapAsyncFn(fn, arr){
-  if (Array.isArray(arr)){
+  if (_isArray(arr)){
     const willReturn = []
     let i = 0
     for (const a of arr){
@@ -23,8 +25,7 @@ export function mapAsync(fn, arr){
   }
 
   return new Promise((resolve, reject) => {
-    mapAsyncFn(fn, arr)
-      .then(resolve)
+    mapAsyncFn(fn, arr).then(resolve)
       .catch(reject)
   })
 }

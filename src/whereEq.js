@@ -1,15 +1,15 @@
-import { equals } from './rambda/equals'
-import { filter } from './rambda/filter'
-import { type } from './rambda/type'
+import { equals } from './equals'
+import { filter } from './filter'
 
-export function whereEq(rule, input){
+export function whereEq(condition, input){
   if (arguments.length === 1){
-    return inputHolder => whereEq(rule, inputHolder)
+    return _input => whereEq(condition, _input)
   }
-  if (type(input) !== 'Object') return false
 
-  const result = filter((ruleValue, ruleProp) => equals(ruleValue, input[ ruleProp ]),
-    rule)
+  const result = filter(
+    (conditionValue, conditionProp) => equals(conditionValue, input[ conditionProp ]),
+    condition
+  )
 
-  return Object.keys(result).length === Object.keys(rule).length
+  return Object.keys(result).length === Object.keys(condition).length
 }

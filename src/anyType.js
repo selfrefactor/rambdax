@@ -1,4 +1,4 @@
-import { type } from './rambda/type'
+import { type } from './type'
 
 export function anyType(targetType){
   return (...inputs) => {

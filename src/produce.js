@@ -1,5 +1,5 @@
-import { map } from './rambda/map'
-import { type } from './rambda/type'
+import { map } from './map'
+import { type } from './type'
 
 function helper({ condition, inputArgument, prop }){
   return new Promise((resolve, reject) => {
@@ -23,8 +23,7 @@ function helper({ condition, inputArgument, prop }){
 
 export function produce(conditions, inputArgument){
   if (arguments.length === 1){
-    return inputArgumentHolder =>
-      produce(conditions, inputArgumentHolder)
+    return inputArgumentHolder => produce(conditions, inputArgumentHolder)
   }
   let asyncConditionsFlag = false
   for (const prop in conditions){
@@ -60,8 +59,7 @@ export function produce(conditions, inputArgument){
       .then(results => {
         const willReturn = {}
 
-        map(result => willReturn[ result.type ] = result.payload,
-          results)
+        map(result => willReturn[ result.type ] = result.payload, results)
 
         resolve(willReturn)
       })

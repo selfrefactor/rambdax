@@ -1,11 +1,11 @@
-import { type } from '../rambda/type.js'
+import { type } from '../type'
+import { _isArray } from './_isArray'
 
 export function isTruthy(x){
-  if (Array.isArray(x)){
+  if (_isArray(x)){
     return x.length > 0
   }
   if (type(x) === 'Object'){
-
     return Object.keys(x).length > 0
   }
 

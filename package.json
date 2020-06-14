@@ -1,50 +1,32 @@
 {
   "name": "rambdax",
   "scripts": {
-    "tslint": "tslint --fix index.d.ts",
-    "tsformat": "tsfmt -r index.d.ts",
-    "sync": "yarn sync:work&&yarn sync:after",
-    "sync:after": "rm -rf -d src/rambda/*.spec.js",
-    "sync:work": "node files/_modules/syncProve.js",
-    "do": "node files/_modules/do",
-    "readme": "node files/_modules/createReadmeProve",
-    "docs": "docsify init ./docs",
-    "test": "jest src --bail=true",
-    "prove": "jest src --json",
-    "jest": "jest --watch -o",
-    "typings": "dtslint --localTs ./node_modules/typescript/lib --expectOnly ./_typings_tests",
-    "cover": "jest src --coverage --maxWorkers=1 --maxConcurrency=1",
-    "build:main": "rollup -c files/rollup.config.js",
-    "build:web": "rollup -c files/rollup.web.config.js",
-    "build": "yarn build:main&&yarn build:web"
+    "build:main": "NODE_ENV=build rollup -c rollup.config.js",
+    "build:web": "NODE_ENV=build rollup -c rollup.web.config.js",
+    "build": "yarn build:main&&yarn build:web",
+    "docs": "docsify init ./docs"
   },
   "typings": "./index.d.ts",
   "main": "./dist/rambdax.js",
   "version": "3.7.0",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "7.9.6",
-    "@babel/plugin-proposal-object-rest-spread": "7.9.6",
-    "@babel/preset-env": "7.9.6",
-    "@types/jest": "25.2.3",
-    "helpers-fn": "0.3.3",
-    "jest": "26.0.1",
-    "jest-extended": "0.11.5"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/*.js",
-      "!src/shuffle.*",
-      "!_internals"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/src/_tryOuts.spec.js"
-    ]
+    "@babel/core": "7.10.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.10.1",
+    "@babel/preset-env": "7.10.2",
+    "rollup": "2.10.9",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-cleanup": "3.1.1",
+    "rollup-plugin-commonjs": "10.1.0",
+    "rollup-plugin-json": "4.0.0",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-replace": "2.2.0",
+    "rollup-plugin-sourcemaps": "0.6.2"
   },
   "files": [
-    "_ts-toolbelt",
     "dist",
     "src",
+    "_ts-toolbelt",
     "index.d.ts"
   ],
   "repository": {
@@ -53,53 +35,20 @@
   },
   "license": "MIT",
   "author": "self_refactor",
-  "description": "Lightweight alternative to Ramda - extended version",
+  "description": "Extended version of Rambda - a lightweight, faster alternative to Ramda",
   "module": "./dist/rambdax.esm.js",
   "umd": "./dist/rambdax.umd.js",
   "sideEffects": false,
   "keywords": [
-    "rambda",
-    "lodash",
     "ramda",
-    "util"
+    "rambda",
+    "fp",
+    "functional",
+    "utility",
+    "lodash"
   ],
   "bugs": {
     "url": "https://github.com/selfrefactor/rambdax/issues"
   },
-  "homepage": "https://github.com/selfrefactor/rambdax#readme",
-  "commitMessage": {
-    "feature": [
-      "method",
-      "sync",
-      "deprecate"
-    ],
-    "support": [
-      "build",
-      "lint",
-      "codestyle",
-      "clean",
-      "prepublish",
-      "typescript",
-      "sync",
-      "todo",
-      "script"
-    ],
-    "docs": [
-      "method",
-      "build",
-      "docsify",
-      "changelog",
-      "fix"
-    ],
-    "test": [
-      "method",
-      "typings",
-      "fix"
-    ],
-    "typings": [
-      "rambda",
-      "fix"
-    ],
-    "workInProgress": ""
-  }
+  "homepage": "https://github.com/selfrefactor/rambdax#readme"
 }

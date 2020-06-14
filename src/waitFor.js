@@ -1,6 +1,6 @@
 import { delay } from './delay'
-import { range } from './rambda/range'
-import { type } from './rambda/type'
+import { range } from './range'
+import { type } from './type'
 
 export function waitFor(
   condition, howLong, loops = 10

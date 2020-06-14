@@ -1,7 +1,7 @@
+import { map } from './map'
 import { mergeAll } from './mergeAll'
 import { ok } from './ok'
-import { map } from './rambda/map'
-import { type } from './rambda/type'
+import { type } from './type'
 
 export function mapToObject(fn, list){
   if (arguments.length === 1){

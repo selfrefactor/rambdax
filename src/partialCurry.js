@@ -1,5 +1,5 @@
-import { merge } from './rambda/merge'
-import { type } from './rambda/type'
+import { merge } from './merge'
+import { type } from './type'
 
 export function partialCurry(fn, input){
   return rest => {

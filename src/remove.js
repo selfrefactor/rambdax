@@ -1,5 +1,5 @@
-import { replace } from './rambda/replace'
-import { type } from './rambda/type'
+import { replace } from './replace'
+import { type } from './type'
 
 export function remove(inputs, text){
   if (arguments.length === 1){
@@ -26,4 +26,3 @@ export function remove(inputs, text){
 
   return textCopy
 }
-
