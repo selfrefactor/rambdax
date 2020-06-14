@@ -1,8 +1,8 @@
 {
   "name": "rambdax",
   "scripts": {
-    "build:main": "cross-env NODE_ENV=build rollup -c rollup.config.js",
-    "build:web": "cross-env NODE_ENV=build rollup -c rollup.web.config.js",
+    "build:main": "NODE_ENV=build rollup -c rollup.config.js",
+    "build:web": "NODE_ENV=build rollup -c rollup.web.config.js",
     "build": "yarn build:main&&yarn build:web",
     "docs": "docsify init ./docs"
   },
