@@ -1,0 +1,43 @@
+{
+  "name": "rambdax",
+  "scripts": {
+    "build:main": "cross-env NODE_ENV=build rollup -c rollup.config.js",
+    "build:web": "cross-env NODE_ENV=build rollup -c rollup.web.config.js",
+    "build": "yarn build:main&&yarn build:web",
+    "docs": "docsify init ./docs"
+  },
+  "typings": "./index.d.ts",
+  "main": "./dist/rambdax.js",
+  "version": "3.7.0",
+  "dependencies": {},
+  "devDependencies": {
+  },
+  "files": [
+    "dist",
+    "src",
+    "_ts-toolbelt",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selfrefactor/rambdax.git"
+  },
+  "license": "MIT",
+  "author": "self_refactor",
+  "description": "Extended version of Rambda - a lightweight, faster alternative to Ramda",
+  "module": "./dist/rambdax.esm.js",
+  "umd": "./dist/rambdax.umd.js",
+  "sideEffects": false,
+  "keywords": [
+    "ramda",
+    "rambda",
+    "fp",
+    "functional",
+    "utility",
+    "lodash"
+  ],
+  "bugs": {
+    "url": "https://github.com/selfrefactor/rambdax/issues"
+  },
+  "homepage": "https://github.com/selfrefactor/rambdax#readme"
+}
