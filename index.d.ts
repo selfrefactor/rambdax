@@ -124,14 +124,14 @@ export function add(a: number): (b: number) => number;
 /**
  * It replaces `index` in array `list` with the result of `replaceFn(list[i])`.
  */
-export function adjust<T>(index: number, replaceFn: (a: T) => T, list: ReadonlyArray<T>): T[];
-export function adjust<T>(index: number, replaceFn: (a: T) => T): (list: ReadonlyArray<T>) => T[];
+export function adjust<T>(index: number, replaceFn: (a: T, index?: number) => T, list: ReadonlyArray<T>): T[];
+export function adjust<T>(index: number, replaceFn: (a: T, index?: number) => T): (list: ReadonlyArray<T>) => T[];
 
 /**
  * It returns `true`, if all members of array `list` returns `true`, when applied as argument to `predicate` function.
  */
-export function all<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): boolean;
-export function all<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
+export function all<T>(predicate: (x: T, index?: number) => boolean, list: ReadonlyArray<T>): boolean;
+export function all<T>(predicate: (x: T, index?: number) => boolean): (list: ReadonlyArray<T>) => boolean;
 
 /**
  * It returns `true`, if all functions of `predicates` return `true`, when `input` is their argument.
@@ -153,9 +153,9 @@ export function and<T extends { and?: ((...a: readonly any[]) => any); } | numbe
  * It returns `true`, if at least one member of `list` returns true, when passed to `predicate` function.
  */
 export function any<T>(predicate: (x: T, i: number) => boolean, list: ReadonlyArray<T>): boolean;
-export function any<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): boolean;
+export function any<T>(predicate: (x: T, index?: number) => boolean, list: ReadonlyArray<T>): boolean;
 export function any<T>(predicate: (x: T, i: number) => boolean): (list: ReadonlyArray<T>) => boolean;
-export function any<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
+export function any<T>(predicate: (x: T, index?: number) => boolean): (list: ReadonlyArray<T>) => boolean;
 
 /**
  * It accepts list of `predicates` and returns a function. This function with its `input` will return `true`, if any of `predicates` returns `true` for this `input`.
@@ -357,32 +357,32 @@ export function filter<T>(predicate: FilterFunctionObject<T>, x: Dictionary<T>):
  * 
  * If there is no such element, it returns `undefined`.
  */
-export function find<T>(predicate: (a: T) => boolean, arr: ReadonlyArray<T>): T | undefined;
-export function find<T>(predicate: (a: T) => boolean): (arr: ReadonlyArray<T>) => T | undefined;
+export function find<T>(predicate: (a: T, index?: number) => boolean, arr: ReadonlyArray<T>): T | undefined;
+export function find<T>(predicate: (a: T, index?: number) => boolean): (arr: ReadonlyArray<T>) => T | undefined;
 
 /**
  * It returns the index of the first element of `list` satisfying the `predicate` function.
  * 
  * If there is no such element, then `-1` is returned.
  */
-export function findIndex<T>(findFn: (a: T) => boolean, arr: ReadonlyArray<T>): number;
-export function findIndex<T>(findFn: (a: T) => boolean): (arr: ReadonlyArray<T>) => number;
+export function findIndex<T>(findFn: (a: T, index?: number) => boolean, arr: ReadonlyArray<T>): number;
+export function findIndex<T>(findFn: (a: T, index?: number) => boolean): (arr: ReadonlyArray<T>) => number;
 
 /**
  * It returns the last element of `list` satisfying the `predicate` function.
  * 
  * If there is no such element, then `undefined` is returned.
  */
-export function findLast<T>(fn: (a: T) => boolean, list: T[]): T | undefined;
-export function findLast<T>(fn: (a: T) => boolean): (list: T[]) => T | undefined;
+export function findLast<T>(fn: (a: T, index?: number) => boolean, list: T[]): T | undefined;
+export function findLast<T>(fn: (a: T, index?: number) => boolean): (list: T[]) => T | undefined;
 
 /**
  * It returns the index of the last element of `list` satisfying the `predicate` function.
  * 
  * If there is no such element, then `-1` is returned.
  */
-export function findLastIndex<T>(fn: (a: T) => boolean, list: T[]): number;
-export function findLastIndex<T>(fn: (a: T) => boolean): (list: T[]) => number;
+export function findLastIndex<T>(fn: (a: T, index?: number) => boolean, list: T[]): number;
+export function findLastIndex<T>(fn: (a: T, index?: number) => boolean): (list: T[]) => number;
 
 /**
  * It deeply flattens an array.
