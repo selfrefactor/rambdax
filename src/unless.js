@@ -1,10 +1,10 @@
-export function unless(condition, whenFalse){
+export function unless(predicate, whenFalse){
   if (arguments.length === 1){
-    return whenFalseHolder => unless(condition, whenFalseHolder)
+    return _whenFalse => unless(predicate, _whenFalse)
   }
 
   return input => {
-    if (condition(input)) return input
+    if (predicate(input)) return input
 
     return whenFalse(input)
   }

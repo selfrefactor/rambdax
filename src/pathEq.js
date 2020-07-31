@@ -1,13 +1,11 @@
-import { path as pathModule } from './path'
+import { curry } from './curry'
+import { equals } from './equals'
+import { path } from './path'
 
-export function pathEq(
-  path, target, obj
+function pathEqFn(
+  pathToSearch, target, input
 ){
-  if (arguments.length === 2){
-    return objHolder => pathEq(
-      path, target, objHolder
-    )
-  }
-
-  return pathModule(path, obj) === target
+  return equals(path(pathToSearch, input), target)
 }
+
+export const pathEq = curry(pathEqFn)
