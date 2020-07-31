@@ -705,7 +705,10 @@ function equals(a, b) {
   const aType = type(a);
   if (aType !== type(b)) return false;
   if (['NaN', 'Undefined', 'Null'].includes(aType)) return true;
-  if (['Boolean', 'Number', 'String'].includes(aType)) return a.toString() === b.toString();
+
+  if (['Boolean', 'Number', 'String'].includes(aType)) {
+    return a.toString() === b.toString();
+  }
 
   if (aType === 'Array') {
     const aClone = Array.from(a);
@@ -994,30 +997,22 @@ function glue(input, glueChar) {
   return input.split('\n').filter(x => x.trim().length > 0).map(x => x.trim()).join(glueChar === undefined ? ' ' : glueChar);
 }
 
-function createThenable(x) {
-  return async function (input) {
-    return x(input);
+function createThenable(fn) {
+  return async function (...input) {
+    return fn(...input);
   };
 }
 
 function ifElseAsync(condition, ifFn, elseFn) {
-  return input => new Promise((resolve, reject) => {
+  return (...inputs) => new Promise((resolve, reject) => {
     const conditionPromise = createThenable(condition);
     const ifFnPromise = createThenable(ifFn);
     const elseFnPromise = createThenable(elseFn);
-    conditionPromise(input).then(conditionResult => {
+    conditionPromise(...inputs).then(conditionResult => {
       const promised = conditionResult === true ? ifFnPromise : elseFnPromise;
-      promised(input).then(resolve).catch(reject);
+      promised(...inputs).then(resolve).catch(reject);
     }).catch(reject);
   });
-}
-
-function isFalsy$1(x) {
-  const typeIs = type(x);
-  if (['Array', 'String'].includes(typeIs)) return x.length === 0;
-  if (typeIs === 'Object') return Object.keys(x).length === 0;
-  if (['Null', 'Undefined'].includes(typeIs)) return true;
-  return false;
 }
 
 function isFunction$1(fn) {
@@ -1361,10 +1356,6 @@ function splitEvery(sliceLength, listOrString) {
 }
 
 async function mapAsyncLimit(iterable, limit, list) {
-  if (arguments.length === 2) {
-    return _list => mapAsyncLimit(iterable, limit, _list);
-  }
-
   if (list.length < limit) return mapFastAsync(iterable, list);
   const slices = splitEvery(limit, list);
   let toReturn = [];
@@ -1395,22 +1386,22 @@ function map(fn, list) {
     }
 
     return willReturn;
-  } else {
-    let index = 0;
-
-    const keys = _keys(list);
-
-    const len = keys.length;
-    const willReturn = {};
-
-    while (index < len) {
-      const key = keys[index];
-      willReturn[key] = fn(list[key], key, list);
-      index++;
-    }
-
-    return willReturn;
   }
+
+  let index = 0;
+
+  const keys = _keys(list);
+
+  const len = keys.length;
+  const willReturn = {};
+
+  while (index < len) {
+    const key = keys[index];
+    willReturn[key] = fn(list[key], key, list);
+    index++;
+  }
+
+  return willReturn;
 }
 
 function mergeAll(arr) {
@@ -1533,11 +1524,11 @@ function _objectSpread2(target) {
   return target;
 }
 
-async function mapToObjectAsync(iterable, list) {
+async function mapToObjectAsync(fn, list) {
   let toReturn = {};
 
   const innerIterable = async x => {
-    const intermediateResult = await iterable(x);
+    const intermediateResult = await fn(x);
     if (intermediateResult === false) return;
     toReturn = _objectSpread2(_objectSpread2({}, toReturn), intermediateResult);
   };
@@ -1546,10 +1537,10 @@ async function mapToObjectAsync(iterable, list) {
   return toReturn;
 }
 
-function maybe(ifRule, whenIfRaw, whenElseRaw) {
-  const whenIf = ifRule && type(whenIfRaw) === 'Function' ? whenIfRaw() : whenIfRaw;
-  const whenElse = !ifRule && type(whenElseRaw) === 'Function' ? whenElseRaw() : whenElseRaw;
-  return ifRule ? whenIf : whenElse;
+function maybe(ifRule, whenIf, whenElse) {
+  const whenIfInput = ifRule && type(whenIf) === 'Function' ? whenIf() : whenIf;
+  const whenElseInput = !ifRule && type(whenElse) === 'Function' ? whenElse() : whenElse;
+  return ifRule ? whenIfInput : whenElseInput;
 }
 
 function compose(...fns) {
@@ -1649,126 +1640,16 @@ function memoize$1(fn, ...inputArguments) {
   return result;
 }
 
-function mergeDeepRight(target, source) {
-  if (arguments.length === 1) {
-    return sourceHolder => mergeDeepRight(target, sourceHolder);
-  }
-
-  const willReturn = JSON.parse(JSON.stringify(target));
-  Object.keys(source).forEach(key => {
-    if (type(source[key]) === 'Object') {
-      if (type(target[key]) === 'Object') {
-        willReturn[key] = mergeDeepRight(target[key], source[key]);
-      } else {
-        willReturn[key] = source[key];
-      }
-    } else {
-      willReturn[key] = source[key];
-    }
-  });
-  return willReturn;
-}
-
-function mergeRight(x, y) {
-  return merge(y, x);
-}
-
 function nextIndex(index, list) {
   return index >= list.length - 1 ? 0 : index + 1;
 }
 
-function _curryN(n, cache, fn) {
-  return function () {
-    let ci = 0;
-    let ai = 0;
-    const cl = cache.length;
-    const al = arguments.length;
-    const args = new Array(cl + al);
-
-    while (ci < cl) {
-      args[ci] = cache[ci];
-      ci++;
-    }
-
-    while (ai < al) {
-      args[cl + ai] = arguments[ai];
-      ai++;
-    }
-
-    const remaining = n - args.length;
-    return args.length >= n ? fn.apply(this, args) : _arity(remaining, _curryN(n, args, fn));
-  };
+function of(value) {
+  return [value];
 }
 
-function _arity(n, fn) {
-  switch (n) {
-    case 0:
-      return function () {
-        return fn.apply(this, arguments);
-      };
-
-    case 1:
-      return function (_1) {
-        return fn.apply(this, arguments);
-      };
-
-    case 2:
-      return function (_1, _2) {
-        return fn.apply(this, arguments);
-      };
-
-    case 3:
-      return function (_1, _2, _3) {
-        return fn.apply(this, arguments);
-      };
-
-    case 4:
-      return function (_1, _2, _3, _4) {
-        return fn.apply(this, arguments);
-      };
-
-    case 5:
-      return function (_1, _2, _3, _4, _5) {
-        return fn.apply(this, arguments);
-      };
-
-    case 6:
-      return function (_1, _2, _3, _4, _5, _6) {
-        return fn.apply(this, arguments);
-      };
-
-    case 7:
-      return function (_1, _2, _3, _4, _5, _6, _7) {
-        return fn.apply(this, arguments);
-      };
-
-    case 8:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8) {
-        return fn.apply(this, arguments);
-      };
-
-    case 9:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9) {
-        return fn.apply(this, arguments);
-      };
-
-    case 10:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) {
-        return fn.apply(this, arguments);
-      };
-
-    default:
-      throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
-  }
-}
-
-function curryN(n, fn) {
-  if (arguments.length === 1) return _fn => curryN(n, _fn);
-  return _arity(n, _curryN(n, [], fn));
-}
-
-function curry(fn) {
-  return curryN(fn.length, fn);
+function curry(fn, args = []) {
+  return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
 }
 
 function onceFn(fn, context) {
@@ -1809,37 +1690,6 @@ function pass(...inputs) {
     const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
     return !check(x, schema);
   }, inputs) === false;
-}
-
-function path(list, obj) {
-  if (arguments.length === 1) return _obj => path(list, _obj);
-
-  if (obj === null || obj === undefined) {
-    return undefined;
-  }
-
-  let willReturn = obj;
-  let counter = 0;
-  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-  while (counter < pathArrValue.length) {
-    if (willReturn === null || willReturn === undefined) {
-      return undefined;
-    }
-
-    willReturn = willReturn[pathArrValue[counter]];
-    counter++;
-  }
-
-  return willReturn;
-}
-
-function pathEq(path$1, target, obj) {
-  if (arguments.length === 2) {
-    return objHolder => pathEq(path$1, target, objHolder);
-  }
-
-  return path(path$1, obj) === target;
 }
 
 function pipe(...fns) {
@@ -1939,82 +1789,8 @@ function produce(conditions, inputArgument) {
   });
 }
 
-function promiseAllObject(promises) {
-  return new Promise((res, rej) => {
-    let counter = 0;
-    const props = {};
-    const promisedArr = [];
-
-    for (const prop in promises) {
-      props[counter] = prop;
-      promisedArr.push(promises[prop]);
-      counter++;
-    }
-
-    Promise.all(promisedArr).then(result => {
-      const willReturn = {};
-      result.map((val, key) => {
-        const prop = props[key];
-        willReturn[prop] = val;
-      });
-      res(willReturn);
-    }).catch(rej);
-  });
-}
-
-function pushUniq(x, list) {
-  if (includes(x, list)) return;
-  list.push(x);
-}
-
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function head(listOrString) {
-  if (typeof listOrString === 'string') return listOrString[0] || '';
-  return listOrString[0];
-}
-
-function range(start, end) {
-  if (arguments.length === 1) return _end => range(start, _end);
-
-  if (Number.isNaN(Number(start)) || Number.isNaN(Number(end))) {
-    throw new TypeError('Both arguments to range must be numbers');
-  }
-
-  if (end < start) return [];
-  const len = end - start;
-  const willReturn = Array(len);
-
-  for (let i = 0; i < len; i++) {
-    willReturn[i] = start + i;
-  }
-
-  return willReturn;
-}
-
-function shuffle(arrayRaw) {
-  const array = arrayRaw.concat();
-  let counter = array.length;
-
-  while (counter > 0) {
-    const index = Math.floor(Math.random() * counter);
-    counter--;
-    const temp = array[counter];
-    array[counter] = array[index];
-    array[index] = temp;
-  }
-
-  return array;
-}
-
-const charCodesString = [...range(65, 90), ...range(97, 122)];
-const charCodes = [...charCodesString, ...range(49, 57)];
-function randomString(length = 8, stringTag = false) {
-  const loops = range(0, length);
-  const charSet = stringTag ? charCodesString : charCodes;
-  return loops.map(x => String.fromCharCode(head(shuffle(charSet)))).join('');
 }
 
 function remove(inputs, text) {
@@ -2057,17 +1833,32 @@ function omit(propsToOmit, obj) {
 }
 
 function renameProps(conditions, inputObject) {
-  if (inputObject === undefined) {
+  if (arguments.length === 1) {
     return inputObjectHolder => renameProps(conditions, inputObjectHolder);
   }
 
   const renamed = {};
-  Object.keys(conditions).forEach(renameConditionProp => {
-    if (Object.keys(inputObject).includes(renameConditionProp)) {
-      renamed[conditions[renameConditionProp]] = inputObject[renameConditionProp];
+  Object.keys(conditions).forEach(condition => {
+    if (Object.keys(inputObject).includes(condition)) {
+      renamed[conditions[condition]] = inputObject[condition];
     }
   });
   return merge(renamed, omit(Object.keys(conditions), inputObject));
+}
+
+function shuffle(arrayRaw) {
+  const array = arrayRaw.concat();
+  let counter = array.length;
+
+  while (counter > 0) {
+    const index = Math.floor(Math.random() * counter);
+    counter--;
+    const temp = array[counter];
+    array[counter] = array[index];
+    array[index] = temp;
+  }
+
+  return array;
 }
 
 function sortObject(predicate, obj) {
@@ -2215,53 +2006,28 @@ function toDecimal(number, charsAfterDecimalPoint = 2) {
   return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
 }
 
-function tryCatch(fn, fallback) {
-  if (!isFunction$1(fn)) {
-    throw new Error(`R.tryCatch | fn '${fn}'`);
-  }
-
-  const passFallback = isFunction$1(fallback);
-
-  if (!isPromise(fn)) {
-    return (...inputs) => {
-      try {
-        return fn(...inputs);
-      } catch (e) {
-        return passFallback ? fallback(...inputs) : fallback;
-      }
-    };
-  }
-
-  return (...inputs) => new Promise(resolve => {
-    fn(...inputs).then(resolve).catch(() => {
-      if (!passFallback) {
-        return resolve(fallback);
-      }
-
-      if (!isPromise(fallback)) {
-        return resolve(fallback(...inputs));
-      }
-
-      fallback(...inputs).then(resolve);
-    });
-  });
-}
-
-function unless(condition, whenFalse) {
-  if (arguments.length === 1) {
-    return whenFalseHolder => unless(condition, whenFalseHolder);
-  }
-
-  return input => {
-    if (condition(input)) return input;
-    return whenFalse(input);
-  };
-}
-
 function wait(fn) {
   return new Promise(resolve => {
     fn.then(result => resolve([result, undefined])).catch(e => resolve([undefined, e]));
   });
+}
+
+function range(start, end) {
+  if (arguments.length === 1) return _end => range(start, _end);
+
+  if (Number.isNaN(Number(start)) || Number.isNaN(Number(end))) {
+    throw new TypeError('Both arguments to range must be numbers');
+  }
+
+  if (end < start) return [];
+  const len = end - start;
+  const willReturn = Array(len);
+
+  for (let i = 0; i < len; i++) {
+    willReturn[i] = start + i;
+  }
+
+  return willReturn;
 }
 
 function waitFor(condition, howLong, loops = 10) {
@@ -2287,33 +2053,6 @@ function waitFor(condition, howLong, loops = 10) {
 
     return false;
   };
-}
-
-function where(conditions, input) {
-  if (input === undefined) {
-    return _input => where(conditions, _input);
-  }
-
-  let flag = true;
-
-  for (const prop in conditions) {
-    const result = conditions[prop](input[prop]);
-
-    if (flag && result === false) {
-      flag = false;
-    }
-  }
-
-  return flag;
-}
-
-function whereEq(condition, input) {
-  if (arguments.length === 1) {
-    return _input => whereEq(condition, _input);
-  }
-
-  const result = filter((conditionValue, conditionProp) => equals(conditionValue, input[conditionProp]), condition);
-  return Object.keys(result).length === Object.keys(condition).length;
 }
 
 function add(a, b) {
@@ -2519,6 +2258,10 @@ function chain(fn, list) {
 }
 
 function clampFn(min, max, input) {
+  if (min > max) {
+    throw new Error('min must not be greater than max in clamp(min, max, value)');
+  }
+
   if (input >= min && input <= max) return input;
   if (input > max) return max;
   if (input < min) return min;
@@ -2561,36 +2304,112 @@ function cond(conditions) {
   };
 }
 
+function _curryN(n, cache, fn) {
+  return function () {
+    let ci = 0;
+    let ai = 0;
+    const cl = cache.length;
+    const al = arguments.length;
+    const args = new Array(cl + al);
+
+    while (ci < cl) {
+      args[ci] = cache[ci];
+      ci++;
+    }
+
+    while (ai < al) {
+      args[cl + ai] = arguments[ai];
+      ai++;
+    }
+
+    const remaining = n - args.length;
+    return args.length >= n ? fn.apply(this, args) : _arity(remaining, _curryN(n, args, fn));
+  };
+}
+
+function _arity(n, fn) {
+  switch (n) {
+    case 0:
+      return function () {
+        return fn.apply(this, arguments);
+      };
+
+    case 1:
+      return function (_1) {
+        return fn.apply(this, arguments);
+      };
+
+    case 2:
+      return function (_1, _2) {
+        return fn.apply(this, arguments);
+      };
+
+    case 3:
+      return function (_1, _2, _3) {
+        return fn.apply(this, arguments);
+      };
+
+    case 4:
+      return function (_1, _2, _3, _4) {
+        return fn.apply(this, arguments);
+      };
+
+    case 5:
+      return function (_1, _2, _3, _4, _5) {
+        return fn.apply(this, arguments);
+      };
+
+    case 6:
+      return function (_1, _2, _3, _4, _5, _6) {
+        return fn.apply(this, arguments);
+      };
+
+    case 7:
+      return function (_1, _2, _3, _4, _5, _6, _7) {
+        return fn.apply(this, arguments);
+      };
+
+    case 8:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8) {
+        return fn.apply(this, arguments);
+      };
+
+    case 9:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9) {
+        return fn.apply(this, arguments);
+      };
+
+    case 10:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) {
+        return fn.apply(this, arguments);
+      };
+
+    default:
+      throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
+  }
+}
+
+function curryN(n, fn) {
+  if (arguments.length === 1) return _fn => curryN(n, _fn);
+  return _arity(n, _curryN(n, [], fn));
+}
+
 function max(x, y) {
   if (arguments.length === 1) return _y => max(x, _y);
   return y > x ? y : x;
 }
 
 function reduceFn(reducer, acc, list) {
-  if (list === undefined) {
-    return acc;
+  if (!_isArray(list)) {
+    throw new TypeError('reduce: list must be array or iterable');
   }
 
-  if (_isArray(list)) {
-    let index = 0;
-    const len = list.length;
+  let index = 0;
+  const len = list.length;
 
-    while (index < len) {
-      acc = reducer(acc, list[index], index, list);
-      index++;
-    }
-  } else {
-    let index = 0;
-
-    const keys = _keys(list);
-
-    const len = keys.length;
-
-    while (index < len) {
-      const key = keys[index];
-      acc = reducer(acc, key, list[key], list);
-      index++;
-    }
+  while (index < len) {
+    acc = reducer(acc, list[index], index, list);
+    index++;
   }
 
   return acc;
@@ -2714,10 +2533,10 @@ function find(predicate, list) {
   const len = list.length;
 
   while (index < len) {
-    const value = list[index];
+    const x = list[index];
 
-    if (predicate(value, index)) {
-      return value;
+    if (predicate(x, index)) {
+      return x;
     }
 
     index++;
@@ -2778,26 +2597,24 @@ function flatten(list, input) {
   return willReturn;
 }
 
-function flipExport(fn) {
-  const flipedFn = (...input) => {
-    const missing = fn.length - input.length;
-    if (missing <= 0) return fn(input[1], input[0], ...input.slice(2));
-    if (input.length === 0) return flipedFn;
-    if (input.length === 1) return curryN(missing, (...rest) => {
-      const args = [rest[0], input[0], ...rest.slice(1)];
-      return fn(...args);
-    });
-    return curryN(missing, (...rest) => {
-      const args = [input[1], input[0], ...input.slice(2), ...rest];
-      return fn(...args);
-    });
-  };
+function flipFn(fn) {
+  return (...input) => {
+    if (input.length === 1) {
+      return holder => fn(holder, input[0]);
+    } else if (input.length === 2) {
+      return fn(input[1], input[0]);
+    } else if (input.length === 3) {
+      return fn(input[1], input[0], input[2]);
+    } else if (input.length === 4) {
+      return fn(input[1], input[0], input[2], input[3]);
+    }
 
-  return flipedFn;
+    throw new Error('R.flip doesn\'t work with arity > 4');
+  };
 }
 
 function flip(fn) {
-  return flipExport(fn);
+  return flipFn(fn);
 }
 
 function fromPairs(listOfPairs) {
@@ -2863,12 +2680,40 @@ function has(prop, obj) {
   return obj[prop] !== undefined;
 }
 
+function path(list, obj) {
+  if (arguments.length === 1) return _obj => path(list, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  let willReturn = obj;
+  let counter = 0;
+  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
+
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
+      return undefined;
+    }
+
+    willReturn = willReturn[pathArrValue[counter]];
+    counter++;
+  }
+
+  return willReturn;
+}
+
 function hasPath(maybePath, obj) {
   if (arguments.length === 1) {
     return objHolder => hasPath(maybePath, objHolder);
   }
 
   return path(maybePath, obj) !== undefined;
+}
+
+function head(listOrString) {
+  if (typeof listOrString === 'string') return listOrString[0] || '';
+  return listOrString[0];
 }
 
 function _objectIs(a, b) {
@@ -3032,7 +2877,7 @@ function lastIndexOf(target, list) {
 }
 
 function length(x) {
-  if (!x || x.length === undefined) {
+  if (!x && x !== '' || x.length === undefined) {
     return NaN;
   }
 
@@ -3142,6 +2987,31 @@ function median(list) {
   }).slice(idx, idx + width));
 }
 
+function mergeDeepRight(target, source) {
+  if (arguments.length === 1) {
+    return sourceHolder => mergeDeepRight(target, sourceHolder);
+  }
+
+  const willReturn = JSON.parse(JSON.stringify(target));
+  Object.keys(source).forEach(key => {
+    if (type(source[key]) === 'Object') {
+      if (type(target[key]) === 'Object') {
+        willReturn[key] = mergeDeepRight(target[key], source[key]);
+      } else {
+        willReturn[key] = source[key];
+      }
+    } else {
+      willReturn[key] = source[key];
+    }
+  });
+  return willReturn;
+}
+
+function mergeLeft(x, y) {
+  if (arguments.length === 1) return _y => mergeLeft(x, _y);
+  return merge(y, x);
+}
+
 function min(x, y) {
   if (arguments.length === 1) return _y => min(x, _y);
   return y < x ? y : x;
@@ -3168,7 +3038,12 @@ function negate(x) {
 
 function none(predicate, list) {
   if (arguments.length === 1) return _list => none(predicate, _list);
-  return list.filter(predicate).length === 0;
+
+  for (let i = 0; i < list.length; i++) {
+    if (!predicate(list[i], i)) return true;
+  }
+
+  return false;
 }
 
 function not(input) {
@@ -3185,6 +3060,12 @@ function partial(fn, ...args) {
     return partial(fn, ...[...args, ...rest]);
   };
 }
+
+function pathEqFn(pathToSearch, target, input) {
+  return equals(path(pathToSearch, input), target);
+}
+
+const pathEq = curry(pathEqFn);
 
 function paths(pathsToSearch, obj) {
   if (arguments.length === 1) {
@@ -3367,8 +3248,8 @@ function toPairs(obj) {
   return Object.entries(obj);
 }
 
-function toString$1(val) {
-  return val.toString();
+function toString$1(x) {
+  return x.toString();
 }
 
 function transpose(array) {
@@ -3380,6 +3261,38 @@ function transpose(array) {
 
 function trim(str) {
   return str.trim();
+}
+
+function tryCatch(fn, fallback) {
+  if (!isFunction$1(fn)) {
+    throw new Error(`R.tryCatch | fn '${fn}'`);
+  }
+
+  const passFallback = isFunction$1(fallback);
+
+  if (!isPromise(fn)) {
+    return (...inputs) => {
+      try {
+        return fn(...inputs);
+      } catch (e) {
+        return passFallback ? fallback(e, ...inputs) : fallback;
+      }
+    };
+  }
+
+  return (...inputs) => new Promise(resolve => {
+    fn(...inputs).then(resolve).catch(() => {
+      if (!passFallback) {
+        return resolve(fallback);
+      }
+
+      if (!isPromise(fallback)) {
+        return resolve(fallback(...inputs));
+      }
+
+      fallback(...inputs).then(resolve);
+    });
+  });
 }
 
 function uniqWith(fn, list) {
@@ -3400,6 +3313,17 @@ function uniqWith(fn, list) {
   return willReturn;
 }
 
+function unless(predicate, whenFalse) {
+  if (arguments.length === 1) {
+    return _whenFalse => unless(predicate, _whenFalse);
+  }
+
+  return input => {
+    if (predicate(input)) return input;
+    return whenFalse(input);
+  };
+}
+
 function values(obj) {
   if (type(obj) !== 'Object') return [];
   return Object.values(obj);
@@ -3414,6 +3338,33 @@ function when(rule, resultOrFunction) {
     if (!rule(input)) return input;
     return isFunction$1(resultOrFunction) ? resultOrFunction(input) : resultOrFunction;
   };
+}
+
+function where(conditions, input) {
+  if (input === undefined) {
+    return _input => where(conditions, _input);
+  }
+
+  let flag = true;
+
+  for (const prop in conditions) {
+    const result = conditions[prop](input[prop]);
+
+    if (flag && result === false) {
+      flag = false;
+    }
+  }
+
+  return flag;
+}
+
+function whereEq(condition, input) {
+  if (arguments.length === 1) {
+    return _input => whereEq(condition, _input);
+  }
+
+  const result = filter((conditionValue, conditionProp) => equals(conditionValue, input[conditionProp]), condition);
+  return Object.keys(result).length === Object.keys(condition).length;
 }
 
 function without(matchAgainst, source) {
@@ -3449,4 +3400,4 @@ function zipObj(keys, values) {
   }, {});
 }
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applySpec, assoc, assocPath, both, chain, change, check, clamp, clone, compact, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, intersection, intersperse, is$1 as is, isEmpty, isFalsy$1 as isFalsy, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensIndex, lensPath, lensProp, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapToObject, mapToObjectAsync, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeepRight, mergeRight, min, minBy, minByFn, modulo, multiply, negate, nextIndex, none, not, nth, ok, omit, once, over, partial, partialCurry, partition, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, promiseAllObject, prop, propEq, propIs, propOr, prototypeToString, pushUniq, random, randomString, range, reduce, reject, remove, renameProps, repeat, replace, reset, reverse, schemaToString, set$1 as set, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, transpose, trim, tryCatch, type, uniq, uniqWith, unless, update, values, view, wait, waitFor, when, where, whereEq, without, xor, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applySpec, assoc, assocPath, both, chain, change, check, clamp, clone, compact, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, intersection, intersperse, is$1 as is, isEmpty, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensIndex, lensPath, lensProp, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapToObject, mapToObjectAsync, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, multiply, negate, nextIndex, none, not, nth, of, ok, omit, once, over, partial, partialCurry, partition, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, prop, propEq, propIs, propOr, prototypeToString, random, range, reduce, reject, remove, renameProps, repeat, replace, reset, reverse, schemaToString, set$1 as set, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, template, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, transpose, trim, tryCatch, type, uniq, uniqWith, unless, update, values, view, wait, waitFor, when, where, whereEq, without, xor, zip, zipObj };
