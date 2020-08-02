@@ -1648,10 +1648,6 @@ function nextIndex(index, list) {
   return index >= list.length - 1 ? 0 : index + 1;
 }
 
-function of(value) {
-  return [value];
-}
-
 function curry(fn, args = []) {
   return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
 }
@@ -3052,6 +3048,10 @@ function none(predicate, list) {
 
 function not(input) {
   return !input;
+}
+
+function of(value) {
+  return [value];
 }
 
 function partial(fn, ...args) {

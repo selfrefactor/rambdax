@@ -2,13 +2,11 @@
 
 Extended version of Rambda(utility library) - [Documentation](https://selfrefactor.github.io/rambdax/#/)
 
-`Rambda` is faster and smaller alternative to the popular functional programming library **Ramda**. - [Documentation](https://selfrefactor.github.io/rambda/#/)
+`Rambda` is smaller and faster  alternative to the popular functional programming library **Ramda**. - [Documentation](https://selfrefactor.github.io/rambda/#/)
 
 [![CircleCI](https://circleci.com/gh/selfrefactor/rambda/tree/master.svg?style=svg)](https://circleci.com/gh/selfrefactor/rambda/tree/master)
 [![codecov](https://codecov.io/gh/selfrefactor/rambda/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambda)
 [![dependencies Status](https://david-dm.org/selfrefactor/rambdax/status.svg)](https://david-dm.org/selfrefactor/rambdax)
-![Commit activity](https://img.shields.io/github/commit-activity/y/selfrefactor/rambdax)
-![All contributors](https://img.shields.io/github/contributors/selfrefactor/rambdax)
 ![Library size](https://img.shields.io/bundlephobia/minzip/rambdax)
 
 ## Differences between Rambda and Ramdax
@@ -20,35 +18,46 @@ The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** co
 ## Example use
 
 ```javascript
-import { compose, map, filter } from 'rambdax'
+import { composeAsync, filter, delay, mapAsync } from 'rambdax'
 
-const result = compose(
-  map(x => x * 2),
-  filter(x => x > 2)
-)([1, 2, 3, 4])
-// => [6, 8]
+const result = await composeAsync(
+  mapAsync(async x => {
+    await delay(100)
+    return x + 1
+  }),
+  filter(x => x > 1)
+)([1, 2, 3])
+// => [3, 4]
 ```
 
-You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D%20R.compose(%0A%20%20R.map(x%20%3D%3E%20x%20*%202)%2C%0A%20%20R.filter(x%20%3D%3E%20x%20%3E%202)%0A)(%5B1%2C%202%2C%203%2C%204%5D)%0A%0A%2F%2F%20%3D%3E%20%5B6%2C%208%5D">Rambda's REPL</a>
+You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D%20await%20R.composeAsync(%0A%20%20R.mapAsync(async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%2B%201%0A%20%20%7D)%2C%0A%20%20R.filter(x%20%3D%3E%20x%20%3E%201)%0A)(%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Rambda's REPL</a>
 
 * [Install](#install)
 * [Differences between Rambda and Ramda](#differences-between-rambda-and-ramda)
 * [API](#api)
 * [Changelog](#changelog)
 
-## Rambda's advantages
+## Rambdax's advantages
+
+- Typescript included
+
+Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
+
+Still, you need to be aware that functional programming features in `Typescript` are in development, which means that using **R.compose/R.pipe** can be problematic.
+
+- Smaller size
+
+The size of a library affects not only the build bundle size but also the dev bundle size and build time. This is important advantage, expecially for big projects.
+
+- Tree-shaking
 
 Currently **Rambda** is more tree-shakable than **Ramda** - proven in the following [repo](https://github.com/selfrefactor/rambda-tree-shaking).
 
-The repo holds two Angular9 applications: one with small example code of *Ramda* and the other - same code but with *Rambda* as import library.
+The repo holds two `Angular9` applications: one with small example code of *Ramda* and the other - same code but with *Rambda* as import library.
 
-Currently the **Ramda** bundle size is **2.03 MB** less than its **Ramda** counterpart.
+Currently the **Ramda** bundle size is **{{rambdaTreeShakingInfo}} MB** less than its **Ramda** counterpart.
 
 > actually tree-shaking is the initial reason for creation of `Rambda`
-
-- Speed
-
-**Rambda** is generally more performant than `Ramda` as the [benchmarks](#benchmarks) can prove that.
 
 - dot notation for `R.path` and `R.paths`
 
@@ -66,13 +75,12 @@ Similar to dot notation, but the separator is comma(`,`) instead of dot(`.`).
 
 ```
 R.pick('a,b', {a: 1 , b: 2, c: 3} })
-
 // No space allowed between properties
 ```
 
-- Typescript included
+- Speed
 
-Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
+**Rambda** is generally more performant than `Ramda` as the [benchmarks](#benchmarks) can prove that.
 
 - More generic methods
 
@@ -80,7 +88,7 @@ Typescript definitions are included in the library, in comparison to **Ramda**, 
 
 <details>
 <summary>
-  Click to see the full list of 107 Ramda methods not implemented in Rambda 
+  Click to see the full list of 106 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -144,7 +152,6 @@ Typescript definitions are included in the library, in comparison to **Ramda**, 
 - nthArg
 - o
 - objOf
-- of
 - once
 - or
 - otherwise
@@ -2592,16 +2599,16 @@ const add = async x => {
   await R.delay(500)
   return x + 1
 }
-const passOn = async x => fn(x)
+const identity = async x => x
 
-const result = R.composeAsync(
+const result = await R.composeAsync(
   add,
-  passOn
+  identity
 )(0)
-// `result` resolves to `2`
+// `result` resolves to `1`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20passOn%20%3D%20async%20x%20%3D%3E%20fn(x)%0A%0Aconst%20result%20%3D%20R.composeAsync(%0A%20%20add%2C%0A%20%20passOn%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%602%60">Try the above <strong>R.composeAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20identity%20%3D%20async%20x%20%3D%3E%20x%0A%0Aconst%20result%20%3D%20await%20R.composeAsync(%0A%20%20add%2C%0A%20%20identity%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try the above <strong>R.composeAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -10578,6 +10585,47 @@ test('with negative index', () => {
 
 </details>
 
+### of
+
+```typescript
+of<T>(x: T): T[]
+```
+
+It returns a partial copy of an `obj` without `propsToOmit` properties.
+
+```javascript
+R.of(null); //=> [null]
+R.of([42]); //=> [[42]]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.of(null)%3B%20%2F%2F%3D%3E%20%5Bnull%5D%0AR.of(%5B42%5D)%3B%20%2F%2F%3D%3E%20%5B%5B42%5D%5D">Try the above <strong>R.of</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+of<T>(x: T): T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { of } from './of'
+
+test('happy', () => {
+  expect(of(3)).toEqual([ 3 ])
+
+  expect(of(null)).toEqual([ null ])
+})
+```
+
+</details>
+
 ### ok
 
 ```typescript
@@ -10879,6 +10927,26 @@ over(lens: Lens): <T>(fn: Arity1Fn, value: readonly T[]) => T[];
 partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: [V0]): (x1: V1) => T
 ```
 
+It is very similar to `R.curry`, but you can pass initial arguments when you create the curried function.
+
+`R.partial` will keep returning a function until all the arguments that the function `fn` expects are passed.
+The name comes from the fact that you partially inject the inputs.
+
+```javascript
+const fn = (title, firstName, lastName) => {
+  return title + ' ' + firstName + ' ' + lastName + '!'
+}
+
+const canPassAnyNumberOfArguments = R.partial(fn, 'Hello')
+const ramdaStyle = R.partial(fn, ['Hello'])
+
+const finalFn = canPassAnyNumberOfArguments('Foo')
+
+finalFn('Bar') // =>  'Hello, Foo Bar!'
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20fn%20%3D%20(title%2C%20firstName%2C%20lastName)%20%3D%3E%20%7B%0A%20%20return%20title%20%2B%20'%20'%20%2B%20firstName%20%2B%20'%20'%20%2B%20lastName%20%2B%20'!'%0A%7D%0A%0Aconst%20canPassAnyNumberOfArguments%20%3D%20R.partial(fn%2C%20'Hello')%0Aconst%20ramdaStyle%20%3D%20R.partial(fn%2C%20%5B'Hello'%5D)%0A%0Aconst%20finalFn%20%3D%20canPassAnyNumberOfArguments('Foo')%0A%0AfinalFn('Bar')%20%2F%2F%20%3D%3E%20%20'Hello%2C%20Foo%20Bar!'">Try the above <strong>R.partial</strong> example in Rambda REPL</a>
+
 <details>
 
 <summary>All Typescript definitions</summary>
@@ -10891,6 +10959,77 @@ partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0,
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1]): (x2: V2, x3: V3) => T;
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0]): (x1: V1, x2: V2, x3: V3) => T;
 partial<T>(fn: (...a: readonly any[]) => T, args: readonly any[]): (...a: readonly any[]) => T;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { partial } from './partial'
+import { type } from './type'
+
+const greet = (
+  salutation, title, firstName, lastName
+) =>
+  salutation + ', ' + title + ' ' + firstName + ' ' + lastName + '!'
+
+test('happy', () => {
+  const canPassAnyNumberOfArguments = partial(
+    greet, 'Hello', 'Ms.'
+  )
+  const fn = canPassAnyNumberOfArguments('foo')
+  const sayHello = partial(greet, [ 'Hello' ])
+  const sayHelloRamda = partial(sayHello, [ 'Ms.' ])
+
+  expect(type(fn)).toBe('Function')
+
+  expect(fn('bar')).toBe('Hello, Ms. foo bar!')
+  expect(sayHelloRamda('foo', 'bar')).toBe('Hello, Ms. foo bar!')
+})
+
+test('extra arguments are ignored', () => {
+  const canPassAnyNumberOfArguments = partial(
+    greet, 'Hello', 'Ms.'
+  )
+  const fn = canPassAnyNumberOfArguments('foo')
+
+  expect(type(fn)).toBe('Function')
+
+  expect(fn(
+    'bar', 1, 2
+  )).toBe('Hello, Ms. foo bar!')
+})
+
+test('when array is input', () => {
+  const fooFn = (
+    a, b, c, d
+  ) => ({
+    a,
+    b,
+    c,
+    d,
+  })
+  const barFn = partial(
+    fooFn, [ 1, 2 ], []
+  )
+
+  expect(barFn(1, 2)).toEqual({
+    a : [ 1, 2 ],
+    b : [],
+    c : 1,
+    d : 2,
+  })
+})
+
+test('ramda spec', () => {
+  const sayHello = partial(greet, 'Hello')
+  const sayHelloToMs = partial(sayHello, 'Ms.')
+
+  expect(sayHelloToMs('Jane', 'Jones')).toBe('Hello, Ms. Jane Jones!')
+})
 ```
 
 </details>
@@ -16436,9 +16575,31 @@ test('ignore extra keys', () => {
 
 ## CHANGELOG
 
-# CHANGELOG
+4.0.1
+
+Forgot to export `R.of` because of wrong marker in `files/index.d.ts`
 
 4.0.0
+
+Deprecate the following methods:
+
+- `R.promiseAllObject` - because `R.produce` serves the same purpose
+- `R.composed` - because `R.piped` makes more sense, when we want to pass the input at the start of the function
+- `R.defaultToStrict` - confusing logic
+- `R.findInObject` - overestimated importance
+- `R.headObject` - overestimated importance
+- `R.includesType` - overestimated importance
+- `R.inject` - confusing logic
+- `R.isAttach` - confusing logic
+- `R.mergeRight` - overestimated importance
+- `R.opposite` - overestimated importance
+- `R.otherwise` - overestimated importance
+- `R.pushUniq` - overestimated importance
+- `R.resolve` - overestimated importance
+- `R.s` - overestimated importance
+- `R.toggle` - overestimated importance
+- `R.uuid` - not suitable
+- `R.whenAsync` - overestimated importance
 
 Move the following methods to `Rambda` and change their logic to match `Ramda` implementation:
 
@@ -16448,26 +16609,6 @@ Move the following methods to `Rambda` and change their logic to match `Ramda` i
 - `R.tryCatch`
 - `R.where`
 - `R.whereEq`
-
-Deprecate the following methods:
-
-- `R.promiseAllObject` - because `R.produce` serves the same purpose
-- `R.composed` - because `R.piped` makes more sense, when we want to pass the input at the start of the function
-- `R.defaultToStrict`
-- `R.findInObject`
-- `R.headObject`
-- `R.includesType`
-- `R.inject`
-- `R.isAttach`
-- `R.mergeRight`
-- `R.opposite`
-- `R.otherwise`
-- `R.pushUniq`
-- `R.resolve` ?
-- `R.s`
-- `R.toggle`
-- `R.uuid`
-- `R.whenAsync`
 
 Also these changes:
 
@@ -16484,8 +16625,6 @@ Also these changes:
 - `R.mergeDeep` is renamed to `R.mergeDeepLeft`
 
 - Add `R.pipeAsync`
-
-- Change how Typescript definitions are exported
 
 - Take `R.partialCurry` from `Rambda` as it is deprecated there
 

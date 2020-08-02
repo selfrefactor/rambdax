@@ -88,7 +88,7 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 <details>
 <summary>
-  Click to see the full list of 107 Ramda methods not implemented in Rambda 
+  Click to see the full list of 106 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -152,7 +152,6 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 - nthArg
 - o
 - objOf
-- of
 - once
 - or
 - otherwise
@@ -10586,6 +10585,47 @@ test('with negative index', () => {
 
 </details>
 
+### of
+
+```typescript
+of<T>(x: T): T[]
+```
+
+It returns a partial copy of an `obj` without `propsToOmit` properties.
+
+```javascript
+R.of(null); //=> [null]
+R.of([42]); //=> [[42]]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.of(null)%3B%20%2F%2F%3D%3E%20%5Bnull%5D%0AR.of(%5B42%5D)%3B%20%2F%2F%3D%3E%20%5B%5B42%5D%5D">Try the above <strong>R.of</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+of<T>(x: T): T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { of } from './of'
+
+test('happy', () => {
+  expect(of(3)).toEqual([ 3 ])
+
+  expect(of(null)).toEqual([ null ])
+})
+```
+
+</details>
+
 ### ok
 
 ```typescript
@@ -10887,6 +10927,26 @@ over(lens: Lens): <T>(fn: Arity1Fn, value: readonly T[]) => T[];
 partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: [V0]): (x1: V1) => T
 ```
 
+It is very similar to `R.curry`, but you can pass initial arguments when you create the curried function.
+
+`R.partial` will keep returning a function until all the arguments that the function `fn` expects are passed.
+The name comes from the fact that you partially inject the inputs.
+
+```javascript
+const fn = (title, firstName, lastName) => {
+  return title + ' ' + firstName + ' ' + lastName + '!'
+}
+
+const canPassAnyNumberOfArguments = R.partial(fn, 'Hello')
+const ramdaStyle = R.partial(fn, ['Hello'])
+
+const finalFn = canPassAnyNumberOfArguments('Foo')
+
+finalFn('Bar') // =>  'Hello, Foo Bar!'
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20fn%20%3D%20(title%2C%20firstName%2C%20lastName)%20%3D%3E%20%7B%0A%20%20return%20title%20%2B%20'%20'%20%2B%20firstName%20%2B%20'%20'%20%2B%20lastName%20%2B%20'!'%0A%7D%0A%0Aconst%20canPassAnyNumberOfArguments%20%3D%20R.partial(fn%2C%20'Hello')%0Aconst%20ramdaStyle%20%3D%20R.partial(fn%2C%20%5B'Hello'%5D)%0A%0Aconst%20finalFn%20%3D%20canPassAnyNumberOfArguments('Foo')%0A%0AfinalFn('Bar')%20%2F%2F%20%3D%3E%20%20'Hello%2C%20Foo%20Bar!'">Try the above <strong>R.partial</strong> example in Rambda REPL</a>
+
 <details>
 
 <summary>All Typescript definitions</summary>
@@ -10899,6 +10959,77 @@ partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0,
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1]): (x2: V2, x3: V3) => T;
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0]): (x1: V1, x2: V2, x3: V3) => T;
 partial<T>(fn: (...a: readonly any[]) => T, args: readonly any[]): (...a: readonly any[]) => T;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { partial } from './partial'
+import { type } from './type'
+
+const greet = (
+  salutation, title, firstName, lastName
+) =>
+  salutation + ', ' + title + ' ' + firstName + ' ' + lastName + '!'
+
+test('happy', () => {
+  const canPassAnyNumberOfArguments = partial(
+    greet, 'Hello', 'Ms.'
+  )
+  const fn = canPassAnyNumberOfArguments('foo')
+  const sayHello = partial(greet, [ 'Hello' ])
+  const sayHelloRamda = partial(sayHello, [ 'Ms.' ])
+
+  expect(type(fn)).toBe('Function')
+
+  expect(fn('bar')).toBe('Hello, Ms. foo bar!')
+  expect(sayHelloRamda('foo', 'bar')).toBe('Hello, Ms. foo bar!')
+})
+
+test('extra arguments are ignored', () => {
+  const canPassAnyNumberOfArguments = partial(
+    greet, 'Hello', 'Ms.'
+  )
+  const fn = canPassAnyNumberOfArguments('foo')
+
+  expect(type(fn)).toBe('Function')
+
+  expect(fn(
+    'bar', 1, 2
+  )).toBe('Hello, Ms. foo bar!')
+})
+
+test('when array is input', () => {
+  const fooFn = (
+    a, b, c, d
+  ) => ({
+    a,
+    b,
+    c,
+    d,
+  })
+  const barFn = partial(
+    fooFn, [ 1, 2 ], []
+  )
+
+  expect(barFn(1, 2)).toEqual({
+    a : [ 1, 2 ],
+    b : [],
+    c : 1,
+    d : 2,
+  })
+})
+
+test('ramda spec', () => {
+  const sayHello = partial(greet, 'Hello')
+  const sayHelloToMs = partial(sayHello, 'Ms.')
+
+  expect(sayHelloToMs('Jane', 'Jones')).toBe('Hello, Ms. Jane Jones!')
+})
 ```
 
 </details>
@@ -16443,6 +16574,10 @@ test('ignore extra keys', () => {
 </details>
 
 ## CHANGELOG
+
+4.0.1
+
+Forgot to export `R.of` because of wrong marker in `files/index.d.ts`
 
 4.0.0
 
