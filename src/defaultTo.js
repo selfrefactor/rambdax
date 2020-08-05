@@ -8,9 +8,8 @@ function flagIs(inputArguments){
 
 export function defaultTo(defaultArgument, ...inputArguments){
   if (arguments.length === 1){
-    return _inputArguments => defaultTo(defaultArgument, _inputArguments)
-  } else if (arguments.length === 2){
-    return flagIs(inputArguments[ 0 ]) ? defaultArgument : inputArguments[ 0 ]
+    return (..._inputArguments) =>
+      defaultTo(defaultArgument, ..._inputArguments)
   }
 
   const limit = inputArguments.length - 1

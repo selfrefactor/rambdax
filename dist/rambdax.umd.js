@@ -712,7 +712,12 @@
     if (aType !== type(b)) return false;
     if (['NaN', 'Undefined', 'Null'].includes(aType)) return true;
 
-    if (['Boolean', 'Number', 'String'].includes(aType)) {
+    if (aType === 'Number') {
+      if (Object.is(-0, a) !== Object.is(-0, b)) return false;
+      return a.toString() === b.toString();
+    }
+
+    if (['String', 'Boolean'].includes(aType)) {
       return a.toString() === b.toString();
     }
 
@@ -823,7 +828,7 @@
 
   function count(searchFor, list) {
     if (arguments.length === 1) {
-      return listHolder => count(searchFor, listHolder);
+      return _list => count(searchFor, _list);
     }
 
     if (!_isArray(list)) return 0;
@@ -1019,6 +1024,43 @@
         promised(...inputs).then(resolve).catch(reject);
       }).catch(reject);
     });
+  }
+
+  const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+
+  const getOccurances = input => input.match(/{{\s*.+?\s*}}/g);
+
+  const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '');
+
+  const replace = ({
+    inputHolder,
+    prop,
+    replacer
+  }) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer);
+
+  function interpolate(input, templateInput) {
+    if (arguments.length === 1) {
+      return _templateInput => interpolate(input, _templateInput);
+    }
+
+    const occurances = getOccurances(input);
+    if (occurances === null) return input;
+    let inputHolder = input;
+
+    for (const occurance of occurances) {
+      const prop = getOccuranceProp(occurance);
+
+      try {
+        const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput);
+        inputHolder = replace({
+          inputHolder,
+          prop,
+          replacer
+        });
+      } catch (e) {}
+    }
+
+    return inputHolder;
   }
 
   function isFunction$1(fn) {
@@ -1328,6 +1370,26 @@
     return toReturn;
   }
 
+  function curry(fn, args = []) {
+    return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
+  }
+
+  const Const = x => ({
+    x,
+    map: fn => Const(x)
+  });
+
+  function view(lens, target) {
+    if (arguments.length === 1) return _target => view(lens, _target);
+    return lens(Const)(target).x;
+  }
+
+  function lensEqFn(lens, target, input) {
+    return equals(view(lens, input), target);
+  }
+
+  const lensEq = curry(lensEqFn);
+
   async function mapFastAsyncFn(fn, arr) {
     const promised = arr.map((a, i) => fn(a, i));
     return Promise.all(promised);
@@ -1570,15 +1632,11 @@
     };
   }
 
-  function replace(pattern, replacer, str) {
-    if (replacer === undefined) {
-      return (_replacer, _str) => replace(pattern, _replacer, _str);
-    } else if (str === undefined) {
-      return _str => replace(pattern, replacer, _str);
-    }
-
+  function replaceFn(pattern, replacer, str) {
     return str.replace(pattern, replacer);
   }
+
+  const replace$1 = curry(replaceFn);
 
   function sort(sortFn, list) {
     if (arguments.length === 1) return _list => sort(sortFn, _list);
@@ -1607,8 +1665,8 @@
     if (type(a) === 'String') {
       return a;
     } else if (['Function', 'Async'].includes(type(a))) {
-      const compacted = replace(/\s{1,}/g, ' ', a.toString());
-      return replace(/\s/g, '_', take(15, compacted));
+      const compacted = replace$1(/\s{1,}/g, ' ', a.toString());
+      return replace$1(/\s/g, '_', take(15, compacted));
     } else if (type(a) === 'Object') {
       return JSON.stringify(normalizeObject(a));
     }
@@ -1648,10 +1706,6 @@
 
   function nextIndex(index, list) {
     return index >= list.length - 1 ? 0 : index + 1;
-  }
-
-  function curry(fn, args = []) {
-    return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
   }
 
   function onceFn(fn, context) {
@@ -1805,12 +1859,12 @@
     }
 
     if (type(inputs) !== 'Array') {
-      return replace(inputs, '', text).trim();
+      return replace$1(inputs, '', text);
     }
 
     let textCopy = text;
     inputs.forEach(singleInput => {
-      textCopy = replace(singleInput, '', textCopy).trim();
+      textCopy = replace$1(singleInput, '', textCopy).trim();
     });
     return textCopy;
   }
@@ -1847,6 +1901,17 @@
     });
     return merge(renamed, omit(Object.keys(conditions), inputObject));
   }
+
+  function replaceAllFn(patterns, replacer, input) {
+    ok(patterns, replacer, input)(Array, String, String);
+    let text = input;
+    patterns.forEach(singlePattern => {
+      text = text.replace(singlePattern, replacer);
+    });
+    return text;
+  }
+
+  const replaceAll = curry(replaceAllFn);
 
   function shuffle(arrayRaw) {
     const array = arrayRaw.concat();
@@ -1952,43 +2017,6 @@
 
     fn(input);
     return input;
-  }
-
-  const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-
-  const getOccurances = input => input.match(/{{\s*.+?\s*}}/g);
-
-  const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '');
-
-  const replace$1 = ({
-    inputHolder,
-    prop,
-    replacer
-  }) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer);
-
-  function template(input, templateInput) {
-    if (arguments.length === 1) {
-      return templateInputHolder => template(input, templateInputHolder);
-    }
-
-    const occurances = getOccurances(input);
-    if (occurances === null) return input;
-    let inputHolder = input;
-
-    for (const occurance of occurances) {
-      const prop = getOccuranceProp(occurance);
-
-      try {
-        const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput);
-        inputHolder = replace$1({
-          inputHolder,
-          prop,
-          replacer
-        });
-      } catch (e) {}
-    }
-
-    return inputHolder;
   }
 
   function throttle(fn, ms) {
@@ -2435,9 +2463,7 @@
 
   function defaultTo(defaultArgument, ...inputArguments) {
     if (arguments.length === 1) {
-      return _inputArguments => defaultTo(defaultArgument, _inputArguments);
-    } else if (arguments.length === 2) {
-      return flagIs(inputArguments[0]) ? defaultArgument : inputArguments[0];
+      return (..._inputArguments) => defaultTo(defaultArgument, ..._inputArguments);
     }
 
     const limit = inputArguments.length - 1;
@@ -2931,27 +2957,17 @@
     map: fn => Identity(fn(x))
   });
 
-  function over(lens, fn, object) {
-    if (arguments.length === 1) return (_fn, _object) => over(lens, _fn, _object);
-    if (arguments.length === 2) return _object => over(lens, fn, _object);
+  function overFn(lens, fn, object) {
     return lens(x => Identity(fn(x)))(object).x;
   }
 
-  function set$1(lens, replacer, x) {
-    if (arguments.length === 1) return (_v, _x) => set$1(lens, _v, _x);
-    if (arguments.length === 2) return _x => set$1(lens, replacer, _x);
+  const over = curry(overFn);
+
+  function setFn(lens, replacer, x) {
     return over(lens, always(replacer), x);
   }
 
-  const Const = x => ({
-    x,
-    map: fn => Const(x)
-  });
-
-  function view(lens, target) {
-    if (arguments.length === 1) return _target => view(lens, _target);
-    return lens(Const)(target).x;
-  }
+  const set$1 = curry(setFn);
 
   function match(pattern, input) {
     if (arguments.length === 1) return _input => match(pattern, _input);
@@ -3301,6 +3317,15 @@
     });
   }
 
+  function union(x, y) {
+    if (arguments.length === 1) return _y => union(x, _y);
+    const toReturn = x.slice();
+    y.forEach(yInstance => {
+      if (!includes(yInstance, x)) toReturn.push(yInstance);
+    });
+    return toReturn;
+  }
+
   function uniqWith(fn, list) {
     if (arguments.length === 1) return _list => uniqWith(fn, _list);
     let index = -1;
@@ -3482,6 +3507,7 @@
   exports.indexBy = indexBy;
   exports.indexOf = indexOf;
   exports.init = init;
+  exports.interpolate = interpolate;
   exports.intersection = intersection;
   exports.intersperse = intersperse;
   exports.is = is$1;
@@ -3499,6 +3525,7 @@
   exports.lastIndexOf = lastIndexOf;
   exports.length = length;
   exports.lens = lens;
+  exports.lensEq = lensEq;
   exports.lensIndex = lensIndex;
   exports.lensPath = lensPath;
   exports.lensProp = lensProp;
@@ -3567,7 +3594,8 @@
   exports.remove = remove;
   exports.renameProps = renameProps;
   exports.repeat = repeat;
-  exports.replace = replace;
+  exports.replace = replace$1;
+  exports.replaceAll = replaceAll;
   exports.reset = reset;
   exports.reverse = reverse;
   exports.schemaToString = schemaToString;
@@ -3590,7 +3618,6 @@
   exports.takeLast = takeLast;
   exports.tap = tap;
   exports.tapAsync = tapAsync;
-  exports.template = template;
   exports.test = test;
   exports.throttle = throttle;
   exports.times = times;
@@ -3603,6 +3630,7 @@
   exports.trim = trim;
   exports.tryCatch = tryCatch;
   exports.type = type;
+  exports.union = union;
   exports.uniq = uniq;
   exports.uniqWith = uniqWith;
   exports.unless = unless;

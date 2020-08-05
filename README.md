@@ -57,6 +57,8 @@ The repo holds two `Angular9` applications: one with small example code of *Ramd
 
 Currently the **Ramda** bundle size is **{{rambdaTreeShakingInfo}} MB** less than its **Ramda** counterpart.
 
+There is also [Webpack/Rollup/Parcel/Esbuild tree-shaking example including several libraries](https://github.com/mischnic/tree-shaking-example) including `Ramda`, `Rambda` and `Rambdax`. 
+
 > actually tree-shaking is the initial reason for creation of `Rambda`
 
 - dot notation for `R.path` and `R.paths`
@@ -88,7 +90,7 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 <details>
 <summary>
-  Click to see the full list of 106 Ramda methods not implemented in Rambda 
+  Click to see the full list of 105 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -186,7 +188,6 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 - unary
 - uncurryN
 - unfold
-- union
 - unionWith
 - uniqBy
 - unnest
@@ -4042,12 +4043,16 @@ equals<T>(x: T): (y: T) => boolean;
 <summary><strong>Tests</strong></summary>
 
 ```javascript
+// import { equals } from 'ramda'
 import { equals } from './equals'
 
 test('with array of objects', () => {
-  const result = equals([ { a : 1 }, [ { b : 3 } ] ], [ { a : 2 }, [ { b : 3 } ] ])
+  const list1 = [ { a : 1 }, [ { b : 2 } ] ]
+  const list2 = [ { a : 1 }, [ { b : 2 } ] ]
+  const list3 = [ { a : 1 }, [ { b : 3 } ] ]
 
-  expect(result).toBeFalse()
+  expect(equals(list1, list2)).toBeTrue()
+  expect(equals(list1, list3)).toBeFalse()
 })
 
 test('with regex', () => {
@@ -4291,6 +4296,13 @@ test('with classes', () => {
   const result = equals(foo, foo)
 
   expect(result).toBeTrue()
+})
+
+test('with negative zero', () => {
+  expect(equals(-0, -0)).toBeTrue()
+  expect(equals(-0, 0)).toBeFalse()
+  expect(equals(0, 0)).toBeTrue()
+  expect(equals(-0, 1)).toBeFalse()
 })
 ```
 
@@ -6612,6 +6624,105 @@ test('with string', () => {
 
 </details>
 
+### interpolate
+
+```typescript
+interpolate(inputWithTags: string, templateArguments: object): string
+```
+
+It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
+
+```javascript
+const inputWithTags = 'foo is {{bar}} even {{a}} more'
+const templateArguments = {"bar":"BAR", a: 1}
+
+const result = R.interpolate(inputWithTags, templateArguments)
+const expected = 'foo is BAR even 1 more'
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20inputWithTags%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateArguments%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.interpolate(inputWithTags%2C%20templateArguments)%0Aconst%20expected%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.interpolate</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+interpolate(inputWithTags: string, templateArguments: object): string;
+interpolate(inputWithTags: string): (templateArguments: object) => string;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { interpolate } from './interpolate'
+
+test('within bracets', () => {
+  const input = 'foo is { {{bar}} } even {{a}} more'
+  const templateInput = {
+    bar : 'BAR',
+    a   : 1,
+  }
+
+  const result = interpolate(input, templateInput)
+  const expectedResult = 'foo is { BAR } even 1 more'
+
+  expect(result).toEqual(expectedResult)
+})
+
+test('happy', () => {
+  const input = 'foo is {{bar}} even {{a}} more'
+  const templateInput = {
+    bar : 'BAR',
+    a   : 1,
+  }
+
+  const result = interpolate(input, templateInput)
+  const expectedResult = 'foo is BAR even 1 more'
+
+  expect(result).toEqual(expectedResult)
+})
+
+test('no interpolation + curry', () => {
+  const input = 'foo is bar even more'
+  const templateInput = { bar : 'BAR' }
+
+  const result = interpolate(input)(templateInput)
+  const expectedResult = 'foo is bar even more'
+
+  expect(result).toEqual(expectedResult)
+})
+
+test('with missing template input', () => {
+  const input = 'foo is {{bar}} even {{a}} more'
+  const templateInput = {
+    baz : 'BAR',
+    a   : 1,
+  }
+
+  const result = interpolate(input, templateInput)
+  const expectedResult = 'foo is {{bar}} even 1 more'
+
+  expect(result).toEqual(expectedResult)
+})
+
+test('with arbitrary expression', () => {
+  const input = '1 + 2 = {{ 1 + 2 }}'
+  const templateInput = {}
+
+  const expectedResult = '1 + 2 = 3'
+  const result = interpolate(input, templateInput)
+
+  expect(result).toEqual(expectedResult)
+})
+```
+
+</details>
+
 ### intersection
 
 ```typescript
@@ -8340,6 +8451,77 @@ test('composed lenses', () => {
 
 </details>
 
+### lensEq
+
+```typescript
+lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean
+```
+
+It returns `true` if data structure focused by the given lens equals to the `target` value.
+
+`R.equals` is used to determine equality.
+
+```javascript
+const list = [ 1, 2, 3 ]
+const lens = lensIndex(0)
+const result = lensEq(
+  lens, 1, list
+)
+// => true
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%201%2C%202%2C%203%20%5D%0Aconst%20lens%20%3D%20lensIndex(0)%0Aconst%20result%20%3D%20lensEq(%0A%20%20lens%2C%201%2C%20list%0A)%0A%2F%2F%20%3D%3E%20true">Try the above <strong>R.lensEq</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
+lensEq<T, U>(lens: Lens, target: T, input: U): boolean;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { lensEq } from './lensEq'
+import { lensIndex } from './lensIndex'
+import { lensPath } from './lensPath'
+
+test('with list', () => {
+  const list = [ 1, 2, 3 ]
+  const lens = lensIndex(0)
+  expect(lensEq(
+    lens, 1, list
+  )).toBeTrue()
+  expect(lensEq(
+    lens, 2, list
+  )).toBeFalse()
+})
+
+test('with R.lensPath', () => {
+  const input = { a : { b : { c : 1 } } }
+  const target = { c : 1 }
+  const lens = lensPath('a.b')
+
+  expect(lensEq(lens)(target)(input)).toBeTrue()
+  expect(lensEq(
+    lens, target, { c : 2 }
+  )).toBeFalse()
+})
+```
+
+</details>
+
 ### lensIndex
 
 ```typescript
@@ -8463,6 +8645,7 @@ R.over(xHeadYLens, R.negate, input)
 
 ```typescript
 lensPath(path: RamdaPath): Lens;
+lensPath(path: string): Lens;
 ```
 
 </details>
@@ -13145,7 +13328,7 @@ test('with single rule', () => {
   const text = 'foo bar baz foo'
 
   const result = remove(inputs, text)
-  const expectedResult = 'bar baz'
+  const expectedResult = ' bar baz '
 
   expect(result).toEqual(expectedResult)
 })
@@ -13318,6 +13501,78 @@ test('2', () => {
 
 test('3', () => {
   expect(replace(/\s/g, '|')('foo bar baz')).toEqual('foo|bar|baz')
+})
+```
+
+</details>
+
+### replaceAll
+
+```typescript
+replaceAll(patterns: Array<RegExp | string>, replacer: string, input: string): string
+```
+
+Same as `R.replace` but it accepts array of string and regular expressions instead of a single value.
+
+```javascript
+const replacer = '|'
+const patterns = [ /foo/g, 'bar' ]
+const input = 'foo bar baz foo bar'
+
+const result = replaceAll(patterns, replacer, input)
+// => '| | baz | bar'
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20replacer%20%3D%20'%7C'%0Aconst%20patterns%20%3D%20%5B%20%2Ffoo%2Fg%2C%20'bar'%20%5D%0Aconst%20input%20%3D%20'foo%20bar%20baz%20foo%20bar'%0A%0Aconst%20result%20%3D%20replaceAll(patterns%2C%20replacer%2C%20input)%0A%2F%2F%20%3D%3E%20'%7C%20%7C%20baz%20%7C%20bar'">Try the above <strong>R.replaceAll</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+replaceAll(patterns: Array<RegExp | string>, replacer: string, input: string): string;
+replaceAll(patterns: Array<RegExp | string>, replacer: string): (input: string) => string;
+replaceAll(patterns: Array<RegExp | string>): (replacer: string) => (input: string) => string;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { replaceAll } from './replaceAll'
+
+const replacer = '|'
+const patterns = [ /foo/g, 'bar' ]
+const input = 'foo bar baz foo bar'
+
+test('happy', () => {
+  const result = replaceAll(
+    patterns, replacer, input
+  )
+  const expected = '| | baz | bar'
+
+  expect(result).toEqual(expected)
+})
+
+test('throws when wrong patterns', () => {
+  expect(() => replaceAll(
+    {}, replacer, input
+  )).toThrow()
+})
+
+test('throws when wrong input', () => {
+  expect(() => replaceAll(
+    patterns, replacer, []
+  )).toThrow()
+})
+
+test('throws when wrong replacer', () => {
+  expect(() => replaceAll(
+    patterns, null, input
+  )).toThrow()
 })
 ```
 
@@ -14501,105 +14756,6 @@ test('', async () => {
 
 </details>
 
-### template
-
-```typescript
-template(inputWithTags: string, templateArguments: object): string
-```
-
-It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
-
-```javascript
-const inputWithTags = 'foo is {{bar}} even {{a}} more'
-const templateArguments = {"bar":"BAR", a: 1}
-
-const result = R.template(inputWithTags, templateArguments)
-const expected = 'foo is BAR even 1 more'
-// => `result` is equal to `expected`
-```
-
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20inputWithTags%20%3D%20'foo%20is%20%7B%7Bbar%7D%7D%20even%20%7B%7Ba%7D%7D%20more'%0Aconst%20templateArguments%20%3D%20%7B%22bar%22%3A%22BAR%22%2C%20a%3A%201%7D%0A%0Aconst%20result%20%3D%20R.template(inputWithTags%2C%20templateArguments)%0Aconst%20expected%20%3D%20'foo%20is%20BAR%20even%201%20more'%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.template</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary>All Typescript definitions</summary>
-
-```typescript
-template(inputWithTags: string, templateArguments: object): string;
-template(inputWithTags: string): (templateArguments: object) => string;
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { template } from './template'
-
-test('within bracets', () => {
-  const input = 'foo is { {{bar}} } even {{a}} more'
-  const templateInput = {
-    bar : 'BAR',
-    a   : 1,
-  }
-
-  const result = template(input, templateInput)
-  const expectedResult = 'foo is { BAR } even 1 more'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('happy', () => {
-  const input = 'foo is {{bar}} even {{a}} more'
-  const templateInput = {
-    bar : 'BAR',
-    a   : 1,
-  }
-
-  const result = template(input, templateInput)
-  const expectedResult = 'foo is BAR even 1 more'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('no interpolation + curry', () => {
-  const input = 'foo is bar even more'
-  const templateInput = { bar : 'BAR' }
-
-  const result = template(input)(templateInput)
-  const expectedResult = 'foo is bar even more'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('with missing template input', () => {
-  const input = 'foo is {{bar}} even {{a}} more'
-  const templateInput = {
-    baz : 'BAR',
-    a   : 1,
-  }
-
-  const result = template(input, templateInput)
-  const expectedResult = 'foo is {{bar}} even 1 more'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('with arbitrary expression', () => {
-  const input = '1 + 2 = {{ 1 + 2 }}'
-  const templateInput = {}
-
-  const expectedResult = '1 + 2 = 3'
-  const result = template(input, templateInput)
-
-  expect(result).toEqual(expectedResult)
-})
-```
-
-</details>
-
 ### test
 
 ```typescript
@@ -15464,6 +15620,54 @@ test('function inside object 2', () => {
 
 </details>
 
+### union
+
+```typescript
+union<T>(x: Array<T>, y: Array<T>): Array<T>
+```
+
+It takes two lists and return a new list containing a merger of both list with removed duplicates. 
+
+`R.equals` is used to compare for duplication, which means that it can be safely used with array of objects.
+
+```javascript
+const result = R.union([1,2,3], [3,4,5]);
+//=> [1, 2, 3, 4, 5]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.union(%5B1%2C2%2C3%5D%2C%20%5B3%2C4%2C5%5D)%3B%0A%2F%2F%3D%3E%20%5B1%2C%202%2C%203%2C%204%2C%205%5D">Try the above <strong>R.union</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+union<T>(x: Array<T>, y: Array<T>): Array<T>;
+union<T>(x: Array<T>): (y: Array<T>) => Array<T>;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { union } from './union'
+
+test('happy', () => {
+  expect(union([ 1, 2 ], [ 2, 3 ])).toEqual([ 1, 2, 3 ])
+})
+
+test('with list of objects', () => {
+  const list1 = [ { a : 1 }, { a : 2 } ]
+  const list2 = [ { a : 2 }, { a : 3 } ]
+  const result = union(list1)(list2)
+})
+```
+
+</details>
+
 ### uniq
 
 ```typescript
@@ -15981,11 +16185,6 @@ waitFor<T>(
   howLong: number,
   loops?: number
 ): (input: T) => Promise<boolean>;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 ```
 
 </details>
@@ -16575,6 +16774,16 @@ test('ignore extra keys', () => {
 
 ## CHANGELOG
 
+4.1.0
+
+- `R.template` is renamed to `R.interpolate`
+
+- `R.equals` now supports negative zero just like `Ramda.equals`
+
+- Add `R.replaceAll` method
+
+- Add `R.lensEq` method
+
 4.0.1
 
 Forgot to export `R.of` because of wrong marker in `files/index.d.ts`
@@ -16867,14 +17076,15 @@ Also with this versions, typings tests are provided and several definitions are 
 > Most influential contributors
 
 - [@farwayer](https://github.com/farwayer)
+- [@thejohnfreeman](https://github.com/thejohnfreeman)
+- [@helmuthdu](https://github.com/helmuthdu)
+- [@jpgorman](https://github.com/jpgorman)
+- [@ku8ar](https://github.com/ku8ar)
+- [@romgrk](https://github.com/romgrk)
+- [@squidfunk](https://github.com/squidfunk)
 - [@synthet1c](https://github.com/synthet1c)
 - [@vlad-zhukov](https://github.com/vlad-zhukov)
-- [@jpgorman](https://github.com/jpgorman)
-- [@romgrk](https://github.com/romgrk)
 - [@WhoAteDaCake](https://github.com/WhoAteDaCake)
-- [@helmuthdu](https://github.com/helmuthdu)
-- [@ku8ar](https://github.com/ku8ar)
-- [@squidfunk](https://github.com/squidfunk)
 
 > Rambda references
 

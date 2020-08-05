@@ -653,6 +653,7 @@ export function lensIndex(index: number): Lens;
  * It returns a lens that focuses on specified `path`.
  */
 export function lensPath(path: RamdaPath): Lens;
+export function lensPath(path: string): Lens;
 
 /**
  * It returns a lens that focuses on specified property `prop`.
@@ -1354,6 +1355,14 @@ export function tryCatch<T>(
 export function type(x: any): "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "Function" | "Undefined" | "Async" | "Promise" | "RegExp" | "NaN";
 
 /**
+ * It takes two lists and return a new list containing a merger of both list with removed duplicates.
+ * 
+ * `R.equals` is used to compare for duplication, which means that it can be safely used with array of objects.
+ */
+export function union<T>(x: Array<T>, y: Array<T>): Array<T>;
+export function union<T>(x: Array<T>): (y: Array<T>) => Array<T>;
+
+/**
  * It returns a new array containing only one copy of each element of `list`.
  */
 export function uniq<T>(list: ReadonlyArray<T>): T[];
@@ -1549,6 +1558,12 @@ export function getter<T>(keyOrKeys: string | string[] | undefined): T;
 export function setter(keyOrObject: string | object, value?: any): void;
 
 export function reset(): void;
+
+/**
+ * It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
+ */
+export function interpolate(inputWithTags: string, templateArguments: object): string;
+export function interpolate(inputWithTags: string): (templateArguments: object) => string;
 
 /**
  * Asynchronous version of `R.ifElse`. Any of `condition`, `ifFn` and `elseFn` can be either asynchronous or synchronous function.
@@ -1758,6 +1773,13 @@ export function renameProps<Output>(rules: object, input: object): Output;
 export function renameProps<Output>(rules: object): (input: object) => Output;
 
 /**
+ * Same as `R.replace` but it accepts array of string and regular expressions instead of a single value.
+ */
+export function replaceAll(patterns: Array<RegExp | string>, replacer: string, input: string): string;
+export function replaceAll(patterns: Array<RegExp | string>, replacer: string): (input: string) => string;
+export function replaceAll(patterns: Array<RegExp | string>): (replacer: string) => (input: string) => string;
+
+/**
  * It returns a randomized copy of array.
  */
 export function shuffle<T>(list: T[]): T[];
@@ -1782,12 +1804,6 @@ export function switcher<T>(valueToMatch: any): Switchem<T>;
  */
 export function tapAsync<T>(fn: Func<any> | Promise<any>, input: T): T;
 export function tapAsync<T>(fn: Func<any> | Promise<any>): (input: T) => T;
-
-/**
- * It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
- */
-export function template(inputWithTags: string, templateArguments: object): string;
-export function template(inputWithTags: string): (templateArguments: object) => string;
 
 /**
  * It creates a throttled function that invokes `fn` maximum once for a `period` of milliseconds.
@@ -1831,6 +1847,14 @@ export function waitFor<T>(
   howLong: number,
   loops?: number
 ): (input: T) => Promise<boolean>;
+
+/**
+ * It returns `true` if data structure focused by the given lens equals to the `target` value.
+ * 
+ * `R.equals` is used to determine equality.
+ */
+export function lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
+export function lensEq<T, U>(lens: Lens, target: T, input: U): boolean;
 
 // RAMBDAX_MARKER_END
 // ============================================
