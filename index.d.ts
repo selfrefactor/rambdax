@@ -1161,10 +1161,10 @@ export function propOr<T>(defaultValue: T, property: string): (obj: { [key: stri
 export function propOr<T>(defaultValue: T): FunctionToolbelt.Curry<(property: string, obj: { [key: string]: T}) => T>;
 
 /**
- * It returns list of numbers between `start`(inclusive) to `end`(exclusive) numbers.
+ * It returns list of numbers between `startInclusive` to `endExclusive` numbers.
  */
-export function range(start: number, end: number): number[];
-export function range(start: number): (end: number) => number[];
+export function range(startInclusive: number, endExclusive: number): number[];
+export function range(startInclusive: number): (endExclusive: number) => number[];
 
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult;
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult;
@@ -1394,12 +1394,9 @@ export function update<T>(index: number, newValue: T): (list: ReadonlyArray<T>) 
  */
 export function values<T extends object, K extends keyof T>(obj: T): T[K][];
 
-export function when<T>(
-  rule: Func<boolean>, resultOrFunction: T | IdentityFunction<T>
-): IdentityFunction<T>;
-export function when<T>(
-  rule: Func<boolean>
-): (resultOrFunction: T | IdentityFunction<T>) => IdentityFunction<T>;
+export function when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U, input: T): U;
+export function when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U): (input: T) => U;
+export function when<T, U>(predicate: (x: T) => boolean): FunctionToolbelt.Curry<(whenTrueFn: (a: T) => U, input: T) => U>;
 
 /**
  * It returns `true` if all each property in `conditions` returns `true` when applied to corresponding property in `input` object.

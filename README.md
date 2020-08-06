@@ -336,6 +336,7 @@ method | Rambda | Ramda | Lodash
 ### add
 
 ```typescript
+
 add(a: number, b: number): number
 ```
 
@@ -389,6 +390,7 @@ test('ramda specs', () => {
 ### adjust
 
 ```typescript
+
 adjust<T>(index: number, replaceFn: (x: T) => T, list: ReadonlyArray<T>): T[]
 ```
 
@@ -469,6 +471,7 @@ test('when index is out of bounds', () => {
 ### all
 
 ```typescript
+
 all<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean
 ```
 
@@ -536,6 +539,7 @@ test('pass index as second argument', () => {
 ### allFalse
 
 ```typescript
+
 allFalse(...inputs: any[]): boolean
 ```
 
@@ -590,6 +594,7 @@ runTests(testData)
 ### allPass
 
 ```typescript
+
 allPass<T>(predicates: ((x: T) => boolean)[]): (input: T) => boolean
 ```
 
@@ -658,6 +663,7 @@ test('when returns false', () => {
 ### allTrue
 
 ```typescript
+
 allTrue(...input: any[]): boolean
 ```
 
@@ -751,6 +757,7 @@ test('escapes early - case 3', () => {
 ### allType
 
 ```typescript
+
 allType(targetType: RambdaTypes): (...input: any[]) => boolean
 ```
 
@@ -806,6 +813,7 @@ test('when false', () => {
 ### always
 
 ```typescript
+
 always<T>(x: T): () => T
 ```
 
@@ -857,6 +865,7 @@ test('f', () => {
 ### and
 
 ```typescript
+
 and<T extends { and?: ((...a: readonly any[]) => any)
 ```
 
@@ -902,6 +911,7 @@ test('happy', () => {
 ### any
 
 ```typescript
+
 any<T>(predicate: (x: T, i: number) => boolean, list: ReadonlyArray<T>): boolean
 ```
 
@@ -959,6 +969,7 @@ test('passes index to predicate', () => {
 ### anyFalse
 
 ```typescript
+
 anyFalse(...input: any[]): boolean
 ```
 
@@ -1012,6 +1023,7 @@ test('supports function', () => {
 ### anyPass
 
 ```typescript
+
 anyPass<T>(predicates: ReadonlyArray<SafePred<T>>): SafePred<T>
 ```
 
@@ -1091,6 +1103,7 @@ test('happy', () => {
 ### anyTrue
 
 ```typescript
+
 anyTrue(...input: any[]): boolean
 ```
 
@@ -1148,6 +1161,7 @@ test('supports function', () => {
 ### anyType
 
 ```typescript
+
 anyType(targetType: RambdaTypes): (...input: any[]) => boolean
 ```
 
@@ -1205,6 +1219,7 @@ test('when false', () => {
 ### append
 
 ```typescript
+
 append<T>(x: T, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -1278,6 +1293,7 @@ test('should not modify arguments', () => {
 ### applySpec
 
 ```typescript
+
 applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
   spec: Spec
 ): (
@@ -1554,6 +1570,7 @@ test('restructure json object', () => {
 ### assoc
 
 ```typescript
+
 assoc<T, U, K extends string>(prop: K, newValue: T, obj: U): Record<K, T> & U
 ```
 
@@ -1665,6 +1682,7 @@ test('assignment is shallow', () => {
 ### assocPath
 
 ```typescript
+
 assocPath<T, U>(path: Path, newValue: T, obj: U): U
 ```
 
@@ -1835,6 +1853,7 @@ test('happy', () => {
 ### both
 
 ```typescript
+
 both(pred1: Pred, pred2: Pred): Pred
 ```
 
@@ -1920,6 +1939,7 @@ test('skip evaluation of the second expression', () => {
 ### chain
 
 ```typescript
+
 chain<T, U>(fn: (n: T) => readonly U[], list: readonly T[]): U[]
 ```
 
@@ -1984,6 +2004,7 @@ test('flattens only one level', () => {
 ### change
 
 ```typescript
+
 change<T>(
   origin: object,
   path: string,
@@ -2178,6 +2199,7 @@ test('works with 4 levels deep nesting', () => {
 ### clamp
 
 ```typescript
+
 clamp(min: number, max: number, input: number): number
 ```
 
@@ -2256,6 +2278,7 @@ test('rambda specs', () => {
 ### clone
 
 ```typescript
+
 clone<T>(input: T): T
 ```
 
@@ -2351,6 +2374,7 @@ test('with R.equals', () => {
 ### compact
 
 ```typescript
+
 compact<T>(x: any[]): T[]
 ```
 
@@ -2410,6 +2434,7 @@ test('happy', () => {
 ### complement
 
 ```typescript
+
 complement(pred: (...args: any[]) => boolean): (...args: any[]) => boolean
 ```
 
@@ -2473,6 +2498,7 @@ test('with multiple parameters', () => {
 ### compose
 
 ```typescript
+
 compose<T1>(fn0: () => T1): () => T1
 ```
 
@@ -2588,6 +2614,7 @@ test('ramda spec', () => {
 ### composeAsync
 
 ```typescript
+
 composeAsync<Out>(
   ...fns: (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>
@@ -2778,6 +2805,7 @@ test('throw error', async () => {
 ### concat
 
 ```typescript
+
 concat<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[]
 ```
 
@@ -2832,6 +2860,7 @@ test('with strings', () => {
 ### cond
 
 ```typescript
+
 cond(conditions: [Pred, (...a: readonly any[]) => any][]): (...a: readonly any[]) => any
 ```
 
@@ -2924,6 +2953,7 @@ test('predicates are tested in order', () => {
 ### converge
 
 ```typescript
+
 converge(after: ((...a: readonly any[]) => any), fns: Array<((...a: readonly any[]) => any)>): (...a: readonly any[]) => any
 ```
 
@@ -3003,6 +3033,7 @@ test('works with empty functions list', () => {
 ### count
 
 ```typescript
+
 count<T>(searchFor: T, list: any[]): number
 ```
 
@@ -3062,6 +3093,7 @@ test('when 2', () => {
 ### curry
 
 ```typescript
+
 curry(fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any
 ```
 
@@ -3137,6 +3169,7 @@ test('when called via multiple curry stages', () => {
 ### curryN
 
 ```typescript
+
 curryN(length: number, fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any
 ```
 
@@ -3227,6 +3260,7 @@ test('forwards extra arguments', () => {
 ### debounce
 
 ```typescript
+
 debounce<T, U>(fn: (input: T) => U, ms: number): (input: T) => U
 ```
 
@@ -3344,6 +3378,7 @@ test('immediate debounce', async () => {
 ### dec
 
 ```typescript
+
 dec(x: number): number
 ```
 
@@ -3376,6 +3411,7 @@ test('happy', () => {
 ### defaultTo
 
 ```typescript
+
 defaultTo<T>(defaultValue: T): (...inputArguments: (T | null | undefined)[]) => T
 ```
 
@@ -3499,6 +3535,7 @@ test('default extends to indefinite input arguments - case 6', () => {
 ### delay
 
 ```typescript
+
 delay(ms: number): Promise<'RAMBDAX_DELAY'>
 ```
 
@@ -3538,6 +3575,7 @@ test('usage with variables', async () => {
 ### difference
 
 ```typescript
+
 difference<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): T[]
 ```
 
@@ -3601,6 +3639,7 @@ test('should use R.equals', () => {
 ### dissoc
 
 ```typescript
+
 dissoc<T>(prop: string, obj: any): T
 ```
 
@@ -3703,6 +3742,7 @@ test('includes prototype properties', () => {
 ### divide
 
 ```typescript
+
 divide(x: number, y: number): number
 ```
 
@@ -3741,6 +3781,7 @@ test('happy', () => {
 ### drop
 
 ```typescript
+
 drop<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -3806,6 +3847,7 @@ test('should return copy', () => {
 ### dropLast
 
 ```typescript
+
 dropLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -3871,6 +3913,7 @@ test('should return copy', () => {
 ### either
 
 ```typescript
+
 either(firstPredicate: Pred, secondPredicate: Pred): Pred
 ```
 
@@ -3964,6 +4007,7 @@ test('case 2', () => {
 ### endsWith
 
 ```typescript
+
 endsWith(target: string, str: string): boolean
 ```
 
@@ -4013,6 +4057,7 @@ test('does not work with arrays', () => {
 ### equals
 
 ```typescript
+
 equals<T>(x: T, y: T): boolean
 ```
 
@@ -4311,6 +4356,7 @@ test('with negative zero', () => {
 ### F
 
 ```typescript
+
 F(): boolean
 ```
 
@@ -4333,6 +4379,7 @@ F(): boolean;
 ### filter
 
 ```typescript
+
 filter<T>(predicate: FilterFunctionArray<T>): (x: T[]) => T[]
 ```
 
@@ -4447,6 +4494,7 @@ test('with object', () => {
 ### filterAsync
 
 ```typescript
+
 filterAsync<T>(fn: AsyncPredicate<T>, list: T[]): Promise<T[]>
 ```
 
@@ -4522,6 +4570,7 @@ test('with object', async () => {
 ### find
 
 ```typescript
+
 find<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): T | undefined
 ```
 
@@ -4589,6 +4638,7 @@ test('pass index', () => {
 ### findIndex
 
 ```typescript
+
 findIndex<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): number
 ```
 
@@ -4648,6 +4698,7 @@ test('pass index as second argument', () => {
 ### findLast
 
 ```typescript
+
 findLast<T>(fn: (x: T) => boolean, list: T[]): T | undefined
 ```
 
@@ -4742,6 +4793,7 @@ test('ramda 4', () => {
 ### findLastIndex
 
 ```typescript
+
 findLastIndex<T>(predicate: (x: T) => boolean, list: T[]): number
 ```
 
@@ -4837,6 +4889,7 @@ test('ramda 4', () => {
 ### flatten
 
 ```typescript
+
 flatten<T>(list: ReadonlyArray<any>): T[]
 ```
 
@@ -4892,6 +4945,7 @@ test('readme example', () => {
 ### flip
 
 ```typescript
+
 flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult
 ```
 
@@ -4986,6 +5040,7 @@ test('function with arity of 5', () => {
 ### forEach
 
 ```typescript
+
 forEach<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<T>
 ```
 
@@ -5131,6 +5186,7 @@ test('pass index as second argument', () => {
 ### fromPairs
 
 ```typescript
+
 fromPairs<V>(listOfPairs: KeyValuePair<string, V>[]): { [index: string]: V }
 ```
 
@@ -5189,6 +5245,7 @@ test('happy', () => {
 ### getter
 
 ```typescript
+
 getter<T>(keyOrKeys: string | string[] | undefined): T
 ```
 
@@ -5310,6 +5367,7 @@ test('setter fallbacks to undefined', () => {
 ### glue
 
 ```typescript
+
 glue(input: string, glueString?: string): string
 ```
 
@@ -5433,6 +5491,7 @@ test('with glue', () => {
 ### groupBy
 
 ```typescript
+
 groupBy<T>(groupFn: (x: T) => string, list: ReadonlyArray<T>): { [index: string]: T[] }
 ```
 
@@ -5519,6 +5578,7 @@ test('groupBy', () => {
 ### groupWith
 
 ```typescript
+
 groupWith<T>(compareFn: (x: T, y: T) => boolean): (list: ReadonlyArray<T>) => T[][]
 ```
 
@@ -5656,6 +5716,7 @@ test('list with single item', () => {
 ### has
 
 ```typescript
+
 has<T>(prop: string, obj: T): boolean
 ```
 
@@ -5710,6 +5771,7 @@ test('with non-object', () => {
 ### hasPath
 
 ```typescript
+
 hasPath<T>(
   path: string | string[],
   input: object
@@ -5782,6 +5844,7 @@ test('when false', () => {
 ### head
 
 ```typescript
+
 head<T>(listOrString: T[]): T | undefined
 ```
 
@@ -5828,6 +5891,7 @@ test('head', () => {
 ### identical
 
 ```typescript
+
 identical<T>(x: T, y: T): boolean
 ```
 
@@ -5901,6 +5965,7 @@ test('identical', () => {
 ### identity
 
 ```typescript
+
 identity<T>(input: T): T
 ```
 
@@ -5941,6 +6006,7 @@ test('happy', () => {
 ### ifElse
 
 ```typescript
+
 ifElse<T, U>(
   condition: (x: T) => boolean, 
   onTrue: (x: T) => U, 
@@ -6088,6 +6154,7 @@ test('simple arity of 2', () => {
 ### ifElseAsync
 
 ```typescript
+
 ifElseAsync<T, U>(
   condition: (x: T) => Promise<boolean>, 
   onTrue: (x: T) => U, 
@@ -6288,6 +6355,7 @@ test('arity of 2 - all inputs are async', async () => {
 ### inc
 
 ```typescript
+
 inc(x: number): number
 ```
 
@@ -6326,6 +6394,7 @@ test('happy', () => {
 ### includes
 
 ```typescript
+
 includes(valueToFind: string, input: ReadonlyArray<string> | string): boolean
 ```
 
@@ -6399,6 +6468,7 @@ test('return false if input is falsy', () => {
 ### indexBy
 
 ```typescript
+
 indexBy<T>(condition: (x: T) => string, list: ReadonlyArray<T>): { [key: string]: T }
 ```
 
@@ -6524,6 +6594,7 @@ test('with string - bad path', () => {
 ### indexOf
 
 ```typescript
+
 indexOf<T>(valueToFind: T, list: ReadonlyArray<T>): number
 ```
 
@@ -6573,6 +6644,7 @@ test('happy', () => {
 ### init
 
 ```typescript
+
 init<T>(listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -6627,6 +6699,7 @@ test('with string', () => {
 ### interpolate
 
 ```typescript
+
 interpolate(inputWithTags: string, templateArguments: object): string
 ```
 
@@ -6726,6 +6799,7 @@ test('with arbitrary expression', () => {
 ### intersection
 
 ```typescript
+
 intersection<T>(listA: ReadonlyArray<T>, listB: ReadonlyArray<T>): T[]
 ```
 
@@ -6779,6 +6853,7 @@ test('intersection with objects', () => {
 ### intersperse
 
 ```typescript
+
 intersperse<T>(separator: T, list: ReadonlyArray<T>): T[]
 ```
 
@@ -6832,6 +6907,7 @@ test('intersperse', () => {
 ### is
 
 ```typescript
+
 is(targetPrototype: any, x: any): boolean
 ```
 
@@ -6915,6 +6991,7 @@ test('does not consider primitives to be instances of Object', () => {
 ### isEmpty
 
 ```typescript
+
 isEmpty<T>(x: T): boolean
 ```
 
@@ -6968,6 +7045,7 @@ test('happy', () => {
 ### isFunction
 
 ```typescript
+
 isFunction(input: any): boolean
 ```
 
@@ -7028,6 +7106,7 @@ test('when false', () => {
 ### isNil
 
 ```typescript
+
 isNil(x: any): x is null | undefined
 ```
 
@@ -7074,6 +7153,7 @@ test('happy', () => {
 ### isPromise
 
 ```typescript
+
 isPromise(input: any): boolean
 ```
 
@@ -7090,6 +7170,7 @@ isPromise(input: any): boolean;
 ### isType
 
 ```typescript
+
 isType(targetType: RambdaTypes, input: any): boolean
 ```
 
@@ -7137,6 +7218,7 @@ test('promise', () => {
 ### isValid
 
 ```typescript
+
 isValid({input: object, schema: Schema}): boolean
 ```
 
@@ -7893,6 +7975,7 @@ test('array of schemas', () => {
 ### isValidAsync
 
 ```typescript
+
 isValidAsync(x: IsValidAsync): Promise<boolean>
 ```
 
@@ -8042,6 +8125,7 @@ test('readme example', async () => {
 ### join
 
 ```typescript
+
 join<T>(glue: string, list: ReadonlyArray<T>): string
 ```
 
@@ -8087,6 +8171,7 @@ test('curry', () => {
 ### keys
 
 ```typescript
+
 keys<T extends object>(x: T): (keyof T)[]
 ```
 
@@ -8126,6 +8211,7 @@ test('happy', () => {
 ### last
 
 ```typescript
+
 last(str: string): string
 ```
 
@@ -8173,6 +8259,7 @@ test('happy', () => {
 ### lastIndexOf
 
 ```typescript
+
 lastIndexOf<T>(target: T, list: ReadonlyArray<T>): number
 ```
 
@@ -8231,6 +8318,7 @@ test('false', () => {
 ### length
 
 ```typescript
+
 length<T>(listOrString: ReadonlyArray<T>): number
 ```
 
@@ -8286,6 +8374,7 @@ test('with bad input returns NaN', () => {
 ### lens
 
 ```typescript
+
 lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens
 ```
 
@@ -8454,6 +8543,7 @@ test('composed lenses', () => {
 ### lensEq
 
 ```typescript
+
 lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean
 ```
 
@@ -8525,6 +8615,7 @@ test('with R.lensPath', () => {
 ### lensIndex
 
 ```typescript
+
 lensIndex(index: number): Lens
 ```
 
@@ -8619,6 +8710,7 @@ test('get (set(set s v1) v2) === v2', () => {
 ### lensPath
 
 ```typescript
+
 lensPath(path: RamdaPath): Lens
 ```
 
@@ -8786,6 +8878,7 @@ test('get (set(set s v1) v2) === v2', () => {
 ### lensProp
 
 ```typescript
+
 lensProp(prop: string): {
   <T, U>(obj: T): U
 ```
@@ -8926,6 +9019,7 @@ test('get (set(set s v1) v2) === v2', () => {
 ### map
 
 ```typescript
+
 map<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<U>
 ```
 
@@ -9043,6 +9137,7 @@ test('when undefined instead of array', () => {
 ### mapAsync
 
 ```typescript
+
 mapAsync<T, K>(fn: AsyncIterable<T, K>, list: T[]): Promise<K[]>
 ```
 
@@ -9153,6 +9248,7 @@ test('error', async () => {
 ### mapAsyncLimit
 
 ```typescript
+
 mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number, list: T[]): Promise<K[]>
 ```
 
@@ -9215,6 +9311,7 @@ test('happy', async () => {
 ### mapFastAsync
 
 ```typescript
+
 mapFastAsync<T, K>(fn: AsyncIterable<T, K>, list: T[]): Promise<K[]>
 ```
 
@@ -9310,6 +9407,7 @@ test('pass index as second argument', async () => {
 ### mapToObject
 
 ```typescript
+
 mapToObject<T, U>(fn: (input: T) => object|false, list: T[]): U
 ```
 
@@ -9412,6 +9510,7 @@ test('bad path', () => {
 ### mapToObjectAsync
 
 ```typescript
+
 mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>
 ```
 
@@ -9460,6 +9559,7 @@ test('happy', async () => {
 ### match
 
 ```typescript
+
 match(regExpression: RegExp, str: string): string[]
 ```
 
@@ -9519,6 +9619,7 @@ test('throwing', () => {
 ### mathMod
 
 ```typescript
+
 mathMod(x: number, y: number): number
 ```
 
@@ -9571,6 +9672,7 @@ test('happy', () => {
 ### max
 
 ```typescript
+
 max<T extends Ord>(x: T, y: T): T
 ```
 
@@ -9619,6 +9721,7 @@ test('with string', () => {
 ### maxBy
 
 ```typescript
+
 maxBy<T>(compareFn: (input: T) => Ord, x: T, y: T): T
 ```
 
@@ -9668,6 +9771,7 @@ test('curried', () => {
 ### maybe
 
 ```typescript
+
 maybe<T>(ifRule: boolean, whenIf: T | Func<T>, whenElse: T | Func<T>): T
 ```
 
@@ -9780,6 +9884,7 @@ test('whenElse', () => {
 ### mean
 
 ```typescript
+
 mean(list: ReadonlyArray<number>): number
 ```
 
@@ -9823,6 +9928,7 @@ test('with NaN', () => {
 ### median
 
 ```typescript
+
 median(list: ReadonlyArray<number>): number
 ```
 
@@ -9866,6 +9972,7 @@ test('with empty array', () => {
 ### memoize
 
 ```typescript
+
 memoize<T, K extends any[]>(fn: (...inputs: K) => T): (...inputs: K) => T
 ```
 
@@ -10014,6 +10121,7 @@ test('string as argument', () => {
 ### merge
 
 ```typescript
+
 merge<O1 extends object, O2 extends object>(target: O1, newProps: O2): Merge<O2, O1, 'flat'>
 ```
 
@@ -10083,6 +10191,7 @@ test('when undefined or null instead of object', () => {
 ### mergeAll
 
 ```typescript
+
 mergeAll<T>(list: object[]): T
 ```
 
@@ -10147,6 +10256,7 @@ test('case 2', () => {
 ### mergeDeepRight
 
 ```typescript
+
 mergeDeepRight<O1 extends object, O2 extends object>(x: O1, y: O2): Merge<O2, O1, 'deep'>
 ```
 
@@ -10277,6 +10387,7 @@ test('ramda compatible test 3', () => {
 ### mergeLeft
 
 ```typescript
+
 mergeLeft<O1 extends object, O2 extends object>(target: O1, newProps: O2): Merge<O2, O1, 'flat'>
 ```
 
@@ -10343,6 +10454,7 @@ test('when undefined or null instead of object', () => {
 ### min
 
 ```typescript
+
 min<T extends Ord>(x: T, y: T): T
 ```
 
@@ -10387,6 +10499,7 @@ test('happy', () => {
 ### minBy
 
 ```typescript
+
 minBy<T>(compareFn: (input: T) => Ord, x: T, y: T): T
 ```
 
@@ -10436,6 +10549,7 @@ test('curried', () => {
 ### modulo
 
 ```typescript
+
 modulo(x: number, y: number): number
 ```
 
@@ -10476,6 +10590,7 @@ test('happy', () => {
 ### multiply
 
 ```typescript
+
 multiply(x: number, y: number): number
 ```
 
@@ -10516,6 +10631,7 @@ test('happy', () => {
 ### negate
 
 ```typescript
+
 negate(x: number): number
 ```
 
@@ -10553,6 +10669,7 @@ test('negate', () => {
 ### nextIndex
 
 ```typescript
+
 nextIndex(index: number, list: any[]): number
 ```
 
@@ -10611,6 +10728,7 @@ test('current index is too big', () => {
 ### none
 
 ```typescript
+
 none<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean
 ```
 
@@ -10671,6 +10789,7 @@ test('passes index to predicate', () => {
 ### not
 
 ```typescript
+
 not(input: any): boolean
 ```
 
@@ -10712,6 +10831,7 @@ test('not', () => {
 ### nth
 
 ```typescript
+
 nth<T>(index: number, list: ReadonlyArray<T>): T | undefined
 ```
 
@@ -10771,6 +10891,7 @@ test('with negative index', () => {
 ### of
 
 ```typescript
+
 of<T>(x: T): T[]
 ```
 
@@ -10812,6 +10933,7 @@ test('happy', () => {
 ### ok
 
 ```typescript
+
 ok(...inputs: any[]): (...schemas: any[]) => void | never
 ```
 
@@ -10929,6 +11051,7 @@ test('when throws with single input', () => {
 ### omit
 
 ```typescript
+
 omit<T, K extends string>(propsToOmit: readonly K[], obj: T): Omit<T, K>
 ```
 
@@ -11012,6 +11135,7 @@ test('happy', () => {
 ### once
 
 ```typescript
+
 once<T extends (...args: any[]) => any>(func: T): T
 ```
 
@@ -11076,6 +11200,7 @@ test('happy path', () => {
 ### over
 
 ```typescript
+
 over<T>(lens: Lens, fn: Arity1Fn, value: T): T
 ```
 
@@ -11107,6 +11232,7 @@ over(lens: Lens): <T>(fn: Arity1Fn, value: readonly T[]) => T[];
 ### partial
 
 ```typescript
+
 partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: [V0]): (x1: V1) => T
 ```
 
@@ -11220,6 +11346,7 @@ test('ramda spec', () => {
 ### partialCurry
 
 ```typescript
+
 partialCurry<Input, PartialInput, Output>(
   fn: (input: Input) => Output, 
   partialInput: PartialInput,
@@ -11331,6 +11458,7 @@ test('async function throwing an error', async () => {
 ### partition
 
 ```typescript
+
 partition<T>(
   predicate: Predicatex<T>,
   input: T[]
@@ -11463,6 +11591,7 @@ test('readme example', () => {
 ### pass
 
 ```typescript
+
 pass(...inputs: any[]): (...rules: any[]) => boolean
 ```
 
@@ -11544,6 +11673,7 @@ test('reame example', () => {
 ### path
 
 ```typescript
+
 path<Input, T>(pathToSearch: string | string[], obj: Input): T | undefined
 ```
 
@@ -11618,6 +11748,7 @@ test('path', () => {
 ### pathEq
 
 ```typescript
+
 pathEq(pathToSearch: Path, target: any, input: any): boolean
 ```
 
@@ -11693,6 +11824,7 @@ test('when wrong path', () => {
 ### pathOr
 
 ```typescript
+
 pathOr<T>(defaultValue: T, pathToSearch: Path, obj: any): T
 ```
 
@@ -11786,6 +11918,7 @@ test('curry case (x,y)(z)', () => {
 ### paths
 
 ```typescript
+
 paths<Input, T>(pathsToSearch: Path[], obj: Input): (T | undefined)[]
 ```
 
@@ -11896,6 +12029,7 @@ test('returns undefined for items not found', () => {
 ### pick
 
 ```typescript
+
 pick<T, K extends string | number | symbol>(propsToPick: readonly K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>
 ```
 
@@ -12032,6 +12166,7 @@ test('with symbol', () => {
 ### pickAll
 
 ```typescript
+
 pickAll<T, U>(propsToPick: readonly string[], input: T): U
 ```
 
@@ -12123,6 +12258,7 @@ test('with array as condition', () => {
 ### pipe
 
 ```typescript
+
 pipe<T1>(fn0: () => T1): () => T1
 ```
 
@@ -12368,6 +12504,7 @@ test('with bad input', () => {
 ### piped
 
 ```typescript
+
 piped<T>(input: any, ...fnList: Func<any>[]): T
 ```
 
@@ -12422,6 +12559,7 @@ test('happy', () => {
 ### pipedAsync
 
 ```typescript
+
 pipedAsync<T>(
   input: any,
   ...fns: (Func<any> | Async<any>)[]
@@ -12444,6 +12582,7 @@ pipedAsync<T>(
 ### pluck
 
 ```typescript
+
 pluck<T>(property: number, list: ReadonlyArray<T>): T
 ```
 
@@ -12498,6 +12637,7 @@ test('with number', () => {
 ### prepend
 
 ```typescript
+
 prepend<T>(x: T, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -12554,6 +12694,7 @@ test('prepend', () => {
 ### prevIndex
 
 ```typescript
+
 prevIndex(index: number, list: any[]): number
 ```
 
@@ -12607,6 +12748,7 @@ test('happy path 2', () => {
 ### produce
 
 ```typescript
+
 produce<Input, Output>(
   rules: ProduceRules<Input>,
   input: Input
@@ -12717,6 +12859,7 @@ test('sync', () => {
 ### product
 
 ```typescript
+
 product(list: ReadonlyArray<number>): number
 ```
 
@@ -12759,6 +12902,7 @@ test('bad input', () => {
 ### prop
 
 ```typescript
+
 prop<P extends keyof T, T>(propToFind: P, obj: T): T[P]
 ```
 
@@ -12809,6 +12953,7 @@ test('prop', () => {
 ### propEq
 
 ```typescript
+
 propEq<T, K extends keyof T>(propToFind: K, valueToMatch: T[K], obj: T): boolean
 ```
 
@@ -12867,6 +13012,7 @@ test('happy', () => {
 ### propIs
 
 ```typescript
+
 propIs(type: any, name: string, obj: any): boolean
 ```
 
@@ -12931,6 +13077,7 @@ test('when false', () => {
 ### propOr
 
 ```typescript
+
 propOr<T>(defaultValue: T, property: string, obj: { [key: string]: T}): T
 ```
 
@@ -12996,6 +13143,7 @@ test('propOr (currying)', () => {
 ### random
 
 ```typescript
+
 random(minInclusive: number, maxInclusive: number): number
 ```
 
@@ -13033,10 +13181,11 @@ test('when returns true', () => {
 ### range
 
 ```typescript
-range(start: number, end: number): number[]
+
+range(startInclusive: number, endExclusive: number): number[]
 ```
 
-It returns list of numbers between `start`(inclusive) to `end`(exclusive) numbers.
+It returns list of numbers between `startInclusive` to `endExclusive` numbers.
 
 ```javascript
 R.range(0, 5)
@@ -13050,8 +13199,8 @@ R.range(0, 5)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-range(start: number, end: number): number[];
-range(start: number): (end: number) => number[];
+range(startInclusive: number, endExclusive: number): number[];
+range(startInclusive: number): (endExclusive: number) => number[];
 ```
 
 </details>
@@ -13088,6 +13237,7 @@ test('curry', () => {
 ### reduce
 
 ```typescript
+
 reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult
 ```
 
@@ -13161,6 +13311,7 @@ test('with undefined as iterable', () => {
 ### reject
 
 ```typescript
+
 reject<T>(predicate: FilterFunctionArray<T>): (x: T[]) => T[]
 ```
 
@@ -13232,6 +13383,7 @@ test('pass index as second argument', () => {
 ### remove
 
 ```typescript
+
 remove(
   toRemove: string | RegExp | (string | RegExp)[],
   text: string
@@ -13339,6 +13491,7 @@ test('with single rule', () => {
 ### renameProps
 
 ```typescript
+
 renameProps(rules: object, input: object): object
 ```
 
@@ -13404,6 +13557,7 @@ test('curry', () => {
 ### repeat
 
 ```typescript
+
 repeat<T>(x: T): (timesToRepeat: number) => T[]
 ```
 
@@ -13452,6 +13606,7 @@ test('repeat', () => {
 ### replace
 
 ```typescript
+
 replace(strOrRegex: RegExp | string, replacer: string, str: string): string
 ```
 
@@ -13509,6 +13664,7 @@ test('3', () => {
 ### replaceAll
 
 ```typescript
+
 replaceAll(patterns: Array<RegExp | string>, replacer: string, input: string): string
 ```
 
@@ -13581,6 +13737,7 @@ test('throws when wrong replacer', () => {
 ### reset
 
 ```typescript
+
 reset(): void
 ```
 
@@ -13597,6 +13754,7 @@ reset(): void;
 ### reverse
 
 ```typescript
+
 reverse<T>(listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -13652,6 +13810,7 @@ test('it doesn\'t mutate', () => {
 ### set
 
 ```typescript
+
 set<T, U>(lens: Lens, replacer: U, obj: T): T
 ```
 
@@ -13682,6 +13841,7 @@ set(lens: Lens): <T, U>(replacer: U, obj: T) => T;
 ### setter
 
 ```typescript
+
 setter(keyOrObject: string | object, value?: any): void
 ```
 
@@ -13698,6 +13858,7 @@ setter(keyOrObject: string | object, value?: any): void;
 ### shuffle
 
 ```typescript
+
 shuffle<T>(list: T[]): T[]
 ```
 
@@ -13735,6 +13896,7 @@ test('happy', () => {
 ### slice
 
 ```typescript
+
 slice(from: number, to: number, list: string): string
 ```
 
@@ -13805,6 +13967,7 @@ test('slice', () => {
 ### sort
 
 ```typescript
+
 sort<T>(sortFn: (a: T, b: T) => number, list: ReadonlyArray<T>): T[]
 ```
 
@@ -13871,6 +14034,7 @@ test('it doesn\'t mutate', () => {
 ### sortBy
 
 ```typescript
+
 sortBy<T>(sortFn: (a: T) => Ord, list: ReadonlyArray<T>): T[]
 ```
 
@@ -13949,6 +14113,7 @@ test('with compose', () => {
 ### sortObject
 
 ```typescript
+
 sortObject<T>(predicate: SortObjectPredicate<T>, input: { [key: string]: T }): { [keyOutput: string]: T }
 ```
 
@@ -14041,6 +14206,7 @@ runTests(testData)
 ### split
 
 ```typescript
+
 split(separator: string | RegExp): (str: string) => string[]
 ```
 
@@ -14091,6 +14257,7 @@ test('curried', () => {
 ### splitEvery
 
 ```typescript
+
 splitEvery<T>(sliceLength: number, listOrString: ReadonlyArray<T>): T[][]
 ```
 
@@ -14155,6 +14322,7 @@ test('with bad input', () => {
 ### startsWith
 
 ```typescript
+
 startsWith(target: string, str: string): boolean
 ```
 
@@ -14208,6 +14376,7 @@ test('false', () => {
 ### subtract
 
 ```typescript
+
 subtract(x: number, y: number): number
 ```
 
@@ -14252,6 +14421,7 @@ test('happy', () => {
 ### sum
 
 ```typescript
+
 sum(list: ReadonlyArray<number>): number
 ```
 
@@ -14289,6 +14459,7 @@ test('happy', () => {
 ### switcher
 
 ```typescript
+
 switcher<T>(valueToMatch: any): Switchem<T>
 ```
 
@@ -14404,6 +14575,7 @@ test('fallback to default input when no matches', () => {
 ### symmetricDifference
 
 ```typescript
+
 symmetricDifference<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[]
 ```
 
@@ -14462,6 +14634,7 @@ test('symmetricDifference with objects', () => {
 ### T
 
 ```typescript
+
 T(): boolean
 ```
 
@@ -14485,6 +14658,7 @@ T(): boolean;
 ### tail
 
 ```typescript
+
 tail<T>(listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -14536,6 +14710,7 @@ test('tail', () => {
 ### take
 
 ```typescript
+
 take<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -14603,6 +14778,7 @@ test('with zero index', () => {
 ### takeLast
 
 ```typescript
+
 takeLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
 ```
 
@@ -14671,6 +14847,7 @@ test('with negative index', () => {
 ### tap
 
 ```typescript
+
 tap<T>(fn: (a: T) => any, x: T): T
 ```
 
@@ -14724,6 +14901,7 @@ test('tap', () => {
 ### tapAsync
 
 ```typescript
+
 tapAsync<T>(fn: Func<any> | Promise<any>, input: T): T
 ```
 
@@ -14759,6 +14937,7 @@ test('', async () => {
 ### test
 
 ```typescript
+
 test(regExpression: RegExp): (str: string) => boolean
 ```
 
@@ -14806,6 +14985,7 @@ test('throws if first argument is not regex', () => {
 ### throttle
 
 ```typescript
+
 throttle<T, U>(fn: (input: T) => U, ms: number): (input: T) => U
 ```
 
@@ -14890,6 +15070,7 @@ test('', async () => {
 ### times
 
 ```typescript
+
 times<T>(fn: (i: number) => T, howMany: number): T[]
 ```
 
@@ -14955,6 +15136,7 @@ test('curry', () => {
 ### toDecimal
 
 ```typescript
+
 toDecimal(num: number, charsAfterDecimalPoint?: number): number
 ```
 
@@ -14994,6 +15176,7 @@ test('', () => {
 ### toLower
 
 ```typescript
+
 toLower(str: string): string
 ```
 
@@ -15031,6 +15214,7 @@ test('toLower', () => {
 ### toPairs
 
 ```typescript
+
 toPairs<S>(obj: { [k: string]: S } | { [k: number]: S }): [string, S][]
 ```
 
@@ -15088,6 +15272,7 @@ test('happy', () => {
 ### toString
 
 ```typescript
+
 toString<T>(x: T): string
 ```
 
@@ -15125,6 +15310,7 @@ test('happy', () => {
 ### toUpper
 
 ```typescript
+
 toUpper(str: string): string
 ```
 
@@ -15162,6 +15348,7 @@ test('toUpper', () => {
 ### transpose
 
 ```typescript
+
 transpose<T>(list: T[][]): T[][]
 ```
 
@@ -15235,6 +15422,7 @@ test('array with falsy values', () => {
 ### trim
 
 ```typescript
+
 trim(str: string): string
 ```
 
@@ -15272,6 +15460,7 @@ test('trim', () => {
 ### tryCatch
 
 ```typescript
+
 tryCatch<T, U>(
   fn: (input: T) => U,
   fallback: U
@@ -15465,6 +15654,7 @@ test('when async + fn', async () => {
 ### type
 
 ```typescript
+
 type(x: any): "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "Function" | "Undefined" | "Async" | "Promise" | "RegExp" | "NaN"
 ```
 
@@ -15623,6 +15813,7 @@ test('function inside object 2', () => {
 ### union
 
 ```typescript
+
 union<T>(x: Array<T>, y: Array<T>): Array<T>
 ```
 
@@ -15671,6 +15862,7 @@ test('with list of objects', () => {
 ### uniq
 
 ```typescript
+
 uniq<T>(list: ReadonlyArray<T>): T[]
 ```
 
@@ -15715,6 +15907,7 @@ test('uniq', () => {
 ### uniqWith
 
 ```typescript
+
 uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean, list: ReadonlyArray<T>): T[]
 ```
 
@@ -15863,6 +16056,7 @@ test('uniqWith', () => {
 ### unless
 
 ```typescript
+
 unless<T, U>(predicate: (x: T) => boolean, whenFalseFn: (x: T) => U, obj: T): U
 ```
 
@@ -15926,6 +16120,7 @@ test('curried', () => {
 ### update
 
 ```typescript
+
 update<T>(index: number, newValue: T, list: ReadonlyArray<T>): T[]
 ```
 
@@ -15993,6 +16188,7 @@ test('list has no such index', () => {
 ### values
 
 ```typescript
+
 values<T extends object, K extends keyof T>(obj: T): T[K][]
 ```
 
@@ -16050,6 +16246,7 @@ test('with bad input', () => {
 ### view
 
 ```typescript
+
 view<T, U>(lens: Lens): (target: T) => U
 ```
 
@@ -16078,6 +16275,7 @@ view<T, U>(lens: Lens, target: T): U;
 ### wait
 
 ```typescript
+
 wait<T>(fn: Promise<T>): Promise<[T, Error|undefined]>
 ```
 
@@ -16131,6 +16329,7 @@ test('when promise is rejected', async () => {
 ### waitFor
 
 ```typescript
+
 waitFor(
   waitForTrueCondition: () => boolean,
   howLong: number,
@@ -16261,9 +16460,8 @@ test('throws when fn is not function', () => {
 ### when
 
 ```typescript
-when<T>(
-  rule: Func<boolean>, resultOrFunction: T | IdentityFunction<T>
-): IdentityFunction<T>
+
+when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U, input: T): U
 ```
 
 <details>
@@ -16271,12 +16469,9 @@ when<T>(
 <summary>All Typescript definitions</summary>
 
 ```typescript
-when<T>(
-  rule: Func<boolean>, resultOrFunction: T | IdentityFunction<T>
-): IdentityFunction<T>;
-when<T>(
-  rule: Func<boolean>
-): (resultOrFunction: T | IdentityFunction<T>) => IdentityFunction<T>;
+when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U, input: T): U;
+when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U): (input: T) => U;
+when<T, U>(predicate: (x: T) => boolean): FunctionToolbelt.Curry<(whenTrueFn: (a: T) => U, input: T) => U>;
 ```
 
 </details>
@@ -16287,30 +16482,14 @@ when<T>(
 
 ```javascript
 import { add } from './add'
-import { is } from './is'
 import { when } from './when'
 
-const ruleResult = 'RULE_RESULT'
-const rule = x => typeof x === 'number'
-const fn = when(rule, ruleResult)
-const curriedFn = when(rule)(ruleResult)
+const predicate = x => typeof x === 'number'
 
-test('when rule returns true', () => {
-  const input = 7
-
-  expect(fn(input)).toBe(ruleResult)
-})
-
-test('when rule returns false', () => {
-  const input = 'foo'
-
-  expect(fn(input)).toBe(input)
-  expect(curriedFn(input)).toBe(input)
-})
-
-test('second argument can be a function', () => {
-  const fn = when(is(Number), add(1))
-  expect(fn(10)).toBe(11)
+test('happy', () => {
+  const fn = when(predicate, add(11))
+  expect(fn(11)).toBe(22)
+  expect(fn('foo')).toBe('foo')
 })
 ```
 
@@ -16319,6 +16498,7 @@ test('second argument can be a function', () => {
 ### where
 
 ```typescript
+
 where<T, U>(conditions: T, input: U): boolean
 ```
 
@@ -16394,6 +16574,7 @@ test('when false', () => {
 ### whereEq
 
 ```typescript
+
 whereEq<T, U>(condition: T, input: U): boolean
 ```
 
@@ -16479,6 +16660,7 @@ test('with wrong input', () => {
 ### without
 
 ```typescript
+
 without<T>(matchAgainst: ReadonlyArray<T>, source: ReadonlyArray<T>): T[]
 ```
 
@@ -16530,6 +16712,7 @@ test('ramda test', () => {
 ### xor
 
 ```typescript
+
 xor(x: boolean, y: boolean): boolean
 ```
 
@@ -16619,6 +16802,7 @@ test.skip('returns a curried function', () => {
 ### zip
 
 ```typescript
+
 zip<K, V>(x: ReadonlyArray<K>, y: ReadonlyArray<V>): KeyValuePair<K, V>[]
 ```
 
@@ -16697,6 +16881,7 @@ test('should truncate result to length of shorted input list', () => {
 ### zipObj
 
 ```typescript
+
 zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T }
 ```
 
@@ -16820,6 +17005,8 @@ Move the following methods to `Rambda` and change their logic to match `Ramda` i
 - `R.whereEq`
 
 Also these changes:
+
+- `R.flatMap` - renamed to `R.chain` and moved to `Rambda`
 
 - `R.ifElseAsync` - accept any number of arguments for the returned function
 
