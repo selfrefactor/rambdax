@@ -1,4 +1,4 @@
-import { FunctionToolbelt, ObjectToolbelt, ListToolbelt } from "./_ts-toolbelt/src/index";
+import { F as FunctionToolbelt, O as ObjectToolbelt, L as ListToolbelt } from "./_ts-toolbelt/src/ts-toolbelt";
 
 type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise";
 
@@ -1850,8 +1850,18 @@ export function waitFor<T>(
  * 
  * `R.equals` is used to determine equality.
  */
-export function lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
 export function lensEq<T, U>(lens: Lens, target: T, input: U): boolean;
+export function lensEq<T, U>(lens: Lens, target: T):  (input: U) => boolean;
+export function lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
+export function lensEq<T>(lens: Lens, target: T): (input: Array<T>) => boolean;
+
+/**
+ * It returns `true` if data structure focused by the given lens satisfies the predicate.
+ */
+export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean;
+export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: Array<T>): boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: Array<T>) => boolean;
 
 // RAMBDAX_MARKER_END
 // ============================================

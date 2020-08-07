@@ -8544,7 +8544,7 @@ test('composed lenses', () => {
 
 ```typescript
 
-lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean
+lensEq<T, U>(lens: Lens, target: T, input: U): boolean
 ```
 
 It returns `true` if data structure focused by the given lens equals to the `target` value.
@@ -8553,27 +8553,24 @@ It returns `true` if data structure focused by the given lens equals to the `tar
 
 ```javascript
 const list = [ 1, 2, 3 ]
-const lens = lensIndex(0)
-const result = lensEq(
+const lens = R.lensIndex(0)
+const result = R.lensEq(
   lens, 1, list
 )
 // => true
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%201%2C%202%2C%203%20%5D%0Aconst%20lens%20%3D%20lensIndex(0)%0Aconst%20result%20%3D%20lensEq(%0A%20%20lens%2C%201%2C%20list%0A)%0A%2F%2F%20%3D%3E%20true">Try the above <strong>R.lensEq</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%201%2C%202%2C%203%20%5D%0Aconst%20lens%20%3D%20R.lensIndex(0)%0Aconst%20result%20%3D%20R.lensEq(%0A%20%20lens%2C%201%2C%20list%0A)%0A%2F%2F%20%3D%3E%20true">Try the above <strong>R.lensEq</strong> example in Rambda REPL</a>
 
 <details>
 
 <summary>All Typescript definitions</summary>
 
 ```typescript
-lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
 lensEq<T, U>(lens: Lens, target: T, input: U): boolean;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
+lensEq<T, U>(lens: Lens, target: T):  (input: U) => boolean;
+lensEq<T>(lens: Lens, target: T, input: Array<T>): boolean;
+lensEq<T>(lens: Lens, target: T): (input: Array<T>) => boolean;
 ```
 
 </details>
@@ -8593,9 +8590,7 @@ test('with list', () => {
   expect(lensEq(
     lens, 1, list
   )).toBeTrue()
-  expect(lensEq(
-    lens, 2, list
-  )).toBeFalse()
+  expect(lensEq(lens, 2)(list)).toBeFalse()
 })
 
 test('with R.lensPath', () => {
@@ -9011,6 +9006,75 @@ test('get (set(set s v1) v2) === v2', () => {
         lensProp('a'), 10, testObj
       )
     ))).toEqual(11)
+})
+```
+
+</details>
+
+### lensSatisfies
+
+```typescript
+
+lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean
+```
+
+It returns `true` if data structure focused by the given lens satisfies the predicate.
+
+```javascript
+const fn = R.lensSatisfies(x => x > 5, R.lensIndex(0))
+const result = [
+  fn([10, 20, 30]),
+  fn([1, 2, 3]),
+]
+// => [true, false]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20R.lensSatisfies(x%20%3D%3E%20x%20%3E%205%2C%20R.lensIndex(0))%0Aconst%20result%20%3D%20%5B%0A%20%20fn(%5B10%2C%2020%2C%2030%5D)%2C%0A%20%20fn(%5B1%2C%202%2C%203%5D)%2C%0A%5D%0A%2F%2F%20%3D%3E%20%5Btrue%2C%20false%5D">Try the above <strong>R.lensSatisfies</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean;
+lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
+lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: Array<T>): boolean;
+lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: Array<T>) => boolean;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { lensIndex } from './lensIndex'
+import { lensPath } from './lensPath'
+import { lensSatisfies } from './lensSatisfies'
+
+const predicate = x => x > 1
+
+test('with list', () => {
+  const lens = lensIndex(0)
+  const fn = lensSatisfies(predicate, lens)
+  expect(fn([ 10, 20, 30 ])).toBeTrue()
+  expect(fn([ 1, 2, 3 ])).toBeFalse()
+})
+
+test('with R.lensPath', () => {
+  const input1 = { a : { b : 10 } }
+  const input2 = { a : { b : 1 } }
+  const lens = lensPath('a.b')
+  const fn = lensSatisfies(predicate, lens)
+
+  expect(fn(input1)).toBeTrue()
+  expect(fn(input2)).toBeFalse()
 })
 ```
 
@@ -16958,6 +17022,13 @@ test('ignore extra keys', () => {
 </details>
 
 ## CHANGELOG
+
+4.2.0
+
+- Add `R.lensSatisfies` method
+
+- Close [Issue #519](https://github.com/selfrefactor/rambda/issues/519) -
+`ts-toolbelt` needs other type of export with `--isolatedModules` flag
 
 4.1.0
 
