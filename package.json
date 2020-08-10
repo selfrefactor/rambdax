@@ -14,7 +14,7 @@
     "@babel/core": "7.10.4",
     "@babel/plugin-proposal-object-rest-spread": "7.10.4",
     "@babel/preset-env": "7.10.4",
-    "rollup": "2.21.0",
+    "rollup": "2.23.1",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-cleanup": "3.1.1",
     "rollup-plugin-commonjs": "10.1.0",

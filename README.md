@@ -90,7 +90,7 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 <details>
 <summary>
-  Click to see the full list of 105 Ramda methods not implemented in Rambda 
+  Click to see the full list of 104 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -149,7 +149,6 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 - mergeRight
 - mergeWith
 - mergeWithKey
-- move
 - nAry
 - nthArg
 - o
@@ -9040,11 +9039,6 @@ lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean
 lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
 lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: Array<T>): boolean;
 lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: Array<T>) => boolean;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 ```
 
 </details>
@@ -9468,6 +9462,67 @@ test('pass index as second argument', async () => {
 
 </details>
 
+### mapKeys
+
+```typescript
+
+mapKeys<T, U>(changeKeyFn: (x: string) => string, obj: { [key: string]: T}): U
+```
+
+It takes an object and returns a new object with changed keys according to `changeKeyFn` function.
+
+```javascript
+const obj = {a: 1, b: 2}
+const changeKeyFn = prop => `{prop}_foo`
+const result = R.mapKeys(changeKeyFn, obj)
+// => {a_foo: 1, b_foo: 2}
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0Aconst%20changeKeyFn%20%3D%20prop%20%3D%3E%20%60%7Bprop%7D_foo%60%0Aconst%20result%20%3D%20R.mapKeys(changeKeyFn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7Ba_foo%3A%201%2C%20b_foo%3A%202%7D">Try the above <strong>R.mapKeys</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+mapKeys<T, U>(changeKeyFn: (x: string) => string, obj: { [key: string]: T}): U;
+mapKeys<T, U>(changeKeyFn: (x: string) => string): (obj: { [key: string]: T}) => U;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { mapKeys } from './mapKeys'
+
+const obj = {
+  a : 1,
+  b : 2,
+}
+const changeKeyFn = prop => `${ prop }_foo`
+const expected = {
+  a_foo : 1,
+  b_foo : 2,
+}
+
+test('happy', () => {
+  const result = mapKeys(changeKeyFn, obj)
+
+  expect(result).toEqual(expected)
+})
+
+test('curried', () => {
+  const result = mapKeys(changeKeyFn)(obj)
+
+  expect(result).toEqual(expected)
+})
+```
+
+</details>
+
 ### mapToObject
 
 ```typescript
@@ -9687,7 +9742,7 @@ test('throwing', () => {
 mathMod(x: number, y: number): number
 ```
 
-`R.mathMod` behaves like the modulo operator should mathematically, unlike the % operator (and by extension, `R.modulo`). So while `-17 % 5` is `-2`, `mathMod(-17, 5)` is `3`.
+`R.mathMod` behaves like the modulo operator should mathematically, unlike the `%` operator (and by extension, `R.modulo`). So while `-17 % 5` is `-2`, `mathMod(-17, 5)` is `3`.
 
 ```javascript
 const result = [
@@ -10646,6 +10701,79 @@ import { modulo } from './modulo'
 test('happy', () => {
   expect(modulo(17, 3)).toEqual(2)
   expect(modulo(15)(6)).toEqual(3)
+})
+```
+
+</details>
+
+### move
+
+```typescript
+
+move<T>(fromIndex: number, toIndex: number, list: readonly T[]): T[]
+```
+
+It returns a copy of `list` with exchanged `fromIndex` and `toIndex` elements.
+
+```javascript
+const list = [1, 2, 3]
+const result = R.move(0, 1, list)
+// => [2, 1, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%5D%0Aconst%20result%20%3D%20R.move(0%2C%201%2C%20list)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%2C%203%5D">Try the above <strong>R.move</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+move<T>(fromIndex: number, toIndex: number, list: readonly T[]): T[];
+move(fromIndex: number, toIndex: number): <T>(list: readonly T[]) => T[];
+move(fromIndex: number): {
+    <T>(toIndex: number, list: readonly T[]): T[];
+    (toIndex: number): <T>(list: readonly T[]) => T[];
+};
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { move } from './move'
+const list = [ 1, 2, 3, 4 ]
+
+test('happy', () => {
+  const result = move(
+    0, 1, list
+  )
+
+  expect(result).toEqual([ 2, 1, 3, 4 ])
+})
+
+test('with negative index', () => {
+  const errorMessage = 'Rambda.move does not support negative indexes'
+  expect(() => move(
+    0, -1, list
+  )).toThrowWithMessage(Error, errorMessage)
+  expect(() => move(
+    -1, 0, list
+  )).toThrowWithMessage(Error, errorMessage)
+})
+
+test('when indexes are outside the list outbounds', () => {
+  const result1 = move(
+    10, 1, list
+  )
+  const result2 = move(
+    1, 10, list
+  )
+
+  expect(result1).toEqual(list)
+  expect(result2).toEqual(list)
 })
 ```
 
@@ -14174,6 +14302,203 @@ test('with compose', () => {
 
 </details>
 
+### sortByPath
+
+```typescript
+
+sortByPath<T>(sortPath: Path, list: ReadonlyArray<T>): T[]
+```
+
+It returns copy of `list` sorted by `sortPath` value. 
+
+As `sortPath` is passed to `R.path`, it can be either a string or an array of strings.
+
+```javascript
+const list = [
+  {a: {b: 2}},
+  {a: {b: 1}},
+  {a: {b: 3}}
+]
+const result = R.sortByPath('a.b', list)
+const expected = [
+  {a: {b: 1}},
+  {a: {b: 2}},
+  {a: {b: 3}}
+]
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%0A%20%20%7Ba%3A%20%7Bb%3A%202%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%201%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%203%7D%7D%0A%5D%0Aconst%20result%20%3D%20R.sortByPath('a.b'%2C%20list)%0Aconst%20expected%20%3D%20%5B%0A%20%20%7Ba%3A%20%7Bb%3A%201%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%202%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%203%7D%7D%0A%5D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.sortByPath</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+sortByPath<T>(sortPath: Path, list: ReadonlyArray<T>): T[];
+sortByPath(sortPath: Path): <T>(list: ReadonlyArray<T>) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { sortByPath } from './sortByPath'
+
+const list = [ { a : { b : 3 } }, { a : { b : 1 } }, { a : { b : 2 } } ]
+const sorted = [ { a : { b : 1 } }, { a : { b : 2 } }, { a : { b : 3 } } ]
+
+test('with string as path', () => {
+  expect(sortByPath('a.b', list)).toEqual(sorted)
+})
+
+test('with list of strings as path', () => {
+  expect(sortByPath([ 'a', 'b' ], list)).toEqual(sorted)
+})
+
+test('with string as path - curried', () => {
+  expect(sortByPath('a.b')(list)).toEqual(sorted)
+})
+
+test('with list of strings as path - curried', () => {
+  expect(sortByPath([ 'a', 'b' ])(list)).toEqual(sorted)
+})
+```
+
+</details>
+
+### sortByProps
+
+```typescript
+
+sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[]
+```
+
+It returns sorted copy of `list` of objects.
+
+Sorting is done using a list of strings, each representing a path. Two members `a` and `b` from `list` can be sorted if both return a value for a given path. If the value is equal, then the next member of `sortPaths`(if there is such) will be used in order to find difference between `a` and `b`.
+
+```javascript
+const list = [
+  {a: {b: 2}},
+  {a: {b: 1}},
+  {a: {b: 3}}
+]
+const result = R.sortByPath('a.b', list)
+const expected = [
+  {a: {b: 1}},
+  {a: {b: 2}},
+  {a: {b: 3}}
+]
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%0A%20%20%7Ba%3A%20%7Bb%3A%202%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%201%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%203%7D%7D%0A%5D%0Aconst%20result%20%3D%20R.sortByPath('a.b'%2C%20list)%0Aconst%20expected%20%3D%20%5B%0A%20%20%7Ba%3A%20%7Bb%3A%201%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%202%7D%7D%2C%0A%20%20%7Ba%3A%20%7Bb%3A%203%7D%7D%0A%5D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.sortByProps</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[];
+sortByProps(sortPaths: string[]): <T>(list: ReadonlyArray<T>) => T[];
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { sortByProps } from './sortByProps'
+
+const list = [
+  {
+    a : {
+      b : 1,
+      c : 2,
+    },
+  },
+  {
+    a : {
+      b : 1,
+      c : 1,
+    },
+  },
+  {
+    a : {
+      b : 0,
+      c : 3,
+    },
+  },
+]
+const sorted = [
+  {
+    a : {
+      b : 0,
+      c : 3,
+    },
+  },
+  {
+    a : {
+      b : 1,
+      c : 1,
+    },
+  },
+  {
+    a : {
+      b : 1,
+      c : 2,
+    },
+  },
+]
+
+test('wrong paths are ignored', () => {
+  expect(sortByProps([ 'foo.bar', 'a.b', 'a.c' ], list)).toEqual(sorted)
+})
+
+test('skip sort when path results are equal', () => {
+  const input = [ {
+    a : {
+      b : 0,
+      c : 2,
+    },
+  }, {
+    a : {
+      b : 0,
+      c : 1,
+    },
+  } ]
+  expect(sortByProps([ 'a.b', 'a.d' ], input)).toEqual(input)
+})
+
+test('when list is already sorted', () => {
+  const input = [ {
+    a : {
+      b : 0,
+      c : 1,
+    },
+  }, {
+    a : {
+      b : 0,
+      c : 2,
+    },
+  } ]
+  expect(sortByProps([ 'a.b', 'a.c' ])(input)).toEqual(input)
+})
+```
+
+</details>
+
 ### sortObject
 
 ```typescript
@@ -17025,7 +17350,17 @@ test('ignore extra keys', () => {
 
 4.2.0
 
+- Add `R.move` method
+
+- Add `R.union` method
+
 - Add `R.lensSatisfies` method
+
+- Add `R.mapKeys` method
+
+- Add `R.sortByPath` method
+
+- Add `R.sortByProps` method *
 
 - Close [Issue #519](https://github.com/selfrefactor/rambda/issues/519) -
 `ts-toolbelt` needs other type of export with `--isolatedModules` flag

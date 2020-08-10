@@ -705,7 +705,7 @@ export function match(regExpression: RegExp, str: string): string[];
 export function match(regExpression: RegExp): (str: string) => string[];
 
 /**
- * `R.mathMod` behaves like the modulo operator should mathematically, unlike the % operator (and by extension, `R.modulo`). So while `-17 % 5` is `-2`, `mathMod(-17, 5)` is `3`.
+ * `R.mathMod` behaves like the modulo operator should mathematically, unlike the `%` operator (and by extension, `R.modulo`). So while `-17 % 5` is `-2`, `mathMod(-17, 5)` is `3`.
  */
 export function mathMod(x: number, y: number): number;
 export function mathMod(x: number): (y: number) => number;
@@ -778,6 +778,16 @@ export function minBy<T>(compareFn: (input: T) => Ord): FunctionToolbelt.Curry<(
  */
 export function modulo(x: number, y: number): number;
 export function modulo(x: number): (y: number) => number;
+
+/**
+ * It returns a copy of `list` with exchanged `fromIndex` and `toIndex` elements.
+ */
+export function move<T>(fromIndex: number, toIndex: number, list: readonly T[]): T[];
+export function move(fromIndex: number, toIndex: number): <T>(list: readonly T[]) => T[];
+export function move(fromIndex: number): {
+    <T>(toIndex: number, list: readonly T[]): T[];
+    (toIndex: number): <T>(list: readonly T[]) => T[];
+};
 
 /**
  * Curried version of `x*y`.
@@ -1663,6 +1673,12 @@ export function mapToObject<T, U>(fn: (input: T) => object|false): (list: T[]) =
 export function mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>;
 
 /**
+ * It takes an object and returns a new object with changed keys according to `changeKeyFn` function.
+ */
+export function mapKeys<T, U>(changeKeyFn: (x: string) => string, obj: { [key: string]: T}): U;
+export function mapKeys<T, U>(changeKeyFn: (x: string) => string): (obj: { [key: string]: T}) => U;
+
+/**
  * It acts as ternary operator and it is helpful when we have nested ternaries.
  * 
  * All of the inputs can be either direct values or anonymous functions. This is helpful if we don't want to evaluate certain paths as we can wrap this logic in a function.
@@ -1862,6 +1878,22 @@ export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, in
 export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: Array<T>): boolean;
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: Array<T>) => boolean;
+
+/**
+ * It returns copy of `list` sorted by `sortPath` value.
+ * 
+ * As `sortPath` is passed to `R.path`, it can be either a string or an array of strings.
+ */
+export function sortByPath<T>(sortPath: Path, list: ReadonlyArray<T>): T[];
+export function sortByPath(sortPath: Path): <T>(list: ReadonlyArray<T>) => T[];
+
+/**
+ * It returns sorted copy of `list` of objects.
+ * 
+ * Sorting is done using a list of strings, each representing a path. Two members `a` and `b` from `list` can be sorted if both return a value for a given path. If the value is equal, then the next member of `sortPaths`(if there is such) will be used in order to find difference between `a` and `b`.
+ */
+export function sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[];
+export function sortByProps(sortPaths: string[]): <T>(list: ReadonlyArray<T>) => T[];
 
 // RAMBDAX_MARKER_END
 // ============================================

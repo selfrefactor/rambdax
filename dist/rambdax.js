@@ -1388,6 +1388,12 @@ function lensEqFn(lens, target, input) {
 
 const lensEq = curry(lensEqFn);
 
+function lensSatisfiesFn(predicate, lens, input) {
+  return Boolean(predicate(view(lens, input)));
+}
+
+const lensSatisfies = curry(lensSatisfiesFn);
+
 async function mapFastAsyncFn(fn, arr) {
   const promised = arr.map((a, i) => fn(a, i));
   return Promise.all(promised);
@@ -1431,6 +1437,13 @@ async function mapAsyncLimit(iterable, limit, list) {
     toReturn = [...toReturn, ...iterableResult];
   }
 
+  return toReturn;
+}
+
+function mapKeys(changeKeyFn, obj) {
+  if (arguments.length === 1) return _obj => mapKeys(changeKeyFn, _obj);
+  const toReturn = {};
+  Object.keys(obj).forEach(prop => toReturn[changeKeyFn(prop)] = obj[prop]);
   return toReturn;
 }
 
@@ -1924,6 +1937,65 @@ function shuffle(arrayRaw) {
   }
 
   return array;
+}
+
+function path(list, obj) {
+  if (arguments.length === 1) return _obj => path(list, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  let willReturn = obj;
+  let counter = 0;
+  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
+
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
+      return undefined;
+    }
+
+    willReturn = willReturn[pathArrValue[counter]];
+    counter++;
+  }
+
+  return willReturn;
+}
+
+function sortBy(sortFn, list) {
+  if (arguments.length === 1) return _list => sortBy(sortFn, _list);
+  const clone = list.slice();
+  return clone.sort((a, b) => {
+    const aSortResult = sortFn(a);
+    const bSortResult = sortFn(b);
+    if (aSortResult === bSortResult) return 0;
+    return aSortResult < bSortResult ? -1 : 1;
+  });
+}
+
+function sortByPath(sortPath, list) {
+  if (arguments.length === 1) return _list => sortByPath(sortPath, _list);
+  return sortBy(path(sortPath), list);
+}
+
+function singleSort(a, b, sortPaths) {
+  let toReturn = 0;
+  sortPaths.forEach(singlePath => {
+    if (toReturn !== 0) return;
+    const aResult = path(singlePath, a);
+    const bResult = path(singlePath, b);
+    if ([aResult, bResult].includes(undefined)) return;
+    if (aResult === bResult) return;
+    toReturn = aResult > bResult ? 1 : -1;
+  });
+  return toReturn;
+}
+
+function sortByProps(sortPaths, list) {
+  if (arguments.length === 1) return _list => sortByProps(sortPaths, _list);
+  const clone = list.slice();
+  clone.sort((a, b) => singleSort(a, b, sortPaths));
+  return clone;
 }
 
 function sortObject(predicate, obj) {
@@ -2706,29 +2778,6 @@ function has(prop, obj) {
   return obj[prop] !== undefined;
 }
 
-function path(list, obj) {
-  if (arguments.length === 1) return _obj => path(list, _obj);
-
-  if (obj === null || obj === undefined) {
-    return undefined;
-  }
-
-  let willReturn = obj;
-  let counter = 0;
-  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-  while (counter < pathArrValue.length) {
-    if (willReturn === null || willReturn === undefined) {
-      return undefined;
-    }
-
-    willReturn = willReturn[pathArrValue[counter]];
-    counter++;
-  }
-
-  return willReturn;
-}
-
 function hasPath(maybePath, obj) {
   if (arguments.length === 1) {
     return objHolder => hasPath(maybePath, objHolder);
@@ -3043,6 +3092,20 @@ function modulo(x, y) {
   return x % y;
 }
 
+function moveFn(fromIndex, toIndex, list) {
+  if (fromIndex < 0 || toIndex < 0) {
+    throw new Error('Rambda.move does not support negative indexes');
+  }
+
+  if (fromIndex > list.length - 1 || toIndex > list.length - 1) return list;
+  const clone = list.slice();
+  clone[fromIndex] = list[toIndex];
+  clone[toIndex] = list[fromIndex];
+  return clone;
+}
+
+const move = curry(moveFn);
+
 function multiply(x, y) {
   if (arguments.length === 1) return _y => multiply(x, _y);
   return x * y;
@@ -3191,17 +3254,6 @@ function sliceFn(from, to, list) {
 }
 
 const slice = curry(sliceFn);
-
-function sortBy(sortFn, list) {
-  if (arguments.length === 1) return _list => sortBy(sortFn, _list);
-  const clone = list.slice();
-  return clone.sort((a, b) => {
-    const aSortResult = sortFn(a);
-    const bSortResult = sortFn(b);
-    if (aSortResult === bSortResult) return 0;
-    return aSortResult < bSortResult ? -1 : 1;
-  });
-}
 
 function split(separator, str) {
   if (arguments.length === 1) return _str => split(separator, _str);
@@ -3358,16 +3410,12 @@ function values(obj) {
   return Object.values(obj);
 }
 
-function when(rule, resultOrFunction) {
-  if (arguments.length === 1) {
-    return whenTrueHolder => when(rule, whenTrueHolder);
-  }
-
-  return input => {
-    if (!rule(input)) return input;
-    return isFunction$1(resultOrFunction) ? resultOrFunction(input) : resultOrFunction;
-  };
+function whenFn(predicate, whenTrueFn, input) {
+  if (!predicate(input)) return input;
+  return whenTrueFn(input);
 }
+
+const when = curry(whenFn);
 
 function where(conditions, input) {
   if (input === undefined) {
@@ -3527,11 +3575,13 @@ exports.lensEq = lensEq;
 exports.lensIndex = lensIndex;
 exports.lensPath = lensPath;
 exports.lensProp = lensProp;
+exports.lensSatisfies = lensSatisfies;
 exports.map = map;
 exports.mapAsync = mapAsync;
 exports.mapAsyncLimit = mapAsyncLimit;
 exports.mapFastAsync = mapFastAsync;
 exports.mapFastAsyncFn = mapFastAsyncFn;
+exports.mapKeys = mapKeys;
 exports.mapToObject = mapToObject;
 exports.mapToObjectAsync = mapToObjectAsync;
 exports.match = match;
@@ -3551,6 +3601,7 @@ exports.min = min;
 exports.minBy = minBy;
 exports.minByFn = minByFn;
 exports.modulo = modulo;
+exports.move = move;
 exports.multiply = multiply;
 exports.negate = negate;
 exports.nextIndex = nextIndex;
@@ -3603,6 +3654,8 @@ exports.shuffle = shuffle;
 exports.slice = slice;
 exports.sort = sort;
 exports.sortBy = sortBy;
+exports.sortByPath = sortByPath;
+exports.sortByProps = sortByProps;
 exports.sortObject = sortObject;
 exports.split = split;
 exports.splitEvery = splitEvery;

@@ -1384,6 +1384,12 @@ function lensEqFn(lens, target, input) {
 
 const lensEq = curry(lensEqFn);
 
+function lensSatisfiesFn(predicate, lens, input) {
+  return Boolean(predicate(view(lens, input)));
+}
+
+const lensSatisfies = curry(lensSatisfiesFn);
+
 async function mapFastAsyncFn(fn, arr) {
   const promised = arr.map((a, i) => fn(a, i));
   return Promise.all(promised);
@@ -1427,6 +1433,13 @@ async function mapAsyncLimit(iterable, limit, list) {
     toReturn = [...toReturn, ...iterableResult];
   }
 
+  return toReturn;
+}
+
+function mapKeys(changeKeyFn, obj) {
+  if (arguments.length === 1) return _obj => mapKeys(changeKeyFn, _obj);
+  const toReturn = {};
+  Object.keys(obj).forEach(prop => toReturn[changeKeyFn(prop)] = obj[prop]);
   return toReturn;
 }
 
@@ -1920,6 +1933,65 @@ function shuffle(arrayRaw) {
   }
 
   return array;
+}
+
+function path(list, obj) {
+  if (arguments.length === 1) return _obj => path(list, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  let willReturn = obj;
+  let counter = 0;
+  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
+
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
+      return undefined;
+    }
+
+    willReturn = willReturn[pathArrValue[counter]];
+    counter++;
+  }
+
+  return willReturn;
+}
+
+function sortBy(sortFn, list) {
+  if (arguments.length === 1) return _list => sortBy(sortFn, _list);
+  const clone = list.slice();
+  return clone.sort((a, b) => {
+    const aSortResult = sortFn(a);
+    const bSortResult = sortFn(b);
+    if (aSortResult === bSortResult) return 0;
+    return aSortResult < bSortResult ? -1 : 1;
+  });
+}
+
+function sortByPath(sortPath, list) {
+  if (arguments.length === 1) return _list => sortByPath(sortPath, _list);
+  return sortBy(path(sortPath), list);
+}
+
+function singleSort(a, b, sortPaths) {
+  let toReturn = 0;
+  sortPaths.forEach(singlePath => {
+    if (toReturn !== 0) return;
+    const aResult = path(singlePath, a);
+    const bResult = path(singlePath, b);
+    if ([aResult, bResult].includes(undefined)) return;
+    if (aResult === bResult) return;
+    toReturn = aResult > bResult ? 1 : -1;
+  });
+  return toReturn;
+}
+
+function sortByProps(sortPaths, list) {
+  if (arguments.length === 1) return _list => sortByProps(sortPaths, _list);
+  const clone = list.slice();
+  clone.sort((a, b) => singleSort(a, b, sortPaths));
+  return clone;
 }
 
 function sortObject(predicate, obj) {
@@ -2702,29 +2774,6 @@ function has(prop, obj) {
   return obj[prop] !== undefined;
 }
 
-function path(list, obj) {
-  if (arguments.length === 1) return _obj => path(list, _obj);
-
-  if (obj === null || obj === undefined) {
-    return undefined;
-  }
-
-  let willReturn = obj;
-  let counter = 0;
-  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-  while (counter < pathArrValue.length) {
-    if (willReturn === null || willReturn === undefined) {
-      return undefined;
-    }
-
-    willReturn = willReturn[pathArrValue[counter]];
-    counter++;
-  }
-
-  return willReturn;
-}
-
 function hasPath(maybePath, obj) {
   if (arguments.length === 1) {
     return objHolder => hasPath(maybePath, objHolder);
@@ -3039,6 +3088,20 @@ function modulo(x, y) {
   return x % y;
 }
 
+function moveFn(fromIndex, toIndex, list) {
+  if (fromIndex < 0 || toIndex < 0) {
+    throw new Error('Rambda.move does not support negative indexes');
+  }
+
+  if (fromIndex > list.length - 1 || toIndex > list.length - 1) return list;
+  const clone = list.slice();
+  clone[fromIndex] = list[toIndex];
+  clone[toIndex] = list[fromIndex];
+  return clone;
+}
+
+const move = curry(moveFn);
+
 function multiply(x, y) {
   if (arguments.length === 1) return _y => multiply(x, _y);
   return x * y;
@@ -3187,17 +3250,6 @@ function sliceFn(from, to, list) {
 }
 
 const slice = curry(sliceFn);
-
-function sortBy(sortFn, list) {
-  if (arguments.length === 1) return _list => sortBy(sortFn, _list);
-  const clone = list.slice();
-  return clone.sort((a, b) => {
-    const aSortResult = sortFn(a);
-    const bSortResult = sortFn(b);
-    if (aSortResult === bSortResult) return 0;
-    return aSortResult < bSortResult ? -1 : 1;
-  });
-}
 
 function split(separator, str) {
   if (arguments.length === 1) return _str => split(separator, _str);
@@ -3354,16 +3406,12 @@ function values(obj) {
   return Object.values(obj);
 }
 
-function when(rule, resultOrFunction) {
-  if (arguments.length === 1) {
-    return whenTrueHolder => when(rule, whenTrueHolder);
-  }
-
-  return input => {
-    if (!rule(input)) return input;
-    return isFunction$1(resultOrFunction) ? resultOrFunction(input) : resultOrFunction;
-  };
+function whenFn(predicate, whenTrueFn, input) {
+  if (!predicate(input)) return input;
+  return whenTrueFn(input);
 }
+
+const when = curry(whenFn);
 
 function where(conditions, input) {
   if (input === undefined) {
@@ -3425,4 +3473,4 @@ function zipObj(keys, values) {
   }, {});
 }
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applySpec, assoc, assocPath, both, chain, change, check, clamp, clone, compact, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, interpolate, intersection, intersperse, is$1 as is, isEmpty, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapToObject, mapToObjectAsync, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, multiply, negate, nextIndex, none, not, nth, of, ok, omit, once, over, partial, partialCurry, partition, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, prop, propEq, propIs, propOr, prototypeToString, random, range, reduce, reject, remove, renameProps, repeat, replace$1 as replace, replaceAll, reset, reverse, schemaToString, set$1 as set, setter, shuffle, slice, sort, sortBy, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, transpose, trim, tryCatch, type, union, uniq, uniqWith, unless, update, values, view, wait, waitFor, when, where, whereEq, without, xor, zip, zipObj };
+export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applySpec, assoc, assocPath, both, chain, change, check, clamp, clone, compact, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, either, endsWith, equals, filter, filterAsync, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, interpolate, intersection, intersperse, is$1 as is, isEmpty, isFunction$1 as isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, lensSatisfies, map, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapKeys, mapToObject, mapToObjectAsync, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize$1 as memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, move, multiply, negate, nextIndex, none, not, nth, of, ok, omit, once, over, partial, partialCurry, partition, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, piped, pipedAsync, pluck, prepend, prevIndex, produce, product, prop, propEq, propIs, propOr, prototypeToString, random, range, reduce, reject, remove, renameProps, repeat, replace$1 as replace, replaceAll, reset, reverse, schemaToString, set$1 as set, setter, shuffle, slice, sort, sortBy, sortByPath, sortByProps, sortObject, split, splitEvery, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString$1 as toString, toUpper, transpose, trim, tryCatch, type, union, uniq, uniqWith, unless, update, values, view, wait, waitFor, when, where, whereEq, without, xor, zip, zipObj };
