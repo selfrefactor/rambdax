@@ -1504,11 +1504,6 @@ export function change<Input, Output>(
 ): Output;
 
 /**
- * It returns a clone of `list` without the falsy or empty elements.
- */
-export function compact<T>(x: any[]): T[];
-
-/**
  * Asynchronous version of `R.compose`
  */
 export function composeAsync<Out>(
@@ -1653,7 +1648,9 @@ export function mapFastAsync<T, K>(fn: AsyncIterableIndexed<T, K>) : ( list: T[]
  * It is similar to `R.mapFastAsync` in that it uses `Promise.all` but not over the whole list, rather than with only slice from `list` with length `limit`.
  */
 export function mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number, list: T[]): Promise<K[]>;
+export function mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number): (list: T[]) => Promise<K[]>;
 export function mapAsyncLimit<T, K>(fn: AsyncIterableIndexed<T, K>, limit: number, list: T[]): Promise<K[]>;
+export function mapAsyncLimit<T, K>(fn: AsyncIterableIndexed<T, K>, limit: number): (list: T[]) => Promise<K[]>;
 
 /**
  * This method allows to generate an object from a list using input function `fn`.
@@ -1671,6 +1668,7 @@ export function mapToObject<T, U>(fn: (input: T) => object|false): (list: T[]) =
  * Asynchronous version of `R.mapToObject`
  */
 export function mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>;
+export function mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>): (list: T[]) => Promise<U>;
 
 /**
  * It takes an object and returns a new object with changed keys according to `changeKeyFn` function.
@@ -1737,6 +1735,9 @@ export function partialCurry<Input, PartialInput, Output>(
  */
 export function piped<T>(input: any, ...fnList: Func<any>[]): T;
 
+/**
+ * It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
+ */
 export function pipedAsync<T>(
   input: any,
   ...fns: (Func<any> | Async<any>)[]
@@ -1747,17 +1748,17 @@ export function pipedAsync<T>(
  * 
  * `rules` input is an object with synchronous or asynchronous functions as values.
  * 
- * If there is at least one member of `rules` that is asynchronous, then the return value is a promise.
+ * The return value is wrapped in a promise, even if all `rules` are synchronous functions.
  */
 export function produce<Input, Output>(
   rules: ProduceRules<Input>,
   input: Input
-): Output;
+): Promise<Output>;
 export function produce<Input, Output>(
   rules: ProduceRules<Input>
 ): (
   input: Input
-) => Output;
+) => Promise<Output>;
 
 /**
  * It returns a random number between `min` inclusive and `max` inclusive.
@@ -1880,6 +1881,13 @@ export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: Array<T>) => boolean;
 
 /**
+ * A combination between `R.defaultTo` and `R.view.
+ */
+export function viewOr<Input, Output>(fallback: Output, lens: Lens, input: Input): Output;
+export function viewOr<Input, Output>(fallback: Output, lens: Lens): (input: Input) =>  Output;
+export function viewOr<Input, Output>(fallback: Output): FunctionToolbelt.Curry<(lens: Lens, input: Input) => Output>;
+
+/**
  * It returns copy of `list` sorted by `sortPath` value.
  * 
  * As `sortPath` is passed to `R.path`, it can be either a string or an array of strings.
@@ -1894,6 +1902,32 @@ export function sortByPath(sortPath: Path): <T>(list: ReadonlyArray<T>) => T[];
  */
 export function sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[];
 export function sortByProps(sortPaths: string[]): <T>(list: ReadonlyArray<T>) => T[];
+
+/**
+ * It returns a copy of `list` input with removed `index`.
+ */
+export function removeIndex<T>(index: number, list: ReadonlyArray<T>): T[];
+export function removeIndex(index: number): <T>(list: ReadonlyArray<T>) => T[];
+
+/**
+ * Opposite of `R.includes`
+ */
+export function excludes(valueToFind: string, input: ReadonlyArray<string> | string): boolean;
+export function excludes(valueToFind: string): (input: ReadonlyArray<string> | string) => boolean;
+export function excludes<T>(valueToFind: T, input: ReadonlyArray<T>): boolean;
+export function excludes<T>(valueToFind: T): (input: ReadonlyArray<T>) => boolean;
+
+/**
+ * Very similar to `R.assocPath` but it applies list of updates instead of only a single update.
+ * 
+ * It return a copy of `obj` input with changed properties according to `rules` input.
+ * 
+ * Each instance of `rules` is a tuple of object path and the new value for this path. If such object path does not exist, then such object path is created.
+ * 
+ * As it uses `R.path` underneath, object path can be either string or array of strings(in Typescript object path can be only a string).
+ */
+export function updateObject<Output>(rules: [string, any][], input: object): Output;
+export function updateObject<Output>(rules: [string, any][]): (input: object) => Output;
 
 // RAMBDAX_MARKER_END
 // ============================================
