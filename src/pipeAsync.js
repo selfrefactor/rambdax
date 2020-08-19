@@ -1,11 +1,11 @@
 import { type } from './type'
 
-export function composeAsync(...inputArguments){
+export function pipeAsync(...inputArguments){
   return async function (startArgument){
     let argumentsToPass = startArgument
 
     while (inputArguments.length !== 0){
-      const fn = inputArguments.pop()
+      const fn = inputArguments.shift()
       const typeFn = type(fn)
 
       if (typeFn === 'Async'){

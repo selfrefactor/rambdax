@@ -1300,6 +1300,9 @@ export function takeLast<T>(howMany: number): {
   (listOrString: string): string;
 };
 
+export function takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
+export function takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+
 /**
  * It applies function `fn` to input `x` and returns `x`.
  * 
@@ -1484,32 +1487,22 @@ export function allType(targetType: RambdaTypes): (...input: any[]) => boolean;
 export function anyType(targetType: RambdaTypes): (...input: any[]) => boolean;
 
 /**
- * It helps changing object's properties if there are below 3 levels deep.
- * 
- * It is intended for usage inside unit tests, when you need more powerful method to change object's properties.
- * 
- * `path` input argument allows you to specify which object's sub-branch you want to focus on. You must pass an empty string if you target the whole `origin` object.
- * 
- * `changeData` can be a direct value or an object. If it is a object, then this object is used to edit or add new properties to the selected sub-branch.
- */
-export function change<T>(
-  origin: object,
-  path: string,
-  changeData: any
-): T;
-export function change<Input, Output>(
-  origin: Input,
-  path: string,
-  changeData: any
-): Output;
-
-/**
  * Asynchronous version of `R.compose`
  */
 export function composeAsync<Out>(
   ...fns: (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>;
 export function composeAsync<Out>(
+  ...fns: (Async<any> | Func<any>)[]
+): (input: any) => Promise<Out>;
+
+/**
+ * Asynchronous version of `R.pipe`
+ */
+export function pipeAsync<Out>(
+  ...fns: (Async<any> | Func<any>)[]
+): (input: any) => Promise<Out>;
+export function pipeAsync<Out>(
   ...fns: (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>;
 

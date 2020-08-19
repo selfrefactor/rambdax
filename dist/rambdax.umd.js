@@ -689,6 +689,29 @@
     return willReturn;
   }
 
+  function composeAsync(...inputArguments) {
+    return async function (startArgument) {
+      let argumentsToPass = startArgument;
+
+      while (inputArguments.length !== 0) {
+        const fn = inputArguments.pop();
+        const typeFn = type(fn);
+
+        if (typeFn === 'Async') {
+          argumentsToPass = await fn(argumentsToPass);
+        } else {
+          argumentsToPass = fn(argumentsToPass);
+
+          if (type(argumentsToPass) === 'Promise') {
+            argumentsToPass = await argumentsToPass;
+          }
+        }
+      }
+
+      return argumentsToPass;
+    };
+  }
+
   function parseError(maybeError) {
     const typeofError = maybeError.__proto__.toString();
 
@@ -785,47 +808,6 @@
     return false;
   }
 
-  const forbidden = ['Null', 'Undefined', 'RegExp'];
-  const allowed = ['Number', 'Boolean'];
-  const notEmpty = ['Array', 'String'];
-  function compact(list) {
-    const toReturn = [];
-    list.forEach(a => {
-      const currentType = type(a);
-      if (forbidden.includes(currentType)) return;
-      if (allowed.includes(currentType)) return toReturn.push(a);
-
-      if (currentType === 'Object') {
-        if (!equals(a, {})) toReturn.push(a);
-        return;
-      }
-
-      if (!notEmpty.includes(currentType)) return;
-      if (a.length === 0) return;
-      toReturn.push(a);
-    });
-    return toReturn;
-  }
-
-  function composeAsync(...inputArguments) {
-    return async function (startArgument) {
-      let argumentsToPass = startArgument;
-
-      while (inputArguments.length !== 0) {
-        const fn = inputArguments.pop();
-        const typeFn = type(fn);
-
-        if (typeFn === 'Async') {
-          argumentsToPass = await fn(argumentsToPass);
-        } else {
-          argumentsToPass = fn(argumentsToPass);
-        }
-      }
-
-      return argumentsToPass;
-    };
-  }
-
   function count(searchFor, list) {
     if (arguments.length === 1) {
       return _list => count(searchFor, _list);
@@ -865,6 +847,34 @@
     });
   }
 
+  function includes(valueToFind, input) {
+    if (arguments.length === 1) return _input => includes(valueToFind, _input);
+
+    if (typeof input === 'string') {
+      return input.includes(valueToFind);
+    }
+
+    if (!input) {
+      throw new TypeError(`Cannot read property \'indexOf\' of ${input}`);
+    }
+
+    if (!_isArray(input)) return false;
+    let index = -1;
+
+    while (++index < input.length) {
+      if (equals(input[index], valueToFind)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function excludes(valueToFind, input) {
+    if (arguments.length === 1) return _input => excludes(valueToFind, _input);
+    return includes(valueToFind, input) === false;
+  }
+
   function filterObject(fn, obj) {
     const willReturn = {};
 
@@ -902,12 +912,12 @@
     return willReturn;
   }
 
-  async function mapAsyncFn(fn, arr) {
-    if (_isArray(arr)) {
+  async function mapAsyncFn(fn, listOrObject) {
+    if (_isArray(listOrObject)) {
       const willReturn = [];
       let i = 0;
 
-      for (const a of arr) {
+      for (const a of listOrObject) {
         willReturn.push(await fn(a, i++));
       }
 
@@ -916,28 +926,24 @@
 
     const willReturn = {};
 
-    for (const prop in arr) {
-      willReturn[prop] = await fn(arr[prop], prop);
+    for (const prop in listOrObject) {
+      willReturn[prop] = await fn(listOrObject[prop], prop);
     }
 
     return willReturn;
   }
 
-  function mapAsync(fn, arr) {
+  function mapAsync(fn, listOrObject) {
     if (arguments.length === 1) {
-      return async holder => mapAsyncFn(fn, holder);
+      return async _listOrObject => mapAsyncFn(fn, _listOrObject);
     }
 
     return new Promise((resolve, reject) => {
-      mapAsyncFn(fn, arr).then(resolve).catch(reject);
+      mapAsyncFn(fn, listOrObject).then(resolve).catch(reject);
     });
   }
 
-  function filterAsync(predicate, listOrObject) {
-    if (arguments.length === 1) {
-      return async holder => filterAsync(predicate, holder);
-    }
-
+  function filterAsyncFn(predicate, listOrObject) {
     return new Promise((resolve, reject) => {
       mapAsync(predicate, listOrObject).then(predicateResult => {
         if (_isArray(predicateResult)) {
@@ -948,6 +954,15 @@
         const filtered = filter((_, prop) => predicateResult[prop], listOrObject);
         return resolve(filtered);
       }).catch(reject);
+    });
+  }
+  function filterAsync(predicate, listOrObject) {
+    if (arguments.length === 1) {
+      return async _listOrObject => filterAsyncFn(predicate, _listOrObject);
+    }
+
+    return new Promise((resolve, reject) => {
+      filterAsyncFn(predicate, listOrObject).then(resolve).catch(reject);
     });
   }
 
@@ -1099,25 +1114,6 @@
       }
 
       counter++;
-    }
-
-    return false;
-  }
-
-  function includes(valueToFind, input) {
-    if (arguments.length === 1) return _input => includes(valueToFind, _input);
-
-    if (typeof input === 'string') {
-      return input.includes(valueToFind);
-    }
-
-    if (!_isArray(input)) return false;
-    let index = -1;
-
-    while (++index < input.length) {
-      if (equals(input[index], valueToFind)) {
-        return true;
-      }
     }
 
     return false;
@@ -1429,7 +1425,7 @@
     return willReturn;
   }
 
-  async function mapAsyncLimit(iterable, limit, list) {
+  async function mapAsyncLimitFn(iterable, limit, list) {
     if (list.length < limit) return mapFastAsync(iterable, list);
     const slices = splitEvery(limit, list);
     let toReturn = [];
@@ -1440,6 +1436,16 @@
     }
 
     return toReturn;
+  }
+
+  function mapAsyncLimit(iterable, limit, list) {
+    if (arguments.length === 2) {
+      return async _list => mapAsyncLimitFn(iterable, limit, _list);
+    }
+
+    return new Promise((resolve, reject) => {
+      mapAsyncLimitFn(iterable, limit, list).then(resolve).catch(reject);
+    });
   }
 
   function mapKeys(changeKeyFn, obj) {
@@ -1605,7 +1611,7 @@
     return target;
   }
 
-  async function mapToObjectAsync(fn, list) {
+  async function mapToObjectAsyncFn(fn, list) {
     let toReturn = {};
 
     const innerIterable = async x => {
@@ -1616,6 +1622,15 @@
 
     await mapAsync(innerIterable, list);
     return toReturn;
+  }
+  function mapToObjectAsync(fn, list) {
+    if (arguments.length === 1) {
+      return async _list => mapToObjectAsyncFn(fn, _list);
+    }
+
+    return new Promise((resolve, reject) => {
+      mapToObjectAsyncFn(fn, list).then(resolve).catch(reject);
+    });
   }
 
   function maybe(ifRule, whenIf, whenElse) {
@@ -1754,11 +1769,75 @@
     };
   }
 
+  async function whenObject$1(predicate, input) {
+    const yes = {};
+    const no = {};
+    Object.entries(input).forEach(([prop, value]) => {
+      if (predicate(value, prop)) {
+        yes[prop] = value;
+      } else {
+        no[prop] = value;
+      }
+    });
+    return [yes, no];
+  }
+
+  async function partitionAsyncFn(predicate, input) {
+    if (!_isArray(input)) return whenObject$1(predicate, input);
+    const yes = [];
+    const no = [];
+
+    for (const i in input) {
+      const predicateResult = await predicate(input[i], Number(i));
+
+      if (predicateResult) {
+        yes.push(input[i]);
+      } else {
+        no.push(input[i]);
+      }
+    }
+
+    return [yes, no];
+  }
+
+  function partitionAsync(predicate, list) {
+    if (arguments.length === 1) {
+      return async _list => partitionAsyncFn(predicate, _list);
+    }
+
+    return new Promise((resolve, reject) => {
+      partitionAsyncFn(predicate, list).then(resolve).catch(reject);
+    });
+  }
+
   function pass(...inputs) {
     return (...schemas) => any((x, i) => {
       const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
       return !check(x, schema);
     }, inputs) === false;
+  }
+
+  function pipeAsync(...inputArguments) {
+    return async function (startArgument) {
+      let argumentsToPass = startArgument;
+
+      while (inputArguments.length !== 0) {
+        const fn = inputArguments.shift();
+        const typeFn = type(fn);
+
+        if (typeFn === 'Async') {
+          argumentsToPass = await fn(argumentsToPass);
+        } else {
+          argumentsToPass = fn(argumentsToPass);
+
+          if (type(argumentsToPass) === 'Promise') {
+            argumentsToPass = await argumentsToPass;
+          }
+        }
+      }
+
+      return argumentsToPass;
+    };
   }
 
   function pipe(...fns) {
@@ -1793,20 +1872,20 @@
     return index === 0 ? list.length - 1 : index - 1;
   }
 
-  function helper({
+  function promisify({
     condition,
-    inputArgument,
+    input,
     prop
   }) {
     return new Promise((resolve, reject) => {
       if (type(condition) !== 'Async') {
         return resolve({
           type: prop,
-          payload: condition(inputArgument)
+          payload: condition(input)
         });
       }
 
-      condition(inputArgument).then(result => {
+      condition(input).then(result => {
         resolve({
           type: prop,
           payload: result
@@ -1815,11 +1894,7 @@
     });
   }
 
-  function produce(conditions, inputArgument) {
-    if (arguments.length === 1) {
-      return inputArgumentHolder => produce(conditions, inputArgumentHolder);
-    }
-
+  function produceFn(conditions, input) {
     let asyncConditionsFlag = false;
 
     for (const prop in conditions) {
@@ -1832,7 +1907,7 @@
       const willReturn = {};
 
       for (const prop in conditions) {
-        willReturn[prop] = conditions[prop](inputArgument);
+        willReturn[prop] = conditions[prop](input);
       }
 
       return willReturn;
@@ -1842,8 +1917,8 @@
 
     for (const prop in conditions) {
       const condition = conditions[prop];
-      promised.push(helper({
-        inputArgument,
+      promised.push(promisify({
+        input,
         condition,
         prop
       }));
@@ -1855,6 +1930,16 @@
         map(result => willReturn[result.type] = result.payload, results);
         resolve(willReturn);
       }).catch(err => reject(err));
+    });
+  }
+
+  function produce(conditions, input) {
+    if (arguments.length === 1) {
+      return async _input => produceFn(conditions, _input);
+    }
+
+    return new Promise((resolve, reject) => {
+      produceFn(conditions, input).then(resolve).catch(reject);
     });
   }
 
@@ -1880,6 +1965,13 @@
       textCopy = replace$1(singleInput, '', textCopy).trim();
     });
     return textCopy;
+  }
+
+  function removeIndex(list, index) {
+    if (arguments.length === 1) return _index => removeIndex(list, _index);
+    if (index <= 0) return list.slice(1);
+    if (index >= list.length - 1) return list.slice(0, list.length - 1);
+    return [...list.slice(0, index), ...list.slice(index + 1)];
   }
 
   function omit(propsToOmit, obj) {
@@ -2074,11 +2166,7 @@
     return new Switchem(input);
   }
 
-  function tapAsync(fn, input) {
-    if (arguments.length === 1) {
-      return inputHolder => tapAsync(fn, inputHolder);
-    }
-
+  function tapAsyncFn(fn, input) {
     if (isPromise(fn) === true) {
       return new Promise((resolve, reject) => {
         fn(input).then(() => {
@@ -2089,6 +2177,16 @@
 
     fn(input);
     return input;
+  }
+
+  function tapAsync(fn, input) {
+    if (arguments.length === 1) {
+      return async _input => tapAsyncFn(fn, _input);
+    }
+
+    return new Promise((resolve, reject) => {
+      tapAsyncFn(fn, input).then(resolve).catch(reject);
+    });
   }
 
   function throttle(fn, ms) {
@@ -2107,6 +2205,92 @@
   function toDecimal(number, charsAfterDecimalPoint = 2) {
     return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
   }
+
+  function _isInteger(n) {
+    return n << 0 === n;
+  }
+  var _isInteger$1 = Number.isInteger || _isInteger;
+
+  function assocFn(prop, newValue, obj) {
+    return Object.assign({}, obj, {
+      [prop]: newValue
+    });
+  }
+
+  const assoc = curry(assocFn);
+
+  function assocPathFn(path, newValue, input) {
+    const pathArrValue = typeof path === 'string' ? path.split('.').map(x => _isInteger(Number(x)) ? Number(x) : x) : path;
+
+    if (pathArrValue.length === 0) {
+      return newValue;
+    }
+
+    const index = pathArrValue[0];
+
+    if (pathArrValue.length > 1) {
+      const condition = typeof input !== 'object' || input === null || !input.hasOwnProperty(index);
+      const nextinput = condition ? _isInteger(pathArrValue[1]) ? [] : {} : input[index];
+      newValue = assocPathFn(Array.prototype.slice.call(pathArrValue, 1), newValue, nextinput);
+    }
+
+    if (_isInteger(index) && _isArray(input)) {
+      const arr = input.slice();
+      arr[index] = newValue;
+      return arr;
+    }
+
+    return assoc(index, newValue, input);
+  }
+
+  const assocPath = curry(assocPathFn);
+
+  function updateObject(rules, obj) {
+    if (arguments.length === 1) return _obj => updateObject(rules, _obj);
+
+    let clone = _objectSpread2({}, obj);
+
+    rules.forEach((objectPath, newValue) => {
+      clone = assocPath(objectPath, newValue, clone);
+    });
+    return clone;
+  }
+
+  function flagIs(inputArguments) {
+    return inputArguments === undefined || inputArguments === null || Number.isNaN(inputArguments) === true;
+  }
+
+  function defaultTo(defaultArgument, ...inputArguments) {
+    if (arguments.length === 1) {
+      return (..._inputArguments) => defaultTo(defaultArgument, ..._inputArguments);
+    }
+
+    const limit = inputArguments.length - 1;
+    let len = limit + 1;
+    let ready = false;
+    let holder;
+
+    while (!ready) {
+      const instance = inputArguments[limit - len + 1];
+
+      if (len === 0) {
+        ready = true;
+      } else if (flagIs(instance)) {
+        len -= 1;
+      } else {
+        holder = instance;
+        ready = true;
+      }
+    }
+
+    return holder === undefined ? defaultArgument : holder;
+  }
+
+  function viewOrFn(fallback, lens, input) {
+    return defaultTo(fallback, view(lens, input));
+  }
+
+  const viewOr = curry(viewOrFn);
 
   function wait(fn) {
     return new Promise(resolve => {
@@ -2307,45 +2491,6 @@
     return toReturn;
   }
 
-  function assocFn(prop, newValue, obj) {
-    return Object.assign({}, obj, {
-      [prop]: newValue
-    });
-  }
-
-  const assoc = curry(assocFn);
-
-  function _isInteger(n) {
-    return n << 0 === n;
-  }
-  var _isInteger$1 = Number.isInteger || _isInteger;
-
-  function assocPathFn(list, newValue, input) {
-    const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-    if (pathArrValue.length === 0) {
-      return newValue;
-    }
-
-    const index = pathArrValue[0];
-
-    if (pathArrValue.length > 1) {
-      const condition = typeof input !== 'object' || input === null || !input.hasOwnProperty(index);
-      const nextinput = condition ? _isInteger(parseInt(pathArrValue[1], 10)) ? [] : {} : input[index];
-      newValue = assocPathFn(Array.prototype.slice.call(pathArrValue, 1), newValue, nextinput);
-    }
-
-    if (_isInteger(parseInt(index, 10)) && _isArray(input)) {
-      const arr = input.slice();
-      arr[index] = newValue;
-      return arr;
-    }
-
-    return assoc(index, newValue, input);
-  }
-
-  const assocPath = curry(assocPathFn);
-
   function both(f, g) {
     if (arguments.length === 1) return _g => both(f, _g);
     return (...input) => f(...input) && g(...input);
@@ -2528,36 +2673,6 @@
   }
 
   const dec = x => x - 1;
-
-  function flagIs(inputArguments) {
-    return inputArguments === undefined || inputArguments === null || Number.isNaN(inputArguments) === true;
-  }
-
-  function defaultTo(defaultArgument, ...inputArguments) {
-    if (arguments.length === 1) {
-      return (..._inputArguments) => defaultTo(defaultArgument, ..._inputArguments);
-    }
-
-    const limit = inputArguments.length - 1;
-    let len = limit + 1;
-    let ready = false;
-    let holder;
-
-    while (!ready) {
-      const instance = inputArguments[limit - len + 1];
-
-      if (len === 0) {
-        ready = true;
-      } else if (flagIs(instance)) {
-        len -= 1;
-      } else {
-        holder = instance;
-        ready = true;
-      }
-    }
-
-    return holder === undefined ? defaultArgument : holder;
-  }
 
   function uniq(list) {
     let index = -1;
@@ -3298,6 +3413,22 @@
     return baseSlice(listOrString, numValue, len);
   }
 
+  function takeWhile(predicate, list) {
+    const toReturn = [];
+    let stopFlag = false;
+    let counter = -1;
+
+    while (stopFlag === false && counter++ < list.length) {
+      if (!predicate(list[counter])) {
+        stopFlag = true;
+      } else {
+        toReturn.push(list[counter]);
+      }
+    }
+
+    return toReturn;
+  }
+
   function tap(fn, x) {
     if (arguments.length === 1) return _x => tap(fn, _x);
     fn(x);
@@ -3506,7 +3637,6 @@
   exports.check = check;
   exports.clamp = clamp;
   exports.clone = clone;
-  exports.compact = compact;
   exports.complement = complement;
   exports.compose = compose;
   exports.composeAsync = composeAsync;
@@ -3528,8 +3658,10 @@
   exports.either = either;
   exports.endsWith = endsWith;
   exports.equals = equals;
+  exports.excludes = excludes;
   exports.filter = filter;
   exports.filterAsync = filterAsync;
+  exports.filterAsyncFn = filterAsyncFn;
   exports.find = find;
   exports.findIndex = findIndex;
   exports.findLast = findLast;
@@ -3586,6 +3718,7 @@
   exports.mapKeys = mapKeys;
   exports.mapToObject = mapToObject;
   exports.mapToObjectAsync = mapToObjectAsync;
+  exports.mapToObjectAsyncFn = mapToObjectAsyncFn;
   exports.match = match;
   exports.mathMod = mathMod;
   exports.max = max;
@@ -3618,6 +3751,7 @@
   exports.partial = partial;
   exports.partialCurry = partialCurry;
   exports.partition = partition;
+  exports.partitionAsync = partitionAsync;
   exports.pass = pass;
   exports.path = path;
   exports.pathEq = pathEq;
@@ -3626,6 +3760,7 @@
   exports.pick = pick;
   exports.pickAll = pickAll;
   exports.pipe = pipe;
+  exports.pipeAsync = pipeAsync;
   exports.piped = piped;
   exports.pipedAsync = pipedAsync;
   exports.pluck = pluck;
@@ -3643,6 +3778,7 @@
   exports.reduce = reduce;
   exports.reject = reject;
   exports.remove = remove;
+  exports.removeIndex = removeIndex;
   exports.renameProps = renameProps;
   exports.repeat = repeat;
   exports.replace = replace$1;
@@ -3669,6 +3805,7 @@
   exports.tail = tail;
   exports.take = take;
   exports.takeLast = takeLast;
+  exports.takeWhile = takeWhile;
   exports.tap = tap;
   exports.tapAsync = tapAsync;
   exports.test = test;
@@ -3688,8 +3825,10 @@
   exports.uniqWith = uniqWith;
   exports.unless = unless;
   exports.update = update;
+  exports.updateObject = updateObject;
   exports.values = values;
   exports.view = view;
+  exports.viewOr = viewOr;
   exports.wait = wait;
   exports.waitFor = waitFor;
   exports.when = when;
