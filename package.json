@@ -8,7 +8,7 @@
   },
   "typings": "./index.d.ts",
   "main": "./dist/rambdax.js",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.11.1",
