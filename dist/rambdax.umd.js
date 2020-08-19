@@ -1648,6 +1648,22 @@
     return new Switchem(input);
   }
 
+  function takeUntil(predicate, list) {
+    const toReturn = [];
+    let stopFlag = false;
+    let counter = -1;
+
+    while (stopFlag === false && counter++ < list.length - 1) {
+      if (predicate(list[counter])) {
+        stopFlag = true;
+      } else {
+        toReturn.push(list[counter]);
+      }
+    }
+
+    return toReturn;
+  }
+
   function tapAsyncFn(fn, input) {
     if (isPromise(fn) === true) {
       return new Promise((resolve, reject) => {
@@ -2934,7 +2950,7 @@
     let stopFlag = false;
     let counter = -1;
 
-    while (stopFlag === false && counter++ < list.length) {
+    while (stopFlag === false && counter++ < list.length - 1) {
       if (!predicate(list[counter])) {
         stopFlag = true;
       } else {
@@ -3320,6 +3336,7 @@
   exports.tail = tail;
   exports.take = take;
   exports.takeLast = takeLast;
+  exports.takeUntil = takeUntil;
   exports.takeWhile = takeWhile;
   exports.tap = tap;
   exports.tapAsync = tapAsync;

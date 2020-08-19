@@ -39,29 +39,33 @@ You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D
 
 ## Rambdax's advantages
 
-- Typescript included
+### Typescript included
 
 Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
 
 Still, you need to be aware that functional programming features in `Typescript` are in development, which means that using **R.compose/R.pipe** can be problematic.
 
-- Smaller size
+### Extendable
+
+`Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
+
+### Smaller size
 
 The size of a library affects not only the build bundle size but also the dev bundle size and build time. This is important advantage, expecially for big projects.
 
-- Tree-shaking
+### Tree-shaking
 
 Currently **Rambda** is more tree-shakable than **Ramda** - proven in the following [repo](https://github.com/selfrefactor/rambda-tree-shaking).
 
 The repo holds two `Angular9` applications: one with small example code of *Ramda* and the other - same code but with *Rambda* as import library.
 
-Currently the **Ramda** bundle size is **{{rambdaTreeShakingInfo}} MB** less than its **Ramda** counterpart.
+Currently the **Ramda** bundle size is **2.03 MB** less than its **Ramda** counterpart.
 
 There is also [Webpack/Rollup/Parcel/Esbuild tree-shaking example including several libraries](https://github.com/mischnic/tree-shaking-example) including `Ramda`, `Rambda` and `Rambdax`. 
 
 > actually tree-shaking is the initial reason for creation of `Rambda`
 
-- dot notation for `R.path` and `R.paths`
+### Dot notation for `R.path`, `R.paths`, `R.assocPath` and `R.lensPath`
 
 Standard usage of `R.path` is `R.path(['a', 'b'], {a: {b: 1} })`.
 
@@ -71,7 +75,7 @@ In **Rambda** you have the choice to use dot notation(which is arguably more rea
 R.path('a.b', {a: {b: 1} })
 ```
 
-- comma notation for `R.pick` and `R.omit`
+### Comma notation for `R.pick` and `R.omit`
 
 Similar to dot notation, but the separator is comma(`,`) instead of dot(`.`).
 
@@ -80,13 +84,13 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 // No space allowed between properties
 ```
 
-- Speed
+### Speed
 
 **Rambda** is generally more performant than `Ramda` as the [benchmarks](#benchmarks) can prove that.
 
-- Support
+### Support
 
-Most of the valid issues are fixed within 2-5 days.
+Most of the valid issues are fixed within 2-3 days.
 
 Closing the issue is usually accompanied by publishing a new patch version of `Rambda` to NPM.
 
@@ -96,7 +100,7 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 
 <details>
 <summary>
-  Click to see the full list of 104 Ramda methods not implemented in Rambda 
+  Click to see the full list of 103 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -184,7 +188,6 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - splitWhen
 - symmetricDifferenceWith
 - takeLastWhile
-- takeWhile
 - andThen
 - toPairsIn
 - transduce
@@ -1723,6 +1726,42 @@ assocPath<T, U>(path: Path): FunctionToolbelt.Curry<(newValue: T, obj: U) => U>;
 ```javascript
 import { assocPath } from './assocPath'
 
+test('string can be used as path input', () => {
+  const testObj = {
+    a : [ { b : 1 }, { b : 2 } ],
+    d : 3,
+  }
+  const result = assocPath(
+    'a.0.b', 10, testObj
+  )
+  const expected = {
+    a : [ { b : 10 }, { b : 2 } ],
+    d : 3,
+  }
+  expect(result).toEqual(expected)
+})
+
+test('bug', () => {
+  /*
+    https://github.com/selfrefactor/rambda/issues/524
+  */
+  const state = {}
+
+  const withDateLike = assocPath(
+    [ 'outerProp', '2020-03-10' ],
+    { prop : 2 },
+    state
+  )
+  const withNumber = assocPath(
+    [ 'outerProp', '5' ], { prop : 2 }, state
+  )
+
+  const withDateLikeExpected = { outerProp : { '2020-03-10' : { prop : 2 } } }
+  const withNumberExpected = { outerProp : { 5 : { prop : 2 } } }
+  expect(withDateLike).toEqual(withDateLikeExpected)
+  expect(withNumber).toEqual(withNumberExpected)
+})
+
 test('adds a key to an empty object', () => {
   expect(assocPath(
     [ 'a' ], 1, {}
@@ -1772,13 +1811,6 @@ test('adds a nested key to a non-empty object - curry case 1', () => {
   expect(assocPath('b.c', 2)({ a : 1 })).toEqual({
     a : 1,
     b : { c : 2 },
-  })
-})
-
-test('adds a nested array to a non-empty object - curry case 1', () => {
-  expect(assocPath('b.0', 2)({ a : 1 })).toEqual({
-    a : 1,
-    b : [ 2 ],
   })
 })
 
@@ -2006,201 +2038,6 @@ test('flattens only one level', () => {
 
 </details>
 
-### change
-
-```typescript
-
-change<T>(
-  origin: object,
-  path: string,
-  changeData: any
-): T
-```
-
-It helps changing object's properties if there are below 3 levels deep.
-
-It is intended for usage inside unit tests, when you need more powerful method to change object's properties.
-
-`path` input argument allows you to specify which object's sub-branch you want to focus on. You must pass an empty string if you target the whole `origin` object.
-
-`changeData` can be a direct value or an object. If it is a object, then this object is used to edit or add new properties to the selected sub-branch.
-
-```javascript
-const result = R.change(
-  { a: 1, b: { c: 2 } },
-  'b.c',
-  10
-)
-const expected = {
-  a: 1,
-  b: { c: 10 }
-}
-// => `result` is equal to `expected`
-
-const origin = {
-  foo : 1,
-  bar : { nested : 2 },
-}
-const changeData = {
-  bar : { a : 3 },
-  baz : 4,
-}
-const complexResult = R.change(
-  origin, '', changeData
-)
-
-const complexExpected = {
-  foo : 1,
-  bar : {
-    a : 3,
-    nested : 2,
-  },
-  baz: 4
-}
-// => `complexResult` is equal to `complexExpected`
-```
-
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.change(%0A%20%20%7B%20a%3A%201%2C%20b%3A%20%7B%20c%3A%202%20%7D%20%7D%2C%0A%20%20'b.c'%2C%0A%20%2010%0A)%0Aconst%20expected%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%20%7B%20c%3A%2010%20%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60%0A%0Aconst%20origin%20%3D%20%7B%0A%20%20foo%20%3A%201%2C%0A%20%20bar%20%3A%20%7B%20nested%20%3A%202%20%7D%2C%0A%7D%0Aconst%20changeData%20%3D%20%7B%0A%20%20bar%20%3A%20%7B%20a%20%3A%203%20%7D%2C%0A%20%20baz%20%3A%204%2C%0A%7D%0Aconst%20complexResult%20%3D%20R.change(%0A%20%20origin%2C%20''%2C%20changeData%0A)%0A%0Aconst%20complexExpected%20%3D%20%7B%0A%20%20foo%20%3A%201%2C%0A%20%20bar%20%3A%20%7B%0A%20%20%20%20a%20%3A%203%2C%0A%20%20%20%20nested%20%3A%202%2C%0A%20%20%7D%2C%0A%20%20baz%3A%204%0A%7D%0A%2F%2F%20%3D%3E%20%60complexResult%60%20is%20equal%20to%20%60complexExpected%60">Try the above <strong>R.change</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary>All Typescript definitions</summary>
-
-```typescript
-change<T>(
-  origin: object,
-  path: string,
-  changeData: any
-): T;
-change<Input, Output>(
-  origin: Input,
-  path: string,
-  changeData: any
-): Output;
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { change } from './change'
-
-test('happy', () => {
-  const localOrigin = {
-    foo : 1,
-    bar : { nested : 2 },
-  }
-  const changeData = {
-    bar : { a : 3 },
-    baz : 4,
-  }
-  const result = change(
-    localOrigin, '', changeData
-  )
-
-  const expected = {
-    foo : 1,
-    bar : {
-      a      : 3,
-      nested : 2,
-    },
-    baz : 4,
-  }
-
-  expect(result).toEqual(expected)
-})
-
-const origin = {
-  a   : 0,
-  foo : {
-    bar : 1,
-    baz : false,
-    bax : { nested : 2 },
-  },
-  first : {
-    second : {
-      third : {
-        fourthA : 3,
-        fourthB : 4,
-        fourth  : {
-          a     : 1,
-          fifth : { unreachable : 22 },
-        },
-      },
-    },
-  },
-}
-
-test('when rule is not an object', () => {
-  const result = change(
-    origin, 'foo.bax.nested', 7
-  )
-  const expected = {
-    a   : 0,
-    foo : {
-      bar : 1,
-      baz : false,
-      bax : { nested : 7 },
-    },
-    first : origin.first,
-  }
-
-  expect(result).toEqual(expected)
-})
-
-test('works with 4 levels deep nesting', () => {
-  const changeData = {
-    foo : {
-      bar : 7,
-      bax : { bay : 8 },
-    },
-    first : {
-      second : {
-        b     : 7,
-        third : {
-          fourthA : 9,
-          // This is 5th level nesting
-          // so we will receive a full change property
-          // instead of merge
-          ///////////////////////////
-          fourth  : { a : 2 },
-        },
-      },
-    },
-  }
-  const result = change(
-    origin, '', changeData
-  )
-  const expected = {
-    a   : 0,
-    foo : {
-      bar : 7,
-      baz : false,
-      bax : {
-        nested : 2,
-        bay    : 8,
-      },
-    },
-    first : {
-      second : {
-        third : {
-          fourthA : 9,
-          fourthB : 4,
-          fourth  : { a : 2 },
-        },
-        b : 7,
-      },
-    },
-  }
-  expect(result).toEqual(expected)
-})
-```
-
-</details>
-
 ### clamp
 
 ```typescript
@@ -2371,66 +2208,6 @@ test('with R.equals', () => {
     equals(objects[ 0 ], objectsClone[ 0 ]),
   ]
   expect(result).toEqual([ true, true ])
-})
-```
-
-</details>
-
-### compact
-
-```typescript
-
-compact<T>(x: any[]): T[]
-```
-
-It returns a clone of `list` without the falsy or empty elements.
-
-```javascript
-const list = [null, '', {}, [], 1]
-
-const result = R.compact(list)
-// => [1]
-```
-
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5Bnull%2C%20''%2C%20%7B%7D%2C%20%5B%5D%2C%201%5D%0A%0Aconst%20result%20%3D%20R.compact(list)%0A%2F%2F%20%3D%3E%20%5B1%5D">Try the above <strong>R.compact</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary>All Typescript definitions</summary>
-
-```typescript
-compact<T>(x: any[]): T[];
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { compact } from './compact'
-
-test('happy', () => {
-  const arr = [
-    1,
-    null,
-    undefined,
-    false,
-    '',
-    ' ',
-    () => {},
-    'foo',
-    {},
-    [],
-    [ 1 ],
-    /\s/g,
-  ]
-
-  const result = compact(arr)
-  const expected = [ 1, false, ' ', 'foo', [ 1 ] ]
-
-  expect(result).toEqual(expected)
 })
 ```
 
@@ -2629,19 +2406,22 @@ Asynchronous version of `R.compose`
 
 ```javascript
 const add = async x => {
-  await R.delay(500)
+  await R.delay(100)
   return x + 1
 }
-const identity = async x => x
+const multiply = async x => {
+  await R.delay(100)
+  return x * 2 
+}
 
 const result = await R.composeAsync(
   add,
-  identity
-)(0)
-// `result` resolves to `1`
+  multiply
+)(1)
+// `result` resolves to `3`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(500)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20identity%20%3D%20async%20x%20%3D%3E%20x%0A%0Aconst%20result%20%3D%20await%20R.composeAsync(%0A%20%20add%2C%0A%20%20identity%0A)(0)%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try the above <strong>R.composeAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20multiply%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20*%202%20%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.composeAsync(%0A%20%20add%2C%0A%20%20multiply%0A)(1)%0A%2F%2F%20%60result%60%20resolves%20to%20%603%60">Try the above <strong>R.composeAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -2664,144 +2444,61 @@ composeAsync<Out>(
 
 ```javascript
 import { composeAsync } from './composeAsync'
-import { delay as delayModule } from './delay'
-import { equals } from './equals'
-import { map } from './map'
-import { mapAsync } from './mapAsync'
-import { prop } from './prop'
-import { tapAsync } from './tapAsync'
+import { delay } from './delay'
 
-test('1', async () => {
-  const fn = input =>
-    new Promise(resolve => {
-      setTimeout(() => {
-        resolve({
-          type    : 'result',
-          payload : input,
-        })
-      }, 100)
-    })
+async function identity(x){
+  await delay(100)
 
-  const list = [ 'foo', 'bar' ].map(a => fn(a))
+  return x
+}
 
-  const result = await composeAsync(
-    map(prop('payload')),
-    async inputs => Promise.all(inputs.map(async input => fn(input))),
-    map(prop('payload'))
-  )(await Promise.all(list))
+test('happy', async () => {
+  const fn1 = async x => {
+    await delay(100)
 
-  expect(result).toEqual([ 'foo', 'bar' ])
-})
-
-test('2', async () => {
-  const delay = ms =>
-    new Promise(resolve => {
-      setTimeout(() => {
-        resolve(ms + 110)
-      }, ms)
-    })
-
-  const delayAsync = async ms => delay(ms)
-
-  const result = await composeAsync(
-    a => a - 1000,
-    a => a,
-    async a => delayAsync(a),
-    a => a + 11
-  )(await delay(20))
-  expect(result).toEqual(-749)
-})
-
-test('3', async () => {
-  try {
-    const delay = ms =>
-      new Promise((_, reject) => {
-        setTimeout(() => {
-          reject('error')
-        }, ms)
-      })
-
-    const delayAsync = async ms => delay(ms)
-
-    await composeAsync(a => a - 1000, delayAsync)(20)
-  } catch (err){
-    expect(err).toEqual('error')
+    return x.map(xx => xx + 1)
   }
-})
+  const fn2 = async x => {
+    await delay(100)
 
-test('4', async () => {
-  let sideEffect
-  const result = await composeAsync(tapAsync(async x => {
-    sideEffect = equals(x, [ 2, 4, 6 ])
+    return x.map(xx => xx * 2)
+  }
+  const result = await composeAsync(fn1,
+    fn2)(await Promise.all([ identity(1), identity(2), identity(3) ]))
 
-    return delayModule(x * 3)
-  }),
-  mapAsync(async x => {
-    await delayModule(x * 100)
-
-    return x * 2
-  }))([ 1, 2, 3 ])
-
-  expect(result).toEqual([ 2, 4, 6 ])
-
-  expect(sideEffect).toEqual(true)
-})
-
-test('inside compose explicit `async` keyword', async () => {
-  const delay = ms =>
-    new Promise((res, rej) => {
-      const b = ms + 7
-
-      res(b)
-    })
-
-  const result = await composeAsync(
-    a => a,
-    a => a + 1000,
-    async a => delay(a),
-    a => a + 11
-  )(20)
-
-  expect(result).toEqual(1038)
+  expect(result).toEqual([ 3, 5, 7 ])
 })
 
 const delayFn = ms =>
-  new Promise((res, rej) => {
-    const b = ms + 7
-
-    res(b)
+  new Promise(resolve => {
+    resolve(ms + 1)
   })
 
-test('known issue - function returning promise', async () => {
+test('with function returning promise', async () => {
   const result = await composeAsync(
-    a => a,
-    a => a + 1000,
+    x => x,
+    x => x + 1,
     delayFn,
-    a => a + 11
-  )(20)
+    x => x
+  )(1)
 
-  expect(result).toEqual('[object Promise]1000')
+  expect(result).toEqual(3)
 })
 
 test('throw error', async () => {
-  const delay = async () => {
-    await delayFn(1)
+  const fn = async () => {
+    await delay(1)
     JSON.parse('{foo')
   }
 
-  let flag = true
+  let didThrow = false
   try {
-    await composeAsync(
-      a => a,
-      a => a + 1000,
-      async () => delay(),
-      a => a + 11
-    )(20)
+    await composeAsync(fn, x => x + 1)(20)
   } catch (e){
-    flag = false
+    didThrow = true
   }
 
-  expect(flag).toBeFalse()
+  expect(didThrow).toBeTrue()
 })
 ```
 
@@ -4358,6 +4055,62 @@ test('with negative zero', () => {
 
 </details>
 
+### excludes
+
+```typescript
+
+excludes(valueToFind: string, input: ReadonlyArray<string> | string): boolean
+```
+
+Opposite of `R.includes`
+
+```javascript
+const result = [
+  R.excludes('ar', 'foo'),
+  R.excludes({a: 2}, [{a: 1}])
+]
+// => [true, true ]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5B%0A%20%20R.excludes('ar'%2C%20'foo')%2C%0A%20%20R.excludes(%7Ba%3A%202%7D%2C%20%5B%7Ba%3A%201%7D%5D)%0A%5D%0A%2F%2F%20%3D%3E%20%5Btrue%2C%20true%20%5D">Try the above <strong>R.excludes</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+excludes(valueToFind: string, input: ReadonlyArray<string> | string): boolean;
+excludes(valueToFind: string): (input: ReadonlyArray<string> | string) => boolean;
+excludes<T>(valueToFind: T, input: ReadonlyArray<T>): boolean;
+excludes<T>(valueToFind: T): (input: ReadonlyArray<T>) => boolean;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { excludes } from './excludes'
+
+test('excludes with string', () => {
+  const str = 'more is less'
+
+  expect(excludes('less')(str)).toBeFalse()
+  expect(excludes('never', str)).toBeTrue()
+})
+
+test('excludes with array', () => {
+  const arr = [ 1, 2, 3 ]
+
+  expect(excludes(2)(arr)).toBeFalse()
+  expect(excludes(4, arr)).toBeTrue()
+})
+```
+
+</details>
+
 ### F
 
 ```typescript
@@ -4538,7 +4291,8 @@ import { delay } from './delay'
 import { filterAsync } from './filterAsync'
 
 test('happy', async () => {
-  const predicate = async x => {
+  const predicate = async (x, i) => {
+    expect(i).toBeNumber()
     await delay(100)
 
     return x % 2 === 1
@@ -4549,7 +4303,7 @@ test('happy', async () => {
 
 test('with object', async () => {
   const predicate = async (x, prop) => {
-    expect(typeof prop).toBe('string')
+    expect(prop).toBeString()
     await delay(100)
 
     return x % 2 === 1
@@ -6458,12 +6212,21 @@ test('includes with array', () => {
   expect(R.includes(4, arr)).toBeFalse()
 })
 
-test('return false if input is falsy', () => {
-  expect(includes(2, null)).toBeFalse()
+test('with wrong input that does not throw', () => {
+  const result = includes(1, /foo/g)
+  const ramdaResult = R.includes(1, /foo/g)
+  expect(result).toBeFalse()
+  expect(ramdaResult).toBeFalse()
+})
+
+test('throws on wrong input - match ramda behaviour', () => {
+  expect(() => includes(2, null)).toThrowWithMessage(TypeError,
+    'Cannot read property \'indexOf\' of null')
   expect(() => R.includes(2, null)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of null')
-  expect(includes(4, undefined)).toBeFalse()
-  expect(() => R.includes(4, undefined)).toThrowWithMessage(TypeError,
+  expect(() => includes(2, undefined)).toThrowWithMessage(TypeError,
+    'Cannot read property \'indexOf\' of undefined')
+  expect(() => R.includes(2, undefined)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of undefined')
 })
 ```
@@ -7995,13 +7758,13 @@ const schema = {a: Number, b: async x => {
 }}
 
 const result = await Promise.all([
-  R.isValid({schema, input}),
-  R.isValid({schema, input: invalidInput})
+  R.isValidAsync({schema, input}),
+  R.isValidAsync({schema, input: invalidInput})
 ])
 // => [true, false]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20input%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0Aconst%20invalidInput%20%3D%20%7Ba%3A%201%2C%20b%3A%20'foo'%7D%0Aconst%20schema%20%3D%20%7Ba%3A%20Number%2C%20b%3A%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20typeof%20x%20%3D%3D%3D%20'number'%0A%7D%7D%0A%0Aconst%20result%20%3D%20await%20Promise.all(%5B%0A%20%20R.isValid(%7Bschema%2C%20input%7D)%2C%0A%20%20R.isValid(%7Bschema%2C%20input%3A%20invalidInput%7D)%0A%5D)%0A%2F%2F%20%3D%3E%20%5Btrue%2C%20false%5D">Try the above <strong>R.isValidAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20input%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0Aconst%20invalidInput%20%3D%20%7Ba%3A%201%2C%20b%3A%20'foo'%7D%0Aconst%20schema%20%3D%20%7Ba%3A%20Number%2C%20b%3A%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20typeof%20x%20%3D%3D%3D%20'number'%0A%7D%7D%0A%0Aconst%20result%20%3D%20await%20Promise.all(%5B%0A%20%20R.isValidAsync(%7Bschema%2C%20input%7D)%2C%0A%20%20R.isValidAsync(%7Bschema%2C%20input%3A%20invalidInput%7D)%0A%5D)%0A%2F%2F%20%3D%3E%20%5Btrue%2C%20false%5D">Try the above <strong>R.isValidAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -9239,22 +9002,9 @@ mapAsync<T, K>(fn: AsyncIterableIndexed<T, K>) : ( list: T[]) => Promise<K[]>;
 
 ```javascript
 import { composeAsync } from './composeAsync'
+import { delay } from './delay'
 import { map } from './map'
 import { mapAsync } from './mapAsync'
-
-const delay = a =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve(a + 20)
-    }, 100)
-  })
-
-const tap = a =>
-  new Promise(resolve => {
-    setTimeout(() => {
-      resolve(a)
-    }, 100)
-  })
 
 const rejectDelay = a =>
   new Promise((_, reject) => {
@@ -9263,39 +9013,44 @@ const rejectDelay = a =>
     }, 100)
   })
 
-test('', async () => {
-  const result = await mapAsync(delay, [ 1, 2, 3 ])
-  expect(result).toEqual([ 21, 22, 23 ])
+test('happy', async () => {
+  const fn = async (x, prop) => {
+    await delay(100)
+    expect(prop).toBeNumber()
+
+    return x + 1
+  }
+  const result = await mapAsync(fn, [ 1, 2, 3 ])
+  expect(result).toEqual([ 2, 3, 4 ])
 })
 
 test('with object', async () => {
-  const result = await mapAsync(delay, {
+  const fn = async (x, prop) => {
+    expect(prop).toBeString()
+
+    return x + 1
+  }
+  const result = await mapAsync(fn, {
     a : 1,
     b : 2,
-    c : 3,
   })
   expect(result).toEqual({
-    a : 21,
-    b : 22,
-    c : 23,
+    a : 2,
+    b : 3,
   })
 })
 
-test('with array', async () => {
-  await mapAsync((x, i) => {
-    expect(x % 10).toBe(0)
-    expect(typeof i).toBe('number')
-  },
-  [ 10, 20, 30 ])
-})
-
-test('composeAsync', async () => {
+test('with R.composeAsync', async () => {
   const result = await composeAsync(
-    mapAsync(delay),
-    mapAsync(async a => delay(a)),
-    map(a => a * 10)
-  )(await tap([ 1, 2, 3 ]))
-  expect(result).toEqual([ 50, 60, 70 ])
+    map(x => x + 1),
+    mapAsync(async x => {
+      delay(x)
+
+      return x
+    }),
+    map(x => x * 10)
+  )([ 1, 2, 3 ])
+  expect(result).toEqual([ 11, 21, 31 ])
 })
 
 test('error', async () => {
@@ -9324,7 +9079,9 @@ It is similar to `R.mapFastAsync` in that it uses `Promise.all` but not over the
 
 ```typescript
 mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number, list: T[]): Promise<K[]>;
+mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number): (list: T[]) => Promise<K[]>;
 mapAsyncLimit<T, K>(fn: AsyncIterableIndexed<T, K>, limit: number, list: T[]): Promise<K[]>;
+mapAsyncLimit<T, K>(fn: AsyncIterableIndexed<T, K>, limit: number): (list: T[]) => Promise<K[]>;
 ```
 
 </details>
@@ -9367,6 +9124,25 @@ test('happy', async () => {
   const methodScale = toDecimal((diffTime2 - diffTime) / 1000, 0)
   expect(result).toEqual([ 2, 3, 4, 5, 6, 7, 8, 9, 10 ])
   if (!isCI) expect(methodScale).toBe(limit)
+})
+
+const fn = async x => {
+  await delay(100)
+
+  return x + 1
+}
+
+test('with R.composeAsync', async () => {
+  const result = await composeAsync(mapAsyncLimit(fn, 2), x =>
+    x.map(xx => xx + 1))([ 1, 2, 3, 4, 5, 6 ])
+  expect(result).toEqual([ 3, 4, 5, 6, 7, 8 ])
+})
+
+test('fallback to R.mapFastAsync', async () => {
+  const result = await mapAsyncLimit(
+    fn, 4, [ 1, 2, 3 ]
+  )
+  expect(result).toEqual([ 2, 3, 4 ])
 })
 ```
 
@@ -9647,6 +9423,7 @@ Asynchronous version of `R.mapToObject`
 
 ```typescript
 mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>;
+mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>): (list: T[]) => Promise<U>;
 ```
 
 </details>
@@ -9656,6 +9433,7 @@ mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Prom
 <summary><strong>Tests</strong></summary>
 
 ```javascript
+import { composeAsync } from './composeAsync'
 import { delay } from './delay'
 import { mapToObjectAsync } from './mapToObjectAsync'
 
@@ -9676,6 +9454,16 @@ const expected = {
 test('happy', async () => {
   const result = await mapToObjectAsync(fn, list)
   expect(result).toEqual(expected)
+})
+
+test('with R.composeAsync', async () => {
+  const result = await composeAsync(mapToObjectAsync(fn), x =>
+    x.filter(xx => xx > 1))(list)
+
+  expect(result).toEqual({
+    key2 : 12,
+    key3 : 4,
+  })
 })
 ```
 
@@ -12699,6 +12487,119 @@ test('with bad input', () => {
 
 </details>
 
+### pipeAsync
+
+```typescript
+
+pipeAsync<Out>(
+  ...fns: (Async<any> | Func<any>)[]
+): (input: any) => Promise<Out>
+```
+
+Asynchronous version of `R.pipe`
+
+```javascript
+const add = async x => {
+  await R.delay(100)
+  return x + 1
+}
+const multiply = async x => {
+  await R.delay(100)
+  return x * 2 
+}
+
+const result = await R.pipeAsync(
+  add,
+  multiply
+)(1)
+// `result` resolves to `4`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20multiply%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20*%202%20%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.pipeAsync(%0A%20%20add%2C%0A%20%20multiply%0A)(1)%0A%2F%2F%20%60result%60%20resolves%20to%20%604%60">Try the above <strong>R.pipeAsync</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+pipeAsync<Out>(
+  ...fns: (Async<any> | Func<any>)[]
+): (input: any) => Promise<Out>;
+pipeAsync<Out>(
+  ...fns: (Async<any> | Func<any>)[]
+): (input: any) => Promise<Out>;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { delay } from './delay'
+import { equals } from './equals'
+import { map } from './map'
+import { pipeAsync } from './pipeAsync'
+
+async function identity(x){
+  await delay(100)
+
+  return x
+}
+
+test('happy', async () => {
+  const fn1 = async x => {
+    await delay(100)
+
+    return x.map(xx => xx + 1)
+  }
+  const fn2 = async x => {
+    await delay(100)
+
+    return x.map(xx => xx * 2)
+  }
+  const result = await pipeAsync(fn1,
+    fn2)(await Promise.all([ identity(1), identity(2), identity(3) ]))
+
+  expect(result).toEqual([ 4, 6, 8 ])
+})
+
+const delayFn = ms =>
+  new Promise(resolve => {
+    resolve(ms + 1)
+  })
+ 
+test('with function returning promise', async () => {
+  const result = await pipeAsync(
+    x => x,
+    x => x + 1,
+    delayFn,
+    x => x
+  )(1)
+
+  expect(result).toEqual(3)
+})
+
+test('throw error', async () => {
+  const fn = async () => {
+    await delay(1)
+    JSON.parse('{foo')
+  }
+
+  let didThrow = false
+  try {
+    await pipeAsync(x => x, fn)(20)
+  } catch (e){
+    didThrow = true
+  }
+
+  expect(didThrow).toBeTrue()
+})
+```
+
+</details>
+
 ### piped
 
 ```typescript
@@ -12764,6 +12665,27 @@ pipedAsync<T>(
 ): Promise<T>
 ```
 
+It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
+
+```javascript
+const result = R.pipedAsync(
+  100,
+  async x => {
+    await R.delay(100)
+    return x + 2
+  },
+  R.add(2),
+  async x => {
+    const delayed = await R.delay(100)
+    return delayed + x
+  }
+)
+const expected = 'RAMBDAX_DELAY104'
+// `result` resolves to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.pipedAsync(%0A%20%20100%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%2B%202%0A%20%20%7D%2C%0A%20%20R.add(2)%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20const%20delayed%20%3D%20await%20R.delay(100)%0A%20%20%20%20return%20delayed%20%2B%20x%0A%20%20%7D%0A)%0Aconst%20expected%20%3D%20'RAMBDAX_DELAY104'%0A%2F%2F%20%60result%60%20resolves%20to%20%60expected%60">Try the above <strong>R.pipedAsync</strong> example in Rambda REPL</a>
+
 <details>
 
 <summary>All Typescript definitions</summary>
@@ -12773,6 +12695,37 @@ pipedAsync<T>(
   input: any,
   ...fns: (Func<any> | Async<any>)[]
 ): Promise<T>;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { add } from './add'
+import { delay } from './delay'
+import { pipedAsync } from './pipedAsync'
+
+const fn1 = async x => {
+  await delay(100)
+
+  return x + 2
+}
+const fn2 = async x => {
+  await delay(100)
+
+  return x + 3
+}
+
+test('happy', async () => {
+  const result = await pipedAsync(
+    1, fn1, add(2), fn2
+  )
+
+  expect(result).toBe(8)
+})
 ```
 
 </details>
@@ -12950,31 +12903,34 @@ test('happy path 2', () => {
 produce<Input, Output>(
   rules: ProduceRules<Input>,
   input: Input
-): Output
+): Promise<Output>
 ```
 
 It returns an object created by applying each value of `rules` to `input` argument
 
 `rules` input is an object with synchronous or asynchronous functions as values.
 
-If there is at least one member of `rules` that is asynchronous, then the return value is a promise.
+The return value is wrapped in a promise, even if all `rules` are synchronous functions.
 
 ```javascript
 const rules = {
-  foo: x =>  > 10,
+  foo: async x => {
+    await R.delay(100)
+    return x > 1
+  },
   bar: x => ({baz: x})
 }
-const input = 7
-const result = R.produce(rules, input)
+const input = 2
+const result = await R.produce(rules, input)
 
 const expected = {
-  foo: false,
-  bar: {baz: 7}
+  foo: true,
+  bar: {baz: 2}
 }
 // => `result` is equal to `expected`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%3A%20x%20%3D%3E%20%20%3E%2010%2C%0A%20%20bar%3A%20x%20%3D%3E%20(%7Bbaz%3A%20x%7D)%0A%7D%0Aconst%20input%20%3D%207%0Aconst%20result%20%3D%20R.produce(rules%2C%20input)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20foo%3A%20false%2C%0A%20%20bar%3A%20%7Bbaz%3A%207%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.produce</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%3A%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%3E%201%0A%20%20%7D%2C%0A%20%20bar%3A%20x%20%3D%3E%20(%7Bbaz%3A%20x%7D)%0A%7D%0Aconst%20input%20%3D%202%0Aconst%20result%20%3D%20await%20R.produce(rules%2C%20input)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20foo%3A%20true%2C%0A%20%20bar%3A%20%7Bbaz%3A%202%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.produce</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -12984,12 +12940,12 @@ const expected = {
 produce<Input, Output>(
   rules: ProduceRules<Input>,
   input: Input
-): Output;
+): Promise<Output>;
 produce<Input, Output>(
   rules: ProduceRules<Input>
 ): (
   input: Input
-) => Output;
+) => Promise<Output>;
 ```
 
 </details>
@@ -13035,20 +12991,6 @@ test('async with error', async () => {
   } catch (e){
     expect(e.message).toBe('LED_ZEPPELIN')
   }
-})
-
-test('sync', () => {
-  const fn = produce({
-    foo : x => x + 1,
-    bar : inputArgument => inputArgument === 5,
-  })
-  const expected = {
-    foo : 6,
-    bar : true,
-  }
-
-  const result = fn(5)
-  expect(result).toEqual(expected)
 })
 ```
 
@@ -13681,6 +13623,61 @@ test('with single rule', () => {
   const expectedResult = ' bar baz '
 
   expect(result).toEqual(expectedResult)
+})
+```
+
+</details>
+
+### removeIndex
+
+```typescript
+
+removeIndex<T>(index: number, list: ReadonlyArray<T>): T[]
+```
+
+It returns a copy of `list` input with removed `index`.
+
+```javascript
+const list = [1, 2, 3, 4]
+const result = R.removeIndex(1, list)
+// => [1, 3, 4]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20result%20%3D%20R.removeIndex(1%2C%20list)%0A%2F%2F%20%3D%3E%20%5B1%2C%203%2C%204%5D">Try the above <strong>R.removeIndex</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+removeIndex<T>(index: number, list: ReadonlyArray<T>): T[];
+removeIndex(index: number): <T>(list: ReadonlyArray<T>) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { removeIndex } from './removeIndex.js'
+
+const list = [ 1, 2, 3, 4 ]
+
+test('first or before first index', () => {
+  expect(removeIndex(list, 0)).toEqual([ 2, 3, 4 ])
+  expect(removeIndex(list)(-2)).toEqual([ 2, 3, 4 ])
+})
+
+test('last or after last index', () => {
+  expect(removeIndex(list, 4)).toEqual([ 1, 2, 3 ])
+  expect(removeIndex(list, 10)).toEqual([ 1, 2, 3 ])
+})
+
+test('middle index', () => {
+  expect(removeIndex(list, 1)).toEqual([ 1, 3, 4 ])
+  expect(removeIndex(list, 2)).toEqual([ 1, 2, 4 ])
 })
 ```
 
@@ -14411,11 +14408,6 @@ const expected = [
 ```typescript
 sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[];
 sortByProps(sortPaths: string[]): <T>(list: ReadonlyArray<T>) => T[];
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 ```
 
 </details>
@@ -14427,78 +14419,46 @@ export as namespace R
 ```javascript
 import { sortByProps } from './sortByProps'
 
-const list = [
-  {
-    a : {
-      b : 1,
-      c : 2,
-    },
-  },
-  {
-    a : {
-      b : 1,
-      c : 1,
-    },
-  },
-  {
-    a : {
-      b : 0,
-      c : 3,
-    },
-  },
-]
-const sorted = [
-  {
-    a : {
-      b : 0,
-      c : 3,
-    },
-  },
-  {
-    a : {
-      b : 1,
-      c : 1,
-    },
-  },
-  {
-    a : {
-      b : 1,
-      c : 2,
-    },
-  },
-]
+const list = [ { a : { b : 3 } }, { a : { b : 2 } }, { a : { b : 1 } } ]
+const sorted = [ { a : { b : 1 } }, { a : { b : 2 } }, { a : { b : 3 } } ]
 
 test('wrong paths are ignored', () => {
-  expect(sortByProps([ 'foo.bar', 'a.b', 'a.c' ], list)).toEqual(sorted)
+  expect(sortByProps([ 'foo.bar', 'a.c', 'a.b', 'a.d' ], list)).toEqual(sorted)
 })
 
 test('skip sort when path results are equal', () => {
-  const input = [ {
-    a : {
-      b : 0,
-      c : 2,
+  const input = [
+    {
+      a : {
+        b : 0,
+        c : 2,
+      },
     },
-  }, {
-    a : {
-      b : 0,
-      c : 1,
+    {
+      a : {
+        b : 0,
+        c : 1,
+      },
     },
-  } ]
+  ]
   expect(sortByProps([ 'a.b', 'a.d' ], input)).toEqual(input)
 })
 
 test('when list is already sorted', () => {
-  const input = [ {
-    a : {
-      b : 0,
-      c : 1,
+  const input = [
+    {
+      a : {
+        b : 0,
+        c : 1,
+      },
     },
-  }, {
-    a : {
-      b : 0,
-      c : 2,
+    {
+      a : {
+        b : 0,
+        c : 2,
+      },
     },
-  } ]
+  ]
   expect(sortByProps([ 'a.b', 'a.c' ])(input)).toEqual(input)
 })
 ```
@@ -15234,6 +15194,121 @@ test('with strings', () => {
 test('with negative index', () => {
   expect(takeLast(-1, [ 1, 2, 3 ])).toEqual([ 1, 2, 3 ])
   expect(takeLast(-Infinity, [ 1, 2, 3 ])).toEqual([ 1, 2, 3 ])
+})
+```
+
+</details>
+
+### takeUntil
+
+```typescript
+
+takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+```
+
+```javascript
+const list = [1, 2, 3, 4, 5]
+const predicate = x => x > 3
+const result = takeUntil(predicate, list)
+
+// => [1, 2, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%203%0Aconst%20result%20%3D%20takeUntil(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try the above <strong>R.takeUntil</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
+takeUntil<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { takeUntil } from './takeUntil'
+
+const list = [ 1, 2, 3, 4, 5, 6 ]
+
+test('happy', () => {
+  const result = takeUntil(x => x > 3, list)
+  expect(result).toEqual([ 1, 2, 3 ])
+})
+
+test('predicate always returns true', () => {
+  const result = takeUntil(x => x < 10, list)
+  expect(result).toEqual([])
+})
+
+test('predicate always returns false', () => {
+  const result = takeUntil(x => x > 10, list)
+  expect(result).toEqual(list)
+})
+```
+
+</details>
+
+### takeWhile
+
+```typescript
+
+takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+```
+
+```javascript
+const list = [1, 2, 3, 4, 5]
+const predicate = x => x < 3
+const result = takeWhile(predicate, list)
+
+// => [1, 2, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3C%203%0Aconst%20result%20%3D%20takeWhile(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try the above <strong>R.takeWhile</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
+takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { takeWhile } from './takeWhile'
+
+const list = [ 1, 2, 3, 4, 5, 6 ]
+
+test('happy', () => {
+  const result = takeWhile(x => x < 4, list)
+  expect(result).toEqual([ 1, 2, 3 ])
+})
+
+test('predicate always returns true', () => {
+  const result = takeWhile(x => x < 10, list)
+  expect(result).toEqual(list)
+}) 
+
+test('predicate alwats returns false', () => {
+  const result = takeWhile(x => x > 10, list)
+  expect(result).toEqual([])
 })
 ```
 
@@ -16580,6 +16655,85 @@ test('list has no such index', () => {
 
 </details>
 
+### updateObject
+
+```typescript
+
+updateObject<Output>(rules: [string, any][], input: object): Output
+```
+
+Very similar to `R.assocPath` but it applies list of updates instead of only a single update.
+
+It return a copy of `obj` input with changed properties according to `rules` input.
+
+Each instance of `rules` is a tuple of object path and the new value for this path. If such object path does not exist, then such object path is created.
+
+As it uses `R.path` underneath, object path can be either string or array of strings(in Typescript object path can be only a string).
+
+```javascript
+const obj = {
+  a: {b: 1},
+  foo: {bar: 10},
+}
+const rules = [
+  ['a.b', 2],
+  ['foo.bar', 20],
+  ['q.z', 300],
+]
+const result = R.updateObject(rules, obj)
+
+const expected = {
+  a: {b: 2},
+  foo: {bar: 20},
+  q: {z: 300},
+}
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7B%0A%20%20a%3A%20%7Bb%3A%201%7D%2C%0A%20%20foo%3A%20%7Bbar%3A%2010%7D%2C%0A%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20%5B'a.b'%2C%202%5D%2C%0A%20%20%5B'foo.bar'%2C%2020%5D%2C%0A%20%20%5B'q.z'%2C%20300%5D%2C%0A%5D%0Aconst%20result%20%3D%20R.updateObject(rules%2C%20obj)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20a%3A%20%7Bb%3A%202%7D%2C%0A%20%20foo%3A%20%7Bbar%3A%2020%7D%2C%0A%20%20q%3A%20%7Bz%3A%20300%7D%2C%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.updateObject</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+updateObject<Output>(rules: [string, any][], input: object): Output;
+updateObject<Output>(rules: [string, any][]): (input: object) => Output;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { updateObject } from './updateObject'
+
+const obj = {
+  a: {b: 1},
+  foo: {bar: 10},
+}
+const rules = [
+  ['a.b', 2],
+  ['foo.bar', 20],
+  ['q.z', 300],
+]
+const expected = {
+  a: {b: 2},
+  foo: {bar: 20},
+  q: {z: 300},
+}
+
+test('happy', () => {
+  const result = updateObject(rules, obj)
+  console.log(result)
+  // expect(result).toEqual(expected)
+})
+```
+
+</details>
+
 ### values
 
 ```typescript
@@ -16663,6 +16817,70 @@ R.view(lens, {x: 4, y: 2}) //=> 4
 ```typescript
 view<T, U>(lens: Lens): (target: T) => U;
 view<T, U>(lens: Lens, target: T): U;
+```
+
+</details>
+
+### viewOr
+
+```typescript
+
+viewOr<Input, Output>(fallback: Output, lens: Lens, input: Input): Output
+```
+
+A combination between `R.defaultTo` and `R.view.
+
+```javascript
+const lens = R.lensProp('a');
+const input = {a: 'foo'}
+const fallbackInput = {b: 'bar'}
+const fallback = 'FALLBACK'
+
+const result = [
+  R.viewOr(fallback, lens, input),
+  R.viewOr(fallback, lens, fallbackInput)
+]
+// => ['foo', 'FALLBACK']
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20lens%20%3D%20R.lensProp('a')%3B%0Aconst%20input%20%3D%20%7Ba%3A%20'foo'%7D%0Aconst%20fallbackInput%20%3D%20%7Bb%3A%20'bar'%7D%0Aconst%20fallback%20%3D%20'FALLBACK'%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.viewOr(fallback%2C%20lens%2C%20input)%2C%0A%20%20R.viewOr(fallback%2C%20lens%2C%20fallbackInput)%0A%5D%0A%2F%2F%20%3D%3E%20%5B'foo'%2C%20'FALLBACK'%5D">Try the above <strong>R.viewOr</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+viewOr<Input, Output>(fallback: Output, lens: Lens, input: Input): Output;
+viewOr<Input, Output>(fallback: Output, lens: Lens): (input: Input) =>  Output;
+viewOr<Input, Output>(fallback: Output): FunctionToolbelt.Curry<(lens: Lens, input: Input) => Output>;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { lensProp } from './lensProp'
+import { viewOr } from './viewOr'
+
+const lens = lensProp('a')
+const input = { a : 'foo' }
+const fallbackInput = { b : 'bar' }
+const fallback = 'FALLBACK'
+
+test('happy', () => {
+  const result = viewOr(
+    fallback, lens, fallbackInput
+  )
+  expect(result).toBe(fallback)
+})
+
+test('curried', () => {
+  const result = viewOr(fallback, lens)(input)
+  expect(result).toBe('foo')
+})
 ```
 
 </details>
@@ -17354,6 +17572,44 @@ test('ignore extra keys', () => {
 
 ## CHANGELOG
 
+5.1.0
+
+- Add `R.takeUntil` method
+
+- Fix wrong `R.takeWhile`
+
+5.0.0
+
+- Deprecate `R.change` method - it does too much; partially replaced with `R.updateObject`.
+
+- Deprecate `R.compact` method - vague use case; `R.filter` does the same job.
+
+- `R.produce` always returns a promise
+
+- Add `R.updateObject` method
+
+- Add `R.takeWhile` method
+
+- Add `R.viewOr` method
+
+- Add `R.pipeAsync` method
+
+- Add `R.removeIndex` method
+
+- Add `R.excludes` method
+
+- `R.includes` throws on wrong input, i.e. `R.includes(1, null)`
+
+- Close [Issue #524](https://github.com/selfrefactor/rambda/issues/524) - `R.assocPath` wrong logic when number is used in array path input.
+
+- `R.mapToObjectAsync` supports currying
+
+- `R.mapAsyncLimit` supports currying
+
+- Fix `R.mapAsync` to pass property to iterator, when input is an object.
+
+- Fix currying for several async methods - `R.tapAsync`, `R.produce`, `R.filterAsync` *(extend typings)
+
 4.2.0
 
 - Add `R.move` method
@@ -17366,7 +17622,7 @@ test('ignore extra keys', () => {
 
 - Add `R.sortByPath` method
 
-- Add `R.sortByProps` method *
+- Add `R.sortByProps` method
 
 - Close [Issue #519](https://github.com/selfrefactor/rambda/issues/519) -
 `ts-toolbelt` needs other type of export with `--isolatedModules` flag

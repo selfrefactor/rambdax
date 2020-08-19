@@ -39,29 +39,33 @@ You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D
 
 ## Rambdax's advantages
 
-- Typescript included
+### Typescript included
 
 Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
 
 Still, you need to be aware that functional programming features in `Typescript` are in development, which means that using **R.compose/R.pipe** can be problematic.
 
-- Smaller size
+### Extendable
+
+`Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
+
+### Smaller size
 
 The size of a library affects not only the build bundle size but also the dev bundle size and build time. This is important advantage, expecially for big projects.
 
-- Tree-shaking
+### Tree-shaking
 
 Currently **Rambda** is more tree-shakable than **Ramda** - proven in the following [repo](https://github.com/selfrefactor/rambda-tree-shaking).
 
 The repo holds two `Angular9` applications: one with small example code of *Ramda* and the other - same code but with *Rambda* as import library.
 
-Currently the **Ramda** bundle size is **{{rambdaTreeShakingInfo}} MB** less than its **Ramda** counterpart.
+Currently the **Ramda** bundle size is **2.03 MB** less than its **Ramda** counterpart.
 
 There is also [Webpack/Rollup/Parcel/Esbuild tree-shaking example including several libraries](https://github.com/mischnic/tree-shaking-example) including `Ramda`, `Rambda` and `Rambdax`. 
 
 > actually tree-shaking is the initial reason for creation of `Rambda`
 
-- dot notation for `R.path` and `R.paths`
+### Dot notation for `R.path`, `R.paths`, `R.assocPath` and `R.lensPath`
 
 Standard usage of `R.path` is `R.path(['a', 'b'], {a: {b: 1} })`.
 
@@ -71,7 +75,7 @@ In **Rambda** you have the choice to use dot notation(which is arguably more rea
 R.path('a.b', {a: {b: 1} })
 ```
 
-- comma notation for `R.pick` and `R.omit`
+### Comma notation for `R.pick` and `R.omit`
 
 Similar to dot notation, but the separator is comma(`,`) instead of dot(`.`).
 
@@ -80,13 +84,13 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 // No space allowed between properties
 ```
 
-- Speed
+### Speed
 
 **Rambda** is generally more performant than `Ramda` as the [benchmarks](#benchmarks) can prove that.
 
-- Support
+### Support
 
-Most of the valid issues are fixed within 2-5 days.
+Most of the valid issues are fixed within 2-3 days.
 
 Closing the issue is usually accompanied by publishing a new patch version of `Rambda` to NPM.
 
@@ -15195,6 +15199,66 @@ test('with negative index', () => {
 
 </details>
 
+### takeUntil
+
+```typescript
+
+takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+```
+
+```javascript
+const list = [1, 2, 3, 4, 5]
+const predicate = x => x > 3
+const result = takeUntil(predicate, list)
+
+// => [1, 2, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%203%0Aconst%20result%20%3D%20takeUntil(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try the above <strong>R.takeUntil</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
+takeUntil<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { takeUntil } from './takeUntil'
+
+const list = [ 1, 2, 3, 4, 5, 6 ]
+
+test('happy', () => {
+  const result = takeUntil(x => x > 3, list)
+  expect(result).toEqual([ 1, 2, 3 ])
+})
+
+test('predicate always returns true', () => {
+  const result = takeUntil(x => x < 10, list)
+  expect(result).toEqual([])
+})
+
+test('predicate always returns false', () => {
+  const result = takeUntil(x => x > 10, list)
+  expect(result).toEqual(list)
+})
+```
+
+</details>
+
 ### takeWhile
 
 ```typescript
@@ -15203,14 +15267,14 @@ takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
 ```
 
 ```javascript
-const list = [1, 2, 3, 4]
-const predicate = (x) => x < 3
+const list = [1, 2, 3, 4, 5]
+const predicate = x => x < 3
 const result = takeWhile(predicate, list)
 
 // => [1, 2, 3]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20predicate%20%3D%20(x)%20%3D%3E%20x%20%3C%203%0Aconst%20result%20%3D%20takeWhile(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try the above <strong>R.takeWhile</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3C%203%0Aconst%20result%20%3D%20takeWhile(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try the above <strong>R.takeWhile</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -15237,13 +15301,13 @@ test('happy', () => {
   expect(result).toEqual([ 1, 2, 3 ])
 })
 
-test('predicate never returns true', () => {
+test('predicate always returns true', () => {
   const result = takeWhile(x => x < 10, list)
   expect(result).toEqual(list)
-})
+}) 
 
-test('predicate initially returns false', () => {
-  const result = takeWhile(x => x > 2, list)
+test('predicate alwats returns false', () => {
+  const result = takeWhile(x => x > 10, list)
   expect(result).toEqual([])
 })
 ```
@@ -16635,11 +16699,6 @@ const expected = {
 ```typescript
 updateObject<Output>(rules: [string, any][], input: object): Output;
 updateObject<Output>(rules: [string, any][]): (input: object) => Output;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 ```
 
 </details>
@@ -17512,6 +17571,12 @@ test('ignore extra keys', () => {
 </details>
 
 ## CHANGELOG
+
+5.1.0
+
+- Add `R.takeUntil` method
+
+- Fix wrong `R.takeWhile`
 
 5.0.0
 

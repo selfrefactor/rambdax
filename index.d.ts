@@ -1922,6 +1922,10 @@ export function excludes<T>(valueToFind: T): (input: ReadonlyArray<T>) => boolea
 export function updateObject<Output>(rules: [string, any][], input: object): Output;
 export function updateObject<Output>(rules: [string, any][]): (input: object) => Output;
 
+export function takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
+export function takeUntil<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+
+
 // RAMBDAX_MARKER_END
 // ============================================
 
