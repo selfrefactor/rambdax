@@ -17949,11 +17949,11 @@ Also with this versions, typings tests are provided and several definitions are 
 
 > Links to Rambda
 
-- [https://mailchi.mp/webtoolsweekly/web-tools-280](Web Tools Weekly)
+- [Web Tools Weekly](https://mailchi.mp/webtoolsweekly/web-tools-280)
 
-- [https://github.com/stoeffel/awesome-fp-js](awesome-fp-js)
+- [awesome-fp-js](https://github.com/stoeffel/awesome-fp-js)
 
-- [https://github.com/docsifyjs/awesome-docsify](awesome-docsify)  
+- [awesome-docsify](https://github.com/docsifyjs/awesome-docsify)  
 
 ## My other libraries
 
