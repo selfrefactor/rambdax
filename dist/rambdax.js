@@ -169,6 +169,182 @@ function anyType(targetType) {
   };
 }
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    if (enumerableOnly) symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    });
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
+function _isInteger(n) {
+  return n << 0 === n;
+}
+var _isInteger$1 = Number.isInteger || _isInteger;
+
+function curry(fn, args = []) {
+  return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
+}
+
+function assocFn(prop, newValue, obj) {
+  return Object.assign({}, obj, {
+    [prop]: newValue
+  });
+}
+
+const assoc = curry(assocFn);
+
+function assocPathFn(path, newValue, input) {
+  const pathArrValue = typeof path === 'string' ? path.split('.').map(x => _isInteger(Number(x)) ? Number(x) : x) : path;
+
+  if (pathArrValue.length === 0) {
+    return newValue;
+  }
+
+  const index = pathArrValue[0];
+
+  if (pathArrValue.length > 1) {
+    const condition = typeof input !== 'object' || input === null || !input.hasOwnProperty(index);
+    const nextinput = condition ? _isInteger(pathArrValue[1]) ? [] : {} : input[index];
+    newValue = assocPathFn(Array.prototype.slice.call(pathArrValue, 1), newValue, nextinput);
+  }
+
+  if (_isInteger(index) && _isArray(input)) {
+    const arr = input.slice();
+    arr[index] = newValue;
+    return arr;
+  }
+
+  return assoc(index, newValue, input);
+}
+
+const assocPath = curry(assocPathFn);
+
+function path(pathInput, obj) {
+  if (arguments.length === 1) return _obj => path(pathInput, _obj);
+
+  if (obj === null || obj === undefined) {
+    return undefined;
+  }
+
+  let willReturn = obj;
+  let counter = 0;
+  const pathArrValue = typeof pathInput === 'string' ? pathInput.split('.') : pathInput;
+
+  while (counter < pathArrValue.length) {
+    if (willReturn === null || willReturn === undefined) {
+      return undefined;
+    }
+
+    willReturn = willReturn[pathArrValue[counter]];
+    counter++;
+  }
+
+  return willReturn;
+}
+
+const ALLOWED_OPERATIONS = ['remove', 'add', 'update'];
+function removeAtPath(path, obj) {
+  const p = typeof path === 'string' ? path.split('.') : path;
+  const len = p.length;
+  if (len === 0) return;
+  if (len === 1) return delete obj[p[0]];
+  if (len === 2) return delete obj[p[0]][p[1]];
+  if (len === 3) return delete obj[p[0]][p[1]][p[2]];
+  if (len === 4) return delete obj[p[0]][p[1]][p[2]][p[3]];
+  if (len === 5) return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]];
+
+  if (len === 6) {
+    return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]][p[5]];
+  }
+
+  if (len === 7) {
+    return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]][p[5]][p[6]];
+  }
+
+  if (len === 8) {
+    return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]][p[5]][p[6]][p[7]];
+  }
+
+  if (len === 9) {
+    return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]][p[5]][p[6]][p[7]][p[8]];
+  }
+
+  if (len === 10) {
+    return delete obj[p[0]][p[1]][p[2]][p[3]][p[4]][p[5]][p[6]][p[7]][p[8]][p[9]];
+  }
+}
+function applyDiff(rules, obj) {
+  if (arguments.length === 1) return _obj => applyDiff(rules, _obj);
+
+  let clone = _objectSpread2({}, obj);
+
+  rules.forEach(({
+    op,
+    path: path$1,
+    value
+  }) => {
+    if (!ALLOWED_OPERATIONS.includes(op)) return;
+
+    if (op === 'add' && path$1 && value !== undefined) {
+      if (path(path$1, obj)) return;
+      return clone = assocPath(path$1, value, clone);
+    }
+
+    if (op === 'remove') {
+      if (path(path$1, obj) === undefined) return;
+      return removeAtPath(path$1, clone);
+    }
+
+    if (op === 'update' && path$1 && value !== undefined) {
+      if (path(path$1, obj) === undefined) return;
+      return clone = assocPath(path$1, value, clone);
+    }
+  });
+  return clone;
+}
+
 function composeAsync(...inputArguments) {
   return async function (startArgument) {
     let argumentsToPass = startArgument;
@@ -382,7 +558,7 @@ function filter(predicate, list) {
   while (index < len) {
     const value = list[index];
 
-    if (predicate(value, index)) {
+    if (predicate(value)) {
       willReturn.push(value);
     }
 
@@ -578,7 +754,7 @@ function all(predicate, list) {
   if (arguments.length === 1) return _list => all(predicate, _list);
 
   for (let i = 0; i < list.length; i++) {
-    if (!predicate(list[i], i)) return false;
+    if (!predicate(list[i])) return false;
   }
 
   return true;
@@ -793,7 +969,7 @@ function forEach(fn, list) {
     const len = list.length;
 
     while (index < len) {
-      fn(list[index], index, list);
+      fn(list[index]);
       index++;
     }
   } else {
@@ -844,10 +1020,6 @@ async function isValidAsync({
   }
 
   return toReturn;
-}
-
-function curry(fn, args = []) {
-  return (..._args) => (rest => rest.length >= fn.length ? fn(...rest) : curry(fn, rest))([...args, ..._args]);
 }
 
 const Const = x => ({
@@ -948,7 +1120,7 @@ function map(fn, list) {
     const willReturn = Array(len);
 
     while (index < len) {
-      willReturn[index] = fn(list[index], index, list);
+      willReturn[index] = fn(list[index]);
       index++;
     }
 
@@ -1040,55 +1212,6 @@ function mapToObject(fn, list) {
 
   ok(type(fn), type(list))('Function', 'Array');
   return mergeAll(map(fn, list));
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
 }
 
 async function mapToObjectAsyncFn(fn, list) {
@@ -1513,29 +1636,6 @@ function shuffle(arrayRaw) {
   return array;
 }
 
-function path(list, obj) {
-  if (arguments.length === 1) return _obj => path(list, _obj);
-
-  if (obj === null || obj === undefined) {
-    return undefined;
-  }
-
-  let willReturn = obj;
-  let counter = 0;
-  const pathArrValue = typeof list === 'string' ? list.split('.') : list;
-
-  while (counter < pathArrValue.length) {
-    if (willReturn === null || willReturn === undefined) {
-      return undefined;
-    }
-
-    willReturn = willReturn[pathArrValue[counter]];
-    counter++;
-  }
-
-  return willReturn;
-}
-
 function sortBy(sortFn, list) {
   if (arguments.length === 1) return _list => sortBy(sortFn, _list);
   const clone = list.slice();
@@ -1701,45 +1801,6 @@ function throttle(fn, ms) {
 function toDecimal(number, charsAfterDecimalPoint = 2) {
   return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
 }
-
-function _isInteger(n) {
-  return n << 0 === n;
-}
-var _isInteger$1 = Number.isInteger || _isInteger;
-
-function assocFn(prop, newValue, obj) {
-  return Object.assign({}, obj, {
-    [prop]: newValue
-  });
-}
-
-const assoc = curry(assocFn);
-
-function assocPathFn(path, newValue, input) {
-  const pathArrValue = typeof path === 'string' ? path.split('.').map(x => _isInteger(Number(x)) ? Number(x) : x) : path;
-
-  if (pathArrValue.length === 0) {
-    return newValue;
-  }
-
-  const index = pathArrValue[0];
-
-  if (pathArrValue.length > 1) {
-    const condition = typeof input !== 'object' || input === null || !input.hasOwnProperty(index);
-    const nextinput = condition ? _isInteger(pathArrValue[1]) ? [] : {} : input[index];
-    newValue = assocPathFn(Array.prototype.slice.call(pathArrValue, 1), newValue, nextinput);
-  }
-
-  if (_isInteger(index) && _isArray(input)) {
-    const arr = input.slice();
-    arr[index] = newValue;
-    return arr;
-  }
-
-  return assoc(index, newValue, input);
-}
-
-const assocPath = curry(assocPathFn);
 
 function updateObject(rules, obj) {
   if (arguments.length === 1) return _obj => updateObject(rules, _obj);
@@ -2246,7 +2307,7 @@ function find(predicate, list) {
   while (index < len) {
     const x = list[index];
 
-    if (predicate(x, index)) {
+    if (predicate(x)) {
       return x;
     }
 
@@ -2260,7 +2321,7 @@ function findIndex(predicate, list) {
   let index = -1;
 
   while (++index < len) {
-    if (predicate(list[index], index)) {
+    if (predicate(list[index])) {
       return index;
     }
   }
@@ -2273,7 +2334,7 @@ function findLast(predicate, list) {
   let index = list.length;
 
   while (--index >= 0) {
-    if (predicate(list[index], index)) {
+    if (predicate(list[index])) {
       return list[index];
     }
   }
@@ -2286,7 +2347,7 @@ function findLastIndex(fn, list) {
   let index = list.length;
 
   while (--index >= 0) {
-    if (fn(list[index], index)) {
+    if (fn(list[index])) {
       return index;
     }
   }
@@ -2732,7 +2793,7 @@ function none(predicate, list) {
   if (arguments.length === 1) return _list => none(predicate, _list);
 
   for (let i = 0; i < list.length; i++) {
-    if (!predicate(list[i], i)) return true;
+    if (!predicate(list[i])) return true;
   }
 
   return false;
@@ -2781,7 +2842,7 @@ function partition(predicate, input) {
   let counter = -1;
 
   while (counter++ < input.length - 1) {
-    if (predicate(input[counter], counter)) {
+    if (predicate(input[counter])) {
       yes.push(input[counter]);
     } else {
       no.push(input[counter]);
@@ -2876,7 +2937,7 @@ const propOr = curry(propOrFn);
 
 function reject(predicate, list) {
   if (arguments.length === 1) return _list => reject(predicate, _list);
-  return filter((x, i) => !predicate(x, i), list);
+  return filter(x => !predicate(x), list);
 }
 
 function repeat(x, timesToRepeat) {
@@ -3158,6 +3219,7 @@ exports.anyPass = anyPass;
 exports.anyTrue = anyTrue;
 exports.anyType = anyType;
 exports.append = append;
+exports.applyDiff = applyDiff;
 exports.applySpec = applySpec;
 exports.assoc = assoc;
 exports.assocPath = assocPath;
@@ -3307,6 +3369,7 @@ exports.range = range;
 exports.reduce = reduce;
 exports.reject = reject;
 exports.remove = remove;
+exports.removeAtPath = removeAtPath;
 exports.removeIndex = removeIndex;
 exports.renameProps = renameProps;
 exports.repeat = repeat;

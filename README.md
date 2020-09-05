@@ -39,32 +39,6 @@ You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D
 
 ## Rambdax's advantages
 
-### Typescript included
-
-Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
-
-Still, you need to be aware that functional programming features in `Typescript` are in development, which means that using **R.compose/R.pipe** can be problematic.
-
-### Extendable
-
-`Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
-
-### Smaller size
-
-The size of a library affects not only the build bundle size but also the dev bundle size and build time. This is important advantage, expecially for big projects.
-
-### Tree-shaking
-
-Currently **Rambda** is more tree-shakable than **Ramda** - proven in the following [repo](https://github.com/selfrefactor/rambda-tree-shaking).
-
-The repo holds two `Angular9` applications: one with small example code of *Ramda* and the other - same code but with *Rambda* as import library.
-
-The test shows that **Rambda** bundle size is **2.03 MB** less than its **Ramda** counterpart.
-
-There is also [Webpack/Rollup/Parcel/Esbuild tree-shaking example including several libraries](https://github.com/mischnic/tree-shaking-example) including `Ramda`, `Rambda` and `Rambdax`. 
-
-> actually tree-shaking is the initial reason for creation of `Rambda`
-
 ### Dot notation for `R.path`, `R.paths`, `R.assocPath` and `R.lensPath`
 
 Standard usage of `R.path` is `R.path(['a', 'b'], {a: {b: 1} })`.
@@ -84,15 +58,21 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 // No space allowed between properties
 ```
 
-### Speed
+### Extendable with Ramda community projects
 
-**Rambda** is generally more performant than `Ramda` as the [benchmarks](#benchmarks) can prove that.
+`Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
+
+### Usage of `foo`, `bar` and `baz` in documentation
+
+Those placeholders exists for a reason. `Ramda` documentation often uses other placeholders, which could be confusing.
+
+`Ramda` documentation and tests on the other hand, try to use them as much as possible.
 
 ### Support
 
 Most of the valid issues are fixed within 2-3 days.
 
-Closing the issue is usually accompanied by publishing a new patch version of `Rambda` to NPM.
+Closing the issue is usually accompanied by publishing a new patch version of `Rambdax` to NPM.
 
 - More generic methods
 
@@ -231,21 +211,13 @@ import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambd
 
 - Rambda's **type** handles *NaN* input, in which case it returns `NaN`.
 
-- Rambda's **path** and **paths** accept dot notation - `'x.y' same as ['x','y']`
+- Rambda's **forEach** can iterate over objects not only arrays.
 
-- Rambda's **pick** and **omit** accept comma notation - `'x,y' same as ['x','y']`
-
-- Rambda's **map**, **reject** and **forEach** can iterate over objects not only arrays.
-
-- Rambda's **map** and **filter** pass array index as second argument when mapping over arrays.
-
-- Rambda's **adjust**, **all**, **allPass**, **any**, **anyPass**, **findIndex** , **findLastIndex** and **reject** are passing index as second argument to the predicate function.
+- Rambda's **map**, **filter**, **partition** when they iterate over objects, they pass property and input object as predicate's argument.
 
 - Rambda's **filter** returns empty array with bad input(`null` or `undefined`), while Ramda throws.
 
-- Ramda's **includes** will throw an error if input is neither `string` nor `array`, while **Rambda** version will return `false`.
-
-- Ramda's **clamp** work for letters, while Rambda's method work only for numbers.
+- Ramda's **clamp** work with strings, while Rambda's method work only with numbers.
 
 > If you need more **Ramda** methods in **Rambda**, you may either submit a `PR` or check the extended version of **Rambda** - [Rambdax](https://github.com/selfrefactor/rambdax). In case of the former, you may want to consult with [Rambda contribution guidelines.](CONTRIBUTING.md)
 
@@ -399,7 +371,7 @@ test('ramda specs', () => {
 
 ```typescript
 
-adjust<T>(index: number, replaceFn: (x: T) => T, list: ReadonlyArray<T>): T[]
+adjust<T>(index: number, replaceFn: (x: T) => T, list: T[]): T[]
 ```
 
 It replaces `index` in array `list` with the result of `replaceFn(list[i])`.
@@ -419,8 +391,8 @@ R.adjust(
 <summary>All Typescript definitions</summary>
 
 ```typescript
-adjust<T>(index: number, replaceFn: (x: T) => T, list: ReadonlyArray<T>): T[];
-adjust<T>(index: number, replaceFn: (x: T) => T): (list: ReadonlyArray<T>) => T[];
+adjust<T>(index: number, replaceFn: (x: T) => T, list: T[]): T[];
+adjust<T>(index: number, replaceFn: (x: T) => T): (list: T[]) => T[];
 ```
 
 </details>
@@ -480,7 +452,7 @@ test('when index is out of bounds', () => {
 
 ```typescript
 
-all<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean
+all<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
 It returns `true`, if all members of array `list` returns `true`, when applied as argument to `predicate` function.
@@ -500,10 +472,8 @@ const result = R.all(predicate, arr)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-all<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean;
-all<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): boolean;
-all<T>(predicate: (x: T, index: number) => boolean): (list: ReadonlyArray<T>) => boolean;
-all<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
+all<T>(predicate: (x: T) => boolean, list: T[]): boolean;
+all<T>(predicate: (x: T) => boolean): (list: T[]) => boolean;
 ```
 
 </details>
@@ -515,30 +485,18 @@ all<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
 ```javascript
 import { all } from './all'
 
-const numArr = [ 0, 1, 2, 3, 4 ]
+const list = [ 0, 1, 2, 3, 4 ]
 
 test('when true', () => {
   const fn = x => x > -1
 
-  expect(all(fn)(numArr)).toBeTrue()
+  expect(all(fn)(list)).toBeTrue()
 })
 
 test('when false', () => {
   const fn = x => x > 2
 
-  expect(all(fn, numArr)).toBeFalse()
-})
-
-test('pass index as second argument', () => {
-  const indexes = []
-  const fn = (x, i) => {
-    indexes.push(i)
-
-    return x > 5
-  }
-  all(fn, [ 10, 12, 14 ])
-
-  expect(indexes).toEqual([ 0, 1, 2 ])
+  expect(all(fn, list)).toBeFalse()
 })
 ```
 
@@ -874,7 +832,7 @@ test('f', () => {
 
 ```typescript
 
-and<T extends { and?: ((...a: readonly any[]) => any)
+and<T extends { and?: ((...a: any[]) => any)
 ```
 
 Returns `true` if both arguments are `true`. Otherwise, it returns `false`.
@@ -891,8 +849,8 @@ R.and(false, true); // => false
 <summary>All Typescript definitions</summary>
 
 ```typescript
-and<T extends { and?: ((...a: readonly any[]) => any); } | number | boolean | string | null>(fn1: T, val2: any): boolean;
-and<T extends { and?: ((...a: readonly any[]) => any); } | number | boolean | string | null>(fn1: T): (val2: any) => boolean;
+and<T extends { and?: ((...a: any[]) => any); } | number | boolean | string | null>(x: T, y: any): boolean;
+and<T extends { and?: ((...a: any[]) => any); } | number | boolean | string | null>(x: T): (y: any) => boolean;
 ```
 
 </details>
@@ -920,10 +878,10 @@ test('happy', () => {
 
 ```typescript
 
-any<T>(predicate: (x: T, i: number) => boolean, list: ReadonlyArray<T>): boolean
+any<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
-It returns `true`, if at least one member of `list` returns true, when passed to `predicate` function.
+It returns `true`, if at least one member of `list` returns true, when passed to a `predicate` function.
 
 ```javascript
 const list = [1, 2, 3]
@@ -939,10 +897,8 @@ R.any(fn, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-any<T>(predicate: (x: T, i: number) => boolean, list: ReadonlyArray<T>): boolean;
-any<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): boolean;
-any<T>(predicate: (x: T, i: number) => boolean): (list: ReadonlyArray<T>) => boolean;
-any<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
+any<T>(predicate: (x: T) => boolean, list: T[]): boolean;
+any<T>(predicate: (x: T) => boolean): (list: T[]) => boolean;
 ```
 
 </details>
@@ -954,21 +910,14 @@ any<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
 ```javascript
 import { any } from './any'
 
-const arr = [ 1, 2 ]
+const list = [ 1, 2, 3 ]
 
-test('no curry', () => {
-  expect(any(val => val < 0, arr)).toBeFalse()
+test('happy', () => {
+  expect(any(x => x < 0, list)).toBeFalse()
 })
 
 test('with curry', () => {
-  expect(any(val => val < 2)(arr)).toBeTrue()
-})
-
-test('passes index to predicate', () => {
-  any((x, i) => {
-    expect(typeof x).toBe('string')
-    expect(typeof i).toBe('number')
-  })([ 'foo', 'bar' ])
+  expect(any(x => x > 2)(list)).toBeTrue()
 })
 ```
 
@@ -1032,7 +981,7 @@ test('supports function', () => {
 
 ```typescript
 
-anyPass<T>(predicates: ReadonlyArray<SafePred<T>>): SafePred<T>
+anyPass<T>(predicates: SafePred<T>[]): SafePred<T>
 ```
 
 It accepts list of `predicates` and returns a function. This function with its `input` will return `true`, if any of `predicates` returns `true` for this `input`.
@@ -1057,7 +1006,7 @@ const result = fn(input)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-anyPass<T>(predicates: ReadonlyArray<SafePred<T>>): SafePred<T>;
+anyPass<T>(predicates: SafePred<T>[]): SafePred<T>;
 ```
 
 </details>
@@ -1228,7 +1177,7 @@ test('when false', () => {
 
 ```typescript
 
-append<T>(x: T, listOrString: ReadonlyArray<T>): T[]
+append<T>(x: T, listOrString: T[]): T[]
 ```
 
 It adds element `x` at the end of `listOrString`.
@@ -1250,8 +1199,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-append<T>(x: T, listOrString: ReadonlyArray<T>): T[];
-append<T>(x: T): <T>(listOrString: ReadonlyArray<T>) => T[];
+append<T>(x: T, listOrString: T[]): T[];
+append<T>(x: T): <T>(listOrString: T[]) => T[];
 ```
 
 </details>
@@ -1298,11 +1247,141 @@ test('should not modify arguments', () => {
 
 </details>
 
+### applyDiff
+
+```typescript
+
+applyDiff<Output>(rules: ApplyDiffRule[], obj: object): Output
+```
+
+It changes paths in an object according to a list of operations. Valid operations are `add`, `update` and `delete`. Its use-case is while writing tests and you need to change the test data.
+
+Note, that you cannot use `update` operation, if the object path is missing in the input object.
+Also, you cannot use `add` operation, if the object path has a value.
+
+```javascript
+const obj = {a: {b:1, c:2}}
+const rules = [
+  {op: 'remove', path: 'a.c'},
+  {op: 'add', path: 'a.d', value: 4},
+  {op: 'update', path: 'a.b', value: 2},
+]
+const result = applyDiff(rules, obj)
+const expected = {a: {b: 2, d: 4}}
+
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7Ba%3A%20%7Bb%3A1%2C%20c%3A2%7D%7D%0Aconst%20rules%20%3D%20%5B%0A%20%20%7Bop%3A%20'remove'%2C%20path%3A%20'a.c'%7D%2C%0A%20%20%7Bop%3A%20'add'%2C%20path%3A%20'a.d'%2C%20value%3A%204%7D%2C%0A%20%20%7Bop%3A%20'update'%2C%20path%3A%20'a.b'%2C%20value%3A%202%7D%2C%0A%5D%0Aconst%20result%20%3D%20applyDiff(rules%2C%20obj)%0Aconst%20expected%20%3D%20%7Ba%3A%20%7Bb%3A%202%2C%20d%3A%204%7D%7D%0A%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try the above <strong>R.applyDiff</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+applyDiff<Output>(rules: ApplyDiffRule[], obj: object): Output;
+applyDiff<Output>(rules: ApplyDiffRule[]): ( obj: object) => Output;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { applyDiff } from './applyDiff'
+
+test('remove operation', () => {
+  const rules = [
+    {
+      op   : 'remove',
+      path : 'a.b',
+    },
+  ]
+  const result = applyDiff(rules, {
+    a : {
+      b : 1,
+      c : 2,
+    },
+  })
+  expect(result).toEqual({ a : { c : 2 } })
+})
+
+test('update operation', () => {
+  const rules = [
+    {
+      op    : 'update',
+      path  : 'a.b',
+      value : 3,
+    },
+    {
+      op    : 'update',
+      path  : 'a.c.1',
+      value : 3,
+    },
+    {
+      op    : 'update',
+      path  : 'a.d',
+      value : 3,
+    },
+  ]
+  const result = applyDiff(rules, {
+    a : {
+      b : 1,
+      c : [ 1, 2 ],
+    },
+  })
+  expect(result).toEqual({
+    a : {
+      b : 3,
+      c : [ 1, 3 ],
+    },
+  })
+})
+
+test('add operation', () => {
+  const rules = [
+    {
+      op    : 'add',
+      path  : 'a.b',
+      value : 3,
+    },
+    {
+      op    : 'add',
+      path  : 'a.d',
+      value : 3,
+    },
+  ]
+  const result = applyDiff(rules, {
+    a : {
+      b : 1,
+      c : 2,
+    },
+  })
+
+  expect(result).toEqual({
+    a : {
+      b : 1,
+      c : 2,
+      d : 3,
+    },
+  })
+})
+```
+
+</details>
+
 ### applySpec
 
 ```typescript
 
-applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
+applySpec<Spec extends Record<string, (...args: any[]) => any>>(
   spec: Spec
 ): (
   ...args: Parameters<ValueOfRecord<Spec>>
@@ -1341,12 +1420,12 @@ getMetrics(2, 4)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
+applySpec<Spec extends Record<string, (...args: any[]) => any>>(
   spec: Spec
 ): (
   ...args: Parameters<ValueOfRecord<Spec>>
 ) => { [Key in keyof Spec]: ReturnType<Spec[Key]> };
-applySpec<T>(spec: any): (...args: readonly any[]) => T;
+applySpec<T>(spec: any): (...args: any[]) => T;
 ```
 
 </details>
@@ -1579,7 +1658,7 @@ test('restructure json object', () => {
 
 ```typescript
 
-assoc<T, U, K extends string>(prop: K, newValue: T, obj: U): Record<K, T> & U
+assoc<T, U, K extends string>(prop: K, val: T, obj: U): Record<K, T> & U
 ```
 
 It makes a shallow clone of `obj` with setting or overriding the property `prop` with `newValue`.
@@ -1596,9 +1675,9 @@ R.assoc('c', 3, {a: 1, b: 2})
 <summary>All Typescript definitions</summary>
 
 ```typescript
-assoc<T, U, K extends string>(prop: K, newValue: T, obj: U): Record<K, T> & U;
-assoc<T, K extends string>(prop: K, newValue: T): <U>(obj: U) => Record<K, T> & U;
-assoc<K extends string>(prop: K): <T, U>(newValue: T, obj: U) => Record<K, T> & U;
+assoc<T, U, K extends string>(prop: K, val: T, obj: U): Record<K, T> & U;
+assoc<T, K extends string>(prop: K, val: T): <U>(obj: U) => Record<K, T> & U;
+assoc<K extends string>(prop: K): AssocPartialOne<K>;
 ```
 
 </details>
@@ -1691,7 +1770,7 @@ test('assignment is shallow', () => {
 
 ```typescript
 
-assocPath<T, U>(path: Path, newValue: T, obj: U): U
+assocPath<Output>(path: Path, newValue: any, obj: object): Output
 ```
 
 It makes a shallow clone of `obj` with setting or overriding with `newValue` the property found with `path`.
@@ -1712,9 +1791,9 @@ R.assocPath(path, newValue, obj)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-assocPath<T, U>(path: Path, newValue: T, obj: U): U;
-assocPath<T, U>(path: Path, newValue: T): (obj: U) => U;
-assocPath<T, U>(path: Path): FunctionToolbelt.Curry<(newValue: T, obj: U) => U>;
+assocPath<Output>(path: Path, newValue: any, obj: object): Output;
+assocPath<Output>(path: Path, newValue: any): (obj: object) => Output;
+assocPath<Output>(path: Path): FunctionToolbelt.Curry<(newValue: any, obj: object) => Output>;
 ```
 
 </details>
@@ -1977,7 +2056,7 @@ test('skip evaluation of the second expression', () => {
 
 ```typescript
 
-chain<T, U>(fn: (n: T) => readonly U[], list: readonly T[]): U[]
+chain<T, U>(fn: (n: T) => U[], list: T[]): U[]
 ```
 
 The method is also known as `flatMap`.
@@ -1997,8 +2076,8 @@ const result = chain(duplicate, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-chain<T, U>(fn: (n: T) => readonly U[], list: readonly T[]): U[];
-chain<T, U>(fn: (n: T) => readonly U[]): (list: readonly T[]) => U[];
+chain<T, U>(fn: (n: T) => U[], list: T[]): U[];
+chain<T, U>(fn: (n: T) => U[]): (list: T[]) => U[];
 chain<X0, X1, R>(fn: (x0: X0, x1: X1) => R, fn1: (x1: X1) => X0): (x1: X1) => R;
 ```
 
@@ -2144,7 +2223,7 @@ const result = [
 
 ```typescript
 clone<T>(input: T): T;
-clone<T>(input: ReadonlyArray<T>): T[];
+clone<T>(input: T[]): T[];
 ```
 
 </details>
@@ -2508,7 +2587,7 @@ test('throw error', async () => {
 
 ```typescript
 
-concat<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[]
+concat<T>(x: T[], y: T[]): T[]
 ```
 
 It returns a new string or array, which is the result of merging `x` and `y`.
@@ -2525,8 +2604,8 @@ R.concat('foo', 'bar') // => 'foobar'
 <summary>All Typescript definitions</summary>
 
 ```typescript
-concat<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[];
-concat<T>(x: ReadonlyArray<T>): (y: ReadonlyArray<T>) => T[];
+concat<T>(x: T[], y: T[]): T[];
+concat<T>(x: T[]): (y: T[]) => T[];
 concat(x: string, y: string): string;
 concat(x: string): (y: string) => string;
 ```
@@ -2563,7 +2642,7 @@ test('with strings', () => {
 
 ```typescript
 
-cond(conditions: [Pred, (...a: readonly any[]) => any][]): (...a: readonly any[]) => any
+cond(conditions: [Pred, (...a: any[]) => any][]): (...x: any[]) => any
 ```
 
 It takes list with `conditions` and returns a new function `fn` that expects `input` as argument. 
@@ -2596,8 +2675,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-cond(conditions: [Pred, (...a: readonly any[]) => any][]): (...a: readonly any[]) => any;
-cond<A, B>(conditions: [SafePred<A>, (...a: readonly A[]) => B][]): (...a: readonly A[]) => B;
+cond(conditions: [Pred, (...a: any[]) => any][]): (...x: any[]) => any;
+cond<A, B>(conditions: [SafePred<A>, (...a: A[]) => B][]): (...x: A[]) => B;
 ```
 
 </details>
@@ -2656,7 +2735,7 @@ test('predicates are tested in order', () => {
 
 ```typescript
 
-converge(after: ((...a: readonly any[]) => any), fns: Array<((...a: readonly any[]) => any)>): (...a: readonly any[]) => any
+converge(after: ((...a: any[]) => any), fns: Array<((...x: any[]) => any)>): (...y: any[]) => any
 ```
 
 <details>
@@ -2664,7 +2743,7 @@ converge(after: ((...a: readonly any[]) => any), fns: Array<((...a: readonly any
 <summary>All Typescript definitions</summary>
 
 ```typescript
-converge(after: ((...a: readonly any[]) => any), fns: Array<((...a: readonly any[]) => any)>): (...a: readonly any[]) => any;
+converge(after: ((...a: any[]) => any), fns: Array<((...x: any[]) => any)>): (...y: any[]) => any;
 ```
 
 </details>
@@ -2796,7 +2875,7 @@ test('when 2', () => {
 
 ```typescript
 
-curry(fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any
+curry(fn: (...args: any[]) => any): (...a: any[]) => any
 ```
 
 It expects a function as input and returns its curried version.
@@ -2816,7 +2895,7 @@ const result = sum(3) // => 6
 <summary>All Typescript definitions</summary>
 
 ```typescript
-curry(fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any;
+curry(fn: (...args: any[]) => any): (...a: any[]) => any;
 ```
 
 </details>
@@ -2872,7 +2951,7 @@ test('when called via multiple curry stages', () => {
 
 ```typescript
 
-curryN(length: number, fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any
+curryN(length: number, fn: (...args: any[]) => any): (...a: any[]) => any
 ```
 
 It returns a curried equivalent of the provided function, with the specified arity.
@@ -2882,7 +2961,7 @@ It returns a curried equivalent of the provided function, with the specified ari
 <summary>All Typescript definitions</summary>
 
 ```typescript
-curryN(length: number, fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any;
+curryN(length: number, fn: (...args: any[]) => any): (...a: any[]) => any;
 ```
 
 </details>
@@ -3278,7 +3357,7 @@ test('usage with variables', async () => {
 
 ```typescript
 
-difference<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): T[]
+difference<T>(a: T[], b: T[]): T[]
 ```
 
 It returns the uniq set of all elements in the first list `a` not contained in the second list `b`.
@@ -3298,8 +3377,8 @@ const result = difference(a, b)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-difference<T>(a: ReadonlyArray<T>, b: ReadonlyArray<T>): T[];
-difference<T>(a: ReadonlyArray<T>): (b: ReadonlyArray<T>) => T[];
+difference<T>(a: T[], b: T[]): T[];
+difference<T>(a: T[]): (b: T[]) => T[];
 ```
 
 </details>
@@ -3484,7 +3563,7 @@ test('happy', () => {
 
 ```typescript
 
-drop<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
+drop<T>(howMany: number, listOrString: T[]): T[]
 ```
 
 It returns `listOrString` with `howMany` items dropped from its beginning.
@@ -3501,10 +3580,10 @@ R.drop(2, 'foobar')  // => 'obar'
 <summary>All Typescript definitions</summary>
 
 ```typescript
-drop<T>(howMany: number, listOrString: ReadonlyArray<T>): T[];
+drop<T>(howMany: number, listOrString: T[]): T[];
 drop(howMany: number, listOrString: string): string;
 drop<T>(howMany: number): {
-  <T>(listOrString: readonly T[]): T[];
+  <T>(listOrString: T[]): T[];
   (listOrString: string): string;
 };
 ```
@@ -3550,7 +3629,7 @@ test('should return copy', () => {
 
 ```typescript
 
-dropLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
+dropLast<T>(howMany: number, listOrString: T[]): T[]
 ```
 
 It returns `listOrString` with `howMany` items dropped from its end.
@@ -3567,10 +3646,10 @@ R.dropLast(2, 'foobar')  // => 'foob'
 <summary>All Typescript definitions</summary>
 
 ```typescript
-dropLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[];
+dropLast<T>(howMany: number, listOrString: T[]): T[];
 dropLast(howMany: number, listOrString: string): string;
 dropLast<T>(howMany: number): {
-  <T>(listOrString: readonly T[]): T[];
+  <T>(listOrString: T[]): T[];
   (listOrString: string): string;
 };
 ```
@@ -4059,7 +4138,7 @@ test('with negative zero', () => {
 
 ```typescript
 
-excludes(valueToFind: string, input: ReadonlyArray<string> | string): boolean
+excludes(valueToFind: string, input: string[] | string): boolean
 ```
 
 Opposite of `R.includes`
@@ -4079,10 +4158,10 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-excludes(valueToFind: string, input: ReadonlyArray<string> | string): boolean;
-excludes(valueToFind: string): (input: ReadonlyArray<string> | string) => boolean;
-excludes<T>(valueToFind: T, input: ReadonlyArray<T>): boolean;
-excludes<T>(valueToFind: T): (input: ReadonlyArray<T>) => boolean;
+excludes(valueToFind: string, input: string[] | string): boolean;
+excludes(valueToFind: string): (input: string[] | string) => boolean;
+excludes<T>(valueToFind: T, input: T[]): boolean;
+excludes<T>(valueToFind: T): (input: T[]) => boolean;
 ```
 
 </details>
@@ -4141,7 +4220,7 @@ F(): boolean;
 filter<T>(predicate: FilterFunctionArray<T>): (x: T[]) => T[]
 ```
 
-It filters list or object `input` with `predicate`.
+It filters a list or an object `input` using a `predicate` function.
 
 ```javascript
 const list = [3, 4, 3, 2]
@@ -4224,15 +4303,6 @@ test('predicate when input is object', () => {
     return val < 2
   }
   expect(filter(predicate, obj)).toEqual({ a : 1 })
-})
-
-test('pass index as second argument', () => {
-  let counter = 0
-  filter((x, i) => {
-    expect(i).toBe(counter)
-    counter++
-  },
-  [ 10, 20, 30 ])
 })
 
 test('with object', () => {
@@ -4330,7 +4400,7 @@ test('with object', async () => {
 
 ```typescript
 
-find<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): T | undefined
+find<T>(predicate: (x: T) => boolean, list: T[]): T | undefined
 ```
 
 It returns the first element of `list` that satisfy the `predicate`.
@@ -4352,10 +4422,8 @@ const result = R.find(predicate, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-find<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): T | undefined;
-find<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): T | undefined;
-find<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => T | undefined;
-find<T>(predicate: (x: T, index: number) => boolean): (list: ReadonlyArray<T>) => T | undefined;
+find<T>(predicate: (x: T) => boolean, list: T[]): T | undefined;
+find<T>(predicate: (x: T) => boolean): (list: T[]) => T | undefined;
 ```
 
 </details>
@@ -4383,13 +4451,6 @@ test('with curry', () => {
 test('with empty list', () => {
   expect(find(() => true, [])).toBeUndefined()
 })
-
-test('pass index', () => {
-  find((_, i) => {
-    expect(i).toBe(0)
-  },
-  [ 'foo' ])
-})
 ```
 
 </details>
@@ -4398,7 +4459,7 @@ test('pass index', () => {
 
 ```typescript
 
-findIndex<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): number
+findIndex<T>(predicate: (x: T) => boolean, list: T[]): number
 ```
 
 It returns the index of the first element of `list` satisfying the `predicate` function.
@@ -4420,10 +4481,8 @@ const result = R.findIndex(predicate, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-findIndex<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): number;
-findIndex<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): number;
-findIndex<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => number;
-findIndex<T>(predicate: (x: T, index: number) => boolean): (list: ReadonlyArray<T>) => number;
+findIndex<T>(predicate: (x: T) => boolean, list: T[]): number;
+findIndex<T>(predicate: (x: T) => boolean): (list: T[]) => number;
 ```
 
 </details>
@@ -4436,19 +4495,14 @@ findIndex<T>(predicate: (x: T, index: number) => boolean): (list: ReadonlyArray<
 import { findIndex } from './findIndex'
 import { propEq } from './propEq'
 
+const list = [ { a : 1 }, { a : 2 }, { a : 3 } ]
+
 test('happy', () => {
-  expect(findIndex(propEq('a', 2))([ { a : 1 }, { a : 2 }, { a : 3 } ])).toEqual(1)
+  expect(findIndex(propEq('a', 2), list)).toEqual(1)
 
-  expect(findIndex(propEq('a', 1))([ { a : 1 }, { a : 2 }, { a : 3 } ])).toEqual(0)
+  expect(findIndex(propEq('a', 1))(list)).toEqual(0)
 
-  expect(findIndex(propEq('a', 4))([ { a : 1 }, { a : 2 }, { a : 3 } ])).toEqual(-1)
-})
-
-test('pass index as second argument', () => {
-  findIndex((x, i) => {
-    expect(typeof x).toBe('number')
-    expect(typeof i).toBe('number')
-  })([ 10, 12, 15 ])
+  expect(findIndex(propEq('a', 4))(list)).toEqual(-1)
 })
 ```
 
@@ -4481,9 +4535,7 @@ const result = R.findLast(predicate, list)
 
 ```typescript
 findLast<T>(fn: (x: T) => boolean, list: T[]): T | undefined;
-findLast<T>(fn: (x: T, index: number) => boolean, list: T[]): T | undefined;
 findLast<T>(fn: (x: T) => boolean): (list: T[]) => T | undefined;
-findLast<T>(fn: (x: T, index: number) => boolean): (list: T[]) => T | undefined;
 ```
 
 </details>
@@ -4496,12 +4548,11 @@ findLast<T>(fn: (x: T, index: number) => boolean): (list: T[]) => T | undefined;
 import { findLast } from './findLast'
 
 test('happy', () => {
-  const result = findLast((x, i) => {
-    expect(typeof i).toBe('number')
-
+  const result = findLast(x => {
     return x > 1
   },
-  [ 1, 1, 1, 2, 3, 4, 1 ])
+  [ 1, 1, 1, 2, 3, 4, 1 ]
+  )
   expect(result).toEqual(4)
 
   expect(findLast(x => x === 0, [ 0, 1, 1, 2, 3, 4, 1 ])).toEqual(0)
@@ -4576,9 +4627,7 @@ const result = R.findLastIndex(predicate, list)
 
 ```typescript
 findLastIndex<T>(predicate: (x: T) => boolean, list: T[]): number;
-findLastIndex<T>(predicate: (x: T, index: number) => boolean, list: T[]): number;
 findLastIndex<T>(predicate: (x: T) => boolean): (list: T[]) => number;
-findLastIndex<T>(predicate: (x: T, index: number) => boolean): (list: T[]) => number;
 ```
 
 </details>
@@ -4591,8 +4640,7 @@ findLastIndex<T>(predicate: (x: T, index: number) => boolean): (list: T[]) => nu
 import { findLastIndex } from './findLastIndex'
 
 test('happy', () => {
-  const result = findLastIndex((x, i) => {
-    expect(typeof i).toBe('number')
+  const result = findLastIndex((x) => {
 
     return x > 1
   },
@@ -4649,7 +4697,7 @@ test('ramda 4', () => {
 
 ```typescript
 
-flatten<T>(list: ReadonlyArray<any>): T[]
+flatten<T>(list: any[]): T[]
 ```
 
 It deeply flattens an array.
@@ -4671,7 +4719,7 @@ const result = R.flatten([
 <summary>All Typescript definitions</summary>
 
 ```typescript
-flatten<T>(list: ReadonlyArray<any>): T[];
+flatten<T>(list: any[]): T[];
 ```
 
 </details>
@@ -4800,7 +4848,7 @@ test('function with arity of 5', () => {
 
 ```typescript
 
-forEach<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<T>
+forEach<T>(fn: MapFunctionArray<T, void>, list: T[]): T[]
 ```
 
 It applies `iterable` function over all members of `list` and returns `list`.
@@ -4822,12 +4870,10 @@ result //=> [1, 2]
 <summary>All Typescript definitions</summary>
 
 ```typescript
-forEach<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<T>;
-forEach<T, U>(fn: MapFunctionArray<T, U>, list: T[]): T[];
-forEach<T, U>(fn: MapFunctionArray<T, U>): (list: T[]) => T[];
-forEach<T, U, S>(fn: MapFunctionObject<T, U>): (list: Dictionary<T>) => Dictionary<T>;
-forEach<T>(fn: MapFunctionArray<T, T>): (list: T[]) => T[];
-forEach<T>(fn: MapFunctionArray<T, T>, list: ReadonlyArray<T>): T[];
+forEach<T>(fn: MapFunctionArray<T, void>, list: T[]): T[];
+forEach<T>(fn: MapFunctionArray<T, void>): (list: T[]) => T[];
+forEach<T>(fn: MapFunctionObject<T, void>, list: Dictionary<T>): Dictionary<T>;
+forEach<T, U>(fn: MapFunctionObject<T, void>): (list: Dictionary<T>) => Dictionary<T>;
 ```
 
 </details>
@@ -4876,40 +4922,6 @@ test('happy', () => {
   })
 })
 
-test('happy 2', () => {
-  const list = [
-    {
-      x : 1,
-      y : 2,
-    },
-    {
-      x : 100,
-      y : 200,
-    },
-    {
-      x : 300,
-      y : 400,
-    },
-    {
-      x : 234,
-      y : 345,
-    },
-  ]
-  const sideEffect = {}
-  const result = forEach(elem => {
-    sideEffect[ elem.x ] = elem.y
-  }, list)
-  const expectedSideEffect = {
-    1   : 2,
-    100 : 200,
-    300 : 400,
-    234 : 345,
-  }
-
-  expect(sideEffect).toEqual(expectedSideEffect)
-  expect(result).toEqual(list)
-})
-
 test('with empty list', () => {
   const list = []
   const result = forEach(x => x * x)(list)
@@ -4929,14 +4941,6 @@ test('returns the input', () => {
   const result = forEach(x => x * x)(list)
 
   expect(result).toEqual(list)
-})
-
-test('pass index as second argument', () => {
-  const list = [ 11, 21, 31 ]
-  const indexes = []
-  const result = forEach((x, i) => indexes.push(i))(list)
-
-  expect(indexes).toEqual([ 0, 1, 2 ])
 })
 ```
 
@@ -5251,7 +5255,7 @@ test('with glue', () => {
 
 ```typescript
 
-groupBy<T>(groupFn: (x: T) => string, list: ReadonlyArray<T>): { [index: string]: T[] }
+groupBy<T>(groupFn: (x: T) => string, list: T[]): { [index: string]: T[] }
 ```
 
 It splits `list` according to a provided `groupFn` function and returns an object.
@@ -5271,8 +5275,8 @@ const result = R.groupBy(groupFn, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-groupBy<T>(groupFn: (x: T) => string, list: ReadonlyArray<T>): { [index: string]: T[] };
-groupBy<T>(groupFn: (x: T) => string): (list: ReadonlyArray<T>) => { [index: string]: T[] };
+groupBy<T>(groupFn: (x: T) => string, list: T[]): { [index: string]: T[] };
+groupBy<T>(groupFn: (x: T) => string): (list: T[]) => { [index: string]: T[] };
 ```
 
 </details>
@@ -5338,7 +5342,7 @@ test('groupBy', () => {
 
 ```typescript
 
-groupWith<T>(compareFn: (x: T, y: T) => boolean): (list: ReadonlyArray<T>) => T[][]
+groupWith<T>(compareFn: (x: T, y: T) => boolean): (list: T[]) => T[][]
 ```
 
 It returns separated version of `list`, where separation is done with equality `compareFn` function.
@@ -5358,8 +5362,8 @@ const result = R.groupWith(isConsecutive, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-groupWith<T>(compareFn: (x: T, y: T) => boolean): (list: ReadonlyArray<T>) => T[][];
-groupWith<T>(compareFn: (x: T, y: T) => boolean, list: ReadonlyArray<T>): T[][];
+groupWith<T>(compareFn: (x: T, y: T) => boolean): (list: T[]) => T[][];
+groupWith<T>(compareFn: (x: T, y: T) => boolean, list: T[]): T[][];
 groupWith<T>(compareFn: (x: T, y: T) => boolean, list: string): string[];
 ```
 
@@ -6154,7 +6158,7 @@ test('happy', () => {
 
 ```typescript
 
-includes(valueToFind: string, input: ReadonlyArray<string> | string): boolean
+includes(valueToFind: string, input: string[] | string): boolean
 ```
 
 If `input` is string, then this method work as native `String.includes`.
@@ -6176,10 +6180,10 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-includes(valueToFind: string, input: ReadonlyArray<string> | string): boolean;
-includes(valueToFind: string): (input: ReadonlyArray<string> | string) => boolean;
-includes<T>(valueToFind: T, input: ReadonlyArray<T>): boolean;
-includes<T>(valueToFind: T): (input: ReadonlyArray<T>) => boolean;
+includes(valueToFind: string, input: string[] | string): boolean;
+includes(valueToFind: string): (input: string[] | string) => boolean;
+includes<T>(valueToFind: T, input: T[]): boolean;
+includes<T>(valueToFind: T): (input: T[]) => boolean;
 ```
 
 </details>
@@ -6194,10 +6198,10 @@ import R from 'ramda'
 import { includes } from './includes'
 
 test('includes with string', () => {
-  const str = 'more is less'
+  const str = 'foo bar'
 
-  expect(includes('less')(str)).toBeTrue()
-  expect(R.includes('less')(str)).toBeTrue()
+  expect(includes('bar')(str)).toBeTrue()
+  expect(R.includes('bar')(str)).toBeTrue()
   expect(includes('never', str)).toBeFalse()
   expect(R.includes('never', str)).toBeFalse()
 })
@@ -6237,7 +6241,7 @@ test('throws on wrong input - match ramda behaviour', () => {
 
 ```typescript
 
-indexBy<T>(condition: (x: T) => string, list: ReadonlyArray<T>): { [key: string]: T }
+indexBy<T>(condition: (x: T) => string, list: T[]): { [key: string]: T }
 ```
 
 It generates object with properties provided by `condition` and values provided by `list` array.
@@ -6271,10 +6275,10 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-indexBy<T>(condition: (x: T) => string, list: ReadonlyArray<T>): { [key: string]: T };
-indexBy<T>(condition: string, list: ReadonlyArray<T>): { [key: string]: T };
-indexBy<T>(condition: (x: T) => string): (list: ReadonlyArray<T>) => { [key: string]: T };
-indexBy<T>(condition: string): (list: ReadonlyArray<T>) => { [key: string]: T };
+indexBy<T>(condition: (x: T) => string, list: T[]): { [key: string]: T };
+indexBy<T>(condition: string, list: T[]): { [key: string]: T };
+indexBy<T>(condition: (x: T) => string): (list: T[]) => { [key: string]: T };
+indexBy<T>(condition: string): (list: T[]) => { [key: string]: T };
 ```
 
 </details>
@@ -6363,7 +6367,7 @@ test('with string - bad path', () => {
 
 ```typescript
 
-indexOf<T>(valueToFind: T, list: ReadonlyArray<T>): number
+indexOf<T>(valueToFind: T, list: T[]): number
 ```
 
 It returns the index of the first element of `list` equals to `valueToFind`.
@@ -6387,8 +6391,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-indexOf<T>(valueToFind: T, list: ReadonlyArray<T>): number;
-indexOf<T>(valueToFind: T): (list: ReadonlyArray<T>) => number;
+indexOf<T>(valueToFind: T, list: T[]): number;
+indexOf<T>(valueToFind: T): (list: T[]) => number;
 ```
 
 </details>
@@ -6413,7 +6417,7 @@ test('happy', () => {
 
 ```typescript
 
-init<T>(listOrString: ReadonlyArray<T>): T[]
+init<T>(listOrString: T[]): T[]
 ```
 
 It returns all but the last element of `listOrString`.
@@ -6433,7 +6437,7 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-init<T>(listOrString: ReadonlyArray<T>): T[];
+init<T>(listOrString: T[]): T[];
 init(listOrString: string): string;
 ```
 
@@ -6568,7 +6572,7 @@ test('with arbitrary expression', () => {
 
 ```typescript
 
-intersection<T>(listA: ReadonlyArray<T>, listB: ReadonlyArray<T>): T[]
+intersection<T>(listA: T[], listB: T[]): T[]
 ```
 
 It loops throw `listA` and `listB` and returns the intersection of the two according to `R.equals`.
@@ -6588,8 +6592,8 @@ const result = intersection(listA, listB)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-intersection<T>(listA: ReadonlyArray<T>, listB: ReadonlyArray<T>): T[];
-intersection<T>(listA: ReadonlyArray<T>): (listB: ReadonlyArray<T>) => T[];
+intersection<T>(listA: T[], listB: T[]): T[];
+intersection<T>(listA: T[]): (listB: T[]) => T[];
 ```
 
 </details>
@@ -6622,7 +6626,7 @@ test('intersection with objects', () => {
 
 ```typescript
 
-intersperse<T>(separator: T, list: ReadonlyArray<T>): T[]
+intersperse<T>(separator: T, list: T[]): T[]
 ```
 
 It adds a `separator` between members of `list`.
@@ -6641,8 +6645,8 @@ const result = intersperse(separator, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-intersperse<T>(separator: T, list: ReadonlyArray<T>): T[];
-intersperse<T>(separator: T): (list: ReadonlyArray<T>) => T[];
+intersperse<T>(separator: T, list: T[]): T[];
+intersperse<T>(separator: T): (list: T[]) => T[];
 ```
 
 </details>
@@ -7894,7 +7898,7 @@ test('readme example', async () => {
 
 ```typescript
 
-join<T>(glue: string, list: ReadonlyArray<T>): string
+join<T>(glue: string, list: T[]): string
 ```
 
 It returns a string of all `list` instances joined with a `glue`.
@@ -7910,8 +7914,8 @@ R.join('-', [1, 2, 3])  // => '1-2-3'
 <summary>All Typescript definitions</summary>
 
 ```typescript
-join<T>(glue: string, list: ReadonlyArray<T>): string;
-join<T>(glue: string): (list: ReadonlyArray<T>) => string;
+join<T>(glue: string, list: T[]): string;
+join<T>(glue: string): (list: T[]) => string;
 ```
 
 </details>
@@ -8001,8 +8005,8 @@ const result = [
 
 ```typescript
 last(str: string): string;
-last(emptyList: readonly []): undefined;
-last<T extends any>(list: readonly T[]): T | undefined;
+last(emptyList: []): undefined;
+last<T extends any>(list: T[]): T | undefined;
 ```
 
 </details>
@@ -8028,7 +8032,7 @@ test('happy', () => {
 
 ```typescript
 
-lastIndexOf<T>(target: T, list: ReadonlyArray<T>): number
+lastIndexOf<T>(target: T, list: T[]): number
 ```
 
 It returns the last index of `target` in `list` array.
@@ -8053,8 +8057,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-lastIndexOf<T>(target: T, list: ReadonlyArray<T>): number;
-lastIndexOf<T>(target: T): (list: ReadonlyArray<T>) => number;
+lastIndexOf<T>(target: T, list: T[]): number;
+lastIndexOf<T>(target: T): (list: T[]) => number;
 ```
 
 </details>
@@ -8087,7 +8091,7 @@ test('false', () => {
 
 ```typescript
 
-length<T>(listOrString: ReadonlyArray<T>): number
+length<T>(listOrString: T[]): number
 ```
 
 It returns the `length` property of `listOrString`.
@@ -8107,7 +8111,7 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-length<T>(listOrString: ReadonlyArray<T>): number;
+length<T>(listOrString: T[]): number;
 ```
 
 </details>
@@ -8178,130 +8182,39 @@ lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { assoc } from './assoc'
 import { compose } from './compose'
-import { lens } from './lens'
 import { lensIndex } from './lensIndex'
 import { lensPath } from './lensPath'
 import { lensProp } from './lensProp'
 import { over } from './over'
-import { prop } from './prop'
-import { set } from './set'
 import { toUpper } from './toUpper'
 import { view } from './view'
 
-const alice = {
-  name    : 'Alice Jones',
-  address : [ '22 Walnut St', 'San Francisco', 'CA' ],
-  pets    : {
-    dog : 'joker',
-    cat : 'batman',
+const testObject = {
+  foo : [ 'a', 'b', 'c' ],
+  baz : {
+    a : 'x',
+    b : 'y',
   },
 }
 
-const nameLens = lens(prop('name'), assoc('name'))
-const addressLens = lensProp('address')
-const headLens = lensIndex(0)
-const dogLens = lensPath('pets.dog')
+const propLens = lensProp('foo')
+const indexLens = lensIndex(2)
+const composedLens = compose(propLens, indexLens)
 
-test('view', () => {
-  expect(view(nameLens, alice)).toEqual('Alice Jones')
-
-  expect(view(dogLens, alice)).toEqual('joker')
-
-  expect(view(headLens, alice.address)).toEqual('22 Walnut St')
-})
-
-test('over', () => {
-  expect(over(
-    nameLens, toUpper, alice
-  )).toEqual({
-    name    : 'ALICE JONES',
-    address : [ '22 Walnut St', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'joker',
-      cat : 'batman',
-    },
-  })
-
-  expect(over(
-    dogLens, toUpper, alice
-  )).toEqual({
-    name    : 'Alice Jones',
-    address : [ '22 Walnut St', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'JOKER',
-      cat : 'batman',
-    },
-  })
-
-  expect(over(headLens, toUpper)(alice.address)).toEqual([
-    '22 WALNUT ST',
-    'San Francisco',
-    'CA',
-  ])
-})
-
-test('set', () => {
-  expect(set(
-    nameLens, 'Alice Smith', alice
-  )).toEqual({
-    name    : 'Alice Smith',
-    address : [ '22 Walnut St', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'joker',
-      cat : 'batman',
-    },
-  })
-
-  expect(set(
-    dogLens, 'bane', alice
-  )).toEqual({
-    name    : 'Alice Jones',
-    address : [ '22 Walnut St', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'bane',
-      cat : 'batman',
-    },
-  })
-
-  expect(set(
-    headLens, '52 Crane Ave', alice.address
-  )).toEqual([
-    '52 Crane Ave',
-    'San Francisco',
-    'CA',
-  ])
-})
+const pathLens = lensPath('baz.a')
+const composedPathLens = compose(lensPath('baz'), lensPath('a'))
 
 test('composed lenses', () => {
-  const composedStreetLens = compose(addressLens, headLens)
-  const composedDogLens = compose(lensPath('pets'), lensPath('dog'))
+  expect(view(composedPathLens, testObject)).toEqual(view(pathLens, testObject))
 
-  expect(view(composedDogLens, alice)).toEqual(view(dogLens, alice))
-
-  expect(view(composedStreetLens, alice)).toEqual('22 Walnut St')
+  expect(view(composedLens, testObject)).toEqual('c')
 
   expect(over(
-    composedStreetLens, toUpper, alice
+    composedLens, toUpper, testObject
   )).toEqual({
-    name    : 'Alice Jones',
-    address : [ '22 WALNUT ST', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'joker',
-      cat : 'batman',
-    },
-  })
-
-  expect(set(
-    composedStreetLens, '52 Crane Ave', alice
-  )).toEqual({
-    name    : 'Alice Jones',
-    address : [ '52 Crane Ave', 'San Francisco', 'CA' ],
-    pets    : {
-      dog : 'joker',
-      cat : 'batman',
-    },
+    ...testObject,
+    foo : [ 'a', 'b', 'C' ],
   })
 })
 ```
@@ -8527,7 +8440,7 @@ const testObj = {
 test('view', () => {
   expect(view(lensPath('d'), testObj)).toEqual(3)
   expect(view(lensPath('a.0.b'), testObj)).toEqual(1)
-  // this is different to ramda, ramda will return a clone of the input object
+  // this is different to ramda, as ramda will return a clone of the input object
   expect(view(lensPath(''), testObj)).toEqual(undefined)
 })
 
@@ -8855,7 +8768,7 @@ It returns the result of looping through `list` with `fn`.
 It works with both array and object.
 
 ```javascript
-const fn = (x, i) => (x * 2) + i
+const fn = x => x * 2
 const fnWhenObject = (val, prop)=>{
   return `${prop}-${val}`
 }
@@ -8867,10 +8780,10 @@ const result = [
   R.map(fn, list),
   R.map(fnWhenObject, obj)
 ]
-// => [ [2, 5], {a: 'a-1', b: 'b-2'}]
+// => [ [1, 4], {a: 'a-1', b: 'b-2'}]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20(x%2C%20i)%20%3D%3E%20(x%20*%202)%20%2B%20i%0Aconst%20fnWhenObject%20%3D%20(val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20list%20%3D%20%5B1%2C%202%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20%5B%20%0A%20%20R.map(fn%2C%20list)%2C%0A%20%20R.map(fnWhenObject%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%20%5B2%2C%205%5D%2C%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D%5D">Try the above <strong>R.map</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20*%202%0Aconst%20fnWhenObject%20%3D%20(val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20list%20%3D%20%5B1%2C%202%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20%5B%20%0A%20%20R.map(fn%2C%20list)%2C%0A%20%20R.map(fnWhenObject%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%20%5B1%2C%204%5D%2C%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D%5D">Try the above <strong>R.map</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -8878,11 +8791,11 @@ const result = [
 
 ```typescript
 map<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<U>;
-map<T, U>(fn: MapFunctionArray<T, U>, list: T[]): U[];
-map<T, U>(fn: MapFunctionArray<T, U>): (list: T[]) => U[];
+map<T, U>(fn: MapIterator<T, U>, list: T[]): U[];
+map<T, U>(fn: MapIterator<T, U>): (list: T[]) => U[];
 map<T, U, S>(fn: MapFunctionObject<T, U>): (list: Dictionary<T>) => Dictionary<U>;
-map<T>(fn: MapFunctionArray<T, T>): (list: T[]) => T[];
-map<T>(fn: MapFunctionArray<T, T>, list: ReadonlyArray<T>): T[];
+map<T>(fn: MapIterator<T, T>): (list: T[]) => T[];
+map<T>(fn: MapIterator<T, T>, list: T[]): T[];
 ```
 
 </details>
@@ -8905,13 +8818,6 @@ const sampleObject = {
 
 test('with array', () => {
   expect(map(double, [ 1, 2, 3 ])).toEqual([ 2, 4, 6 ])
-})
-
-test('pass index as second argument', () => {
-  map((x, i) => {
-    expect(i).toBeNumber()
-  },
-  [ 10, 20, 30 ])
 })
 
 test('with object', () => {
@@ -9798,7 +9704,7 @@ test('whenElse', () => {
 
 ```typescript
 
-mean(list: ReadonlyArray<number>): number
+mean(list: number[]): number
 ```
 
 It returns the mean value of `list` input.
@@ -9815,7 +9721,7 @@ R.mean([ 2, 7 ])
 <summary>All Typescript definitions</summary>
 
 ```typescript
-mean(list: ReadonlyArray<number>): number;
+mean(list: number[]): number;
 ```
 
 </details>
@@ -9842,7 +9748,7 @@ test('with NaN', () => {
 
 ```typescript
 
-median(list: ReadonlyArray<number>): number
+median(list: number[]): number
 ```
 
 It returns the median value of `list` input.
@@ -9858,7 +9764,7 @@ R.median([ 7, 2, 10, 9 ]) // => 8
 <summary>All Typescript definitions</summary>
 
 ```typescript
-median(list: ReadonlyArray<number>): number;
+median(list: number[]): number;
 ```
 
 </details>
@@ -10504,7 +10410,7 @@ test('happy', () => {
 
 ```typescript
 
-move<T>(fromIndex: number, toIndex: number, list: readonly T[]): T[]
+move<T>(fromIndex: number, toIndex: number, list: T[]): T[]
 ```
 
 It returns a copy of `list` with exchanged `fromIndex` and `toIndex` elements.
@@ -10522,11 +10428,11 @@ const result = R.move(0, 1, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-move<T>(fromIndex: number, toIndex: number, list: readonly T[]): T[];
-move(fromIndex: number, toIndex: number): <T>(list: readonly T[]) => T[];
+move<T>(fromIndex: number, toIndex: number, list: T[]): T[];
+move(fromIndex: number, toIndex: number): <T>(list: T[]) => T[];
 move(fromIndex: number): {
-    <T>(toIndex: number, list: readonly T[]): T[];
-    (toIndex: number): <T>(list: readonly T[]) => T[];
+    <T>(toIndex: number, list: T[]): T[];
+    (toIndex: number): <T>(list: T[]) => T[];
 };
 ```
 
@@ -10715,7 +10621,7 @@ test('current index is too big', () => {
 
 ```typescript
 
-none<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean
+none<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
 It returns `true`, if all members of array `list` returns `false`, when applied as argument to `predicate` function.
@@ -10735,10 +10641,8 @@ const result = R.none(predicate, arr)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-none<T>(predicate: (x: T, index: number) => boolean, list: ReadonlyArray<T>): boolean;
-none<T>(predicate: (x: T) => boolean, list: ReadonlyArray<T>): boolean;
-none<T>(predicate: (x: T, index: number) => boolean): (list: ReadonlyArray<T>) => boolean;
-none<T>(predicate: (x: T) => boolean): (list: ReadonlyArray<T>) => boolean;
+none<T>(predicate: (x: T) => boolean, list: T[]): boolean;
+none<T>(predicate: (x: T) => boolean): (list: T[]) => boolean;
 ```
 
 </details>
@@ -10760,13 +10664,6 @@ test('when true', () => {
 
 test('when false curried', () => {
   expect(none(isOdd)(arr)).toBeFalse()
-})
-
-test('passes index to predicate', () => {
-  none((x, i) => {
-    expect(typeof x).toBe('number')
-    expect(typeof i).toBe('number')
-  })([ 1, 2, 3 ])
 })
 ```
 
@@ -10818,7 +10715,7 @@ test('not', () => {
 
 ```typescript
 
-nth<T>(index: number, list: ReadonlyArray<T>): T | undefined
+nth<T>(index: number, list: T[]): T | undefined
 ```
 
 Curried version of `list[index]`.
@@ -10842,8 +10739,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-nth<T>(index: number, list: ReadonlyArray<T>): T | undefined;	
-nth(index: number): <T>(list: ReadonlyArray<T>) => T | undefined;
+nth<T>(index: number, list: T[]): T | undefined;	
+nth(index: number): <T>(list: T[]) => T | undefined;
 ```
 
 </details>
@@ -10880,8 +10777,6 @@ test('with negative index', () => {
 
 of<T>(x: T): T[]
 ```
-
-It returns a partial copy of an `obj` without `propsToOmit` properties.
 
 ```javascript
 R.of(null); //=> [null]
@@ -11038,7 +10933,7 @@ test('when throws with single input', () => {
 
 ```typescript
 
-omit<T, K extends string>(propsToOmit: readonly K[], obj: T): Omit<T, K>
+omit<T, K extends string>(propsToOmit: K[], obj: T): Omit<T, K>
 ```
 
 It returns a partial copy of an `obj` without `propsToOmit` properties.
@@ -11062,8 +10957,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-omit<T, K extends string>(propsToOmit: readonly K[], obj: T): Omit<T, K>;
-omit<K extends string>(propsToOmit: readonly K[]): <T>(obj: T) => Omit<T, K>;
+omit<T, K extends string>(propsToOmit: K[], obj: T): Omit<T, K>;
+omit<K extends string>(propsToOmit: K[]): <T>(obj: T) => Omit<T, K>;
 omit<T, U>(propsToOmit: string, obj: T): U;
 omit<T, U>(propsToOmit: string): (obj: T) => U;
 omit<T>(propsToOmit: string, obj: object): T;
@@ -11206,11 +11101,68 @@ R.over(headLens, R.toUpper, ['foo', 'bar', 'baz']) //=> ['FOO', 'bar', 'baz']
 
 ```typescript
 over<T>(lens: Lens, fn: Arity1Fn, value: T): T;
-over<T>(lens: Lens, fn: Arity1Fn, value: readonly T[]): T[];
+over<T>(lens: Lens, fn: Arity1Fn, value: T[]): T[];
 over(lens: Lens, fn: Arity1Fn): <T>(value: T) => T;
-over(lens: Lens, fn: Arity1Fn): <T>(value: readonly T[]) => T[];
+over(lens: Lens, fn: Arity1Fn): <T>(value: T[]) => T[];
 over(lens: Lens): <T>(fn: Arity1Fn, value: T) => T;
-over(lens: Lens): <T>(fn: Arity1Fn, value: readonly T[]) => T[];
+over(lens: Lens): <T>(fn: Arity1Fn, value: T[]) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { assoc } from './assoc'
+import { lens } from './lens'
+import { lensIndex } from './lensIndex'
+import { lensPath } from './lensPath'
+import { over } from './over'
+import { prop } from './prop'
+import { toUpper } from './toUpper'
+
+const testObject = {
+  foo : 'bar',
+  baz : {
+    a : 'x',
+    b : 'y',
+  },
+}
+
+test('assoc lens', () => {
+  const assocLens = lens(prop('foo'), assoc('foo'))
+  const result = over(
+    assocLens, toUpper, testObject
+    )
+    const expected = {
+      ...testObject,
+      foo : 'BAR',
+    }
+    expect(result).toEqual(expected)
+  })
+  
+  test('path lens', () => {
+    const pathLens = lensPath('baz.a')
+  const result = over(
+    pathLens, toUpper, testObject
+  )
+  const expected = {
+    ...testObject,
+    baz : {
+      a : 'X',
+      b : 'y',
+    },
+  }
+  expect(result).toEqual(expected)
+})
+
+test('index lens', () => {
+  const indexLens = lensIndex(0)
+  const result = over(indexLens, toUpper)(['foo', 'bar'])
+  expect(result).toEqual([ 'FOO', 'bar' ])
+})
 ```
 
 </details>
@@ -11253,7 +11205,7 @@ partial<V0, V1, V2, T>(fn: (x0: V0, x1: V1, x2: V2) => T, args: [V0]): (x1: V1, 
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1, V2]): (x2: V3) => T;
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1]): (x2: V2, x3: V3) => T;
 partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0]): (x1: V1, x2: V2, x3: V3) => T;
-partial<T>(fn: (...a: readonly any[]) => T, args: readonly any[]): (...a: readonly any[]) => T;
+partial<T>(fn: (...a: any[]) => T, args: any[]): (...x: any[]) => T;
 ```
 
 </details>
@@ -11446,14 +11398,12 @@ test('async function throwing an error', async () => {
 ```typescript
 
 partition<T>(
-  predicate: Predicatex<T>,
+  predicate: Predicate<T>,
   input: T[]
 ): [T[], T[]]
 ```
 
 It will return array of two objects/arrays according to `predicate` function. The first member holds all instanses of `input` that pass the `predicate` function, while the second member - those who doesn't.
-
-`input` can be either an object or an array unlike `Ramda` where only array is a valid input.
 
 ```javascript
 const list = [1, 2, 3]
@@ -11479,11 +11429,11 @@ const expected = [
 
 ```typescript
 partition<T>(
-  predicate: Predicatex<T>,
+  predicate: Predicate<T>,
   input: T[]
 ): [T[], T[]];
 partition<T>(
-  predicate: Predicatex<T>
+  predicate: Predicate<T>
 ): (input: T[]) => [T[], T[]];
 partition<T>(
   predicate: (x: T, prop?: string) => boolean,
@@ -11504,8 +11454,7 @@ partition<T>(
 import { partition } from './partition'
 
 test('with array', () => {
-  const predicate = (x, i) => {
-    expect(typeof i).toBe('number')
+  const predicate = (x) => {
 
     return x > 2
   }
@@ -11959,9 +11908,9 @@ const obj = {
       d : 2,
     },
   },
-  p : [ { q : 3 }, 'Hi' ],
+  p : [ { q : 3 } ],
   x : {
-    y : 'Alice',
+    y : 'FOO',
     z : [ [ {} ] ],
   },
 }
@@ -11983,7 +11932,7 @@ test('with array path', () => {
   ],
   obj)
 
-  expect(result).toEqual([ 1, 'Alice' ])
+  expect(result).toEqual([ 1, 'FOO' ])
 })
 
 test('takes a paths that contains indices into arrays', () => {
@@ -12016,7 +11965,7 @@ test('returns undefined for items not found', () => {
 
 ```typescript
 
-pick<T, K extends string | number | symbol>(propsToPick: readonly K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>
+pick<T, K extends string | number | symbol>(propsToPick: K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>
 ```
 
 It returns a partial copy of an `input` containing only `propsToPick` properties.
@@ -12062,8 +12011,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-pick<T, K extends string | number | symbol>(propsToPick: readonly K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
-pick<K extends string | number | symbol>(propsToPick: readonly K[]): <T>(input: T) => Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
+pick<T, K extends string | number | symbol>(propsToPick: K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
+pick<K extends string | number | symbol>(propsToPick: K[]): <T>(input: T) => Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
 pick<T, U>(propsToPick: string, input: T): U;
 pick<T, U>(propsToPick: string): (input: T) => U;
 pick<T>(propsToPick: string, input: object): T;
@@ -12153,7 +12102,7 @@ test('with symbol', () => {
 
 ```typescript
 
-pickAll<T, U>(propsToPick: readonly string[], input: T): U
+pickAll<T, U>(propsToPick: string[], input: T): U
 ```
 
 Same as `R.pick` but it won't skip the missing props, i.e. it will assign them to `undefined`.
@@ -12189,8 +12138,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-pickAll<T, U>(propsToPick: readonly string[], input: T): U;
-pickAll<T, U>(propsToPick: readonly string[]): (input: T) => U;
+pickAll<T, U>(propsToPick: string[], input: T): U;
+pickAll<T, U>(propsToPick: string[]): (input: T) => U;
 pickAll<T, U>(propsToPick: string, input: T): U;
 pickAll<T, U>(propsToPick: string): (input: T) => U;
 ```
@@ -12569,7 +12518,7 @@ const delayFn = ms =>
   new Promise(resolve => {
     resolve(ms + 1)
   })
- 
+
 test('with function returning promise', async () => {
   const result = await pipeAsync(
     x => x,
@@ -12734,7 +12683,7 @@ test('happy', async () => {
 
 ```typescript
 
-pluck<T>(property: number, list: ReadonlyArray<T>): T
+pluck<T>(property: number, list: T[]): T
 ```
 
 It returns list of the values of `property` taken from the all objects inside `list`.
@@ -12754,10 +12703,10 @@ R.pluck(list, property)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-pluck<T>(property: number, list: ReadonlyArray<T>): T;
-pluck<K extends keyof T, T>(property: K, list: ReadonlyArray<T>): T[K][];
-pluck(property: number): <T>(list: ReadonlyArray<T>) => T;
-pluck<P extends string>(property: P): <T>(list: ReadonlyArray<Record<P, T>>) => T[];
+pluck<T>(property: number, list: T[]): T;
+pluck<K extends keyof T, T>(property: K, list: T[]): T[K][];
+pluck(property: number): <T>(list: T[]) => T;
+pluck<P extends string>(property: P): <T>(list: Record<P, T>[]) => T[];
 ```
 
 </details>
@@ -12789,7 +12738,7 @@ test('with number', () => {
 
 ```typescript
 
-prepend<T>(x: T, listOrString: ReadonlyArray<T>): T[]
+prepend<T>(x: T, listOrString: T[]): T[]
 ```
 
 It adds element `x` at the beginning of `listOrString`.
@@ -12811,8 +12760,8 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-prepend<T>(x: T, listOrString: ReadonlyArray<T>): T[];
-prepend<T>(x: T): (listOrString: ReadonlyArray<T>) => T[];
+prepend<T>(x: T, listOrString: T[]): T[];
+prepend<T>(x: T): (listOrString: T[]) => T[];
 ```
 
 </details>
@@ -13000,7 +12949,7 @@ test('async with error', async () => {
 
 ```typescript
 
-product(list: ReadonlyArray<number>): number
+product(list: number[]): number
 ```
 
 ```javascript
@@ -13015,7 +12964,7 @@ R.product([ 2, 3, 4 ])
 <summary>All Typescript definitions</summary>
 
 ```typescript
-product(list: ReadonlyArray<number>): number;
+product(list: number[]): number;
 ```
 
 </details>
@@ -13378,7 +13327,7 @@ test('curry', () => {
 
 ```typescript
 
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult
 ```
 
 ```javascript
@@ -13397,10 +13346,10 @@ const result = R.reduce(reducer, initialValue, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: ReadonlyArray<T>): TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: ReadonlyArray<T>) => TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: ReadonlyArray<T>) => TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: T[]): TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
 ```
 
 </details>
@@ -13452,34 +13401,34 @@ test('with undefined as iterable', () => {
 
 ```typescript
 
-reject<T>(predicate: FilterFunctionArray<T>): (x: T[]) => T[]
+reject<T>(predicate: FilterFunctionArray<T>, list: T[]): T[]
 ```
 
 It has the opposite effect of `R.filter`.
 
-It will return those members of `list` that return `false` when applied to `predicate` function.
-
 ```javascript
 const list = [1, 2, 3, 4]
-const predicate = x => x > 2
+const obj = {a: 1, b: 2}
+const predicate = x => x > 1
 
 const result = [
   R.reject(predicate, list)
+  R.reject(predicate, obj)
 ]
-// => [1, 2]
+// => [[1, 2], {a: 1}]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%202%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.reject(predicate%2C%20list)%0A%5D%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try the above <strong>R.reject</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%201%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.reject(predicate%2C%20list)%0A%20%20R.reject(predicate%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%5B1%2C%202%5D%2C%20%7Ba%3A%201%7D%5D">Try the above <strong>R.reject</strong> example in Rambda REPL</a>
 
 <details>
 
 <summary>All Typescript definitions</summary>
 
 ```typescript
-reject<T>(predicate: FilterFunctionArray<T>): (x: T[]) => T[];
-reject<T>(predicate: FilterFunctionArray<T>, x: T[]): T[];
-reject<T, U>(predicate: FilterFunctionObject<T>): (x: Dictionary<T>) => Dictionary<T>;
-reject<T>(predicate: FilterFunctionObject<T>, x: Dictionary<T>): Dictionary<T>;
+reject<T>(predicate: FilterFunctionArray<T>, list: T[]): T[];
+reject<T>(predicate: FilterFunctionArray<T>): (list: T[]) => T[];
+reject<T>(predicate: FilterFunctionArray<T>, obj: Dictionary<T>): Dictionary<T>;
+reject<T, U>(predicate: FilterFunctionArray<T>): (obj: Dictionary<T>) => Dictionary<T>;
 ```
 
 </details>
@@ -13494,27 +13443,28 @@ import { reject } from './reject'
 const isOdd = n => n % 2 === 1
 
 test('with array', () => {
-  expect(reject(isOdd, [ 1, 2, 3, 4 ])).toEqual([ 2, 4 ])
+  expect(reject(isOdd)([ 1, 2, 3, 4 ])).toEqual([ 2, 4 ])
 })
 
 test('with object', () => {
-  expect(reject(isOdd, {
+  const obj = {
     a : 1,
     b : 2,
     c : 3,
     d : 4,
-  })).toEqual({
+  }
+  const fn = (
+    a, b, c
+  ) => console.log({
+    a,
+    b,
+    c,
+  })
+  reject(fn, obj)
+  expect(reject(isOdd, obj)).toEqual({
     b : 2,
     d : 4,
   })
-})
-
-test('pass index as second argument', () => {
-  reject((x, i) => {
-    expect(typeof x).toBe('number')
-    expect(typeof i).toBe('number')
-  },
-  [ 10, 12, 15 ])
 })
 ```
 
@@ -13632,7 +13582,7 @@ test('with single rule', () => {
 
 ```typescript
 
-removeIndex<T>(index: number, list: ReadonlyArray<T>): T[]
+removeIndex<T>(index: number, list: T[]): T[]
 ```
 
 It returns a copy of `list` input with removed `index`.
@@ -13650,8 +13600,8 @@ const result = R.removeIndex(1, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-removeIndex<T>(index: number, list: ReadonlyArray<T>): T[];
-removeIndex(index: number): <T>(list: ReadonlyArray<T>) => T[];
+removeIndex<T>(index: number, list: T[]): T[];
+removeIndex(index: number): <T>(list: T[]) => T[];
 ```
 
 </details>
@@ -13661,7 +13611,7 @@ removeIndex(index: number): <T>(list: ReadonlyArray<T>) => T[];
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { removeIndex } from './removeIndex.js'
+import { removeIndex } from './removeIndex'
 
 const list = [ 1, 2, 3, 4 ]
 
@@ -13950,7 +13900,7 @@ reset(): void;
 
 ```typescript
 
-reverse<T>(listOrString: ReadonlyArray<T>): T[]
+reverse<T>(listOrString: T[]): T[]
 ```
 
 It returns a reversed copy of `listOrString` input.
@@ -13970,7 +13920,7 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-reverse<T>(listOrString: ReadonlyArray<T>): T[];
+reverse<T>(listOrString: T[]): T[];
 reverse(listOrString: string): string;
 ```
 
@@ -14029,6 +13979,65 @@ R.set(xLens, 8, input) //=> {x: 8, y: 2}
 set<T, U>(lens: Lens, replacer: U, obj: T): T;
 set<U>(lens: Lens, replacer: U): <T>(obj: T) => T;
 set(lens: Lens): <T, U>(replacer: U, obj: T) => T;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { assoc } from './assoc'
+import { lens } from './lens'
+import { lensIndex } from './lensIndex'
+import { lensPath } from './lensPath'
+import { prop } from './prop'
+import { set } from './set'
+
+const testObject = {
+  foo : 'bar',
+  baz : {
+    a : 'x',
+    b : 'y',
+  },
+}
+
+test('assoc lens', () => {
+  const assocLens = lens(prop('foo'), assoc('foo'))
+  const result = set(
+    assocLens, 'FOO', testObject
+  )
+  const expected = {
+    ...testObject,
+    foo : 'FOO',
+  }
+  expect(result).toEqual(expected)
+})
+
+test('path lens', () => {
+  const pathLens = lensPath('baz.a')
+  const result = set(
+    pathLens, 'z', testObject
+  )
+  const expected = {
+    ...testObject,
+    baz : {
+      a : 'z',
+      b : 'y',
+    },
+  }
+  expect(result).toEqual(expected)
+})
+
+test('index lens', () => {
+  const indexLens = lensIndex(0)
+
+  const result = set(
+    indexLens, 3, [ 1, 2 ]
+  )
+  expect(result).toEqual([ 3, 2 ])
+})
 ```
 
 </details>
@@ -14163,7 +14172,7 @@ test('slice', () => {
 
 ```typescript
 
-sort<T>(sortFn: (a: T, b: T) => number, list: ReadonlyArray<T>): T[]
+sort<T>(sortFn: (a: T, b: T) => number, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortFn` function.
@@ -14194,8 +14203,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-sort<T>(sortFn: (a: T, b: T) => number, list: ReadonlyArray<T>): T[];
-sort<T>(sortFn: (a: T, b: T) => number): (list: ReadonlyArray<T>) => T[];
+sort<T>(sortFn: (a: T, b: T) => number, list: T[]): T[];
+sort<T>(sortFn: (a: T, b: T) => number): (list: T[]) => T[];
 ```
 
 </details>
@@ -14230,7 +14239,7 @@ test('it doesn\'t mutate', () => {
 
 ```typescript
 
-sortBy<T>(sortFn: (a: T) => Ord, list: ReadonlyArray<T>): T[]
+sortBy<T>(sortFn: (a: T) => Ord, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortFn` function.
@@ -14259,8 +14268,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-sortBy<T>(sortFn: (a: T) => Ord, list: ReadonlyArray<T>): T[];
-sortBy(sortFn: (a: any) => Ord): <T>(list: ReadonlyArray<T>) => T[];
+sortBy<T>(sortFn: (a: T) => Ord, list: T[]): T[];
+sortBy(sortFn: (a: any) => Ord): <T>(list: T[]) => T[];
 ```
 
 </details>
@@ -14309,7 +14318,7 @@ test('with compose', () => {
 
 ```typescript
 
-sortByPath<T>(sortPath: Path, list: ReadonlyArray<T>): T[]
+sortByPath<T>(sortPath: Path, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortPath` value. 
@@ -14338,8 +14347,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-sortByPath<T>(sortPath: Path, list: ReadonlyArray<T>): T[];
-sortByPath(sortPath: Path): <T>(list: ReadonlyArray<T>) => T[];
+sortByPath<T>(sortPath: Path, list: T[]): T[];
+sortByPath(sortPath: Path): <T>(list: T[]) => T[];
 ```
 
 </details>
@@ -14377,7 +14386,7 @@ test('with list of strings as path - curried', () => {
 
 ```typescript
 
-sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[]
+sortByProps<T>(sortPaths: string[], list: T[]): T[]
 ```
 
 It returns sorted copy of `list` of objects.
@@ -14406,8 +14415,8 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-sortByProps<T>(sortPaths: string[], list: ReadonlyArray<T>): T[];
-sortByProps(sortPaths: string[]): <T>(list: ReadonlyArray<T>) => T[];
+sortByProps<T>(sortPaths: string[], list: T[]): T[];
+sortByProps(sortPaths: string[]): <T>(list: T[]) => T[];
 ```
 
 </details>
@@ -14613,7 +14622,7 @@ test('curried', () => {
 
 ```typescript
 
-splitEvery<T>(sliceLength: number, listOrString: ReadonlyArray<T>): T[][]
+splitEvery<T>(sliceLength: number, listOrString: T[]): T[][]
 ```
 
 It splits `listOrString` into slices of `sliceLength`.
@@ -14638,11 +14647,11 @@ const expected = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-splitEvery<T>(sliceLength: number, listOrString: ReadonlyArray<T>): T[][];
+splitEvery<T>(sliceLength: number, listOrString: T[]): T[][];
 splitEvery(sliceLength: number, listOrString: string): string[];
 splitEvery(sliceLength: number): {
   (listOrString: string): string[];
-  <T>(listOrString: ReadonlyArray<T>): T[][];
+  <T>(listOrString: T[]): T[][];
 };
 ```
 
@@ -14777,7 +14786,7 @@ test('happy', () => {
 
 ```typescript
 
-sum(list: ReadonlyArray<number>): number
+sum(list: number[]): number
 ```
 
 ```javascript
@@ -14792,7 +14801,7 @@ R.sum([1, 2, 3, 4, 5])
 <summary>All Typescript definitions</summary>
 
 ```typescript
-sum(list: ReadonlyArray<number>): number;
+sum(list: number[]): number;
 ```
 
 </details>
@@ -14931,7 +14940,7 @@ test('fallback to default input when no matches', () => {
 
 ```typescript
 
-symmetricDifference<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[]
+symmetricDifference<T>(x: T[], y: T[]): T[]
 ```
 
 It returns a merged list of `x` and `y` with all equal elements removed.
@@ -14951,8 +14960,8 @@ const result = symmetricDifference(x, y)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-symmetricDifference<T>(x: ReadonlyArray<T>, y: ReadonlyArray<T>): T[];
-symmetricDifference<T>(x: ReadonlyArray<T>): <T>(y: ReadonlyArray<T>) => T[];
+symmetricDifference<T>(x: T[], y: T[]): T[];
+symmetricDifference<T>(x: T[]): <T>(y: T[]) => T[];
 ```
 
 </details>
@@ -15014,7 +15023,7 @@ T(): boolean;
 
 ```typescript
 
-tail<T>(listOrString: ReadonlyArray<T>): T[]
+tail<T>(listOrString: T[]): T[]
 ```
 
 It returns all but the first element of `listOrString`.
@@ -15034,7 +15043,7 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-tail<T>(listOrString: ReadonlyArray<T>): T[];
+tail<T>(listOrString: T[]): T[];
 tail(listOrString: string): string;
 ```
 
@@ -15066,7 +15075,7 @@ test('tail', () => {
 
 ```typescript
 
-take<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
+take<T>(howMany: number, listOrString: T[]): T[]
 ```
 
 It returns the first `howMany` elements of `listOrString`.
@@ -15088,10 +15097,10 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-take<T>(howMany: number, listOrString: ReadonlyArray<T>): T[];
+take<T>(howMany: number, listOrString: T[]): T[];
 take(howMany: number, listOrString: string): string;
 take<T>(howMany: number): {
-  <T>(listOrString: readonly T[]): T[];
+  <T>(listOrString: T[]): T[];
   (listOrString: string): string;
 };
 ```
@@ -15134,7 +15143,7 @@ test('with zero index', () => {
 
 ```typescript
 
-takeLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[]
+takeLast<T>(howMany: number, listOrString: T[]): T[]
 ```
 
 It returns the last `howMany` elements of `listOrString`.
@@ -15156,10 +15165,10 @@ const result = [
 <summary>All Typescript definitions</summary>
 
 ```typescript
-takeLast<T>(howMany: number, listOrString: ReadonlyArray<T>): T[];
+takeLast<T>(howMany: number, listOrString: T[]): T[];
 takeLast(howMany: number, listOrString: string): string;
 takeLast<T>(howMany: number): {
-  <T>(listOrString: readonly T[]): T[];
+  <T>(listOrString: T[]): T[];
   (listOrString: string): string;
 };
 ```
@@ -15203,7 +15212,7 @@ test('with negative index', () => {
 
 ```typescript
 
-takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+takeUntil<T>(predicate: (x: T) => boolean, list: T[]): T[]
 ```
 
 ```javascript
@@ -15221,13 +15230,8 @@ const result = takeUntil(predicate, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
-takeUntil<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
+takeUntil<T>(predicate: (x: T) => boolean, list: T[]): T[];
+takeUntil<T>(predicate: (x: T) => boolean): (list: T[]) => T[];
 ```
 
 </details>
@@ -15263,7 +15267,7 @@ test('predicate always returns false', () => {
 
 ```typescript
 
-takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+takeWhile<T>(predicate: (x: T) => boolean, list: T[]): T[]
 ```
 
 ```javascript
@@ -15281,8 +15285,8 @@ const result = takeWhile(predicate, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
-takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+takeWhile<T>(predicate: (x: T) => boolean, list: T[]): T[];
+takeWhile<T>(predicate: (x: T) => boolean): (list: T[]) => T[];
 ```
 
 </details>
@@ -15304,7 +15308,7 @@ test('happy', () => {
 test('predicate always returns true', () => {
   const result = takeWhile(x => x < 10, list)
   expect(result).toEqual(list)
-}) 
+})
 
 test('predicate alwats returns false', () => {
   const result = takeWhile(x => x > 10, list)
@@ -16333,7 +16337,7 @@ test('with list of objects', () => {
 
 ```typescript
 
-uniq<T>(list: ReadonlyArray<T>): T[]
+uniq<T>(list: T[]): T[]
 ```
 
 It returns a new array containing only one copy of each element of `list`.
@@ -16352,7 +16356,7 @@ R.uniq(list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-uniq<T>(list: ReadonlyArray<T>): T[];
+uniq<T>(list: T[]): T[];
 ```
 
 </details>
@@ -16378,7 +16382,7 @@ test('uniq', () => {
 
 ```typescript
 
-uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean, list: ReadonlyArray<T>): T[]
+uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean, list: T[]): T[]
 ```
 
 It returns a new array containing only one copy of each element in `list` according to boolean returning function `uniqFn`.
@@ -16411,8 +16415,8 @@ const result = R.uniqWith(uniqFn, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean, list: ReadonlyArray<T>): T[];
-uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean): (list: ReadonlyArray<T>) => T[];
+uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean, list: T[]): T[];
+uniqWith<T, U>(uniqFn: (x: T, y: T) => boolean): (list: T[]) => T[];
 ```
 
 </details>
@@ -16591,7 +16595,7 @@ test('curried', () => {
 
 ```typescript
 
-update<T>(index: number, newValue: T, list: ReadonlyArray<T>): T[]
+update<T>(index: number, newValue: T, list: T[]): T[]
 ```
 
 It returns a copy of `list` with updated element at `index` with `newValue`.
@@ -16612,8 +16616,8 @@ const result = R.update(index, newValue, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-update<T>(index: number, newValue: T, list: ReadonlyArray<T>): T[];
-update<T>(index: number, newValue: T): (list: ReadonlyArray<T>) => T[];
+update<T>(index: number, newValue: T, list: T[]): T[];
+update<T>(index: number, newValue: T): (list: T[]) => T[];
 ```
 
 </details>
@@ -16711,18 +16715,18 @@ updateObject<Output>(rules: [string, any][]): (input: object) => Output;
 import { updateObject } from './updateObject'
 
 const obj = {
-  a: {b: 1},
-  foo: {bar: 10},
+  a   : { b : 1 },
+  foo : { bar : 10 },
 }
 const rules = [
-  ['a.b', 2],
-  ['foo.bar', 20],
-  ['q.z', 300],
+  [ 'a.b', 2 ],
+  [ 'foo.bar', 20 ],
+  [ 'q.z', 300 ],
 ]
 const expected = {
-  a: {b: 2},
-  foo: {bar: 20},
-  q: {z: 300},
+  a   : { b : 2 },
+  foo : { bar : 20 },
+  q   : { z : 300 },
 }
 
 test('happy', () => {
@@ -16817,6 +16821,27 @@ R.view(lens, {x: 4, y: 2}) //=> 4
 ```typescript
 view<T, U>(lens: Lens): (target: T) => U;
 view<T, U>(lens: Lens, target: T): U;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { assoc } from './assoc'
+import { lens } from './lens'
+import { prop } from './prop'
+import { view } from './view'
+
+const testObject = { foo : 'Led Zeppelin' }
+
+const assocLens = lens(prop('foo'), assoc('foo'))
+
+test('happy', () => {
+  expect(view(assocLens, testObject)).toEqual('Led Zeppelin')
+})
 ```
 
 </details>
@@ -17274,7 +17299,7 @@ test('with wrong input', () => {
 
 ```typescript
 
-without<T>(matchAgainst: ReadonlyArray<T>, source: ReadonlyArray<T>): T[]
+without<T>(matchAgainst: T[], source: T[]): T[]
 ```
 
 It will return a new array, based on all members of `source` list that are not part of `matchAgainst` list.
@@ -17294,8 +17319,8 @@ const result = R.without(matchAgainst, source)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-without<T>(matchAgainst: ReadonlyArray<T>, source: ReadonlyArray<T>): T[];
-without<T>(matchAgainst: ReadonlyArray<T>): (source: ReadonlyArray<T>) => T[];
+without<T>(matchAgainst: T[], source: T[]): T[];
+without<T>(matchAgainst: T[]): (source: T[]) => T[];
 ```
 
 </details>
@@ -17416,7 +17441,7 @@ test.skip('returns a curried function', () => {
 
 ```typescript
 
-zip<K, V>(x: ReadonlyArray<K>, y: ReadonlyArray<V>): KeyValuePair<K, V>[]
+zip<K, V>(x: K[], y: V[]): KeyValuePair<K, V>[]
 ```
 
 It will return a new array containing tuples of equally positions items from both `x` and `y` lists. 
@@ -17441,8 +17466,8 @@ R.zip([...x, 3], ['A', 'B'])
 <summary>All Typescript definitions</summary>
 
 ```typescript
-zip<K, V>(x: ReadonlyArray<K>, y: ReadonlyArray<V>): KeyValuePair<K, V>[];
-zip<K>(x: ReadonlyArray<K>): <V>(y: ReadonlyArray<V>) => KeyValuePair<K, V>[];
+zip<K, V>(x: K[], y: V[]): KeyValuePair<K, V>[];
+zip<K>(x: K[]): <V>(y: V[]) => KeyValuePair<K, V>[];
 ```
 
 </details>
@@ -17495,7 +17520,7 @@ test('should truncate result to length of shorted input list', () => {
 
 ```typescript
 
-zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T }
+zipObj<T>(keys: string[], values: T[]): { [index: string]: T }
 ```
 
 It will return a new object with keys of `keys` array and values of `values` array.
@@ -17518,8 +17543,8 @@ R.zipObj(keys, [1, 2])
 <summary>All Typescript definitions</summary>
 
 ```typescript
-zipObj<T>(keys: ReadonlyArray<string>, values: ReadonlyArray<T>): { [index: string]: T };
-zipObj(keys: ReadonlyArray<string>): <T>(values: ReadonlyArray<T>) => { [index: string]: T };
+zipObj<T>(keys: string[], values: T[]): { [index: string]: T };
+zipObj(keys: string[]): <T>(values: T[]) => { [index: string]: T };
 
 // RAMBDAX_MARKER_START
 ```
@@ -17571,6 +17596,24 @@ test('ignore extra keys', () => {
 </details>
 
 ## CHANGELOG
+
+6.0.0
+
+- Breaking change - `R.map`/`R.filter`/`R.reject`/`R.forEach`/`R.partition` doesn't pass index as second argument to the predicate, when looping over arrays.
+
+- Breaking change - `R.all`/`R.none`/`R.any`/`R.find`/`R.findLast`/`R.findIndex`/`R.findLastIndex` doesn't pass index as second argument to the predicate.
+
+- Add `R.applyDiff` method
+
+- Change `R.assocPath` typings so the user can explicitly sets type of the new object
+
+- Typings of `R.assoc` match its `@types/ramda` counterpart.
+
+- Simplify `R.forEach` typings
+
+- Remove `ReadonlyArray<T>` pattern from Typescript definitions - not enough value for the noise  it adds.
+
+- Fix typing of `R.reject` as it wrongly declares that with object, it pass property to predicate.
 
 5.1.0
 
@@ -17930,16 +17973,23 @@ Also with this versions, typings tests are provided and several definitions are 
 
 > Most influential contributors
 
-- [@farwayer](https://github.com/farwayer)
-- [@thejohnfreeman](https://github.com/thejohnfreeman)
-- [@helmuthdu](https://github.com/helmuthdu)
-- [@jpgorman](https://github.com/jpgorman)
-- [@ku8ar](https://github.com/ku8ar)
-- [@romgrk](https://github.com/romgrk)
-- [@squidfunk](https://github.com/squidfunk)
-- [@synthet1c](https://github.com/synthet1c)
-- [@vlad-zhukov](https://github.com/vlad-zhukov)
-- [@WhoAteDaCake](https://github.com/WhoAteDaCake)
+- [@farwayer](https://github.com/farwayer) - improving performance in R.find, R.filter; give the idea how to make benchmarks more reliable;
+
+- [@thejohnfreeman](https://github.com/thejohnfreeman) - add R.assoc, R.chain;
+
+- [@helmuthdu](https://github.com/helmuthdu) - add R.clone; help improve code style;
+
+- [@jpgorman](https://github.com/jpgorman) - add R.zip, R.reject, R.without, R.addIndex;
+
+- [@ku8ar](https://github.com/ku8ar) - add R.slice, R.propOr, R.identical, R.propIs and several math related methods; introduce the idea to display missing Ramda methods;
+
+- [@romgrk](https://github.com/romgrk) - add R.groupBy, R.indexBy, R.findLast, R.findLastIndex;
+
+- [@squidfunk](https://github.com/squidfunk) - add R.assocPath, R.symmetricDifference, R.difference, R.intersperse;
+
+- [@synthet1c](https://github.com/synthet1c) - add all lenses methods; add R.applySpec, R.converge;
+
+- [@vlad-zhukov](https://github.com/vlad-zhukov) - help with configuring Rollup, Babel; change export file to use ES module exports;
 
 > Rambda references
 
@@ -17949,11 +17999,11 @@ Also with this versions, typings tests are provided and several definitions are 
 
 > Links to Rambda
 
-- [Web Tools Weekly](https://mailchi.mp/webtoolsweekly/web-tools-280)
+- [https://mailchi.mp/webtoolsweekly/web-tools-280](Web Tools Weekly)
 
-- [awesome-fp-js](https://github.com/stoeffel/awesome-fp-js)
+- [https://github.com/stoeffel/awesome-fp-js](awesome-fp-js)
 
-- [awesome-docsify](https://github.com/docsifyjs/awesome-docsify)  
+- [https://github.com/docsifyjs/awesome-docsify](awesome-docsify)  
 
 ## My other libraries
 
