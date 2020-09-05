@@ -62,12 +62,6 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 `Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
 
-### Usage of `foo`, `bar` and `baz` in documentation
-
-Those placeholders exists for a reason. `Ramda` documentation often uses other placeholders, which could be confusing.
-
-`Ramda` documentation and tests on the other hand, try to use them as much as possible.
-
 ### Support
 
 Most of the valid issues are fixed within 2-3 days.
@@ -302,6 +296,8 @@ method | Rambda | Ramda | Lodash
 - [WatermelonDB](https://github.com/Nozbe/WatermelonDB)
 
 - [SAP's Cloud SDK](https://github.com/SAP/cloud-sdk)
+
+- Walmart, Canada - used in several internal projects (this was conveyed to me in a private email from one Walmart Canada developer).
 
 - [VSCode Slack intergration](https://github.com/verydanny/vcslack)
 
