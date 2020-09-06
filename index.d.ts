@@ -3,10 +3,13 @@ import { F as FunctionToolbelt, O as ObjectToolbelt, L as ListToolbelt } from ".
 type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise";
 
 type FilterFunctionArray<T> = (x: T) => boolean;
+type FilterPredicateIndexed<T> = (x: T, i: number) => boolean;
 type FilterFunctionObject<T> = (x: T, prop: string, inputObj: Dictionary<T>) => boolean;
 type MapFunctionObject<T, U> = (x: T, prop: string, inputObj: Dictionary<T>) => U;
 type MapFunctionArray<T, U> = (x: T) => U;
+type MapFunctionArrayIndexed<T, U> = (x: T, i: number) => U;
 type MapIterator<T> = (x: T) => U;
+type MapIndexedIterator<T, U> = (x: T, i: number) => U;
 
 type SimplePredicate<T> = (x: T) => boolean;
 
@@ -160,10 +163,16 @@ export function allPass<T>(predicates: ((x: T) => boolean)[]): (input: T) => boo
 export function always<T>(x: T): () => T;
 
 /**
- * Returns `true` if both arguments are `true`. Otherwise, it returns `false`.
+ * Logical AND
  */
-export function and<T extends { and?: ((...a: any[]) => any); } | number | boolean | string | null>(x: T, y: any): boolean;
-export function and<T extends { and?: ((...a: any[]) => any); } | number | boolean | string | null>(x: T): (y: any) => boolean;
+export function and<T, U>(x: T, y: U): T | U;
+export function and<T>(x: T): <U>(y: U) => T | U;
+
+/**
+ * Logical OR
+ */
+export function or<T, U>(a: T, b: U): T | U;
+export function or<T>(a: T): <U>(b: U) => T | U;
 
 /**
  * It returns `true`, if at least one member of `list` returns true, when passed to a `predicate` function.
@@ -683,16 +692,16 @@ export function view<T, U>(lens: Lens): (target: T) => U;
 export function view<T, U>(lens: Lens, target: T): U;
 
 /**
- * It returns the result of looping through `list` with `fn`.
+ * It returns the result of looping through `iterable` with `fn`.
  * 
  * It works with both array and object.
  */
-export function map<T, U>(fn: MapFunctionObject<T, U>, list: Dictionary<T>): Dictionary<U>;
-export function map<T, U>(fn: MapIterator<T, U>, list: T[]): U[];
-export function map<T, U>(fn: MapIterator<T, U>): (list: T[]) => U[];
-export function map<T, U, S>(fn: MapFunctionObject<T, U>): (list: Dictionary<T>) => Dictionary<U>;
-export function map<T>(fn: MapIterator<T, T>): (list: T[]) => T[];
-export function map<T>(fn: MapIterator<T, T>, list: T[]): T[];
+export function map<T, U>(fn: MapFunctionObject<T, U>, iterable: Dictionary<T>): Dictionary<U>;
+export function map<T, U>(fn: MapIterator<T, U>, iterable: T[]): U[];
+export function map<T, U>(fn: MapIterator<T, U>): (iterable: T[]) => U[];
+export function map<T, U, S>(fn: MapFunctionObject<T, U>): (iterable: Dictionary<T>) => Dictionary<U>;
+export function map<T>(fn: MapIterator<T, T>): (iterable: T[]) => T[];
+export function map<T>(fn: MapIterator<T, T>, iterable: T[]): T[];
 
 /**
  * Curried version of `String.prototype.match` which returns empty array, when there is no match.
@@ -809,6 +818,11 @@ export function not(input: any): boolean;
  */
 export function nth<T>(index: number, list: T[]): T | undefined;	
 export function nth(index: number): <T>(list: T[]) => T | undefined;
+
+/**
+ * It returns a function, which invokes only once `fn` function.
+ */
+export function once<T extends (...args: any[]) => any>(func: T): T;
 
 /**
  * It returns a partial copy of an `obj` without `propsToOmit` properties.
@@ -1696,11 +1710,6 @@ export function ok(...inputs: any[]): (...schemas: any[]) => void | never;
 export function pass(...inputs: any[]): (...rules: any[]) => boolean;
 
 /**
- * It returns a function, which invokes only once `fn` function.
- */
-export function once<T extends (...args: any[]) => any>(func: T): T;
-
-/**
  * `R.partialCurry` is a curry helper designed specifically for functions accepting object as a single argument.
  * 
  * Initially the function knows only a part from the whole input object and then `R.partialCurry` helps in preparing the function for the second part, when it receives the rest of the input.
@@ -1921,6 +1930,28 @@ export function takeUntil<T>(predicate: (x: T) => boolean): (list: T[]) => T[];
 export function applyDiff<Output>(rules: ApplyDiffRule[], obj: object): Output;
 export function applyDiff<Output>(rules: ApplyDiffRule[]): ( obj: object) => Output;
 
+/**
+ * Same as `R.map`, but it passes index as second argument to the iterator, when looping over arrays.
+ */
+export function mapIndexed<T, U>(fn: MapFunctionObject<T, U>, iterable: Dictionary<T>): Dictionary<U>;
+export function mapIndexed<T, U>(fn: MapIndexedIterator<T, U>, iterable: T[]): U[];
+export function mapIndexed<T, U>(fn: MapIndexedIterator<T, U>): (iterable: T[]) => U[];
+export function mapIndexed<T, U, S>(fn: MapFunctionObject<T, U>): (iterable: Dictionary<T>) => Dictionary<U>;
+export function mapIndexed<T>(fn: MapIndexedIterator<T, T>): (iterable: T[]) => T[];
+export function mapIndexed<T>(fn: MapIndexedIterator<T, T>, iterable: T[]): T[];
+
+/**
+ * Same as `R.filter`, but it passes index as second argument to the predicate, when looping over arrays.
+ */
+export function filterIndexed<T>(predicate: FilterPredicateIndexed<T>): (x: T[]) => T[];
+export function filterIndexed<T>(predicate: FilterPredicateIndexed<T>, x: T[]): T[];
+export function filterIndexed<T, U>(predicate: FilterFunctionObject<T>): (x: Dictionary<T>) => Dictionary<T>;
+export function filterIndexed<T>(predicate: FilterFunctionObject<T>, x: Dictionary<T>): Dictionary<T>;
+
+export function forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>, list: T[]): T[];
+export function forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>): (list: T[]) => T[];
+export function forEachIndexed<T>(fn: MapFunctionObject<T, void>, list: Dictionary<T>): Dictionary<T>;
+export function forEachIndexed<T, U>(fn: MapFunctionObject<T, void>): (list: Dictionary<T>) => Dictionary<T>;
 
 // RAMBDAX_MARKER_END
 // ============================================

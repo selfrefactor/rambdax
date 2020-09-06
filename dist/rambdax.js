@@ -542,30 +542,31 @@ function filterObject(fn, obj) {
 
   return willReturn;
 }
-
-function filter(predicate, list) {
-  if (arguments.length === 1) return _list => filter(predicate, _list);
-  if (!list) return [];
-
-  if (!_isArray(list)) {
-    return filterObject(predicate, list);
-  }
-
+function filterArray(predicate, list, indexed = false) {
   let index = 0;
   const len = list.length;
   const willReturn = [];
 
   while (index < len) {
-    const value = list[index];
+    const predicateResult = indexed ? predicate(list[index], index) : predicate(list[index]);
 
-    if (predicate(value)) {
-      willReturn.push(value);
+    if (predicateResult) {
+      willReturn.push(list[index]);
     }
 
     index++;
   }
 
   return willReturn;
+}
+function filter(predicate, iterable) {
+  if (arguments.length === 1) {
+    return _iterable => filter(predicate, _iterable);
+  }
+
+  if (!iterable) return [];
+  if (_isArray(iterable)) return filterArray(predicate, iterable);
+  return filterObject(predicate, iterable);
 }
 
 async function mapAsyncFn(fn, listOrObject) {
@@ -620,6 +621,68 @@ function filterAsync(predicate, listOrObject) {
   return new Promise((resolve, reject) => {
     filterAsyncFn(predicate, listOrObject).then(resolve).catch(reject);
   });
+}
+
+function filterIndexed(predicate, iterable) {
+  if (arguments.length === 1) return _iterable => filterIndexed(predicate, _iterable);
+  if (!iterable) return [];
+  if (_isArray(iterable)) return filterArray(predicate, iterable, true);
+  return filterObject(predicate, iterable);
+}
+
+const _keys = Object.keys;
+
+function mapArray(fn, list, isIndexed = false) {
+  let index = 0;
+  const willReturn = Array(list.length);
+
+  while (index < list.length) {
+    willReturn[index] = isIndexed ? fn(list[index], index) : fn(list[index]);
+    index++;
+  }
+
+  return willReturn;
+}
+function mapObject(fn, obj) {
+  let index = 0;
+
+  const keys = _keys(obj);
+
+  const len = keys.length;
+  const willReturn = {};
+
+  while (index < len) {
+    const key = keys[index];
+    willReturn[key] = fn(obj[key], key, obj);
+    index++;
+  }
+
+  return willReturn;
+}
+function map(fn, list) {
+  if (arguments.length === 1) return _list => map(fn, _list);
+  if (list === undefined) return [];
+  if (_isArray(list)) return mapArray(fn, list);
+  return mapObject(fn, list);
+}
+
+function mapIndexed(fn, iterable) {
+  if (arguments.length === 1) {
+    return _iterable => mapIndexed(fn, _iterable);
+  }
+
+  if (iterable === undefined) return [];
+  if (_isArray(iterable)) return mapArray(fn, iterable, true);
+  return mapObject(fn, iterable);
+}
+
+function forEachIndexed(fn, iterable) {
+  if (arguments.length === 1) {
+    return _iterable => forEachIndexed(fn, _iterable);
+  }
+
+  mapIndexed(fn, iterable);
+  return iterable;
 }
 
 function merge(target, newProps) {
@@ -955,8 +1018,6 @@ function isValid({
   return flag;
 }
 
-const _keys = Object.keys;
-
 function forEach(fn, list) {
   if (arguments.length === 1) return _list => forEach(fn, _list);
 
@@ -1105,42 +1166,6 @@ function mapKeys(changeKeyFn, obj) {
   const toReturn = {};
   Object.keys(obj).forEach(prop => toReturn[changeKeyFn(prop)] = obj[prop]);
   return toReturn;
-}
-
-function map(fn, list) {
-  if (arguments.length === 1) return _list => map(fn, _list);
-
-  if (list === undefined) {
-    return [];
-  }
-
-  if (_isArray(list)) {
-    let index = 0;
-    const len = list.length;
-    const willReturn = Array(len);
-
-    while (index < len) {
-      willReturn[index] = fn(list[index]);
-      index++;
-    }
-
-    return willReturn;
-  }
-
-  let index = 0;
-
-  const keys = _keys(list);
-
-  const len = keys.length;
-  const willReturn = {};
-
-  while (index < len) {
-    const key = keys[index];
-    willReturn[key] = fn(list[key], key, list);
-    index++;
-  }
-
-  return willReturn;
 }
 
 function mergeAll(arr) {
@@ -1337,27 +1362,6 @@ function memoize(fn, ...inputArguments) {
 
 function nextIndex(index, list) {
   return index >= list.length - 1 ? 0 : index + 1;
-}
-
-function onceFn(fn, context) {
-  let result;
-  return function () {
-    if (fn) {
-      result = fn.apply(context || this, arguments);
-      fn = null;
-    }
-
-    return result;
-  };
-}
-
-function once(fn, context) {
-  if (arguments.length === 1) {
-    const wrap = onceFn(fn, context);
-    return curry(wrap);
-  }
-
-  return onceFn(fn, context);
 }
 
 function partialCurry(fn, input) {
@@ -1936,6 +1940,11 @@ function always(x) {
 function and(a, b) {
   if (arguments.length === 1) return _b => and(a, _b);
   return a && b;
+}
+
+function or(a, b) {
+  if (arguments.length === 1) return _b => or(a, _b);
+  return a || b;
 }
 
 function anyPass(predicates) {
@@ -2803,6 +2812,27 @@ function not(input) {
   return !input;
 }
 
+function onceFn(fn, context) {
+  let result;
+  return function () {
+    if (fn) {
+      result = fn.apply(context || this, arguments);
+      fn = null;
+    }
+
+    return result;
+  };
+}
+
+function once(fn, context) {
+  if (arguments.length === 1) {
+    const wrap = onceFn(fn, context);
+    return curry(wrap);
+  }
+
+  return onceFn(fn, context);
+}
+
 function of(value) {
   return [value];
 }
@@ -3251,8 +3281,11 @@ exports.endsWith = endsWith;
 exports.equals = equals;
 exports.excludes = excludes;
 exports.filter = filter;
+exports.filterArray = filterArray;
 exports.filterAsync = filterAsync;
 exports.filterAsyncFn = filterAsyncFn;
+exports.filterIndexed = filterIndexed;
+exports.filterObject = filterObject;
 exports.find = find;
 exports.findIndex = findIndex;
 exports.findLast = findLast;
@@ -3260,6 +3293,7 @@ exports.findLastIndex = findLastIndex;
 exports.flatten = flatten;
 exports.flip = flip;
 exports.forEach = forEach;
+exports.forEachIndexed = forEachIndexed;
 exports.fromPairs = fromPairs;
 exports.fromPrototypeToString = fromPrototypeToString;
 exports.getter = getter;
@@ -3302,11 +3336,14 @@ exports.lensPath = lensPath;
 exports.lensProp = lensProp;
 exports.lensSatisfies = lensSatisfies;
 exports.map = map;
+exports.mapArray = mapArray;
 exports.mapAsync = mapAsync;
 exports.mapAsyncLimit = mapAsyncLimit;
 exports.mapFastAsync = mapFastAsync;
 exports.mapFastAsyncFn = mapFastAsyncFn;
+exports.mapIndexed = mapIndexed;
 exports.mapKeys = mapKeys;
+exports.mapObject = mapObject;
 exports.mapToObject = mapToObject;
 exports.mapToObjectAsync = mapToObjectAsync;
 exports.mapToObjectAsyncFn = mapToObjectAsyncFn;
@@ -3338,6 +3375,7 @@ exports.of = of;
 exports.ok = ok;
 exports.omit = omit;
 exports.once = once;
+exports.or = or;
 exports.over = over;
 exports.partial = partial;
 exports.partialCurry = partialCurry;
