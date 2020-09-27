@@ -1718,7 +1718,7 @@ const is = (testValue, matchResult = true) => ({
 
 class Switchem {
   constructor(defaultValue, cases, willMatch) {
-    if (defaultValue !== undefined && cases === undefined && willMatch === undefined) {
+    if (cases === undefined && willMatch === undefined) {
       this.cases = [];
       this.defaultValue = undefined;
       this.willMatch = defaultValue;
@@ -1963,10 +1963,10 @@ function anyPass(predicates) {
   };
 }
 
-function append(x, listOrString) {
-  if (arguments.length === 1) return _listOrString => append(x, _listOrString);
-  if (typeof listOrString === 'string') return `${listOrString}${x}`;
-  const clone = listOrString.slice();
+function append(x, input) {
+  if (arguments.length === 1) return _input => append(x, _input);
+  if (typeof input === 'string') return input.split('').concat(x);
+  const clone = input.slice();
   clone.push(x);
   return clone;
 }
@@ -2848,10 +2848,10 @@ function partial(fn, ...args) {
   };
 }
 
-function whenObject$1(predicate, input) {
+function partitionObject(predicate, iterable) {
   const yes = {};
   const no = {};
-  Object.entries(input).forEach(([prop, value]) => {
+  Object.entries(iterable).forEach(([prop, value]) => {
     if (predicate(value, prop)) {
       yes[prop] = value;
     } else {
@@ -2860,26 +2860,28 @@ function whenObject$1(predicate, input) {
   });
   return [yes, no];
 }
-
-function partition(predicate, input) {
-  if (arguments.length === 1) {
-    return listHolder => partition(predicate, listHolder);
-  }
-
-  if (!_isArray(input)) return whenObject$1(predicate, input);
+function partitionArray(predicate, list) {
   const yes = [];
   const no = [];
   let counter = -1;
 
-  while (counter++ < input.length - 1) {
-    if (predicate(input[counter])) {
-      yes.push(input[counter]);
+  while (counter++ < list.length - 1) {
+    if (predicate(list[counter])) {
+      yes.push(list[counter]);
     } else {
-      no.push(input[counter]);
+      no.push(list[counter]);
     }
   }
 
   return [yes, no];
+}
+function partition(predicate, iterable) {
+  if (arguments.length === 1) {
+    return listHolder => partition(predicate, listHolder);
+  }
+
+  if (!_isArray(iterable)) return partitionObject(predicate, iterable);
+  return partitionArray(predicate, iterable);
 }
 
 function pathEqFn(pathToSearch, target, input) {
@@ -2937,10 +2939,10 @@ function pluck(property, list) {
   return willReturn;
 }
 
-function prepend(x, listOrString) {
-  if (arguments.length === 1) return _listOrString => prepend(x, _listOrString);
-  if (typeof listOrString === 'string') return `${x}${listOrString}`;
-  return [x].concat(listOrString);
+function prepend(x, input) {
+  if (arguments.length === 1) return _input => prepend(x, _input);
+  if (typeof input === 'string') return [x].concat(input.split(''));
+  return [x].concat(input);
 }
 
 const product = reduce(multiply, 1);
@@ -3231,6 +3233,56 @@ function zipObj(keys, values) {
   }, {});
 }
 
+function props(propsToPick, obj) {
+  if (arguments.length === 1) {
+    return _obj => props(propsToPick, _obj);
+  }
+
+  return mapArray(prop => obj[prop], propsToPick);
+}
+
+function zipWithFn(fn, x, y) {
+  return take(x.length > y.length ? y.length : x.length, x).map((xInstance, i) => fn(xInstance, y[i]));
+}
+
+const zipWith = curry(zipWithFn);
+
+function splitAt(index, input) {
+  if (arguments.length === 1) {
+    return _list => splitAt(index, _list);
+  }
+
+  if (!input) throw new TypeError(`Cannot read property 'slice' of ${input}`);
+  if (!_isArray(input) && typeof input !== 'string') return [[], []];
+  const correctIndex = maybe(index < 0, input.length + index < 0 ? 0 : input.length + index, index);
+  return [take(correctIndex, input), drop(correctIndex, input)];
+}
+
+function splitWhen(predicate, input) {
+  if (arguments.length === 1) {
+    return _input => splitWhen(predicate, _input);
+  }
+
+  if (!input) throw new TypeError(`Cannot read property 'length' of ${input}`);
+  const preFound = [];
+  const postFound = [];
+  let found = false;
+  let counter = -1;
+
+  while (counter++ < input.length - 1) {
+    if (found) {
+      postFound.push(input[counter]);
+    } else if (predicate(input[counter])) {
+      postFound.push(input[counter]);
+      found = true;
+    } else {
+      preFound.push(input[counter]);
+    }
+  }
+
+  return [preFound, postFound];
+}
+
 exports.DELAY = DELAY;
 exports.F = F;
 exports.T = T;
@@ -3380,7 +3432,9 @@ exports.over = over;
 exports.partial = partial;
 exports.partialCurry = partialCurry;
 exports.partition = partition;
+exports.partitionArray = partitionArray;
 exports.partitionAsync = partitionAsync;
+exports.partitionObject = partitionObject;
 exports.pass = pass;
 exports.path = path;
 exports.pathEq = pathEq;
@@ -3401,6 +3455,7 @@ exports.prop = prop;
 exports.propEq = propEq;
 exports.propIs = propIs;
 exports.propOr = propOr;
+exports.props = props;
 exports.prototypeToString = prototypeToString;
 exports.random = random;
 exports.range = range;
@@ -3426,7 +3481,9 @@ exports.sortByPath = sortByPath;
 exports.sortByProps = sortByProps;
 exports.sortObject = sortObject;
 exports.split = split;
+exports.splitAt = splitAt;
 exports.splitEvery = splitEvery;
+exports.splitWhen = splitWhen;
 exports.startsWith = startsWith;
 exports.subtract = subtract;
 exports.sum = sum;
@@ -3469,3 +3526,4 @@ exports.without = without;
 exports.xor = xor;
 exports.zip = zip;
 exports.zipObj = zipObj;
+exports.zipWith = zipWith;
