@@ -1,76 +1,14 @@
 import { map } from './map'
 import { type } from './type'
 
-function promisify({ condition, input, prop }){
-  return new Promise((resolve, reject) => {
-    if (type(condition) !== 'Async'){
-      return resolve({
-        type    : prop,
-        payload : condition(input),
-      })
-    }
-
-    condition(input)
-      .then(result => {
-        resolve({
-          type    : prop,
-          payload : result,
-        })
-      })
-      .catch(err => reject(err))
-  })
-}
-
-function produceFn(conditions, input){
-  let asyncConditionsFlag = false
-  for (const prop in conditions){
-    if (
-      asyncConditionsFlag === false &&
-      type(conditions[ prop ]) === 'Async'
-    ){
-      asyncConditionsFlag = true
-    }
-  }
-
-  if (asyncConditionsFlag === false){
-    const willReturn = {}
-    for (const prop in conditions){
-      willReturn[ prop ] = conditions[ prop ](input)
-    }
-
-    return willReturn
-  }
-
-  const promised = []
-  for (const prop in conditions){
-    const condition = conditions[ prop ]
-    promised.push(promisify({
-      input,
-      condition,
-      prop,
-    }))
-  }
-
-  return new Promise((resolve, reject) => {
-    Promise.all(promised)
-      .then(results => {
-        const willReturn = {}
-
-        map(result => willReturn[ result.type ] = result.payload, results)
-
-        resolve(willReturn)
-      })
-      .catch(err => reject(err))
-  })
-}
-
-export function produce(conditions, input){
+export function produce(rules, input){
   if (arguments.length === 1){
-    return async _input => produceFn(conditions, _input)
+    return _input => produce(rules, _input)
   }
 
-  return new Promise((resolve, reject) => {
-    produceFn(conditions, input).then(resolve)
-      .catch(reject)
-  })
+  return map(singleRule =>
+    type(singleRule) === 'Object' ?
+      produce(singleRule, input) :
+      singleRule(input),
+  rules)
 }

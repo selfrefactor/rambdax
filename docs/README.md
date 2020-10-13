@@ -72,7 +72,7 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 
 <details>
 <summary>
-  Click to see the full list of 97 Ramda methods not implemented in Rambda 
+  Click to see the full list of 92 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -96,14 +96,10 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - descend
 - differenceWith
 - dissocPath
-- dropLastWhile
-- dropRepeats
-- dropRepeatsWith
 - dropWhile
 - empty
 - eqBy
 - eqProps
-- evolve
 - forEachObjIndexed
 - gt
 - gte
@@ -154,7 +150,6 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - sequence
 - sortWith
 - symmetricDifferenceWith
-- takeLastWhile
 - andThen
 - toPairsIn
 - transduce
@@ -205,7 +200,9 @@ import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambd
 
 - Ramda's **clamp** work with strings, while Rambda's method work only with numbers.
 
-- Typescript definitions between `rambda` and `@types/ramda` may vary. List of all differences will be added soon. 
+- Error handling, when wrong inputs are provided, may not be the same. This difference will be better documented once all brute force tests are completed.
+
+- Typescript definitions between `rambda` and `@types/ramda` may vary.
 
 > If you need more **Ramda** methods in **Rambda**, you may either submit a `PR` or check the extended version of **Rambda** - [Rambdax](https://github.com/selfrefactor/rambdax). In case of the former, you may want to consult with [Rambda contribution guidelines.](CONTRIBUTING.md)
 
@@ -1361,34 +1358,18 @@ applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
 ) => { [Key in keyof Spec]: ReturnType<Spec[Key]> }
 ```
 
-It returns a curried function with the same arity as the longest function in the spec object.
-Arguments will be applied to the spec methods recursively.
-
 > :boom: The currying in this function works best with functions with 4 arguments or less. (arity of 4)
 
 ```javascript
-const spec = {
-  name: R.path('deeply.nested.firstname')
-}
-const json = {
-  deeply: {
-   nested: {
-      firstname: 'barry'
-    }
-  }
-}
-const result = R.applySpec(spec, json) // => { name: 'barry' }
-
-// Second example
-const getMetrics = R.applySpec({
+const fn = R.applySpec({
   sum: R.add,
   nested: { mul: R.multiply }
 })
-getMetrics(2, 4) 
+const result = fn(2, 4) 
 // => { sum: 6, nested: { mul: 8 } }
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20spec%20%3D%20%7B%0A%20%20name%3A%20R.path('deeply.nested.firstname')%0A%7D%0Aconst%20json%20%3D%20%7B%0A%20%20deeply%3A%20%7B%0A%20%20%20nested%3A%20%7B%0A%20%20%20%20%20%20firstname%3A%20'barry'%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D%0Aconst%20result%20%3D%20R.applySpec(spec%2C%20json)%20%2F%2F%20%3D%3E%20%7B%20name%3A%20'barry'%20%7D%0A%0A%2F%2F%20Second%20example%0Aconst%20getMetrics%20%3D%20R.applySpec(%7B%0A%20%20sum%3A%20R.add%2C%0A%20%20nested%3A%20%7B%20mul%3A%20R.multiply%20%7D%0A%7D)%0AgetMetrics(2%2C%204)%20%0A%2F%2F%20%3D%3E%20%7B%20sum%3A%206%2C%20nested%3A%20%7B%20mul%3A%208%20%7D%20%7D">Try this <strong>R.applySpec</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20R.applySpec(%7B%0A%20%20sum%3A%20R.add%2C%0A%20%20nested%3A%20%7B%20mul%3A%20R.multiply%20%7D%0A%7D)%0Aconst%20result%20%3D%20fn(2%2C%204)%20%0A%2F%2F%20%3D%3E%20%7B%20sum%3A%206%2C%20nested%3A%20%7B%20mul%3A%208%20%7D%20%7D">Try this <strong>R.applySpec</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -1497,12 +1478,17 @@ test('works with a spec defining a map key', () => {
   expect(applySpec({ map : prop('a') })({ a : 1 })).toEqual({ map : 1 })
 })
 
-test.skip('retains the highest arity', () => {
+test('cannot retains the highest arity', () => {
   const f = applySpec({
     f1 : nAry(2, T),
     f2 : nAry(5, T),
   })
-  expect(f.length).toBe(5)
+  const fRamda = applySpecRamda({
+    f1 : nAry(2, T),
+    f2 : nAry(5, T),
+  })
+  expect(f.length).toBe(0)
+  expect(fRamda.length).toBe(5)
 })
 
 test('returns a curried function', () => {
@@ -3676,6 +3662,317 @@ test('should return copy', () => {
 
 </details>
 
+### dropLastWhile
+
+```typescript
+
+dropLastWhile(predicate: (x: string) => boolean, iterable: string): string
+```
+
+```javascript
+const list = [1, 2, 3, 4, 5];
+const predicate = x => x >= 3
+
+const result = dropLastWhile(predicate, list);
+// => [1, 2]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%3B%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%3D%203%0A%0Aconst%20result%20%3D%20dropLastWhile(predicate%2C%20list)%3B%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.dropLastWhile</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+dropLastWhile(predicate: (x: string) => boolean, iterable: string): string;
+dropLastWhile(predicate: (x: string) => boolean): (iterable: string) => string;
+dropLastWhile<T>(predicate: (x: T) => boolean, iterable: readonly T[]): T[];
+dropLastWhile<T>(predicate: (x: T) => boolean): <T>(iterable: readonly T[]) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { dropLastWhile as dropLastWhileRamda } from "ramda";
+
+import { compareCombinations } from "./_internals/testUtils";
+import { dropLastWhile } from "./dropLastWhile";
+
+const list = [1, 2, 3, 4, 5];
+const str = "foobar";
+
+test("with list", () => {
+  const result = dropLastWhile((x) => x >= 3, list);
+  expect(result).toEqual([1, 2]);
+});
+
+test("with string", () => {
+  const result = dropLastWhile((x) => x !== "b")(str);
+  expect(result).toBe("foob");
+});
+
+test("with empty list", () => {
+  expect(dropLastWhile(() => true, [])).toEqual([]);
+  expect(dropLastWhile(() => false, [])).toEqual([]);
+});
+
+const possiblePredicates = [
+  (x) => x > 2,
+  (x) => x < 2,
+  (x) => x < -2,
+  (x) => x > 10,
+  "",
+  [],
+  [1],
+];
+
+const possibleIterables = [
+  list,
+  [{}, "1", 2],
+  str,
+  `${str}${str}`,
+  /foo/g,
+  Promise.resolve("foo"),
+  2,
+];
+
+describe("brute force", () => {
+  compareCombinations({
+    fn: dropLastWhile,
+    fnRamda: dropLastWhileRamda,
+    firstInput: possiblePredicates,
+    secondInput: possibleIterables,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_DIFFERENT": 0,
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 12,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 21,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+  });
+});
+```
+
+</details>
+
+### dropRepeats
+
+```typescript
+
+dropRepeats<T>(list: readonly T[]): T[]
+```
+
+It removes any successive duplicates according to `R.equals`.
+
+```javascript
+const result = R.dropRepeats([
+  1, 
+  1, 
+  {a: 1}, 
+  {a:1}, 
+  1
+])
+// => [1, {a: 1}, 1]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.dropRepeats(%5B%0A%20%201%2C%20%0A%20%201%2C%20%0A%20%20%7Ba%3A%201%7D%2C%20%0A%20%20%7Ba%3A1%7D%2C%20%0A%20%201%0A%5D)%0A%2F%2F%20%3D%3E%20%5B1%2C%20%7Ba%3A%201%7D%2C%201%5D">Try this <strong>R.dropRepeats</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+dropRepeats<T>(list: readonly T[]): T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { dropRepeats as dropRepeatsRamda } from 'ramda'
+
+import { compareCombinations } from './_internals/testUtils'
+import { add } from './add'
+import { dropRepeats } from './dropRepeats'
+
+const list = [ 1, 2, 2, 2, 3, 4, 4, 5, 5, 3, 2, 2, { a : 1 }, { a : 1 } ]
+const listClean = [ 1, 2, 3, 4, 5, 3, 2, { a : 1 } ]
+
+test('happy', () => {
+  const result = dropRepeats(list)
+  expect(result).toEqual(listClean)
+})
+
+const possibleLists = [
+  [ add(1), async () => {}, [ 1 ], [ 1 ], [ 2 ], [ 2 ] ],
+  [ add(1), add(1), add(2) ],
+  [],
+  1,
+  /foo/g,
+  Promise.resolve(1),
+]
+
+describe('brute force', () => {
+  compareCombinations({
+    firstInput : possibleLists,
+    callback   : errorsCounters => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_DIFFERENT": 0,
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 0,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 3,
+          "SHOULD_THROW": 0,
+        }
+      `)
+    },
+    fn      : dropRepeats,
+    fnRamda : dropRepeatsRamda,
+  })
+})
+```
+
+</details>
+
+### dropRepeatsWith
+
+```typescript
+
+dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[]
+```
+
+```javascript
+const result = R.dropRepeatsWith()
+// =>
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.dropRepeatsWith()%0A%2F%2F%20%3D%3E">Try this <strong>R.dropRepeatsWith</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[];
+dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean): (list: readonly T[]) => T[];
+
+// RAMBDAX_MARKER_START
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { dropRepeatsWith as dropRepeatsWithRamda, eqProps } from "ramda";
+
+import { compareCombinations } from "./_internals/testUtils";
+import { dropRepeatsWith } from "./dropRepeatsWith";
+import { path } from "./path";
+
+const eqI = eqProps("i");
+
+test("happy", () => {
+  const list = [{ i: 1 }, { i: 2 }, { i: 2 }, { i: 3 }];
+  const expected = [{ i: 1 }, { i: 2 }, { i: 3 }];
+  const result = dropRepeatsWith(eqI, list);
+  expect(result).toEqual(expected);
+});
+
+test("keeps elements from the left predicate input", () => {
+  const list = [
+    {
+      i: 1,
+      n: 1,
+    },
+    {
+      i: 1,
+      n: 2,
+    },
+    {
+      i: 1,
+      n: 3,
+    },
+    {
+      i: 4,
+      n: 1,
+    },
+    {
+      i: 4,
+      n: 2,
+    },
+  ];
+  const expected = [
+    {
+      i: 1,
+      n: 1,
+    },
+    {
+      i: 4,
+      n: 1,
+    },
+  ];
+  const result = dropRepeatsWith(eqI, list);
+  expect(result).toEqual(expected);
+});
+
+const possiblePredicates = [
+  null,
+  undefined,
+  (x) => x + 1,
+  (x) => true,
+  (x) => false,
+  (x) => "",
+  path(["a", "b"]),
+];
+const possibleLists = [
+  null,
+  undefined,
+  [],
+  [1],
+  [{ a: { b: 1 } }, { a: { b: 1 } }],
+  [/foo/g, /foo/g],
+];
+
+describe("brute force", () => {
+  compareCombinations({
+    firstInput: possiblePredicates,
+    secondInput: possibleLists,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_DIFFERENT": 0,
+          "ERRORS_MESSAGE_MISMATCH": 4,
+          "ERRORS_TYPE_MISMATCH": 14,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 0,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+    fn: dropRepeatsWith,
+    fnRamda: dropRepeatsWithRamda,
+  });
+});
+```
+
+</details>
+
 ### either
 
 ```typescript
@@ -4119,6 +4416,159 @@ test('with negative zero', () => {
   expect(equals(0, 0)).toBeTrue()
   expect(equals(-0, 1)).toBeFalse()
 })
+```
+
+</details>
+
+### evolve
+
+```typescript
+
+evolve<T, U>(rules: Array<(x: T) => U>, list: T[]): U[]
+```
+
+It takes object or array of functions as set of rules. These `rules` are applied to the `iterable` input to produce the result.
+
+> :boom: Error handling of this method differs between Ramda and Rambda. Ramda for some wrong inputs returns result and for other - it returns one of the inputs. Rambda simply throws when inputs are not correct. Full details for this mismatch are listed in `source/_snapshots/evolve.spec.js.snap` file.
+
+```javascript
+const rules = {
+  foo : add(1),
+  bar : add(-1),
+}
+const input = {
+  a   : 1,
+  foo : 2,
+  bar : 3,
+}
+const result = evolve(rules, input)
+const expected = {
+  a   : 1,
+  foo : 3,
+  bar : 2,
+})
+// => `result` is equal to `expected`
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%20%3A%20add(1)%2C%0A%20%20bar%20%3A%20add(-1)%2C%0A%7D%0Aconst%20input%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20foo%20%3A%202%2C%0A%20%20bar%20%3A%203%2C%0A%7D%0Aconst%20result%20%3D%20evolve(rules%2C%20input)%0Aconst%20expected%20%3D%20%7B%0A%20%20a%20%20%20%3A%201%2C%0A%20%20foo%20%3A%203%2C%0A%20%20bar%20%3A%202%2C%0A%7D)%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.evolve</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+evolve<T, U>(rules: Array<(x: T) => U>, list: T[]): U[];
+evolve<T, U>(rules: Array<(x: T) => U>) : (list: T[]) => U[];
+evolve<E extends Evolver, V extends Evolvable<E>>(rules: E, obj: V): Evolve<V, E>;
+evolve<E extends Evolver>(rules: E): <V extends Evolvable<E>>(obj: V) => Evolve<V, E>;
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { evolve as evolveRamda } from "ramda";
+
+import { add } from "../rambda.js";
+import { compareCombinations, compareToRamda } from "./_internals/testUtils";
+import { evolve } from "./evolve";
+
+test("happy", () => {
+  const rules = {
+    foo: add(1),
+    bar: add(-1),
+  };
+  const input = {
+    a: 1,
+    foo: 2,
+    bar: 3,
+  };
+  const result = evolve(rules, input);
+  expect(result).toEqual({
+    a: 1,
+    foo: 3,
+    bar: 2,
+  });
+});
+
+test("is recursive", () => {
+  const rules = {
+    nested: {
+      second: add(-1),
+      third: add(1),
+    },
+  };
+  const object = {
+    first: 1,
+    nested: {
+      second: 2,
+      third: 3,
+    },
+  };
+  const expected = {
+    first: 1,
+    nested: {
+      second: 1,
+      third: 4,
+    },
+  };
+  const result = evolve(rules, object);
+  expect(result).toEqual(expected);
+});
+
+test("ignores primitive value rulesormations", () => {
+  const rules = {
+    n: 2,
+    m: "foo",
+  };
+  const object = {
+    n: 0,
+    m: 1,
+  };
+  const expected = {
+    n: 0,
+    m: 1,
+  };
+  const result = evolve(rules, object);
+  expect(result).toEqual(expected);
+});
+
+test("with array", () => {
+  const rules = [add(1), add(-1)];
+  const list = [100, 1400];
+  const expected = [101, 1399];
+  const result = evolve(rules, list);
+  expect(result).toEqual(expected);
+});
+
+const rulesObject = { a: add(1) };
+const rulesList = [add(1)];
+const possibleIterables = [null, undefined, "", 42, [], [1], { a: 1 }];
+const possibleRules = [...possibleIterables, rulesList, rulesObject];
+
+describe("brute force", () => {
+  compareCombinations({
+    firstInput: possibleRules,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_DIFFERENT": 0,
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 4,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 51,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+    secondInput: possibleIterables,
+    fn: evolve,
+    fnRamda: evolveRamda,
+  });
+});
 ```
 
 </details>
@@ -5009,11 +5459,6 @@ forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>, list: readonly T[]): T[]
 forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>): (list: readonly T[]) => T[];
 forEachIndexed<T>(fn: MapFunctionObject<T, void>, list: Dictionary<T>): Dictionary<T>;
 forEachIndexed<T, U>(fn: MapFunctionObject<T, void>): (list: Dictionary<T>) => Dictionary<T>;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 ```
 
 </details>
@@ -8278,51 +8723,6 @@ R.over(xLens, R.negate, {x: 1, y: 2}) // => {x: -1, y: 2}
 
 ```typescript
 lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
-lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { compose } from './compose'
-import { lensIndex } from './lensIndex'
-import { lensPath } from './lensPath'
-import { lensProp } from './lensProp'
-import { over } from './over'
-import { toUpper } from './toUpper'
-import { view } from './view'
-
-const testObject = {
-  foo : [ 'a', 'b', 'c' ],
-  baz : {
-    a : 'x',
-    b : 'y',
-  },
-}
-
-const propLens = lensProp('foo')
-const indexLens = lensIndex(2)
-const composedLens = compose(propLens, indexLens)
-
-const pathLens = lensPath('baz.a')
-const composedPathLens = compose(lensPath('baz'), lensPath('a'))
-
-test('composed lenses', () => {
-  expect(view(composedPathLens, testObject)).toEqual(view(pathLens, testObject))
-
-  expect(view(composedLens, testObject)).toEqual('c')
-
-  expect(over(
-    composedLens, toUpper, testObject
-  )).toEqual({
-    ...testObject,
-    foo : [ 'a', 'b', 'C' ],
-  })
-})
 ```
 
 </details>
@@ -9950,7 +10350,7 @@ import { median } from './median'
 
 test('happy', () => {
   expect(median([ 2 ])).toEqual(2)
-  expect(median([ 7, 2, 10, 9 ])).toEqual(8)
+  expect(median([ 7, 2, 10, 2, 9 ])).toEqual(7)
 })
 
 test('with empty array', () => {
@@ -10481,7 +10881,7 @@ import { min } from './min'
 
 test('happy', () => {
   expect(min(2, 1)).toBe(1)
-  expect(min(2)(1)).toBe(1)
+  expect(min(1)(2)).toBe(1)
 })
 ```
 
@@ -11069,7 +11469,18 @@ test('schema in error message', () => {
     h  : Object,
   })
 
-  expect(JSON.stringify(result)).toMatchInlineSnapshot('"{\\"_a\\":\\"Array\\",\\"a\\":\\"number\\",\\"b\\":\\"Function\\",\\"c\\":\\"Array\\",\\"d\\":\\"Array\\",\\"e\\":\\"String\\",\\"f\\":\\"array\\",\\"h\\":\\"object\\"}"')
+  expect(result).toMatchInlineSnapshot(`
+    Object {
+      "_a": "Array",
+      "a": "number",
+      "b": "Function",
+      "c": "Array",
+      "d": "Array",
+      "e": "String",
+      "f": "array",
+      "h": "object",
+    }
+  `)
 })
 
 test('error contains schema', () => {
@@ -13087,19 +13498,85 @@ test('happy path 2', () => {
 
 ```typescript
 
-produce<Input, Output>(
-  rules: ProduceRules<Input>,
+produce<T>(x: T): T
+```
+
+```javascript
+const result = R.produce()
+// =>
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.produce()%0A%2F%2F%20%3D%3E">Try this <strong>R.produce</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+produce<T>(x: T): T;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { add, pipe } from '../rambda'
+import { produce } from './produce'
+
+const rules = {
+  a : pipe(add(2), add(3)),
+  b : x => ({ foo : x }),
+  c : {
+    d : add(2),
+    e : add(10),
+  },
+}
+
+const expected = {
+  a : 6,
+  b : { foo : 1 },
+  c : {
+    d : 3,
+    e : 11,
+  },
+}
+
+test('happy', () => {
+  const result = produce(rules, 1)
+  expect(result).toEqual(expected)
+})
+
+test('curried', () => {
+  const result = produce(rules)(1)
+  expect(result).toEqual(expected)
+})
+```
+
+</details>
+
+### produceAsync
+
+```typescript
+
+produceAsync<Input extends any, Output>(
+  rules: ProduceAsyncRules<Output, keyof Output, Input>,
   input: Input
 ): Promise<Output>
 ```
 
-It returns an object created by applying each value of `rules` to `input` argument
+It returns an object created by applying each value of `rules` to `input` argument.
 
 `rules` input is an object with synchronous or asynchronous functions as values.
 
 The return value is wrapped in a promise, even if all `rules` are synchronous functions.
-
-> :boom: It is very similar to `R.applySpec`.
 
 ```javascript
 const rules = {
@@ -13110,7 +13587,7 @@ const rules = {
   bar: x => ({baz: x})
 }
 const input = 2
-const result = await R.produce(rules, input)
+const result = await R.produceAsync(rules, input)
 
 const expected = {
   foo: true,
@@ -13119,20 +13596,20 @@ const expected = {
 // => `result` is equal to `expected`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%3A%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%3E%201%0A%20%20%7D%2C%0A%20%20bar%3A%20x%20%3D%3E%20(%7Bbaz%3A%20x%7D)%0A%7D%0Aconst%20input%20%3D%202%0Aconst%20result%20%3D%20await%20R.produce(rules%2C%20input)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20foo%3A%20true%2C%0A%20%20bar%3A%20%7Bbaz%3A%202%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.produce</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%3A%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%3E%201%0A%20%20%7D%2C%0A%20%20bar%3A%20x%20%3D%3E%20(%7Bbaz%3A%20x%7D)%0A%7D%0Aconst%20input%20%3D%202%0Aconst%20result%20%3D%20await%20R.produceAsync(rules%2C%20input)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20foo%3A%20true%2C%0A%20%20bar%3A%20%7Bbaz%3A%202%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.produceAsync</strong> example in Rambda REPL</a>
 
 <details>
 
 <summary>All Typescript definitions</summary>
 
 ```typescript
-produce<Input, Output>(
-  rules: ProduceRules<Input>,
+produceAsync<Input extends any, Output>(
+  rules: ProduceAsyncRules<Output, keyof Output, Input>,
   input: Input
 ): Promise<Output>;
-produce<Input, Output>(
-  rules: ProduceRules<Input>
-): (
+produceAsync<Input extends any, Output>(
+  rules: ProduceAsyncRules<Output, keyof Output, Input>
+): <Input>(
   input: Input
 ) => Promise<Output>;
 ```
@@ -13145,28 +13622,28 @@ produce<Input, Output>(
 
 ```javascript
 import { delay } from './delay'
-import { produce } from './produce'
+import { produceAsync } from './produceAsync'
 
-test('async', async () => {
-  const fn = produce({
+test('happy', async () => {
+  const result /*?*/ = await produceAsync({
     foo : async x => {
       await delay(100)
 
       return `${ x }_ZEPPELIN`
     },
-    bar : inputArgument => inputArgument === 5,
-  })
+    bar : x => x.length === 3,
+  },
+  'LED')
   const expected = {
     foo : 'LED_ZEPPELIN',
-    bar : false,
+    bar : true,
   }
 
-  const result = await fn('LED')
   expect(result).toEqual(expected)
 })
 
-test('async with error', async () => {
-  const fn = produce({
+test('with error', async () => {
+  const fn = produceAsync({
     foo : async x => {
       await delay(100)
       throw new Error(`${ x }_ZEPPELIN`)
@@ -13174,12 +13651,7 @@ test('async with error', async () => {
     bar : inputArgument => inputArgument === 5,
   })
 
-  try {
-    await fn('LED')
-    expect(1).toBe(2)
-  } catch (e){
-    expect(e.message).toBe('LED_ZEPPELIN')
-  }
+  await expect(fn('LED')).rejects.toThrow('LED_ZEPPELIN')
 })
 ```
 
@@ -13479,11 +13951,12 @@ props<P extends string, T>(propsToPick: P[], obj: Record<P, T>): T[]
 It takes list with properties `propsToPick` and returns a list with property values in `obj`.
 
 ```javascript
-const result = R.props(['a', 'b'], {a:1, c:3})
+const result = [
+  R.props(['a', 'b'], {a:1, c:3})
 // => [1, undefined]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.props(%5B'a'%2C%20'b'%5D%2C%20%7Ba%3A1%2C%20c%3A3%7D)%0A%2F%2F%20%3D%3E%20%5B1%2C%20undefined%5D">Try this <strong>R.props</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5B%0A%20%20R.props(%5B'a'%2C%20'b'%5D%2C%20%7Ba%3A1%2C%20c%3A3%7D)%0A%2F%2F%20%3D%3E%20%5B1%2C%20undefined%5D">Try this <strong>R.props</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -13504,12 +13977,20 @@ props<P extends string, T>(propsToPick: P[]): (obj: Record<P, T>) => T[];
 ```javascript
 import { props } from './props'
 
-const obj = {a: 1, b: 2}
+const obj = {
+  a : 1,
+  b : 2,
+}
+const propsToPick = [ 'a', 'c' ]
 
 test('happy', () => {
-  const result = props(['a', 'c'], obj)
-  console.log(result)
-  expect(result).toEqual([1,undefined])
+  const result = props(propsToPick, obj)
+  expect(result).toEqual([ 1, undefined ])
+})
+
+test('curried', () => {
+  const result = props(propsToPick)(obj)
+  expect(result).toEqual([ 1, undefined ])
 })
 ```
 
@@ -13613,7 +14094,7 @@ test('curry', () => {
 
 ```typescript
 
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: readonly T[]): TResult
 ```
 
 > :boom: It passes index of the list as third argument to `reducer` function.
@@ -13634,10 +14115,10 @@ const result = R.reduce(reducer, initialValue, list)
 <summary>All Typescript definitions</summary>
 
 ```typescript
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: T[]): TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: readonly T[]): TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: readonly T[]): TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: readonly T[]) => TResult;
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: readonly T[]) => TResult;
 ```
 
 </details>
@@ -13741,14 +14222,6 @@ test('with object', () => {
     c : 3,
     d : 4,
   }
-  const fn = (
-    a, b, c
-  ) => console.log({
-    a,
-    b,
-    c,
-  })
-  reject(fn, obj)
   expect(reject(isOdd, obj)).toEqual({
     b : 2,
     d : 4,
@@ -14973,7 +15446,6 @@ test('with array - index is out of scope', () => {
 
 test('with string', () => {
   const result = splitAt(4, str)
-  console.log(result)
   expect(result).toEqual([ 'foo ', 'bar' ])
 })
 
@@ -15006,10 +15478,6 @@ test('with bad inputs', () => {
   badInputs.forEach(badInput => {
     const result = splitAt(1, badInput)
     const ramdaResult = splitAtRamda(1, badInput)
-    console.log({
-      result,
-      ramdaResult,
-    })
     expect(result).toEqual(ramdaResult)
   })
 })
@@ -15108,8 +15576,6 @@ const result = R.splitWhen(R.equals(2), list)
 ```typescript
 splitWhen<T, U>(predicate: Predicate<T>, list: U[]): U[][];
 splitWhen<T>(predicate: Predicate<T>): <U>(list: U[]) => U[][];
-
-// RAMBDAX_MARKER_START
 ```
 
 </details>
@@ -15692,6 +16158,72 @@ test('with negative index', () => {
 
 </details>
 
+### takeLastWhile
+
+```typescript
+
+takeLastWhile(predicate: (x: string) => boolean, input: string): string
+```
+
+```javascript
+const result = R.takeLastWhile(
+  x => x > 2,
+  [1, 2, 3, 4]
+)
+// => [3, 4]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.takeLastWhile(%0A%20%20x%20%3D%3E%20x%20%3E%202%2C%0A%20%20%5B1%2C%202%2C%203%2C%204%5D%0A)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Try this <strong>R.takeLastWhile</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+takeLastWhile(predicate: (x: string) => boolean, input: string): string;
+takeLastWhile(predicate: (x: string) => boolean): (input: string) => string;
+takeLastWhile<T>(predicate: (x: T) => boolean, input: readonly T[]): T[];
+takeLastWhile<T>(predicate: (x: T) => boolean): <T>(input: readonly T[]) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { takeLastWhile } from './takeLastWhile'
+const assert = require('assert')
+
+const list = [ 1, 2, 3, 4 ]
+
+test('happy', () => {
+  const predicate = x => x > 2
+  const result = takeLastWhile(predicate, list)
+  expect(result).toEqual([ 3, 4 ])
+})
+
+test('predicate is always true', () => {
+  const predicate = x => x > 0
+  const result = takeLastWhile(predicate)(list)
+  expect(result).toEqual(list)
+})
+
+test('predicate is always false', () => {
+  const predicate = x => x < 0
+  const result = takeLastWhile(predicate, list)
+  expect(result).toEqual([])
+})
+
+test('with string', () => {
+  const result = takeLastWhile(x => x !== 'F', 'FOOBAR')
+  expect(result).toEqual('OOBAR')
+})
+```
+
+</details>
+
 ### takeUntil
 
 ```typescript
@@ -15882,11 +16414,29 @@ tapAsync<T>(fn: Func<any> | Promise<any>): (input: T) => T;
 
 ```javascript
 import { delay } from './delay'
+import { pipedAsync } from './pipedAsync'
 import { tapAsync } from './tapAsync'
 
-test('', async () => {
-  const result = await tapAsync(delay)(1)
+test('happy', async () => {
+  const result = await tapAsync(delay, 1)
   expect(result).toEqual(1)
+})
+
+test('complex', async () => {
+  let marker = false
+  const fn = () => marker = true
+  const result = await pipedAsync(
+    1,
+    async x => {
+      await delay(100)
+
+      return x + 1
+    },
+    tapAsync(fn),
+    x => x + 1
+  )
+  expect(marker).toBeTrue()
+  expect(result).toEqual(3)
 })
 ```
 
@@ -16121,9 +16671,10 @@ toDecimal(num: number, charsAfterDecimalPoint?: number): number;
 ```javascript
 import { toDecimal } from './toDecimal'
 
-test('', () => {
+test('happy', () => {
   expect(toDecimal(2.2789, 1)).toBe(2.3)
   expect(toDecimal(2.2789, 3)).toBe(2.279)
+  expect(toDecimal(2, 3)).toBe(2)
   expect(toDecimal(2.2789)).toBe(2.28)
   expect(toDecimal(2.45464)).toBe(2.45)
 })
@@ -17219,8 +17770,12 @@ const expected = {
 
 test('happy', () => {
   const result = updateObject(rules, obj)
-  console.log(result)
-  // expect(result).toEqual(expected)
+  expect(result).toEqual(expected)
+})
+
+test('curried', () => {
+  const result = updateObject(rules)(obj)
+  expect(result).toEqual(expected)
 })
 ```
 
@@ -17324,7 +17879,6 @@ import { prop } from './prop'
 import { view } from './view'
 
 const testObject = { foo : 'Led Zeppelin' }
-
 const assocLens = lens(prop('foo'), assoc('foo'))
 
 test('happy', () => {
@@ -17916,13 +18470,6 @@ test('when one argument is truthy and the other is falsy, it should return true'
   expect(xor([], null)).toEqual(true)
   expect(xor(undefined, [])).toEqual(true)
 })
-
-test.skip('returns a curried function', () => {
-  expect(xor()(true)(true)).toEqual(false)
-  expect(xor()(true)(false)).toEqual(true)
-  expect(xor()(false)(true)).toEqual(true)
-  expect(xor()(false)(false)).toEqual(false)
-})
 ```
 
 </details>
@@ -18144,6 +18691,12 @@ test('when second list is longer', () => {
 </details>
 
 ## CHANGELOG
+
+WIP 7.0.0
+
+- Rename `R.produce` to `R.produceAsync`
+
+- Add `R.produce` which is synchronous version of `R.produceAsync`
 
 6.2.0
 

@@ -44,6 +44,37 @@ type SafePred<T> = (...x: readonly T[]) => boolean;
 interface Dictionary<T> {
   [index: string]: T;
 }
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
+
+type Evolvable<E extends Evolver> = {
+  [P in keyof E]?: Evolved<E[P]>;
+};
+
+type Evolver<T extends Evolvable<any> = any> = {
+  [key in keyof Partial<T>]: ((value: T[key]) => T[key]) | (T[key] extends Evolvable<any> ? Evolver<T[key]> : never);
+};
+
+type Evolve<O extends Evolvable<E>, E extends Evolver> = {
+  [P in keyof O]: P extends keyof E
+                  ? EvolveValue<O[P], E[P]>
+                  : O[P];
+};
+
+type EvolveNestedValue<O, E extends Evolver> =
+    O extends object
+    ? O extends Evolvable<E>
+      ? Evolve<O, E>
+      : never
+    : never;
+
+type EvolveValue<V, E> =
+    E extends (value: V) => any
+    ? ReturnType<E>
+    : E extends Evolver
+      ? EvolveNestedValue<V, E>
+      : never;
 
 type Merge<O1 extends object, O2 extends object, Depth extends 'flat' | 'deep'> = ObjectToolbelt.MergeUp<ListToolbelt.ObjectOf<O1>, ListToolbelt.ObjectOf<O2>, Depth, 1>;
 
@@ -114,11 +145,12 @@ interface IsValidAsync {
   schema: Schema | SchemaAsync;
 }
 
-
-type ProduceRules<Input> = {
-  [key: string]: ProduceFunctionRule<Input> | ProduceAsyncRule<Input>
+type ProduceRules<Output,K extends keyof Output, Input> = {
+  [P in K]: (input: Input) => Output[P];
 }
-type ProduceFunctionRule<Input> = (input: Input) => any
+type ProduceAsyncRules<Output,K extends keyof Output, Input> = {
+  [P in K]: (input: Input) => Promise<Output[P]>;
+}
 type ProduceAsyncRule<Input> = (input: Input) => Promise<any>
 type Async<T> = (x: any) => Promise<T>;
 type AsyncIterable<T, K> = (x: T) => Promise<K>;
@@ -191,10 +223,6 @@ export function anyPass<T>(predicates: SafePred<T>[]): SafePred<T>;
 export function append<T>(x: T, list: readonly T[]): T[];
 export function append<T>(x: T): <T>(list: readonly T[]) => T[];
 
-/**
- * It returns a curried function with the same arity as the longest function in the spec object.
- * Arguments will be applied to the spec methods recursively.
- */
 export function applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
   spec: Spec
 ): (
@@ -646,7 +674,6 @@ export function length<T>(input: readonly T[]): number;
  * 
  * The setter should not mutate the data structure.
  */
-export function lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
 export function lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
 
 /**
@@ -1179,10 +1206,10 @@ export function propOr<T>(defaultValue: T): FunctionToolbelt.Curry<(property: st
 export function range(startInclusive: number, endExclusive: number): number[];
 export function range(startInclusive: number): (endExclusive: number) => number[];
 
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult;
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: T[]): TResult;
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: readonly T[]): TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: readonly T[]): TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: readonly T[]) => TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: readonly T[]) => TResult;
 
 /**
  * It has the opposite effect of `R.filter`.
@@ -1470,6 +1497,32 @@ export function splitAt(index: number): {
 export function splitWhen<T, U>(predicate: Predicate<T>, list: U[]): U[][];
 export function splitWhen<T>(predicate: Predicate<T>): <U>(list: U[]) => U[][];
 
+export function takeLastWhile(predicate: (x: string) => boolean, input: string): string;
+export function takeLastWhile(predicate: (x: string) => boolean): (input: string) => string;
+export function takeLastWhile<T>(predicate: (x: T) => boolean, input: readonly T[]): T[];
+export function takeLastWhile<T>(predicate: (x: T) => boolean): <T>(input: readonly T[]) => T[];
+
+/**
+ * It takes object or array of functions as set of rules. These `rules` are applied to the `iterable` input to produce the result.
+ */
+export function evolve<T, U>(rules: Array<(x: T) => U>, list: T[]): U[];
+export function evolve<T, U>(rules: Array<(x: T) => U>) : (list: T[]) => U[];
+export function evolve<E extends Evolver, V extends Evolvable<E>>(rules: E, obj: V): Evolve<V, E>;
+export function evolve<E extends Evolver>(rules: E): <V extends Evolvable<E>>(obj: V) => Evolve<V, E>;
+
+export function dropLastWhile(predicate: (x: string) => boolean, iterable: string): string;
+export function dropLastWhile(predicate: (x: string) => boolean): (iterable: string) => string;
+export function dropLastWhile<T>(predicate: (x: T) => boolean, iterable: readonly T[]): T[];
+export function dropLastWhile<T>(predicate: (x: T) => boolean): <T>(iterable: readonly T[]) => T[];
+
+/**
+ * It removes any successive duplicates according to `R.equals`.
+ */
+export function dropRepeats<T>(list: readonly T[]): T[];
+
+export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[];
+export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean): (list: readonly T[]) => T[];
+
 // RAMBDAX_MARKER_START
 
 /**
@@ -1753,20 +1806,27 @@ export function pipedAsync<T>(
   ...fns: (Func<any> | Async<any>)[]
 ): Promise<T>;
 
+export function produce<T>(x: T): T;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
+
 /**
- * It returns an object created by applying each value of `rules` to `input` argument
+ * It returns an object created by applying each value of `rules` to `input` argument.
  * 
  * `rules` input is an object with synchronous or asynchronous functions as values.
  * 
  * The return value is wrapped in a promise, even if all `rules` are synchronous functions.
  */
-export function produce<Input, Output>(
-  rules: ProduceRules<Input>,
+export function produceAsync<Input extends any, Output>(
+  rules: ProduceAsyncRules<Output, keyof Output, Input>,
   input: Input
 ): Promise<Output>;
-export function produce<Input, Output>(
-  rules: ProduceRules<Input>
-): (
+export function produceAsync<Input extends any, Output>(
+  rules: ProduceAsyncRules<Output, keyof Output, Input>
+): <Input>(
   input: Input
 ) => Promise<Output>;
 
@@ -1973,8 +2033,3 @@ export function forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>, list: re
 export function forEachIndexed<T>(fn: MapFunctionArrayIndexed<T, void>): (list: readonly T[]) => T[];
 export function forEachIndexed<T>(fn: MapFunctionObject<T, void>, list: Dictionary<T>): Dictionary<T>;
 export function forEachIndexed<T, U>(fn: MapFunctionObject<T, void>): (list: Dictionary<T>) => Dictionary<T>;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
