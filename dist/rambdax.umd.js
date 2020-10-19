@@ -762,8 +762,6 @@
     });
   }
 
-  const escapeSpecialCharacters = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-
   const getOccurances = input => input.match(/{{\s*.+?\s*}}/g);
 
   const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '');
@@ -772,7 +770,11 @@
     inputHolder,
     prop,
     replacer
-  }) => inputHolder.replace(new RegExp(`{{\\s*${escapeSpecialCharacters(prop)}\\s*}}`), replacer);
+  }) => {
+    const regexBase = `{{${prop}}}`;
+    const regex = new RegExp(regexBase, 'g');
+    return inputHolder.replace(regex, replacer);
+  };
 
   function interpolate(input, templateInput) {
     if (arguments.length === 1) {
@@ -785,15 +787,11 @@
 
     for (const occurance of occurances) {
       const prop = getOccuranceProp(occurance);
-
-      try {
-        const replacer = new Function('templateInput', `with(templateInput) { return ${prop} }`)(templateInput);
-        inputHolder = replace({
-          inputHolder,
-          prop,
-          replacer
-        });
-      } catch (e) {}
+      inputHolder = replace({
+        inputHolder,
+        prop,
+        replacer: templateInput[prop]
+      });
     }
 
     return inputHolder;
@@ -1481,6 +1479,14 @@
     return index === 0 ? list.length - 1 : index - 1;
   }
 
+  function produce(rules, input) {
+    if (arguments.length === 1) {
+      return _input => produce(rules, _input);
+    }
+
+    return map(singleRule => type(singleRule) === 'Object' ? produce(singleRule, input) : singleRule(input), rules);
+  }
+
   function promisify({
     condition,
     input,
@@ -1542,7 +1548,7 @@
     });
   }
 
-  function produce(conditions, input) {
+  function produceAsync(conditions, input) {
     if (arguments.length === 1) {
       return async _input => produceFn(conditions, _input);
     }
@@ -1768,16 +1774,8 @@
     return toReturn;
   }
 
-  function tapAsyncFn(fn, input) {
-    if (isPromise(fn) === true) {
-      return new Promise((resolve, reject) => {
-        fn(input).then(() => {
-          resolve(input);
-        }).catch(reject);
-      });
-    }
-
-    fn(input);
+  async function tapAsyncFn(fn, input) {
+    await fn(input);
     return input;
   }
 
@@ -1813,7 +1811,7 @@
 
     let clone = _objectSpread2({}, obj);
 
-    rules.forEach((objectPath, newValue) => {
+    rules.forEach(([objectPath, newValue]) => {
       clone = assocPath(objectPath, newValue, clone);
     });
     return clone;
@@ -2645,7 +2643,6 @@
   }
 
   function lens(getter, setter) {
-    if (arguments.length === 1) return _setter => lens(getter, _setter);
     return function (functor) {
       return function (target) {
         return functor(getter(target)).map(focus => setter(focus, target));
@@ -3038,22 +3035,6 @@
     return baseSlice(listOrString, numValue, len);
   }
 
-  function takeWhile(predicate, list) {
-    const toReturn = [];
-    let stopFlag = false;
-    let counter = -1;
-
-    while (stopFlag === false && counter++ < list.length - 1) {
-      if (!predicate(list[counter])) {
-        stopFlag = true;
-      } else {
-        toReturn.push(list[counter]);
-      }
-    }
-
-    return toReturn;
-  }
-
   function tap(fn, x) {
     if (arguments.length === 1) return _x => tap(fn, _x);
     fn(x);
@@ -3240,6 +3221,10 @@
       return _obj => props(propsToPick, _obj);
     }
 
+    if (!_isArray(propsToPick)) {
+      throw new Error('propsToPick is not a list');
+    }
+
     return mapArray(prop => obj[prop], propsToPick);
   }
 
@@ -3284,6 +3269,222 @@
 
     return [preFound, postFound];
   }
+
+  function takeLastWhile(predicate, input) {
+    if (arguments.length === 1) {
+      return _input => takeLastWhile(predicate, _input);
+    }
+
+    if (input.length === 0) return input;
+    let found = false;
+    const toReturn = [];
+    let counter = input.length;
+
+    while (!found || counter === 0) {
+      counter--;
+
+      if (predicate(input[counter]) === false) {
+        found = true;
+      } else if (!found) {
+        toReturn.push(input[counter]);
+      }
+    }
+
+    return _isArray(input) ? toReturn.reverse() : toReturn.reverse().join('');
+  }
+
+  function evolveArray(rules, list) {
+    return mapArray((x, i) => {
+      if (type(rules[i]) === 'Function') {
+        return rules[i](x);
+      }
+
+      return x;
+    }, list, true);
+  }
+  function evolveObject(rules, iterable) {
+    return mapObject((x, prop) => {
+      if (type(x) === 'Object') {
+        const typeRule = type(rules[prop]);
+
+        if (typeRule === 'Function') {
+          return rules[prop](x);
+        }
+
+        if (typeRule === 'Object') {
+          return evolve(rules[prop], x);
+        }
+
+        return x;
+      }
+
+      if (type(rules[prop]) === 'Function') {
+        return rules[prop](x);
+      }
+
+      return x;
+    }, iterable);
+  }
+  function evolve(rules, iterable) {
+    if (arguments.length === 1) {
+      return _iterable => evolve(rules, _iterable);
+    }
+
+    const rulesType = type(rules);
+    const iterableType = type(iterable);
+
+    if (iterableType !== rulesType) {
+      throw new Error('iterableType !== rulesType');
+    }
+
+    if (!['Object', 'Array'].includes(rulesType)) {
+      throw new Error(`'iterable' and 'rules' are from wrong type ${rulesType}`);
+    }
+
+    if (iterableType === 'Object') {
+      return evolveObject(rules, iterable);
+    }
+
+    return evolveArray(rules, iterable);
+  }
+
+  function dropLastWhile(predicate, iterable) {
+    if (arguments.length === 1) {
+      return _iterable => dropLastWhile(predicate, _iterable);
+    }
+
+    if (iterable.length === 0) return iterable;
+
+    const isArray = _isArray(iterable);
+
+    if (typeof predicate !== 'function') {
+      throw new Error(`'predicate' is from wrong type ${typeof predicate}`);
+    }
+
+    if (!isArray && typeof iterable !== 'string') {
+      throw new Error(`'iterable' is from wrong type ${typeof iterable}`);
+    }
+
+    let found = false;
+    const toReturn = [];
+    let counter = iterable.length;
+
+    while (counter > 0) {
+      counter--;
+
+      if (!found && predicate(iterable[counter]) === false) {
+        found = true;
+        toReturn.push(iterable[counter]);
+      } else if (found) {
+        toReturn.push(iterable[counter]);
+      }
+    }
+
+    return isArray ? toReturn.reverse() : toReturn.reverse().join('');
+  }
+
+  function dropRepeats(list) {
+    if (!_isArray(list)) {
+      throw new Error(`${list} is not a list`);
+    }
+
+    const toReturn = [];
+    list.reduce((prev, current) => {
+      if (!equals(prev, current)) {
+        toReturn.push(current);
+      }
+
+      return current;
+    }, undefined);
+    return toReturn;
+  }
+
+  function dropRepeatsWith(predicate, list) {
+    if (arguments.length === 1) {
+      return _iterable => dropRepeatsWith(predicate, _iterable);
+    }
+
+    if (!_isArray(list)) {
+      throw new Error(`${list} is not a list`);
+    }
+
+    const toReturn = [];
+    list.reduce((prev, current) => {
+      if (prev === undefined) {
+        toReturn.push(current);
+        return current;
+      }
+
+      if (!predicate(prev, current)) {
+        toReturn.push(current);
+      }
+
+      return current;
+    }, undefined);
+    return toReturn;
+  }
+
+  function dropWhile(predicate, iterable) {
+    if (arguments.length === 1) {
+      return _iterable => dropWhile(predicate, _iterable);
+    }
+
+    const isArray = _isArray(iterable);
+
+    if (!isArray && typeof iterable !== 'string') {
+      throw new Error('`iterable` is neither list nor a string');
+    }
+
+    let flag = false;
+    const holder = [];
+    let counter = -1;
+
+    while (counter++ < iterable.length - 1) {
+      if (flag) {
+        holder.push(iterable[counter]);
+      } else if (!predicate(iterable[counter])) {
+        if (!flag) flag = true;
+        holder.push(iterable[counter]);
+      }
+    }
+
+    return isArray ? holder : holder.join('');
+  }
+
+  function takeWhile(predicate, iterable) {
+    if (arguments.length === 1) {
+      return _iterable => takeWhile(predicate, _iterable);
+    }
+
+    const isArray = _isArray(iterable);
+
+    if (!isArray && typeof iterable !== 'string') {
+      throw new Error('`iterable` is neither list nor a string');
+    }
+
+    let flag = true;
+    const holder = [];
+    let counter = -1;
+
+    while (counter++ < iterable.length - 1) {
+      if (!predicate(iterable[counter])) {
+        if (flag) flag = false;
+      } else if (flag) {
+        holder.push(iterable[counter]);
+      }
+    }
+    return isArray ? holder : holder.join('');
+  }
+
+  function eqPropsFn(prop, obj1, obj2) {
+    if (!obj1 || !obj2) {
+      throw new Error('wrong object inputs are passed to R.eqProps');
+    }
+
+    return equals(obj1[prop], obj2[prop]);
+  }
+
+  const eqProps = curry(eqPropsFn);
 
   exports.DELAY = DELAY;
   exports.F = F;
@@ -3330,9 +3531,17 @@
   exports.divide = divide;
   exports.drop = drop;
   exports.dropLast = dropLast;
+  exports.dropLastWhile = dropLastWhile;
+  exports.dropRepeats = dropRepeats;
+  exports.dropRepeatsWith = dropRepeatsWith;
+  exports.dropWhile = dropWhile;
   exports.either = either;
   exports.endsWith = endsWith;
+  exports.eqProps = eqProps;
   exports.equals = equals;
+  exports.evolve = evolve;
+  exports.evolveArray = evolveArray;
+  exports.evolveObject = evolveObject;
   exports.excludes = excludes;
   exports.filter = filter;
   exports.filterArray = filterArray;
@@ -3452,6 +3661,7 @@
   exports.prepend = prepend;
   exports.prevIndex = prevIndex;
   exports.produce = produce;
+  exports.produceAsync = produceAsync;
   exports.product = product;
   exports.prop = prop;
   exports.propEq = propEq;
@@ -3494,6 +3704,7 @@
   exports.tail = tail;
   exports.take = take;
   exports.takeLast = takeLast;
+  exports.takeLastWhile = takeLastWhile;
   exports.takeUntil = takeUntil;
   exports.takeWhile = takeWhile;
   exports.tap = tap;

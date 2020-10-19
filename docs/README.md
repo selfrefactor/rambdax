@@ -9,13 +9,15 @@ Extended version of Rambda(utility library) - [Documentation](https://selfrefact
 [![dependencies Status](https://david-dm.org/selfrefactor/rambdax/status.svg)](https://david-dm.org/selfrefactor/rambdax)
 ![Library size](https://img.shields.io/bundlephobia/minzip/rambdax)
 
-## Differences between Rambda and Ramdax
+## ➤ Differences between Rambda and Rambdax
 
 Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods and introduce some new functions.
 
 The idea of **Rambdax** is to extend **Rambda** without worring for **Ramda** compatibility.
 
-## Example use
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-differences-between-rambda-and-rambdax)
+
+## ➤ Example use
 
 ```javascript
 import { composeAsync, filter, delay, mapAsync } from 'rambdax'
@@ -37,7 +39,9 @@ You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D
 * [API](#api)
 * [Changelog](#changelog)
 
-## Rambdax's advantages
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-example-use)
+
+## ➤ Rambdax's advantages
 
 ### Dot notation for `R.path`, `R.paths`, `R.assocPath` and `R.lensPath`
 
@@ -68,11 +72,13 @@ Most of the valid issues are fixed within 2-3 days.
 
 Closing the issue is usually accompanied by publishing a new patch version of `Rambdax` to NPM.
 
-## Missing Ramda methods
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-rambdaxs-advantages)
+
+## ➤ Missing Ramda methods
 
 <details>
 <summary>
-  Click to see the full list of 92 Ramda methods not implemented in Rambda 
+  Click to see the full list of 90 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -96,10 +102,8 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - descend
 - differenceWith
 - dissocPath
-- dropWhile
 - empty
 - eqBy
-- eqProps
 - forEachObjIndexed
 - gt
 - gte
@@ -169,8 +173,10 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - default
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-missing-ramda-methods)
   
-## Install
+## ➤ Install
 
 - **yarn add rambdax**
 
@@ -185,6 +191,8 @@ https://unpkg.com/rambdax@CURRENT_VERSION/dist/rambdax.umd.js
 ```
 import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambdax/master/dist/rambdax.esm.js'
 ```
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-install)
 
 ## Differences between Rambda and Ramda
 
@@ -206,7 +214,9 @@ import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambd
 
 > If you need more **Ramda** methods in **Rambda**, you may either submit a `PR` or check the extended version of **Rambda** - [Rambdax](https://github.com/selfrefactor/rambdax). In case of the former, you may want to consult with [Rambda contribution guidelines.](CONTRIBUTING.md)
 
-## Benchmarks
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-differences-between-rambda-and-ramda)
+
+## ➤ Benchmarks
 
 <details>
 
@@ -282,7 +292,9 @@ method | Rambda | Ramda | Lodash
 
 </details>
 
-## Used by
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-benchmarks)
+
+## ➤ Used by
 
 - [WatermelonDB](https://github.com/Nozbe/WatermelonDB)
 
@@ -297,6 +309,8 @@ method | Rambda | Ramda | Lodash
 - [MobX-State-Tree decorators](https://github.com/farwayer/mst-decorators)
 
 - [Mobx decorators](https://github.com/farwayer/mobx-decorators)
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-used-by)
 
 ## API
 
@@ -355,6 +369,8 @@ test('ramda specs', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#add)
 
 ### adjust
 
@@ -437,6 +453,8 @@ test('when index is out of bounds', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#adjust)
+
 ### all
 
 ```typescript
@@ -450,11 +468,11 @@ It returns `true`, if all members of array `list` returns `true`, when applied a
 const list = [ 0, 1, 2, 3, 4 ]
 const predicate = x => x > -1
 
-const result = R.all(predicate, arr)
+const result = R.all(predicate, list)
 // => true
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%200%2C%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%20-1%0A%0Aconst%20result%20%3D%20R.all(predicate%2C%20arr)%0A%2F%2F%20%3D%3E%20true">Try this <strong>R.all</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%200%2C%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3E%20-1%0A%0Aconst%20result%20%3D%20R.all(predicate%2C%20list)%0A%2F%2F%20%3D%3E%20true">Try this <strong>R.all</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -490,6 +508,8 @@ test('when false', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#all)
 
 ### allFalse
 
@@ -545,6 +565,8 @@ runTests(testData)
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#allFalse)
 
 ### allPass
 
@@ -614,6 +636,8 @@ test('when returns false', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#allPass)
 
 ### allTrue
 
@@ -709,6 +733,8 @@ test('escapes early - case 3', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#allTrue)
+
 ### allType
 
 ```typescript
@@ -767,6 +793,8 @@ test('when false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#allType)
+
 ### always
 
 ```typescript
@@ -819,6 +847,8 @@ test('f', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#always)
+
 ### and
 
 ```typescript
@@ -865,6 +895,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#and)
 
 ### any
 
@@ -914,6 +946,8 @@ test('with curry', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#any)
 
 ### anyFalse
 
@@ -968,6 +1002,8 @@ test('supports function', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#anyFalse)
 
 ### anyPass
 
@@ -1049,6 +1085,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#anyPass)
+
 ### anyTrue
 
 ```typescript
@@ -1106,6 +1144,8 @@ test('supports function', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#anyTrue)
 
 ### anyType
 
@@ -1167,6 +1207,8 @@ test('when false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#anyType)
+
 ### append
 
 ```typescript
@@ -1221,6 +1263,8 @@ test('with strings', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#append)
 
 ### applyDiff
 
@@ -1346,6 +1390,8 @@ test('add operation', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#applyDiff)
 
 ### applySpec
 
@@ -1615,6 +1661,8 @@ test('restructure json object', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#applySpec)
+
 ### assoc
 
 ```typescript
@@ -1730,6 +1778,8 @@ test('assignment is shallow', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#assoc)
 
 ### assocPath
 
@@ -1931,6 +1981,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#assocPath)
+
 ### both
 
 ```typescript
@@ -2017,6 +2069,8 @@ test('skip evaluation of the second expression', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#both)
+
 ### chain
 
 ```typescript
@@ -2081,6 +2135,8 @@ test('flattens only one level', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#chain)
 
 ### clamp
 
@@ -2160,6 +2216,8 @@ test('rambda specs', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#clamp)
 
 ### clone
 
@@ -2257,6 +2315,8 @@ test('with R.equals', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#clone)
+
 ### complement
 
 ```typescript
@@ -2320,6 +2380,8 @@ test('with multiple parameters', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#complement)
 
 ### compose
 
@@ -2437,6 +2499,8 @@ test('ramda spec', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#compose)
+
 ### composeAsync
 
 ```typescript
@@ -2550,6 +2614,8 @@ test('throw error', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#composeAsync)
+
 ### concat
 
 ```typescript
@@ -2604,6 +2670,8 @@ test('with strings', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#concat)
 
 ### cond
 
@@ -2698,12 +2766,25 @@ test('predicates are tested in order', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#cond)
+
 ### converge
 
 ```typescript
 
 converge(after: ((...a: any[]) => any), fns: Array<((...x: any[]) => any)>): (...y: any[]) => any
 ```
+
+Accepts a converging function and a list of branching functions and returns a new function. When invoked, this new function is applied to some arguments, each branching function is applied to those same arguments. The results of each branching function are passed as arguments to the converging function to produce the return value.
+
+> :boom: Explanation is taken from `Ramda` documentation
+
+```javascript
+const result = R.converge(R.multiply)([ R.add(1), R.add(3) ])(2)
+// => 15
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.converge(R.multiply)(%5B%20R.add(1)%2C%20R.add(3)%20%5D)(2)%0A%2F%2F%20%3D%3E%2015">Try this <strong>R.converge</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -2722,12 +2803,11 @@ converge(after: ((...a: any[]) => any), fns: Array<((...x: any[]) => any)>): (..
 ```javascript
 import { add } from './add'
 import { converge } from './converge'
+import { multiply } from './multiply'
 
-const mult = (a, b) => a * b
-
-const f1 = converge(mult, [ a => a + 1, a => a + 10 ])
-const f2 = converge(mult, [ a => a + 1, (a, b) => a + b + 10 ])
-const f3 = converge(mult, [ a => a + 1, (
+const f1 = converge(multiply, [ a => a + 1, a => a + 10 ])
+const f2 = converge(multiply, [ a => a + 1, (a, b) => a + b + 10 ])
+const f3 = converge(multiply, [ a => a + 1, (
   a, b, c
 ) => a + b + c + 10 ])
 
@@ -2736,7 +2816,7 @@ test('happy', () => {
 })
 
 test('passes the results of applying the arguments individually', () => {
-  const result = converge(mult)([ add(1), add(3) ])(2)
+  const result = converge(multiply)([ add(1), add(3) ])(2)
   expect(result).toEqual(15)
 })
 
@@ -2777,6 +2857,8 @@ test('works with empty functions list', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#converge)
 
 ### count
 
@@ -2837,6 +2919,8 @@ test('when 2', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#count)
 
 ### curry
 
@@ -2913,6 +2997,8 @@ test('when called via multiple curry stages', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#curry)
 
 ### curryN
 
@@ -3004,6 +3090,8 @@ test('forwards extra arguments', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#curryN)
 
 ### debounce
 
@@ -3125,6 +3213,8 @@ test('immediate debounce', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#debounce)
+
 ### dec
 
 ```typescript
@@ -3157,6 +3247,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dec)
 
 ### defaultTo
 
@@ -3284,6 +3376,8 @@ test('default extends to indefinite input arguments - case 6', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#defaultTo)
+
 ### delay
 
 ```typescript
@@ -3323,6 +3417,8 @@ test('usage with variables', async () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#delay)
 
 ### difference
 
@@ -3387,6 +3483,8 @@ test('should use R.equals', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#difference)
 
 ### dissoc
 
@@ -3491,6 +3589,8 @@ test('includes prototype properties', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dissoc)
+
 ### divide
 
 ```typescript
@@ -3529,6 +3629,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#divide)
 
 ### drop
 
@@ -3596,6 +3698,8 @@ test('should return copy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#drop)
+
 ### dropLast
 
 ```typescript
@@ -3661,6 +3765,8 @@ test('should return copy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropLast)
 
 ### dropLastWhile
 
@@ -3749,7 +3855,6 @@ describe("brute force", () => {
     callback: (errorsCounters) => {
       expect(errorsCounters).toMatchInlineSnapshot(`
         Object {
-          "ERRORS_DIFFERENT": 0,
           "ERRORS_MESSAGE_MISMATCH": 0,
           "ERRORS_TYPE_MISMATCH": 12,
           "RESULTS_MISMATCH": 0,
@@ -3763,6 +3868,8 @@ describe("brute force", () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropLastWhile)
 
 ### dropRepeats
 
@@ -3801,51 +3908,52 @@ dropRepeats<T>(list: readonly T[]): T[];
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { dropRepeats as dropRepeatsRamda } from 'ramda'
+import { dropRepeats as dropRepeatsRamda } from "ramda";
 
-import { compareCombinations } from './_internals/testUtils'
-import { add } from './add'
-import { dropRepeats } from './dropRepeats'
+import { compareCombinations } from "./_internals/testUtils";
+import { add } from "./add";
+import { dropRepeats } from "./dropRepeats";
 
-const list = [ 1, 2, 2, 2, 3, 4, 4, 5, 5, 3, 2, 2, { a : 1 }, { a : 1 } ]
-const listClean = [ 1, 2, 3, 4, 5, 3, 2, { a : 1 } ]
+const list = [1, 2, 2, 2, 3, 4, 4, 5, 5, 3, 2, 2, { a: 1 }, { a: 1 }];
+const listClean = [1, 2, 3, 4, 5, 3, 2, { a: 1 }];
 
-test('happy', () => {
-  const result = dropRepeats(list)
-  expect(result).toEqual(listClean)
-})
+test("happy", () => {
+  const result = dropRepeats(list);
+  expect(result).toEqual(listClean);
+});
 
 const possibleLists = [
-  [ add(1), async () => {}, [ 1 ], [ 1 ], [ 2 ], [ 2 ] ],
-  [ add(1), add(1), add(2) ],
+  [add(1), async () => {}, [1], [1], [2], [2]],
+  [add(1), add(1), add(2)],
   [],
   1,
   /foo/g,
   Promise.resolve(1),
-]
+];
 
-describe('brute force', () => {
+describe("brute force", () => {
   compareCombinations({
-    firstInput : possibleLists,
-    callback   : errorsCounters => {
+    firstInput: possibleLists,
+    callback: (errorsCounters) => {
       expect(errorsCounters).toMatchInlineSnapshot(`
         Object {
-          "ERRORS_DIFFERENT": 0,
           "ERRORS_MESSAGE_MISMATCH": 0,
           "ERRORS_TYPE_MISMATCH": 0,
           "RESULTS_MISMATCH": 0,
           "SHOULD_NOT_THROW": 3,
           "SHOULD_THROW": 0,
         }
-      `)
+      `);
     },
-    fn      : dropRepeats,
-    fnRamda : dropRepeatsRamda,
-  })
-})
+    fn: dropRepeats,
+    fnRamda: dropRepeatsRamda,
+  });
+});
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropRepeats)
 
 ### dropRepeatsWith
 
@@ -3855,11 +3963,13 @@ dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[]
 ```
 
 ```javascript
-const result = R.dropRepeatsWith()
-// =>
+const list = [{a:1,b:2}, {a:1,b:3}, {a:2, b:4}]
+const result = R.dropRepeatsWith(R.prop('a'))
+
+// => [{a:1,b:2}, {a:2, b:4}]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.dropRepeatsWith()%0A%2F%2F%20%3D%3E">Try this <strong>R.dropRepeatsWith</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%7Ba%3A1%2Cb%3A2%7D%2C%20%7Ba%3A1%2Cb%3A3%7D%2C%20%7Ba%3A2%2C%20b%3A4%7D%5D%0Aconst%20result%20%3D%20R.dropRepeatsWith(R.prop('a'))%0A%0A%2F%2F%20%3D%3E%20%5B%7Ba%3A1%2Cb%3A2%7D%2C%20%7Ba%3A2%2C%20b%3A4%7D%5D">Try this <strong>R.dropRepeatsWith</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -3868,8 +3978,6 @@ const result = R.dropRepeatsWith()
 ```typescript
 dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[];
 dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean): (list: readonly T[]) => T[];
-
-// RAMBDAX_MARKER_START
 ```
 
 </details>
@@ -3956,7 +4064,6 @@ describe("brute force", () => {
     callback: (errorsCounters) => {
       expect(errorsCounters).toMatchInlineSnapshot(`
         Object {
-          "ERRORS_DIFFERENT": 0,
           "ERRORS_MESSAGE_MISMATCH": 4,
           "ERRORS_TYPE_MISMATCH": 14,
           "RESULTS_MISMATCH": 0,
@@ -3972,6 +4079,121 @@ describe("brute force", () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropRepeatsWith)
+
+### dropWhile
+
+```typescript
+
+dropWhile(fn: Predicate<string>, iterable: string): string
+```
+
+```javascript
+const list = [1, 2, 3, 4]
+const predicate = x => x < 3
+const result = R.dropWhile(predicate, list)
+// => [3, 4]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3C%203%0Aconst%20result%20%3D%20R.dropWhile(predicate%2C%20list)%0A%2F%2F%20%3D%3E%20%5B3%2C%204%5D">Try this <strong>R.dropWhile</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+dropWhile(fn: Predicate<string>, iterable: string): string;
+dropWhile(fn: Predicate<string>): (iterable: string) => string;
+dropWhile<T>(fn: Predicate<T>, iterable: readonly T[]): T[];
+dropWhile<T>(fn: Predicate<T>): (iterable: readonly T[]) => T[];
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { dropWhile as dropWhileRamda } from 'ramda'
+
+import { compareCombinations } from './_internals/testUtils'
+import { dropWhile } from './dropWhile'
+
+const list = [ 1, 2, 3, 4 ]
+
+test('happy', () => {
+  const predicate = x => x < 3
+  const result = dropWhile(predicate, list)
+  expect(result).toEqual([3,4])
+})
+
+test('always true', () => {
+  const predicate = () => true
+  const result = dropWhileRamda(predicate, list)
+  expect(result).toEqual([])
+})
+
+test('always false', () => {
+  const predicate = () => 0
+  const result = dropWhile(predicate, list)
+  expect(result).toEqual(list)
+})
+
+test('works with string as iterable', () => {
+  const iterable = 'foobar'
+  const predicate = x => x !== 'b'
+  const result = dropWhile(predicate, iterable)
+  expect(result).toBe('bar')
+})
+
+const possiblePredicates = [
+  null,
+  undefined,
+  () => 0,
+  () => true,
+  /foo/g,
+  {},
+  [],
+]
+
+const possibleIterables = [
+  null,
+  undefined,
+  [],
+  {},
+  1,
+  '',
+  'foobar',
+  [ '' ],
+  [ 1, 2, 3, 4, 5 ],
+]
+
+describe('brute force', () => {
+  compareCombinations({
+    firstInput : possiblePredicates,
+    callback   : errorsCounters => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_MESSAGE_MISMATCH": 15,
+          "ERRORS_TYPE_MISMATCH": 14,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 14,
+          "SHOULD_THROW": 0,
+        }
+      `)
+    },
+    secondInput : possibleIterables,
+    fn          : dropWhile,
+    fnRamda     : dropWhileRamda,
+  })
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropWhile)
 
 ### either
 
@@ -4067,6 +4289,8 @@ test('case 2', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#either)
+
 ### endsWith
 
 ```typescript
@@ -4118,6 +4342,133 @@ test('does not work with arrays', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#endsWith)
+
+### eqProps
+
+```typescript
+
+eqProps<T, U>(prop: string, obj1: T, obj2: U): boolean
+```
+
+It returns `true` if property `prop` in `obj1` is equal to property `prop` in `obj2` according to `R.equals`.
+
+```javascript
+const obj1 = {a: 1, b:2}
+const obj2 = {a: 1, b:3}
+const result = R.eqProps('a', obj1, obj2)
+// => true
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj1%20%3D%20%7Ba%3A%201%2C%20b%3A2%7D%0Aconst%20obj2%20%3D%20%7Ba%3A%201%2C%20b%3A3%7D%0Aconst%20result%20%3D%20R.eqProps('a'%2C%20obj1%2C%20obj2)%0A%2F%2F%20%3D%3E%20true">Try this <strong>R.eqProps</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary>All Typescript definitions</summary>
+
+```typescript
+eqProps<T, U>(prop: string, obj1: T, obj2: U): boolean;
+eqProps<P extends string>(prop: P): <T, U>(obj1: Record<P, T>, obj2: Record<P, U>) => boolean;
+eqProps<T>(prop: string, obj1: T): <U>(obj2: U) => boolean;
+
+// RAMBDAX_MARKER_START
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { eqProps as eqPropsRamda } from 'ramda'
+
+import { compareCombinations } from './_internals/testUtils'
+import { eqProps } from './eqProps'
+
+const obj1 = {
+  a : 1,
+  b : 2,
+}
+const obj2 = {
+  a : 1,
+  b : 3,
+}
+
+test('props are equal', () => {
+  const result = eqProps(
+    'a', obj1, obj2
+  )
+  expect(result).toBeTrue()
+})
+
+test('props are not equal', () => {
+  const result = eqProps(
+    'b', obj1, obj2
+  )
+  expect(result).toBeFalse()
+})
+
+test('prop does not exist ', () => {
+  const result = eqProps(
+    'c', obj1, obj2
+  )
+  expect(result).toBeTrue()
+})
+
+const possibleProps = [ 'a', 'a.b', null, false, 0, 1, {}, [] ]
+
+const possibleObjects = [
+  { a : 1 },
+  {
+    a : 1,
+    b : 2,
+  },
+  {},
+  [],
+  null,
+  {
+    a : { b : 1 },
+    c : 2,
+  },
+  {
+    a : { b : 1 },
+    c : 3,
+  },
+  { a : { b : 2 } },
+]
+
+describe('brute force', () => {
+  let totalTestsCounter = 0
+
+  compareCombinations({
+    firstInput : possibleProps,
+    setCounter : () => totalTestsCounter++,
+    callback   : errorsCounters => {
+      // console.log({ totalTestsCounter })
+
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 120,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 0,
+          "SHOULD_THROW": 0,
+        }
+      `)
+    },
+    secondInput : possibleObjects,
+    thirdInput  : possibleObjects,
+    fn          : eqProps,
+    fnRamda     : eqPropsRamda,
+  })
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#eqProps)
 
 ### equals
 
@@ -4420,6 +4771,8 @@ test('with negative zero', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#equals)
+
 ### evolve
 
 ```typescript
@@ -4555,7 +4908,6 @@ describe("brute force", () => {
     callback: (errorsCounters) => {
       expect(errorsCounters).toMatchInlineSnapshot(`
         Object {
-          "ERRORS_DIFFERENT": 0,
           "ERRORS_MESSAGE_MISMATCH": 0,
           "ERRORS_TYPE_MISMATCH": 4,
           "RESULTS_MISMATCH": 0,
@@ -4572,6 +4924,8 @@ describe("brute force", () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#evolve)
 
 ### excludes
 
@@ -4629,6 +4983,8 @@ test('excludes with array', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#excludes)
+
 ### F
 
 ```typescript
@@ -4651,6 +5007,8 @@ F(): boolean;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#F)
 
 ### filter
 
@@ -4758,6 +5116,8 @@ test('with object', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filter)
+
 ### filterAsync
 
 ```typescript
@@ -4835,6 +5195,8 @@ test('with object', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterAsync)
+
 ### filterIndexed
 
 ```typescript
@@ -4888,6 +5250,8 @@ test('with bad input', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterIndexed)
 
 ### find
 
@@ -4948,6 +5312,8 @@ test('with empty list', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#find)
+
 ### findIndex
 
 ```typescript
@@ -5000,6 +5366,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#findIndex)
 
 ### findLast
 
@@ -5092,6 +5460,8 @@ test('ramda 4', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#findLast)
 
 ### findLastIndex
 
@@ -5186,6 +5556,8 @@ test('ramda 4', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#findLastIndex)
+
 ### flatten
 
 ```typescript
@@ -5241,6 +5613,8 @@ test('readme example', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#flatten)
 
 ### flip
 
@@ -5338,6 +5712,8 @@ test('function with arity of 5', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#flip)
 
 ### forEach
 
@@ -5443,6 +5819,8 @@ test('returns the input', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#forEach)
+
 ### forEachIndexed
 
 ```typescript
@@ -5490,6 +5868,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#forEachIndexed)
 
 ### fromPairs
 
@@ -5549,6 +5929,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#fromPairs)
 
 ### getter
 
@@ -5671,6 +6053,8 @@ test('setter fallbacks to undefined', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#getter)
 
 ### glue
 
@@ -5796,6 +6180,8 @@ test('with glue', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#glue)
+
 ### groupBy
 
 ```typescript
@@ -5882,6 +6268,8 @@ test('groupBy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#groupBy)
 
 ### groupWith
 
@@ -6021,6 +6409,8 @@ test('list with single item', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#groupWith)
+
 ### has
 
 ```typescript
@@ -6075,6 +6465,8 @@ test('with non-object', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#has)
 
 ### hasPath
 
@@ -6149,6 +6541,8 @@ test('when false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#hasPath)
+
 ### head
 
 ```typescript
@@ -6195,6 +6589,8 @@ test('head', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#head)
 
 ### identical
 
@@ -6272,6 +6668,8 @@ test('identical', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#identical)
+
 ### identity
 
 ```typescript
@@ -6314,6 +6712,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#identity)
 
 ### ifElse
 
@@ -6462,6 +6862,8 @@ test('simple arity of 2', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ifElse)
 
 ### ifElseAsync
 
@@ -6664,6 +7066,8 @@ test('arity of 2 - all inputs are async', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ifElseAsync)
+
 ### inc
 
 ```typescript
@@ -6702,6 +7106,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#inc)
 
 ### includes
 
@@ -6785,6 +7191,8 @@ test('throws on wrong input - match ramda behaviour', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#includes)
 
 ### indexBy
 
@@ -6912,6 +7320,8 @@ test('with string - bad path', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#indexBy)
+
 ### indexOf
 
 ```typescript
@@ -6961,6 +7371,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#indexOf)
 
 ### init
 
@@ -7016,6 +7428,8 @@ test('with string', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#init)
 
 ### interpolate
 
@@ -7099,7 +7513,7 @@ test('with missing template input', () => {
   }
 
   const result = interpolate(input, templateInput)
-  const expectedResult = 'foo is {{bar}} even 1 more'
+  const expectedResult = 'foo is undefined even 1 more'
 
   expect(result).toEqual(expectedResult)
 })
@@ -7108,14 +7522,15 @@ test('with arbitrary expression', () => {
   const input = '1 + 2 = {{ 1 + 2 }}'
   const templateInput = {}
 
-  const expectedResult = '1 + 2 = 3'
   const result = interpolate(input, templateInput)
 
-  expect(result).toEqual(expectedResult)
+  expect(result).toEqual(input)
 })
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#interpolate)
 
 ### intersection
 
@@ -7171,6 +7586,8 @@ test('intersection with objects', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#intersection)
+
 ### intersperse
 
 ```typescript
@@ -7224,6 +7641,8 @@ test('intersperse', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#intersperse)
 
 ### is
 
@@ -7309,6 +7728,8 @@ test('does not consider primitives to be instances of Object', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#is)
+
 ### isEmpty
 
 ```typescript
@@ -7362,6 +7783,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isEmpty)
 
 ### isFunction
 
@@ -7424,6 +7847,8 @@ test('when false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isFunction)
+
 ### isNil
 
 ```typescript
@@ -7471,6 +7896,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isNil)
+
 ### isPromise
 
 ```typescript
@@ -7487,6 +7914,8 @@ isPromise(input: any): boolean;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isPromise)
 
 ### isType
 
@@ -7535,6 +7964,8 @@ test('promise', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isType)
 
 ### isValid
 
@@ -8295,6 +8726,8 @@ test('array of schemas', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isValid)
+
 ### isValidAsync
 
 ```typescript
@@ -8445,6 +8878,8 @@ test('readme example', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isValidAsync)
+
 ### join
 
 ```typescript
@@ -8491,6 +8926,8 @@ test('curry', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#join)
+
 ### keys
 
 ```typescript
@@ -8530,6 +8967,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#keys)
 
 ### last
 
@@ -8578,6 +9017,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#last)
 
 ### lastIndexOf
 
@@ -8638,6 +9079,8 @@ test('false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lastIndexOf)
+
 ### length
 
 ```typescript
@@ -8694,6 +9137,8 @@ test('with bad input returns NaN', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#length)
+
 ### lens
 
 ```typescript
@@ -8726,6 +9171,8 @@ lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lens)
 
 ### lensEq
 
@@ -8795,6 +9242,8 @@ test('with R.lensPath', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lensEq)
 
 ### lensIndex
 
@@ -8890,6 +9339,8 @@ test('get (set(set s v1) v2) === v2', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lensIndex)
 
 ### lensPath
 
@@ -9059,6 +9510,8 @@ test('get (set(set s v1) v2) === v2', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lensPath)
+
 ### lensProp
 
 ```typescript
@@ -9200,6 +9653,8 @@ test('get (set(set s v1) v2) === v2', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lensProp)
+
 ### lensSatisfies
 
 ```typescript
@@ -9265,6 +9720,8 @@ test('with R.lensPath', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lensSatisfies)
 
 ### map
 
@@ -9379,6 +9836,8 @@ test('when undefined instead of array', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#map)
+
 ### mapAsync
 
 ```typescript
@@ -9482,6 +9941,8 @@ test('error', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapAsync)
+
 ### mapAsyncLimit
 
 ```typescript
@@ -9567,6 +10028,8 @@ test('fallback to R.mapFastAsync', async () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapAsyncLimit)
 
 ### mapFastAsync
 
@@ -9664,6 +10127,8 @@ test('pass index as second argument', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapFastAsync)
+
 ### mapIndexed
 
 ```typescript
@@ -9719,6 +10184,8 @@ test('with bad input', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapIndexed)
 
 ### mapKeys
 
@@ -9780,6 +10247,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapKeys)
 
 ### mapToObject
 
@@ -9884,6 +10353,8 @@ test('bad path', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapToObject)
+
 ### mapToObjectAsync
 
 ```typescript
@@ -9945,6 +10416,8 @@ test('with R.composeAsync', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapToObjectAsync)
+
 ### match
 
 ```typescript
@@ -10005,6 +10478,8 @@ test('throwing', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#match)
+
 ### mathMod
 
 ```typescript
@@ -10060,6 +10535,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mathMod)
+
 ### max
 
 ```typescript
@@ -10108,6 +10585,8 @@ test('with string', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#max)
 
 ### maxBy
 
@@ -10158,6 +10637,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#maxBy)
 
 ### maybe
 
@@ -10272,6 +10753,8 @@ test('whenElse', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#maybe)
+
 ### mean
 
 ```typescript
@@ -10316,6 +10799,8 @@ test('with NaN', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mean)
+
 ### median
 
 ```typescript
@@ -10359,6 +10844,8 @@ test('with empty array', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#median)
 
 ### memoize
 
@@ -10509,6 +10996,8 @@ test('string as argument', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#memoize)
+
 ### merge
 
 ```typescript
@@ -10579,6 +11068,8 @@ test('when undefined or null instead of object', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#merge)
+
 ### mergeAll
 
 ```typescript
@@ -10643,6 +11134,8 @@ test('case 2', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mergeAll)
 
 ### mergeDeepRight
 
@@ -10775,6 +11268,8 @@ test('ramda compatible test 3', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mergeDeepRight)
+
 ### mergeLeft
 
 ```typescript
@@ -10842,6 +11337,8 @@ test('when undefined or null instead of object', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mergeLeft)
+
 ### min
 
 ```typescript
@@ -10886,6 +11383,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#min)
 
 ### minBy
 
@@ -10937,6 +11436,8 @@ test('curried', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#minBy)
+
 ### modulo
 
 ```typescript
@@ -10977,6 +11478,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#modulo)
 
 ### move
 
@@ -11053,6 +11556,8 @@ test('when indexes are outside the list outbounds', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#move)
+
 ### multiply
 
 ```typescript
@@ -11094,6 +11599,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#multiply)
+
 ### negate
 
 ```typescript
@@ -11131,6 +11638,8 @@ test('negate', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#negate)
 
 ### nextIndex
 
@@ -11191,6 +11700,8 @@ test('current index is too big', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#nextIndex)
+
 ### none
 
 ```typescript
@@ -11243,6 +11754,8 @@ test('when false curried', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#none)
+
 ### not
 
 ```typescript
@@ -11284,6 +11797,8 @@ test('not', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#not)
 
 ### nth
 
@@ -11345,6 +11860,8 @@ test('with negative index', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#nth)
+
 ### of
 
 ```typescript
@@ -11384,6 +11901,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#of)
 
 ### ok
 
@@ -11516,6 +12035,8 @@ test('when throws with single input', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ok)
+
 ### omit
 
 ```typescript
@@ -11602,6 +12123,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#omit)
+
 ### once
 
 ```typescript
@@ -11667,6 +12190,8 @@ test('happy path', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#once)
+
 ### or
 
 ```typescript
@@ -11711,6 +12236,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#or)
 
 ### over
 
@@ -11800,6 +12327,8 @@ test('index lens', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#over)
 
 ### partial
 
@@ -11917,6 +12446,8 @@ test('ramda spec', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partial)
+
 ### partialCurry
 
 ```typescript
@@ -12030,6 +12561,8 @@ test('async function throwing an error', async () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partialCurry)
 
 ### partition
 
@@ -12161,6 +12694,8 @@ test('readme example', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partition)
+
 ### pass
 
 ```typescript
@@ -12243,6 +12778,8 @@ test('reame example', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pass)
+
 ### path
 
 ```typescript
@@ -12320,6 +12857,8 @@ test('path', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#path)
+
 ### pathEq
 
 ```typescript
@@ -12395,6 +12934,8 @@ test('when wrong path', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pathEq)
 
 ### pathOr
 
@@ -12489,6 +13030,8 @@ test('curry case (x,y)(z)', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pathOr)
 
 ### paths
 
@@ -12600,6 +13143,8 @@ test('returns undefined for items not found', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#paths)
 
 ### pick
 
@@ -12740,6 +13285,8 @@ test('with symbol', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pick)
+
 ### pickAll
 
 ```typescript
@@ -12833,6 +13380,8 @@ test('with array as condition', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pickAll)
 
 ### pipe
 
@@ -13080,6 +13629,8 @@ test('with bad input', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pipe)
+
 ### pipeAsync
 
 ```typescript
@@ -13195,6 +13746,8 @@ test('throw error', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pipeAsync)
+
 ### piped
 
 ```typescript
@@ -13251,6 +13804,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#piped)
 
 ### pipedAsync
 
@@ -13329,6 +13884,8 @@ test('happy', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pipedAsync)
+
 ### pluck
 
 ```typescript
@@ -13384,6 +13941,8 @@ test('with number', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pluck)
+
 ### prepend
 
 ```typescript
@@ -13437,6 +13996,8 @@ test('with string instead of array', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#prepend)
 
 ### prevIndex
 
@@ -13493,6 +14054,8 @@ test('happy path 2', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#prevIndex)
 
 ### produce
 
@@ -13561,6 +14124,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#produce)
 
 ### produceAsync
 
@@ -13657,6 +14222,8 @@ test('with error', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#produceAsync)
+
 ### product
 
 ```typescript
@@ -13699,6 +14266,8 @@ test('bad input', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#product)
 
 ### prop
 
@@ -13750,6 +14319,8 @@ test('prop', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#prop)
 
 ### propEq
 
@@ -13809,6 +14380,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#propEq)
 
 ### propIs
 
@@ -13874,6 +14447,8 @@ test('when false', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#propIs)
 
 ### propOr
 
@@ -13941,6 +14516,8 @@ test('propOr (currying)', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#propOr)
+
 ### props
 
 ```typescript
@@ -13996,6 +14573,8 @@ test('curried', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#props)
+
 ### random
 
 ```typescript
@@ -14033,6 +14612,8 @@ test('when returns true', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#random)
 
 ### range
 
@@ -14089,6 +14670,8 @@ test('curry', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#range)
 
 ### reduce
 
@@ -14166,6 +14749,8 @@ test('with undefined as iterable', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#reduce)
+
 ### reject
 
 ```typescript
@@ -14230,6 +14815,8 @@ test('with object', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#reject)
 
 ### remove
 
@@ -14341,6 +14928,8 @@ test('with single rule', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#remove)
+
 ### removeIndex
 
 ```typescript
@@ -14395,6 +14984,8 @@ test('middle index', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#removeIndex)
 
 ### renameProps
 
@@ -14462,6 +15053,8 @@ test('curry', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#renameProps)
+
 ### repeat
 
 ```typescript
@@ -14508,6 +15101,8 @@ test('repeat', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#repeat)
 
 ### replace
 
@@ -14566,6 +15161,8 @@ test('3', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#replace)
 
 ### replaceAll
 
@@ -14640,6 +15237,8 @@ test('throws when wrong replacer', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#replaceAll)
+
 ### reset
 
 ```typescript
@@ -14658,6 +15257,8 @@ reset(): void;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#reset)
 
 ### reverse
 
@@ -14714,6 +15315,8 @@ test('it doesn\'t mutate', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#reverse)
 
 ### set
 
@@ -14805,6 +15408,8 @@ test('index lens', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#set)
+
 ### setter
 
 ```typescript
@@ -14823,6 +15428,8 @@ setter(keyOrObject: string | object, value?: any): void;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#setter)
 
 ### shuffle
 
@@ -14861,6 +15468,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#shuffle)
 
 ### slice
 
@@ -14931,6 +15540,8 @@ test('slice', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#slice)
+
 ### sort
 
 ```typescript
@@ -14999,6 +15610,8 @@ test('it doesn\'t mutate', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sort)
 
 ### sortBy
 
@@ -15081,6 +15694,8 @@ test('with compose', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sortBy)
+
 ### sortByPath
 
 ```typescript
@@ -15148,6 +15763,8 @@ test('with list of strings as path - curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sortByPath)
 
 ### sortByProps
 
@@ -15240,6 +15857,8 @@ test('when list is already sorted', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sortByProps)
 
 ### sortObject
 
@@ -15334,6 +15953,8 @@ runTests(testData)
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sortObject)
+
 ### split
 
 ```typescript
@@ -15384,6 +16005,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#split)
 
 ### splitAt
 
@@ -15485,6 +16108,8 @@ test('with bad inputs', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#splitAt)
+
 ### splitEvery
 
 ```typescript
@@ -15549,6 +16174,8 @@ test('with bad input', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#splitEvery)
 
 ### splitWhen
 
@@ -15623,6 +16250,8 @@ test('with bad inputs', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#splitWhen)
+
 ### startsWith
 
 ```typescript
@@ -15679,6 +16308,8 @@ test('false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#startsWith)
+
 ### subtract
 
 ```typescript
@@ -15724,6 +16355,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#subtract)
+
 ### sum
 
 ```typescript
@@ -15761,6 +16394,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#sum)
 
 ### switcher
 
@@ -15884,6 +16519,8 @@ test('fallback to default input when no matches', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#switcher)
+
 ### symmetricDifference
 
 ```typescript
@@ -15945,6 +16582,8 @@ test('symmetricDifference with objects', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#symmetricDifference)
+
 ### T
 
 ```typescript
@@ -15968,6 +16607,8 @@ T(): boolean;
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#T)
 
 ### tail
 
@@ -16020,6 +16661,8 @@ test('tail', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#tail)
 
 ### take
 
@@ -16088,6 +16731,8 @@ test('with zero index', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#take)
 
 ### takeLast
 
@@ -16158,6 +16803,8 @@ test('with negative index', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#takeLast)
+
 ### takeLastWhile
 
 ```typescript
@@ -16224,6 +16871,8 @@ test('with string', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#takeLastWhile)
+
 ### takeUntil
 
 ```typescript
@@ -16279,30 +16928,34 @@ test('predicate always returns false', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#takeUntil)
+
 ### takeWhile
 
 ```typescript
 
-takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[]
+takeWhile(fn: Predicate<string>, iterable: string): string
 ```
 
 ```javascript
-const list = [1, 2, 3, 4, 5]
+const list = [1, 2, 3, 4]
 const predicate = x => x < 3
-const result = takeWhile(predicate, list)
 
-// => [1, 2, 3]
+const result = R.takeWhile(predicate, list)
+// => [1, 2]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%2C%205%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3C%203%0Aconst%20result%20%3D%20takeWhile(predicate%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B1%2C%202%2C%203%5D">Try this <strong>R.takeWhile</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20predicate%20%3D%20x%20%3D%3E%20x%20%3C%203%0A%0Aconst%20result%20%3D%20R.takeWhile(predicate%2C%20list)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.takeWhile</strong> example in Rambda REPL</a>
 
 <details>
 
 <summary>All Typescript definitions</summary>
 
 ```typescript
-takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
-takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
+takeWhile(fn: Predicate<string>, iterable: string): string;
+takeWhile(fn: Predicate<string>): (iterable: string) => string;
+takeWhile<T>(fn: Predicate<T>, iterable: readonly T[]): T[];
+takeWhile<T>(fn: Predicate<T>): (iterable: readonly T[]) => T[];
 ```
 
 </details>
@@ -16312,27 +16965,81 @@ takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { takeWhile } from './takeWhile'
+import { takeWhile as takeWhileRamda } from "ramda";
 
-const list = [ 1, 2, 3, 4, 5, 6 ]
+import { takeWhile } from "./takeWhile";
+import { compareCombinations } from "./_internals/testUtils";
 
-test('happy', () => {
-  const result = takeWhile(x => x < 4, list)
-  expect(result).toEqual([ 1, 2, 3 ])
-})
+const list = [1, 2, 3, 4, 5];
 
-test('predicate always returns true', () => {
-  const result = takeWhile(x => x < 10, list)
-  expect(result).toEqual(list)
-})
+test("happy", () => {
+  const result = takeWhile((x) => x < 3, list);
+  expect(result).toEqual([1, 2]);
+});
 
-test('predicate alwats returns false', () => {
-  const result = takeWhile(x => x > 10, list)
-  expect(result).toEqual([])
-})
+test("always true", () => {
+  const result = takeWhile((x) => true, list);
+  expect(result).toEqual(list);
+});
+
+test("always false", () => {
+  const result = takeWhile((x) => 0, list);
+  expect(result).toEqual([]);
+});
+
+test("with string", () => {
+  const result = takeWhile((x) => x !== "b", "foobar");
+  console.log(result);
+  expect(result).toBe("foo");
+});
+
+const possiblePredicates = [
+  null,
+  undefined,
+  () => 0,
+  () => true,
+  (x) => x !== "b",
+  /foo/g,
+  {},
+  [],
+];
+
+const possibleIterables = [
+  null,
+  undefined,
+  [],
+  {},
+  1,
+  "",
+  "foobar",
+  [""],
+  [1, 2, 3, 4, 5],
+];
+
+describe("brute force", () => {
+  compareCombinations({
+    firstInput: possiblePredicates,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_MESSAGE_MISMATCH": 15,
+          "ERRORS_TYPE_MISMATCH": 16,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 16,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+    secondInput: possibleIterables,
+    fn: takeWhile,
+    fnRamda: takeWhileRamda,
+  });
+});
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#takeWhile)
 
 ### tap
 
@@ -16388,6 +17095,8 @@ test('tap', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#tap)
+
 ### tapAsync
 
 ```typescript
@@ -16442,6 +17151,8 @@ test('complex', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#tapAsync)
+
 ### test
 
 ```typescript
@@ -16489,6 +17200,8 @@ test('throws if first argument is not regex', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#test)
 
 ### throttle
 
@@ -16575,6 +17288,8 @@ test('', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#throttle)
+
 ### times
 
 ```typescript
@@ -16641,6 +17356,8 @@ test('curry', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#times)
+
 ### toDecimal
 
 ```typescript
@@ -16682,6 +17399,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#toDecimal)
+
 ### toLower
 
 ```typescript
@@ -16719,6 +17438,8 @@ test('toLower', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#toLower)
 
 ### toPairs
 
@@ -16778,6 +17499,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#toPairs)
+
 ### toString
 
 ```typescript
@@ -16816,6 +17539,8 @@ test('happy', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#toString)
+
 ### toUpper
 
 ```typescript
@@ -16853,6 +17578,8 @@ test('toUpper', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#toUpper)
 
 ### transpose
 
@@ -16928,6 +17655,8 @@ test('array with falsy values', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#transpose)
+
 ### trim
 
 ```typescript
@@ -16965,6 +17694,8 @@ test('trim', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#trim)
 
 ### tryCatch
 
@@ -17160,6 +17891,8 @@ test('when async + fn', async () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#tryCatch)
+
 ### type
 
 ```typescript
@@ -17321,6 +18054,8 @@ test('function inside object 2', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#type)
+
 ### union
 
 ```typescript
@@ -17370,6 +18105,8 @@ test('with list of objects', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#union)
+
 ### uniq
 
 ```typescript
@@ -17416,6 +18153,8 @@ test('uniq', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#uniq)
 
 ### uniqWith
 
@@ -17566,6 +18305,8 @@ test('uniqWith', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#uniqWith)
+
 ### unless
 
 ```typescript
@@ -17629,6 +18370,8 @@ test('curried', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#unless)
 
 ### update
 
@@ -17697,6 +18440,8 @@ test('list has no such index', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#update)
 
 ### updateObject
 
@@ -17781,6 +18526,8 @@ test('curried', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#updateObject)
+
 ### values
 
 ```typescript
@@ -17839,6 +18586,8 @@ test('with bad input', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#values)
+
 ### view
 
 ```typescript
@@ -17887,6 +18636,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#view)
 
 ### viewOr
 
@@ -17952,6 +18703,8 @@ test('curried', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#viewOr)
+
 ### wait
 
 ```typescript
@@ -18005,6 +18758,8 @@ test('when promise is rejected', async () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#wait)
 
 ### waitFor
 
@@ -18137,6 +18892,8 @@ test('throws when fn is not function', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#waitFor)
+
 ### when
 
 ```typescript
@@ -18174,6 +18931,8 @@ test('happy', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#when)
 
 ### where
 
@@ -18250,6 +19009,8 @@ test('when false', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#where)
 
 ### whereEq
 
@@ -18337,6 +19098,8 @@ test('with wrong input', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#whereEq)
+
 ### without
 
 ```typescript
@@ -18390,6 +19153,8 @@ test('ramda test', () => {
 ```
 
 </details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#without)
 
 ### xor
 
@@ -18474,6 +19239,8 @@ test('when one argument is truthy and the other is falsy, it should return true'
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#xor)
+
 ### zip
 
 ```typescript
@@ -18553,6 +19320,8 @@ test('should truncate result to length of shorted input list', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zip)
+
 ### zipObj
 
 ```typescript
@@ -18630,6 +19399,8 @@ test('ignore extra keys', () => {
 
 </details>
 
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipObj)
+
 ### zipWith
 
 ```typescript
@@ -18690,13 +19461,33 @@ test('when second list is longer', () => {
 
 </details>
 
-## CHANGELOG
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
-WIP 7.0.0
+## ➤ CHANGELOG
+
+7.0.0
 
 - Rename `R.produce` to `R.produceAsync`
 
 - Add `R.produce` which is synchronous version of `R.produceAsync`
+
+- Remove try/catch block in `R.interpolate` and stop supporting expression inside template's props.
+
+- Add typings for `R.takeWhile` when iterable is a string
+
+- Add `R.takeLastWhile`
+
+- Add `R.dropWhile`
+
+- Add `R.eqProps`
+
+- Add `R.dropLastWhile`
+
+- Add `R.dropRepeats`
+
+- Add `R.dropRepeatsWith`
+
+- Add `R.evolve`
 
 6.2.0
 
@@ -19102,7 +19893,9 @@ Also with this versions, typings tests are provided and several definitions are 
 
 > Last version with `lib` folder exposed
 
-## Additional info
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-changelog)
+
+## ➤ Additional info
 
 > Most influential contributors
 
@@ -19141,6 +19934,8 @@ Also with this versions, typings tests are provided and several definitions are 
 > Releases
 
 [Rambda's releases](https://github.com/selfrefactor/rambda/releases) are used mostly for testing purposes, so it is not advisable to be used.
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-additional-info)
 
 ## My other libraries
 

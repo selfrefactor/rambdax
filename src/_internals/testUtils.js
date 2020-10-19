@@ -39,33 +39,6 @@ function parseError(err){
   }
 }
 
-export function show(input){
-  const typeInput = type(input)
-  if ([ 'Promise', 'Async' ].includes(typeInput)){
-    return ''
-  }
-
-  if (typeInput === 'Array'){
-    if (input.length === 0) return '[]'
-
-    return `[${ input.map(show).join(', ') }]`
-  }
-
-  if (typeInput === 'Object'){
-    if (Object.keys(input).length === 0) return '{}'
-
-    return JSON.stringify(map(show, input))
-  }
-  if ([ 'Boolean', 'Number', 'String' ].includes(typeInput)){
-    return input
-  }
-  if ([ 'Null', 'Undefined' ].includes(typeInput)){
-    return typeInput.toLowerCase()
-  }
-
-  return input.toString()
-}
-
 function executeSync(fn, inputs){
   let result = PENDING
   let error = { ok : false }
@@ -225,14 +198,47 @@ export function compareToRamda(fn, fnRamda){
   }
 }
 
-export const getTestTitle = (...inputs) => inputs.map(type).join(' | ')
+const list = [ 1, 2, 3, 4 ]
+
+export function show(input){
+  if (process.env.WALLABY === 'ON'){
+    return input
+  }
+
+  const typeInput = type(input)
+  if ([ 'Promise', 'Async' ].includes(typeInput)){
+    return ''
+  }
+
+  if (typeInput === 'Array'){
+    if (input.length === 0) return '[]'
+
+    return `[${ input.map(show).join(', ') }]`
+  }
+
+  if (typeInput === 'Object'){
+    if (Object.keys(input).length === 0) return '{}'
+
+    return JSON.stringify(map(show, input))
+  }
+  if ([ 'Boolean', 'Number', 'String' ].includes(typeInput)){
+    return input
+  }
+  if ([ 'Null', 'Undefined' ].includes(typeInput)){
+    return typeInput.toLowerCase()
+  }
+
+  return input.toString()
+}
+
+export const getTestTitle = (...inputs) =>
+  inputs.map(x => `${ type(x) } ${ show(x) }`).join(' | ')
 
 export const compareCombinations = ({
   firstInput,
   secondInput = undefined,
   thirdInput = undefined,
   setCounter = () => {},
-  setGlobalCounter = () => {},
   callback = x => {},
   fn,
   fnRamda,
@@ -243,7 +249,6 @@ export const compareCombinations = ({
     SHOULD_NOT_THROW        : 0,
     ERRORS_TYPE_MISMATCH    : 0,
     ERRORS_MESSAGE_MISMATCH : 0,
-    ERRORS_DIFFERENT        : 0,
   }
 
   const increaseCounter = comparedResult => {
@@ -263,7 +268,9 @@ export const compareCombinations = ({
   const inputKeys = Object.keys(combinationsInput)
   const combinations = combinate(combinationsInput)
   const compareOutputs = compareToRamda(fn, fnRamda)
+
   afterAll(() => callback(counter))
+
   combinations.forEach(combination => {
     const inputs = [
       combination.firstInput,
@@ -273,11 +280,10 @@ export const compareCombinations = ({
 
     test(getTestTitle(...inputs), () => {
       const compared = compareOutputs(...inputs)
-      setGlobalCounter()
+      setCounter()
 
       if (!compared.ok){
         increaseCounter(compared)
-        setCounter()
         expect({
           ...compared,
           inputs,
@@ -288,18 +294,16 @@ export const compareCombinations = ({
 }
 
 /*
-  describe("r.foo", () => {
+  describe("brute force", () => {
   let counter = 0;
-  let globalCounter = 0;
 
   afterAll(() => {
     console.log({ counter });
-    console.log({ globalCounter });
   });
+
   compareCombinations({
     firstInput: possibleRules,
     setCounter: () => counter++,
-    setGlobalCounter: () => globalCounter++,
     callback: errorsCounter => {
       expect(
         errorsCounter

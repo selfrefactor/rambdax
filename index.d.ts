@@ -76,7 +76,7 @@ type EvolveValue<V, E> =
       ? EvolveNestedValue<V, E>
       : never;
 
-type Merge<O1 extends object, O2 extends object, Depth extends 'flat' | 'deep'> = ObjectToolbelt.MergeUp<ListToolbelt.ObjectOf<O1>, ListToolbelt.ObjectOf<O2>, Depth, 1>;
+type Merge<O1 extends object, O2 extends object, Depth extends 'flat' | 'deep'> =  ObjectToolbelt.Merge<ListToolbelt.ObjectOf<O1>, ListToolbelt.ObjectOf<O2>, Depth, 1>;
 
 interface AssocPartialOne<K extends keyof any> {
   <T>(val: T): <U>(obj: U) => Record<K, T> & U;
@@ -349,6 +349,9 @@ export function concat(x: string): (y: string) => string;
 export function cond(conditions: [Pred, (...a: readonly any[]) => any][]): (...x: readonly any[]) => any;
 export function cond<A, B>(conditions: [SafePred<A>, (...a: readonly A[]) => B][]): (...x: readonly A[]) => B;
 
+/**
+ * Accepts a converging function and a list of branching functions and returns a new function. When invoked, this new function is applied to some arguments, each branching function is applied to those same arguments. The results of each branching function are passed as arguments to the converging function to produce the return value.
+ */
 export function converge(after: ((...a: any[]) => any), fns: Array<((...x: any[]) => any)>): (...y: any[]) => any;
 
 /**
@@ -1322,9 +1325,6 @@ export function takeLast<T>(howMany: number): {
   (input: string): string;
 };
 
-export function takeWhile<T>(predicate: (x: T) => boolean, list: readonly T[]): T[];
-export function takeWhile<T>(predicate: (x: T) => boolean): (list: readonly T[]) => T[];
-
 /**
  * It applies function `fn` to input `x` and returns `x`.
  * 
@@ -1522,6 +1522,23 @@ export function dropRepeats<T>(list: readonly T[]): T[];
 
 export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: readonly T[]): T[];
 export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean): (list: readonly T[]) => T[];
+
+export function dropWhile(fn: Predicate<string>, iterable: string): string;
+export function dropWhile(fn: Predicate<string>): (iterable: string) => string;
+export function dropWhile<T>(fn: Predicate<T>, iterable: readonly T[]): T[];
+export function dropWhile<T>(fn: Predicate<T>): (iterable: readonly T[]) => T[];
+
+export function takeWhile(fn: Predicate<string>, iterable: string): string;
+export function takeWhile(fn: Predicate<string>): (iterable: string) => string;
+export function takeWhile<T>(fn: Predicate<T>, iterable: readonly T[]): T[];
+export function takeWhile<T>(fn: Predicate<T>): (iterable: readonly T[]) => T[];
+
+/**
+ * It returns `true` if property `prop` in `obj1` is equal to property `prop` in `obj2` according to `R.equals`.
+ */
+export function eqProps<T, U>(prop: string, obj1: T, obj2: U): boolean;
+export function eqProps<P extends string>(prop: P): <T, U>(obj1: Record<P, T>, obj2: Record<P, U>) => boolean;
+export function eqProps<T>(prop: string, obj1: T): <U>(obj2: U) => boolean;
 
 // RAMBDAX_MARKER_START
 
