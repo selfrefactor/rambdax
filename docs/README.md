@@ -19465,13 +19465,17 @@ test('when second list is longer', () => {
 
 ## ➤ CHANGELOG
 
+7.0.1
+
+- Fix missing `Evolved` declaration in Typescript definition
+
 7.0.0
 
 - Rename `R.produce` to `R.produceAsync`
 
 - Add `R.produce` which is synchronous version of `R.produceAsync`
 
-- Remove try/catch block in `R.interpolate` and stop supporting expression inside template's props.
+- Stop supporting expression inside template's props. Also, spaces are no longer allowed between `{{` and `}}`, i.e. `R.interpolate('{{ foo }}', x)` should be `R.interpolate('{{foo}}', x)`.
 
 - Add typings for `R.takeWhile` when iterable is a string
 
