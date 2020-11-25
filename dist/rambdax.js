@@ -19,6 +19,8 @@ function type(input) {
     return 'String';
   } else if (_isArray(input)) {
     return 'Array';
+  } else if (typeOf === 'symbol') {
+    return 'Symbol';
   } else if (input instanceof RegExp) {
     return 'RegExp';
   }
@@ -389,6 +391,11 @@ function equals(a, b) {
   if (arguments.length === 1) return _b => equals(a, _b);
   const aType = type(a);
   if (aType !== type(b)) return false;
+
+  if (aType === 'Function') {
+    return a.name === undefined ? false : a.name === b.name;
+  }
+
   if (['NaN', 'Undefined', 'Null'].includes(aType)) return true;
 
   if (aType === 'Number') {
@@ -1804,6 +1811,22 @@ function toDecimal(number, charsAfterDecimalPoint = 2) {
   return Number(parseFloat(String(number)).toFixed(charsAfterDecimalPoint));
 }
 
+function tryCatchAsync(fn, fallback) {
+  return (...inputs) => new Promise(resolve => {
+    fn(...inputs).then(resolve).catch(err => {
+      if (!isFunction(fallback)) {
+        return resolve(fallback);
+      }
+
+      if (!isPromise(fallback)) {
+        return resolve(fallback(err, ...inputs));
+      }
+
+      fallback(err, ...inputs).then(resolve).catch(resolve);
+    });
+  });
+}
+
 function updateObject(rules, obj) {
   if (arguments.length === 1) return _obj => updateObject(rules, _obj);
 
@@ -1898,6 +1921,14 @@ function waitFor(condition, howLong, loops = 10) {
 
     return false;
   };
+}
+
+function xnor(x, y) {
+  if (arguments.length === 1) {
+    return _y => xnor(x, _y);
+  }
+
+  return Boolean(x && y || !x && !y);
 }
 
 function add(a, b) {
@@ -3078,30 +3109,13 @@ function tryCatch(fn, fallback) {
   }
 
   const passFallback = isFunction(fallback);
-
-  if (!isPromise(fn)) {
-    return (...inputs) => {
-      try {
-        return fn(...inputs);
-      } catch (e) {
-        return passFallback ? fallback(e, ...inputs) : fallback;
-      }
-    };
-  }
-
-  return (...inputs) => new Promise(resolve => {
-    fn(...inputs).then(resolve).catch(() => {
-      if (!passFallback) {
-        return resolve(fallback);
-      }
-
-      if (!isPromise(fallback)) {
-        return resolve(fallback(...inputs));
-      }
-
-      fallback(...inputs).then(resolve);
-    });
-  });
+  return (...inputs) => {
+    try {
+      return fn(...inputs);
+    } catch (e) {
+      return passFallback ? fallback(e, ...inputs) : fallback;
+    }
+  };
 }
 
 function union(x, y) {
@@ -3718,6 +3732,7 @@ exports.toUpper = toUpper;
 exports.transpose = transpose;
 exports.trim = trim;
 exports.tryCatch = tryCatch;
+exports.tryCatchAsync = tryCatchAsync;
 exports.type = type;
 exports.union = union;
 exports.uniq = uniq;
@@ -3734,6 +3749,7 @@ exports.when = when;
 exports.where = where;
 exports.whereEq = whereEq;
 exports.without = without;
+exports.xnor = xnor;
 exports.xor = xor;
 exports.zip = zip;
 exports.zipObj = zipObj;
