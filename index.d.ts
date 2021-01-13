@@ -1690,7 +1690,7 @@ export function isType(targetType: RambdaTypes): (input: any) => boolean;
  * 
  * Please [check the detailed explanation](https://github.com/selfrefactor/rambdax/blob/master/files/isValid.md) as it is hard to write a short description for this method.
  */
-export function isValid({input: object, schema: Schema}): boolean;
+export function isValid({input: object, schema: Schema}: IsValid): boolean;
 
 /**
  * Asynchronous version of `R.isValid`
