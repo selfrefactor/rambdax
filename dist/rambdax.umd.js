@@ -1456,7 +1456,20 @@
 
   function pipe(...fns) {
     if (fns.length === 0) throw new Error('pipe requires at least one argument');
-    return compose(...fns.reverse());
+    return (...args) => {
+      const list = fns.slice();
+
+      if (list.length > 0) {
+        const fn = list.shift();
+        let result = fn(...args);
+
+        while (list.length > 0) {
+          result = list.shift()(result);
+        }
+
+        return result;
+      }
+    };
   }
 
   function piped(...inputs) {
@@ -1532,7 +1545,7 @@
         willReturn[prop] = conditions[prop](input);
       }
 
-      return willReturn;
+      return Promise.resolve(willReturn);
     }
 
     const promised = [];
@@ -1840,34 +1853,16 @@
     return clone;
   }
 
-  function flagIs(inputArguments) {
-    return inputArguments === undefined || inputArguments === null || Number.isNaN(inputArguments) === true;
+  function isFalsy$1(input) {
+    return input === undefined || input === null || Number.isNaN(input) === true;
   }
 
-  function defaultTo(defaultArgument, ...inputArguments) {
+  function defaultTo(defaultArgument, input) {
     if (arguments.length === 1) {
-      return (..._inputArguments) => defaultTo(defaultArgument, ..._inputArguments);
+      return _input => defaultTo(defaultArgument, _input);
     }
 
-    const limit = inputArguments.length - 1;
-    let len = limit + 1;
-    let ready = false;
-    let holder;
-
-    while (!ready) {
-      const instance = inputArguments[limit - len + 1];
-
-      if (len === 0) {
-        ready = true;
-      } else if (flagIs(instance)) {
-        len -= 1;
-      } else {
-        holder = instance;
-        ready = true;
-      }
-    }
-
-    return holder === undefined ? defaultArgument : holder;
+    return isFalsy$1(input) ? defaultArgument : input;
   }
 
   function viewOrFn(fallback, lens, input) {
@@ -2223,18 +2218,20 @@
           return fn.apply(this, arguments);
         };
 
-      case 10:
+      default:
         return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) {
           return fn.apply(this, arguments);
         };
-
-      default:
-        throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
     }
   }
 
   function curryN(n, fn) {
     if (arguments.length === 1) return _fn => curryN(n, _fn);
+
+    if (n > 10) {
+      throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
+    }
+
     return _arity(n, _curryN(n, [], fn));
   }
 
@@ -3129,15 +3126,15 @@
     return toReturn;
   }
 
-  function uniqWith(fn, list) {
-    if (arguments.length === 1) return _list => uniqWith(fn, _list);
+  function uniqWith(predicate, list) {
+    if (arguments.length === 1) return _list => uniqWith(predicate, _list);
     let index = -1;
     const len = list.length;
     const willReturn = [];
 
     while (++index < len) {
       const value = list[index];
-      const flag = any(willReturnInstance => fn(value, willReturnInstance), willReturn);
+      const flag = any(willReturnInstance => predicate(value, willReturnInstance), willReturn);
 
       if (!flag) {
         willReturn.push(value);
