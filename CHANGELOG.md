@@ -1,3 +1,9 @@
+WIP 7.3.0
+
+- Wrong logic where `R.without` use `R.includes` while it should use the array version of `R.includes`
+
+- Use uglify plugin for UMD bundle
+
 7.2.0
 
 - Approve [PR #61](https://github.com/selfrefactor/rambda/pull/61) - fix wrong `R.isValid` typings
