@@ -14157,14 +14157,14 @@ pluck<K extends keyof T, T>(property: K, list: readonly T[]): ReadonlyArray<T[K]
 It returns list of the values of `property` taken from the all objects inside `list`.
 
 ```javascript
-const list = [{a: 1}, {a: 2}, {b: 3}]
 const property = 'a'
+const list = [{a: 1}, {a: 2}, {b: 3}]
 
-R.pluck(list, property) 
+R.pluck(property, list) 
 // => [1, 2]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20list%20%3D%20%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D%0Aconst%20property%20%3D%20'a'%0A%0AR.pluck(list%2C%20property)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh/?const%20property%20=%20%27a%27%0Aconst%20list%20=%20%5B%7Ba:%201%7D,%20%7Ba:%202%7D,%20%7Bb:%203%7D%5D%0A%0Aconst%20result%20=%20R.pluck(property,%20list)%0A//%20=%3E%20%5B1,%202%5D%0A">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
 
 <details>
 
