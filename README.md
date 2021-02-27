@@ -77,7 +77,7 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 
 <details>
 <summary>
-  Click to see the full list of 90 Ramda methods not implemented in Rambda 
+  Click to see the full list of 89 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -133,7 +133,6 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - nAry
 - nthArg
 - o
-- objOf
 - otherwise
 - pair
 - partialRight
@@ -333,10 +332,11 @@ R.add(2, 3) // =>  5
 <summary><strong>R.add</strong> source</summary>
 
 ```javascript
-export function add(a, b){
-  if (arguments.length === 1) return _b => add(a, _b)
+export function add(a, b) {
+  if (arguments.length === 1)
+    return (_b) => add(a, _b);
 
-  return Number(a) + Number(b)
+  return Number(a) + Number(b);
 }
 ```
 
@@ -9363,11 +9363,11 @@ R.over(xHeadYLens, R.negate, input)
 <summary><strong>R.lensPath</strong> source</summary>
 
 ```javascript
-import { assocPath } from './assocPath'
-import { lens } from './lens'
-import { path } from './path'
+import {assocPath} from './assocPath'
+import {lens} from './lens'
+import {path} from './path'
 
-export function lensPath(key){
+export function lensPath(key) {
   return lens(path(key), assocPath(key))
 }
 ```
@@ -12089,6 +12089,91 @@ test('with negative index', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#nth)
 
+### objOf
+
+```typescript
+
+objOf<T, K extends string>(key: K, value: T): Record<K, T>
+```
+
+It returns a new object with the provided key and value.
+
+```javascript
+const result = [
+  R.objOf('foo', 42),
+  R.objOf(null, undefined),
+]
+// => [{foo: 42}, {null: undefined}]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5B%0A%20%20R.objOf('foo'%2C%2042)%2C%0A%20%20R.objOf(null%2C%20undefined)%2C%0A%5D%0A%2F%2F%20%3D%3E%20%5B%7Bfoo%3A%2042%7D%2C%20%7Bnull%3A%20undefined%7D%5D">Try this <strong>R.objOf</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary><strong>R.objOf</strong> source</summary>
+
+```javascript
+export function objOf(key, value) {
+  if (arguments.length === 1) {
+    return (_value) => objOf(key, _value)
+  }
+  
+  return {
+    [key]: value
+  }
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { objOf } from "./objOf";
+import { objOf as objOfRamda } from "ramda";
+import { compareCombinations } from "./_internals/testUtils";
+
+test("happy", function () {
+  expect(objOf("foo", 42)).toEqual({ foo: 42 });
+});
+
+test("with bad inputs", function () {
+  expect(objOf(null, undefined)).toEqual({ null: undefined });
+});
+
+test("curried", function () {
+  expect(objOf("foo")(42)).toEqual({ foo: 42 });
+});
+
+describe("brute force", () => {
+  const possibleInputs = [0, 1, null, undefined, [], {}];
+
+  compareCombinations({
+    firstInput: possibleInputs,
+    secondInput: possibleInputs,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 0,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 0,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+    fn: objOf,
+    fnRamda: objOfRamda,
+  });
+});
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#objOf)
+
 ### of
 
 ```typescript
@@ -13997,7 +14082,7 @@ test('throw error', async () => {
 
 ```typescript
 
-piped<T>(input: any, ...fnList: readonly Func<any>[]): T
+piped<A, B>(input: A, fn0: (x: A) => B) : B
 ```
 
 It is basically `R.pipe`, but instead of passing `input` argument as `R.pipe(...)(input)`, you pass it as the first argument.
@@ -14166,11 +14251,11 @@ It returns list of the values of `property` taken from the all objects inside `l
 const list = [{a: 1}, {a: 2}, {b: 3}]
 const property = 'a'
 
-R.pluck(list, property) 
+R.pluck(property, list) 
 // => [1, 2]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20list%20%3D%20%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D%0Aconst%20property%20%3D%20'a'%0A%0AR.pluck(list%2C%20property)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20list%20%3D%20%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D%0Aconst%20property%20%3D%20'a'%0A%0AR.pluck(property%2C%20list)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -20635,6 +20720,8 @@ test('when second list is longer', () => {
 ## ❯ CHANGELOG
 
 WIP 7.3.0
+
+- Change `R.piped` typings to mimic that of `R.pipe`. Main difference is that `R.pipe` is focused on unary functions.
 
 - Wrong logic where `R.without` use `R.includes` while it should use the array version of `R.includes`
 

@@ -1,5 +1,7 @@
 WIP 7.3.0
 
+- Change `R.piped` typings to mimic that of `R.pipe`. Main difference is that `R.pipe` is focused on unary functions.
+
 - Wrong logic where `R.without` use `R.includes` while it should use the array version of `R.includes`
 
 - Use uglify plugin for UMD bundle

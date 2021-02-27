@@ -827,6 +827,12 @@ export function nth<T>(index: number, list: readonly T[]): T | undefined;
 export function nth(index: number): <T>(list: readonly T[]) => T | undefined;
 
 /**
+ * It returns a new object with the provided key and value.
+ */
+export function objOf<T, K extends string>(key: K, value: T): Record<K, T>;
+export function objOf<K extends string>(key: K): <T>(value: T) => Record<K, T>;
+
+/**
  * It returns a function, which invokes only once `fn` function.
  */
 export function once<T extends (...args: readonly any[]) => any>(func: T): T;
@@ -1810,7 +1816,14 @@ export function partialCurry<Input, PartialInput, Output>(
 /**
  * It is basically `R.pipe`, but instead of passing `input` argument as `R.pipe(...)(input)`, you pass it as the first argument.
  */
-export function piped<T>(input: any, ...fnList: readonly Func<any>[]): T;
+export function piped<A, B>(input: A, fn0: (x: A) => B) : B;
+export function piped<A, B, C>(input: A, fn0: (x: A) => B, fn1: (x: B) => C) : C;
+export function piped<A, B, C, D>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D) : D;
+export function piped<A, B, C, D, E>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E) : E;
+export function piped<A, B, C, D, E, F>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E, fn4: (x: E) => F) : F;
+export function piped<A, B, C, D, E, F, G>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E, fn4: (x: E) => F, fn5: (x: F) => G) : G;
+export function piped<A, B, C, D, E, F, G, H>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E, fn4: (x: E) => F, fn5: (x: F) => G, fn6: (x: G) => H) : H;
+export function piped<A, B, C, D, E, F, G, H, I>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E, fn4: (x: E) => F, fn5: (x: F) => G, fn6: (x: G) => H, fn7: (x: H) => I) : I;
 
 /**
  * It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.

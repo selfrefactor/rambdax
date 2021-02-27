@@ -77,7 +77,7 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 
 <details>
 <summary>
-  Click to see the full list of 90 Ramda methods not implemented in Rambda 
+  Click to see the full list of 89 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -133,7 +133,6 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - nAry
 - nthArg
 - o
-- objOf
 - otherwise
 - pair
 - partialRight
@@ -333,10 +332,11 @@ R.add(2, 3) // =>  5
 <summary><strong>R.add</strong> source</summary>
 
 ```javascript
-export function add(a, b){
-  if (arguments.length === 1) return _b => add(a, _b)
+export function add(a, b) {
+  if (arguments.length === 1)
+    return (_b) => add(a, _b);
 
-  return Number(a) + Number(b)
+  return Number(a) + Number(b);
 }
 ```
 
@@ -3646,7 +3646,7 @@ difference<T>(a: readonly T[], b: readonly T[]): readonly T[]
 
 It returns the uniq set of all elements in the first list `a` not contained in the second list `b`.
 
-It uses `R.equals` underneath.
+`R.equals` is used to determine equality.
 
 ```javascript
 const a = [ 1, 2, 3, 4 ]
@@ -4849,6 +4849,8 @@ excludes(valueToFind: string, input: readonly string[] | string): boolean
 ```
 
 Opposite of `R.includes`
+
+`R.equals` is used to determine equality.
 
 ```javascript
 const result = [
@@ -7055,6 +7057,18 @@ const result = [
 import { _isArray } from './_internals/_isArray'
 import { equals } from './equals'
 
+export function includesArray(valueToFind, input){
+  let index = -1
+
+  while (++index < input.length){
+    if (equals(input[ index ], valueToFind)){
+      return true
+    }
+  }
+
+  return false
+}
+
 export function includes(valueToFind, input){
   if (arguments.length === 1) return _input => includes(valueToFind, _input)
   if (typeof input === 'string'){
@@ -7065,15 +7079,7 @@ export function includes(valueToFind, input){
   }
   if (!_isArray(input)) return false
 
-  let index = -1
-
-  while (++index < input.length){
-    if (equals(input[ index ], valueToFind)){
-      return true
-    }
-  }
-
-  return false
+  return includesArray(valueToFind, input)
 }
 ```
 
@@ -9357,11 +9363,11 @@ R.over(xHeadYLens, R.negate, input)
 <summary><strong>R.lensPath</strong> source</summary>
 
 ```javascript
-import { assocPath } from './assocPath'
-import { lens } from './lens'
-import { path } from './path'
+import {assocPath} from './assocPath'
+import {lens} from './lens'
+import {path} from './path'
 
-export function lensPath(key){
+export function lensPath(key) {
   return lens(path(key), assocPath(key))
 }
 ```
@@ -12083,6 +12089,91 @@ test('with negative index', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#nth)
 
+### objOf
+
+```typescript
+
+objOf<T, K extends string>(key: K, value: T): Record<K, T>
+```
+
+It returns a new object with the provided key and value.
+
+```javascript
+const result = [
+  R.objOf('foo', 42),
+  R.objOf(null, undefined),
+]
+// => [{foo: 42}, {null: undefined}]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5B%0A%20%20R.objOf('foo'%2C%2042)%2C%0A%20%20R.objOf(null%2C%20undefined)%2C%0A%5D%0A%2F%2F%20%3D%3E%20%5B%7Bfoo%3A%2042%7D%2C%20%7Bnull%3A%20undefined%7D%5D">Try this <strong>R.objOf</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary><strong>R.objOf</strong> source</summary>
+
+```javascript
+export function objOf(key, value) {
+  if (arguments.length === 1) {
+    return (_value) => objOf(key, _value)
+  }
+  
+  return {
+    [key]: value
+  }
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { objOf } from "./objOf";
+import { objOf as objOfRamda } from "ramda";
+import { compareCombinations } from "./_internals/testUtils";
+
+test("happy", function () {
+  expect(objOf("foo", 42)).toEqual({ foo: 42 });
+});
+
+test("with bad inputs", function () {
+  expect(objOf(null, undefined)).toEqual({ null: undefined });
+});
+
+test("curried", function () {
+  expect(objOf("foo")(42)).toEqual({ foo: 42 });
+});
+
+describe("brute force", () => {
+  const possibleInputs = [0, 1, null, undefined, [], {}];
+
+  compareCombinations({
+    firstInput: possibleInputs,
+    secondInput: possibleInputs,
+    callback: (errorsCounters) => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+        Object {
+          "ERRORS_MESSAGE_MISMATCH": 0,
+          "ERRORS_TYPE_MISMATCH": 0,
+          "RESULTS_MISMATCH": 0,
+          "SHOULD_NOT_THROW": 0,
+          "SHOULD_THROW": 0,
+        }
+      `);
+    },
+    fn: objOf,
+    fnRamda: objOfRamda,
+  });
+});
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#objOf)
+
 ### of
 
 ```typescript
@@ -13991,7 +14082,7 @@ test('throw error', async () => {
 
 ```typescript
 
-piped<T>(input: any, ...fnList: readonly Func<any>[]): T
+piped<A, B>(input: A, fn0: (x: A) => B) : B
 ```
 
 It is basically `R.pipe`, but instead of passing `input` argument as `R.pipe(...)(input)`, you pass it as the first argument.
@@ -14157,14 +14248,14 @@ pluck<K extends keyof T, T>(property: K, list: readonly T[]): ReadonlyArray<T[K]
 It returns list of the values of `property` taken from the all objects inside `list`.
 
 ```javascript
-const property = 'a'
 const list = [{a: 1}, {a: 2}, {b: 3}]
+const property = 'a'
 
 R.pluck(property, list) 
 // => [1, 2]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh/?const%20property%20=%20%27a%27%0Aconst%20list%20=%20%5B%7Ba:%201%7D,%20%7Ba:%202%7D,%20%7Bb:%203%7D%5D%0A%0Aconst%20result%20=%20R.pluck(property,%20list)%0A//%20=%3E%20%5B1,%202%5D%0A">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20const%20list%20%3D%20%5B%7Ba%3A%201%7D%2C%20%7Ba%3A%202%7D%2C%20%7Bb%3A%203%7D%5D%0Aconst%20property%20%3D%20'a'%0A%0AR.pluck(property%2C%20list)%20%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.pluck</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -14340,15 +14431,32 @@ test('happy path 2', () => {
 
 ```typescript
 
-produce<T>(x: T): T
+produce<Input extends any, Output>(
+  rules: ProduceRules<Output, keyof Output, Input>,
+  input: Input
+): Output
 ```
+
+It returns an object created by applying each value of `rules` to `input` argument.
+
+> :boom: In Typescript context, `rules` functions can be only 1 level deep. In Javascript context, there is no such restriction.
 
 ```javascript
-const result = R.produce()
-// =>
+const rules = {
+  foo: R.pipe(R.add(1), R.add(2)),
+  a: {b: add(3)}
+}
+const input = i
+const result = R.produce(rules, input)
+
+const expected = {
+  foo: 4,
+  a: {b: 4}
+}
+// => `result` is equal to `expected`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.produce()%0A%2F%2F%20%3D%3E">Try this <strong>R.produce</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20rules%20%3D%20%7B%0A%20%20foo%3A%20R.pipe(R.add(1)%2C%20R.add(2))%2C%0A%20%20a%3A%20%7Bb%3A%20add(3)%7D%0A%7D%0Aconst%20input%20%3D%20i%0Aconst%20result%20%3D%20R.produce(rules%2C%20input)%0A%0Aconst%20expected%20%3D%20%7B%0A%20%20foo%3A%204%2C%0A%20%20a%3A%20%7Bb%3A%204%7D%0A%7D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.produce</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -15506,15 +15614,18 @@ test('renameProps', () => {
   const rules = {
     f : 'foo',
     b : 'bar',
+    q : 'x',
   }
   const input = {
     f : 1,
     b : 2,
+    a : 3,
   }
   const result = renameProps(rules, input)
   const expectedResult = {
     foo : 1,
     bar : 2,
+    a   : 3,
   }
   expect(result).toEqual(expectedResult)
 })
@@ -17026,6 +17137,8 @@ Edited fork of [Switchem](https://github.com/planttheidea/switchem) library.
 The method return a value if the matched option is a value.
 
 If the matched option is a function, then `R.switcher` returns a function which expects input. Tests of the method explain it better than this short description.
+
+`R.equals` is used to determine equality.
 
 ```javascript
 const valueToMatch = {foo: 1}
@@ -19049,7 +19162,7 @@ export function uniq(list){
 ```javascript
 import { uniq } from './uniq'
 
-test('uniq', () => {
+test('happy', () => {
   expect(uniq([ 1, 2, 3, 3, 3, 1, 2, 0 ])).toEqual([ 1, 2, 3, 0 ])
   expect(uniq([ 1, 1, 2, 1 ])).toEqual([ 1, 2 ])
   expect([ 1, '1' ]).toEqual([ 1, '1' ])
@@ -19947,6 +20060,8 @@ where<T, U>(conditions: T, input: U): boolean
 
 It returns `true` if all each property in `conditions` returns `true` when applied to corresponding property in `input` object.
 
+`R.equals` is used to determine equality.
+
 ```javascript
 const condition = R.where({
   a : x => typeof x === "string",
@@ -20034,6 +20149,8 @@ whereEq<T, U>(condition: T, input: U): boolean
 ```
 
 It will return `true` if all of `input` object fully or partially include `rule` object.
+
+`R.equals` is used to determine equality.
 
 ```javascript
 const condition = { a : { b : 1 } }
@@ -20152,7 +20269,7 @@ const result = R.without(matchAgainst, source)
 <summary><strong>R.without</strong> source</summary>
 
 ```javascript
-import { includes } from './includes'
+import { includesArray } from './includes'
 import { reduce } from './reduce'
 
 export function without(matchAgainst, source){
@@ -20162,7 +20279,7 @@ export function without(matchAgainst, source){
 
   return reduce(
     (prev, current) =>
-      includes(current, matchAgainst) ? prev : prev.concat(current),
+    includesArray(current, matchAgainst) ? prev : prev.concat(current),
     [],
     source
   )
@@ -20184,6 +20301,12 @@ test('should return a new list without values in the first argument ', () => {
 
   expect(without(itemsToOmit, collection)).toEqual([ 'D', 'E', 'F' ])
   expect(without(itemsToOmit)(collection)).toEqual([ 'D', 'E', 'F' ])
+})
+
+test('ramda bug', () => {
+  expect(
+    without("0:1", ["0", "0:1"])
+  ).toEqual(['0:1'])
 })
 
 test('ramda test', () => {
@@ -20595,6 +20718,14 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+WIP 7.3.0
+
+- Change `R.piped` typings to mimic that of `R.pipe`. Main difference is that `R.pipe` is focused on unary functions.
+
+- Wrong logic where `R.without` use `R.includes` while it should use the array version of `R.includes`
+
+- Use uglify plugin for UMD bundle
 
 7.2.0
 
