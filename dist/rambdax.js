@@ -171,29 +171,18 @@ function anyType(targetType) {
   };
 }
 
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
     keys.push.apply(keys, symbols);
   }
 
@@ -218,6 +207,21 @@ function _objectSpread2(target) {
   }
 
   return target;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
 }
 
 function _isInteger(n) {
@@ -279,6 +283,7 @@ function path(pathInput, obj) {
       return undefined;
     }
 
+    if (willReturn[pathArrValue[counter]] === null) return undefined;
     willReturn = willReturn[pathArrValue[counter]];
     counter++;
   }
@@ -510,6 +515,17 @@ function delay(ms) {
   });
 }
 
+function includesArray(valueToFind, input) {
+  let index = -1;
+
+  while (++index < input.length) {
+    if (equals(input[index], valueToFind)) {
+      return true;
+    }
+  }
+
+  return false;
+}
 function includes(valueToFind, input) {
   if (arguments.length === 1) return _input => includes(valueToFind, _input);
 
@@ -522,15 +538,7 @@ function includes(valueToFind, input) {
   }
 
   if (!_isArray(input)) return false;
-  let index = -1;
-
-  while (++index < input.length) {
-    if (equals(input[index], valueToFind)) {
-      return true;
-    }
-  }
-
-  return false;
+  return includesArray(valueToFind, input);
 }
 
 function excludes(valueToFind, input) {
@@ -538,11 +546,11 @@ function excludes(valueToFind, input) {
   return includes(valueToFind, input) === false;
 }
 
-function filterObject(fn, obj) {
+function filterObject(predicate, obj) {
   const willReturn = {};
 
   for (const prop in obj) {
-    if (fn(obj[prop], prop, obj)) {
+    if (predicate(obj[prop], prop, obj)) {
       willReturn[prop] = obj[prop];
     }
   }
@@ -1422,6 +1430,51 @@ function partitionAsync(predicate, list) {
   });
 }
 
+function partitionObject(predicate, iterable) {
+  const yes = {};
+  const no = {};
+  Object.entries(iterable).forEach(([prop, value]) => {
+    if (predicate(value, prop)) {
+      yes[prop] = value;
+    } else {
+      no[prop] = value;
+    }
+  });
+  return [yes, no];
+}
+function partitionArray(predicate, list, indexed = false) {
+  const yes = [];
+  const no = [];
+  let counter = -1;
+
+  while (counter++ < list.length - 1) {
+    if (indexed ? predicate(list[counter], counter) : predicate(list[counter])) {
+      yes.push(list[counter]);
+    } else {
+      no.push(list[counter]);
+    }
+  }
+
+  return [yes, no];
+}
+function partition(predicate, iterable) {
+  if (arguments.length === 1) {
+    return listHolder => partition(predicate, listHolder);
+  }
+
+  if (!_isArray(iterable)) return partitionObject(predicate, iterable);
+  return partitionArray(predicate, iterable);
+}
+
+function partitionIndexed(predicate, iterable) {
+  if (arguments.length === 1) {
+    return listHolder => partitionIndexed(predicate, listHolder);
+  }
+
+  if (!_isArray(iterable)) return partitionObject(predicate, iterable);
+  return partitionArray(predicate, iterable, true);
+}
+
 function pass(...inputs) {
   return (...schemas) => any((x, i) => {
     const schema = schemas[i] === undefined ? schemas[0] : schemas[i];
@@ -1580,6 +1633,13 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function rejectIndexed(predicate, iterable) {
+  if (arguments.length === 1) return _iterable => rejectIndexed(predicate, _iterable);
+  if (!iterable) throw new Error(`"${iterable}" is not iterable`);
+  if (_isArray(iterable)) return filterArray((x, i) => !predicate(x, i), iterable, true);
+  return filterObject((x, prop) => !predicate(x, prop), iterable);
+}
+
 function remove(inputs, text) {
   if (arguments.length === 1) {
     return textHolder => remove(inputs, textHolder);
@@ -1600,8 +1660,8 @@ function remove(inputs, text) {
   return textCopy;
 }
 
-function removeIndex(list, index) {
-  if (arguments.length === 1) return _index => removeIndex(list, _index);
+function removeIndex(index, list) {
+  if (arguments.length === 1) return _list => removeIndex(index, _list);
   if (index <= 0) return list.slice(1);
   if (index >= list.length - 1) return list.slice(0, list.length - 1);
   return [...list.slice(0, index), ...list.slice(index + 1)];
@@ -2484,7 +2544,7 @@ function groupWith(compareFn, list) {
 function has(prop, obj) {
   if (arguments.length === 1) return _obj => has(prop, _obj);
   if (!obj) return false;
-  return obj[prop] !== undefined;
+  return obj.hasOwnProperty(prop);
 }
 
 function hasPath(maybePath, obj) {
@@ -2585,7 +2645,7 @@ function indexOf(valueToFind, list) {
 
 function intersection(listA, listB) {
   if (arguments.length === 1) return _list => intersection(listA, _list);
-  return filter(value => includes(value, listB), listA);
+  return filter(x => includes(x, listA), listB);
 }
 
 function intersperse(separator, list) {
@@ -2837,6 +2897,16 @@ function not(input) {
   return !input;
 }
 
+function objOf(key, value) {
+  if (arguments.length === 1) {
+    return _value => objOf(key, _value);
+  }
+
+  return {
+    [key]: value
+  };
+}
+
 function onceFn(fn, context) {
   let result;
   return function () {
@@ -2871,42 +2941,6 @@ function partial(fn, ...args) {
 
     return partial(fn, ...[...args, ...rest]);
   };
-}
-
-function partitionObject(predicate, iterable) {
-  const yes = {};
-  const no = {};
-  Object.entries(iterable).forEach(([prop, value]) => {
-    if (predicate(value, prop)) {
-      yes[prop] = value;
-    } else {
-      no[prop] = value;
-    }
-  });
-  return [yes, no];
-}
-function partitionArray(predicate, list) {
-  const yes = [];
-  const no = [];
-  let counter = -1;
-
-  while (counter++ < list.length - 1) {
-    if (predicate(list[counter])) {
-      yes.push(list[counter]);
-    } else {
-      no.push(list[counter]);
-    }
-  }
-
-  return [yes, no];
-}
-function partition(predicate, iterable) {
-  if (arguments.length === 1) {
-    return listHolder => partition(predicate, listHolder);
-  }
-
-  if (!_isArray(iterable)) return partitionObject(predicate, iterable);
-  return partitionArray(predicate, iterable);
 }
 
 function pathEqFn(pathToSearch, target, input) {
@@ -3127,12 +3161,11 @@ function union(x, y) {
 function uniqWith(predicate, list) {
   if (arguments.length === 1) return _list => uniqWith(predicate, _list);
   let index = -1;
-  const len = list.length;
   const willReturn = [];
 
-  while (++index < len) {
+  while (++index < list.length) {
     const value = list[index];
-    const flag = any(willReturnInstance => predicate(value, willReturnInstance), willReturn);
+    const flag = any(x => predicate(value, x), willReturn);
 
     if (!flag) {
       willReturn.push(value);
@@ -3147,10 +3180,7 @@ function unless(predicate, whenFalse) {
     return _whenFalse => unless(predicate, _whenFalse);
   }
 
-  return input => {
-    if (predicate(input)) return input;
-    return whenFalse(input);
-  };
+  return input => predicate(input) ? input : whenFalse(input);
 }
 
 function values(obj) {
@@ -3197,7 +3227,7 @@ function without(matchAgainst, source) {
     return _source => without(matchAgainst, _source);
   }
 
-  return reduce((prev, current) => includes(current, matchAgainst) ? prev : prev.concat(current), [], source);
+  return reduce((prev, current) => includesArray(current, matchAgainst) ? prev : prev.concat(current), [], source);
 }
 
 function xor(a, b) {
@@ -3581,6 +3611,7 @@ exports.ifElse = ifElse;
 exports.ifElseAsync = ifElseAsync;
 exports.inc = inc;
 exports.includes = includes;
+exports.includesArray = includesArray;
 exports.indexBy = indexBy;
 exports.indexOf = indexOf;
 exports.init = init;
@@ -3643,6 +3674,7 @@ exports.nextIndex = nextIndex;
 exports.none = none;
 exports.not = not;
 exports.nth = nth;
+exports.objOf = objOf;
 exports.of = of;
 exports.ok = ok;
 exports.omit = omit;
@@ -3654,6 +3686,7 @@ exports.partialCurry = partialCurry;
 exports.partition = partition;
 exports.partitionArray = partitionArray;
 exports.partitionAsync = partitionAsync;
+exports.partitionIndexed = partitionIndexed;
 exports.partitionObject = partitionObject;
 exports.pass = pass;
 exports.path = path;
@@ -3682,6 +3715,7 @@ exports.random = random;
 exports.range = range;
 exports.reduce = reduce;
 exports.reject = reject;
+exports.rejectIndexed = rejectIndexed;
 exports.remove = remove;
 exports.removeAtPath = removeAtPath;
 exports.removeIndex = removeIndex;

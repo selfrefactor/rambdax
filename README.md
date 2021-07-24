@@ -4962,15 +4962,11 @@ const result = [
 ```javascript
 import { _isArray } from './_internals/_isArray'
 
-export function filterObject(predicate, obj, indexed = false){
+export function filterObject(predicate, obj){
   const willReturn = {}
 
   for (const prop in obj){
-    const predicateResult = indexed ?
-      predicate(obj[ prop ], prop) :
-      predicate(obj[ prop ])
-
-    if (predicateResult){
+    if (predicate(obj[ prop ], prop, obj)){
       willReturn[ prop ] = obj[ prop ]
     }
   }
@@ -5050,7 +5046,7 @@ test('bad inputs difference between Ramda and Rambda', () => {
     'Cannot read property \'filter\' of undefined')
 })
 
-test('predicate when input is object', () => {
+test.only('predicate when input is object', () => {
   const obj = {
     a : 1,
     b : 2,
@@ -5081,6 +5077,25 @@ test('with object', () => {
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filter)
+
+### filterArray
+
+```typescript
+
+filterArray<T>(predicate: Predicate<T>): (input: T[]) => T[]
+```
+
+```javascript
+const result = R.filterArray(
+  x => x > 1,
+  [1, 2, 3]
+)
+// => [1, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.filterArray(%0A%20%20x%20%3D%3E%20x%20%3E%201%2C%0A%20%20%5B1%2C%202%2C%203%5D%0A)%0A%2F%2F%20%3D%3E%20%5B1%2C%203%5D">Try this <strong>R.filterArray</strong> example in Rambda REPL</a>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterArray)
 
 ### filterAsync
 
@@ -5199,8 +5214,19 @@ Same as `R.filter`, but it passes index/property as second argument to the predi
 
 ```typescript
 
-filterObject<T>(fn: ObjectIterator<T, boolean>, iterable: Dictionary<T>): Dictionary<T>
+filterObject<T>(predicate: ObjectPredicate<T>): (x: Dictionary<T>) => Dictionary<T>
 ```
+
+```javascript
+const obj = {a: 1, b:2}
+const result = R.filterObject(
+  x => x > 1,
+  obj
+)
+// => {b: 2}
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A2%7D%0Aconst%20result%20%3D%20R.filterObject(%0A%20%20x%20%3D%3E%20x%20%3E%201%2C%0A%20%20obj%0A)%0A%2F%2F%20%3D%3E%20%7Bb%3A%202%7D">Try this <strong>R.filterObject</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterObject)
 
@@ -10280,7 +10306,7 @@ test('curried', () => {
 
 ```typescript
 
-mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<U>
+mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<T>
 ```
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapObject)
