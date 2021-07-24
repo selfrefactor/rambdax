@@ -29,6 +29,7 @@
     "src",
     "CHANGELOG.md",
     "immutable.d.ts",
+    "immutable.js",
     "index.d.ts"
   ],
   "repository": {
