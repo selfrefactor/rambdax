@@ -27,7 +27,8 @@
   "files": [
     "dist",
     "src",
-    "_ts-toolbelt",
+    "CHANGELOG.md",
+    "immutable.d.ts",
     "index.d.ts"
   ],
   "repository": {

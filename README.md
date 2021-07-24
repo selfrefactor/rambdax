@@ -332,11 +332,10 @@ R.add(2, 3) // =>  5
 <summary><strong>R.add</strong> source</summary>
 
 ```javascript
-export function add(a, b) {
-  if (arguments.length === 1)
-    return (_b) => add(a, _b);
+export function add(a, b){
+  if (arguments.length === 1) return _b => add(a, _b)
 
-  return Number(a) + Number(b);
+  return Number(a) + Number(b)
 }
 ```
 
@@ -376,7 +375,7 @@ test('ramda specs', () => {
 
 ```typescript
 
-adjust<T>(index: number, replaceFn: (x: T) => T, list: readonly T[]): readonly T[]
+adjust<T>(index: number, replaceFn: (x: T) => T, list: T[]): T[]
 ```
 
 It replaces `index` in array `list` with the result of `replaceFn(list[i])`.
@@ -472,7 +471,7 @@ test('when index is out of bounds', () => {
 
 ```typescript
 
-all<T>(predicate: (x: T) => boolean, list: readonly T[]): boolean
+all<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
 It returns `true`, if all members of array `list` returns `true`, when applied as argument to `predicate` function.
@@ -535,7 +534,7 @@ test('when false', () => {
 
 ```typescript
 
-allFalse(...inputs: readonly any[]): boolean
+allFalse(...inputs: any[]): boolean
 ```
 
 It returns `true` if all `inputs` arguments are falsy(empty objects and empty arrays are considered falsy).
@@ -612,7 +611,7 @@ runTests(testData)
 
 ```typescript
 
-allPass<T>(predicates: readonly ((x: T) => boolean)[]): (input: T) => boolean
+allPass<T>(predicates: ((x: T) => boolean)[]): (input: T) => boolean
 ```
 
 It returns `true`, if all functions of `predicates` return `true`, when `input` is their argument.
@@ -695,7 +694,7 @@ test('when returns false', () => {
 
 ```typescript
 
-allTrue(...input: readonly any[]): boolean
+allTrue(...input: any[]): boolean
 ```
 
 It returns `true` if all `inputs` arguments are truthy(empty objects and empty arrays are considered falsy).
@@ -811,7 +810,7 @@ test('escapes early - case 3', () => {
 
 ```typescript
 
-allType(targetType: RambdaTypes): (...input: readonly any[]) => boolean
+allType(targetType: RambdaTypes): (...input: any[]) => boolean
 ```
 
 It returns a function which will return `true` if all of its `inputs` arguments belong to `targetType`.
@@ -994,7 +993,7 @@ test('happy', () => {
 
 ```typescript
 
-any<T>(predicate: (x: T) => boolean, list: readonly T[]): boolean
+any<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
 It returns `true`, if at least one member of `list` returns true, when passed to a `predicate` function.
@@ -1056,7 +1055,7 @@ test('with curry', () => {
 
 ```typescript
 
-anyFalse(...input: readonly any[]): boolean
+anyFalse(...input: any[]): boolean
 ```
 
 It returns `true` if any of `inputs` is falsy(empty objects and empty arrays are considered falsy).
@@ -1132,7 +1131,7 @@ test('supports function', () => {
 
 ```typescript
 
-anyPass<T>(predicates: readonly SafePred<T>[]): SafePred<T>
+anyPass<T>(predicates: SafePred<T>[]): SafePred<T>
 ```
 
 It accepts list of `predicates` and returns a function. This function with its `input` will return `true`, if any of `predicates` returns `true` for this `input`.
@@ -1226,7 +1225,7 @@ test('happy', () => {
 
 ```typescript
 
-anyTrue(...input: readonly any[]): boolean
+anyTrue(...input: any[]): boolean
 ```
 
 It returns `true` if any of `inputs` arguments are truthy(empty objects and empty arrays are considered falsy).
@@ -1306,7 +1305,7 @@ test('supports function', () => {
 
 ```typescript
 
-anyType(targetType: RambdaTypes): (...input: readonly any[]) => boolean
+anyType(targetType: RambdaTypes): (...input: any[]) => boolean
 ```
 
 It returns a function which will return `true` if at least one of its `inputs` arguments belongs to `targetType`.
@@ -1383,7 +1382,7 @@ test('when false', () => {
 
 ```typescript
 
-append<T>(x: T, list: readonly T[]): readonly T[]
+append<T>(x: T, list: T[]): T[]
 ```
 
 It adds element `x` at the end of `list`.
@@ -1448,7 +1447,7 @@ test('with strings', () => {
 
 ```typescript
 
-applyDiff<Output>(rules: readonly ApplyDiffRule[], obj: object): Output
+applyDiff<Output>(rules: ApplyDiffRule[], obj: object): Output
 ```
 
 It changes paths in an object according to a list of operations. Valid operations are `add`, `update` and `delete`. Its use-case is while writing tests and you need to change the test data.
@@ -1637,11 +1636,11 @@ test('add operation', () => {
 
 ```typescript
 
-applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
+applySpec<Spec extends Record<string, (...args: any[]) => any>>(
   spec: Spec
 ): (
   ...args: Parameters<ValueOfRecord<Spec>>
-) => { readonly [Key in keyof Spec]: ReturnType<Spec[Key]> }
+) => { [Key in keyof Spec]: ReturnType<Spec[Key]> }
 ```
 
 > :boom: The currying in this function works best with functions with 4 arguments or less. (arity of 4)
@@ -2496,7 +2495,7 @@ test('skip evaluation of the second expression', () => {
 
 ```typescript
 
-chain<T, U>(fn: (n: T) => readonly U[], list: readonly T[]): readonly U[]
+chain<T, U>(fn: (n: T) => U[], list: T[]): U[]
 ```
 
 The method is also known as `flatMap`.
@@ -2778,7 +2777,7 @@ test('with R.equals', () => {
 
 ```typescript
 
-complement<T extends readonly any[]>(pred: (...args: T) => boolean): (...args: T) => boolean
+complement<T extends any[]>(pred: (...args: T) => boolean): (...args: T) => boolean
 ```
 
 It returns `inverted` version of `origin` function that accept `input` as argument.
@@ -2864,7 +2863,7 @@ const result = R.compose(
 ```typescript
 
 composeAsync<Out>(
-  ...fns: readonly (Async<any> | Func<any>)[]
+  ...fns: (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>
 ```
 
@@ -2995,7 +2994,7 @@ test('throw error', async () => {
 
 ```typescript
 
-concat<T>(x: readonly T[], y: readonly T[]): readonly T[]
+concat<T>(x: T[], y: T[]): T[]
 ```
 
 It returns a new string or array, which is the result of merging `x` and `y`.
@@ -3053,7 +3052,7 @@ test('with strings', () => {
 
 ```typescript
 
-cond(conditions: readonly (readonly [Pred, (...a: readonly any[]) => any])[]): (...x: readonly any[]) => any
+cond(conditions: ([Pred, (...a: any[]) => any])[]): (...x: any[]) => any
 ```
 
 It takes list with `conditions` and returns a new function `fn` that expects `input` as argument. 
@@ -3160,7 +3159,7 @@ test('predicates are tested in order', () => {
 
 ```typescript
 
-converge(after: ((...a: readonly any[]) => any), fns: ReadonlyArray<((...x: readonly any[]) => any)>): (...y: readonly any[]) => any
+converge(after: ((...a: any[]) => any), fns: ((...x: any[]) => any)[]): (...y: any[]) => any
 ```
 
 Accepts a converging function and a list of branching functions and returns a new function. When invoked, this new function is applied to some arguments, each branching function is applied to those same arguments. The results of each branching function are passed as arguments to the converging function to produce the return value.
@@ -3269,7 +3268,7 @@ test('works with empty functions list', () => {
 
 ```typescript
 
-count<T>(searchFor: T, list: readonly any[]): number
+count<T>(searchFor: T, list: any[]): number
 ```
 
 It counts how many times `searchFor` is within `list` according to `R.equals`.
@@ -3641,7 +3640,7 @@ test('usage with variables', async () => {
 
 ```typescript
 
-difference<T>(a: readonly T[], b: readonly T[]): readonly T[]
+difference<T>(a: T[], b: T[]): T[]
 ```
 
 It returns the uniq set of all elements in the first list `a` not contained in the second list `b`.
@@ -3738,7 +3737,7 @@ R.divide(71, 100) // => 0.71
 
 ```typescript
 
-drop<T>(howMany: number, input: readonly T[]): readonly T[]
+drop<T>(howMany: number, input: T[]): T[]
 ```
 
 It returns `howMany` items dropped from beginning of list or string `input`.
@@ -3805,7 +3804,7 @@ test('should return copy', () => {
 
 ```typescript
 
-dropLast<T>(howMany: number, input: readonly T[]): readonly T[]
+dropLast<T>(howMany: number, input: T[]): T[]
 ```
 
 It returns `howMany` items dropped from the end of list or string `input`.
@@ -3890,7 +3889,7 @@ const result = dropLastWhile(predicate, list);
 
 ```typescript
 
-dropRepeats<T>(list: readonly T[]): readonly T[]
+dropRepeats<T>(list: T[]): T[]
 ```
 
 It removes any successive duplicates according to `R.equals`.
@@ -4617,7 +4616,7 @@ test('with negative zero', () => {
 
 ```typescript
 
-evolve<T, U>(rules: ReadonlyArray<(x: T) => U>, list: readonly T[]): readonly U[]
+evolve<T, U>(rules: ((x: T) => U)[], list: T[]): U[]
 ```
 
 It takes object or array of functions as set of rules. These `rules` are applied to the `iterable` input to produce the result.
@@ -4845,7 +4844,7 @@ describe('brute force', () => {
 
 ```typescript
 
-excludes(valueToFind: string, input: readonly string[] | string): boolean
+excludes(valueToFind: string, input: string[] | string): boolean
 ```
 
 Opposite of `R.includes`
@@ -4935,7 +4934,7 @@ export function F(){
 
 ```typescript
 
-filter<T>(predicate: Predicate<T>): (input: readonly T[]) => readonly T[]
+filter<T>(predicate: Predicate<T>): (input: T[]) => T[]
 ```
 
 It filters list or object `input` using a `predicate` function.
@@ -4963,13 +4962,15 @@ const result = [
 ```javascript
 import { _isArray } from './_internals/_isArray'
 
-export function filterObject(fn, obj){
+export function filterObject(predicate, obj, indexed = false){
   const willReturn = {}
 
   for (const prop in obj){
-    if (fn(
-      obj[ prop ], prop, obj
-    )){
+    const predicateResult = indexed ?
+      predicate(obj[ prop ], prop) :
+      predicate(obj[ prop ])
+
+    if (predicateResult){
       willReturn[ prop ] = obj[ prop ]
     }
   }
@@ -5085,7 +5086,7 @@ test('with object', () => {
 
 ```typescript
 
-filterAsync<T>(fn: AsyncPredicate<T>, list: readonly T[]): Promise<readonly T[]>
+filterAsync<T>(fn: AsyncPredicate<T>, list: T[]): Promise<T[]>
 ```
 
 Asynchronous version of `R.filter`
@@ -5190,74 +5191,24 @@ test('with object', async () => {
 
 ### filterIndexed
 
-```typescript
-
-filterIndexed<T>(predicate: IndexedPredicate<T>): (x: readonly T[]) => readonly T[]
-```
-
-Same as `R.filter`, but it passes index as second argument to the predicate, when looping over arrays.
-
-<details>
-
-<summary><strong>R.filterIndexed</strong> source</summary>
-
-```javascript
-import { _isArray } from './_internals/_isArray'
-import { filterArray, filterObject } from './filter'
-
-export function filterIndexed(predicate, iterable){
-  if (arguments.length === 1)
-    return _iterable => filterIndexed(predicate, _iterable)
-  if (!iterable) return []
-  if (_isArray(iterable)) return filterArray(
-    predicate, iterable, true
-  )
-
-  return filterObject(predicate, iterable)
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { filter } from './filter'
-import { filterIndexed } from './filterIndexed'
-
-const iterator = (x, i) => {
-  expect(x).toBeNumber()
-  expect(i).toBeNumber()
-}
-
-test('happy', () => {
-  const list = [ 1, 2, 3 ]
-  filterIndexed(iterator, list)
-  filterIndexed(iterator)(list)
-})
-
-test('with object', () => {
-  const iterator = x => x + 1
-  const obj = { a : 1 }
-  expect(filterIndexed(iterator, obj)).toEqual(filter(iterator, obj))
-})
-
-test('with bad input', () => {
-  expect(filterIndexed(iterator, undefined)).toEqual([])
-})
-```
-
-</details>
+Same as `R.filter`, but it passes index/property as second argument to the predicate, when looping over arrays/objects.
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterIndexed)
+
+### filterObject
+
+```typescript
+
+filterObject<T>(fn: ObjectIterator<T, boolean>, iterable: Dictionary<T>): Dictionary<T>
+```
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#filterObject)
 
 ### find
 
 ```typescript
 
-find<T>(predicate: (x: T) => boolean, list: readonly T[]): T | undefined
+find<T>(predicate: (x: T) => boolean, list: T[]): T | undefined
 ```
 
 It returns the first element of `list` that satisfy the `predicate`.
@@ -5331,7 +5282,7 @@ test('with empty list', () => {
 
 ```typescript
 
-findIndex<T>(predicate: (x: T) => boolean, list: readonly T[]): number
+findIndex<T>(predicate: (x: T) => boolean, list: T[]): number
 ```
 
 It returns the index of the first element of `list` satisfying the `predicate` function.
@@ -5398,7 +5349,7 @@ test('happy', () => {
 
 ```typescript
 
-findLast<T>(fn: (x: T) => boolean, list: readonly T[]): T | undefined
+findLast<T>(fn: (x: T) => boolean, list: T[]): T | undefined
 ```
 
 It returns the last element of `list` satisfying the `predicate` function.
@@ -5500,7 +5451,7 @@ test('ramda 4', () => {
 
 ```typescript
 
-findLastIndex<T>(predicate: (x: T) => boolean, list: readonly T[]): number
+findLastIndex<T>(predicate: (x: T) => boolean, list: T[]): number
 ```
 
 It returns the index of the last element of `list` satisfying the `predicate` function.
@@ -5603,7 +5554,7 @@ test('ramda 4', () => {
 
 ```typescript
 
-flatten<T>(list: readonly any[]): readonly T[]
+flatten<T>(list: any[]): T[]
 ```
 
 It deeply flattens an array.
@@ -5682,12 +5633,12 @@ const subtractFlip = R.flip(R.subtract)
 
 const result = [
   subtractFlip(1,7),
-  R.flip(1, 6)
+  R.subtract(1, 6)
 ]  
 // => [6, -6]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20%5B%0A%20%20subtractFlip(1%2C7)%2C%0A%20%20R.flip(1%2C%206)%0A%5D%20%20%0A%2F%2F%20%3D%3E%20%5B6%2C%20-6%5D">Try this <strong>R.flip</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20subtractFlip%20%3D%20R.flip(R.subtract)%0A%0Aconst%20result%20%3D%20%5B%0A%20%20subtractFlip(1%2C7)%2C%0A%20%20R.subtract(1%2C%206)%0A%5D%20%20%0A%2F%2F%20%3D%3E%20%5B6%2C%20-6%5D">Try this <strong>R.flip</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#flip)
 
@@ -5695,7 +5646,7 @@ const result = [
 
 ```typescript
 
-forEach<T>(fn: Iterator<T, void>, list: readonly T[]): readonly T[]
+forEach<T>(fn: Iterator<T, void>, list: T[]): T[]
 ```
 
 It applies `iterable` function over all members of `list` and returns `list`.
@@ -5831,7 +5782,7 @@ test('returns the input', () => {
 
 ```typescript
 
-forEachIndexed<T>(fn: IndexedIterator<T, void>, list: readonly T[]): readonly T[]
+forEachIndexed<T>(fn: IndexedIterator<T, void>, list: T[]): T[]
 ```
 
 <details>
@@ -5908,7 +5859,7 @@ const result = R.fromPairs(listOfPairs)
 
 ```typescript
 
-getter<T>(keyOrKeys: string | readonly string[] | undefined): T
+getter<T>(keyOrKeys: string | string[] | undefined): T
 ```
 
 The set of methods `R.setter`, `R.getter` and `R.reset` allow different parts of your logic to access comminicate indirectly via shared cache object. 
@@ -6220,7 +6171,7 @@ const result = R.groupBy(groupFn, list)
 
 ```typescript
 
-groupWith<T>(compareFn: (x: T, y: T) => boolean): (input: readonly T[]) => readonly (readonly T[])[]
+groupWith<T>(compareFn: (x: T, y: T) => boolean): (input: T[]) => (T[])[]
 ```
 
 It returns separated version of list or string `input`, where separation is done with equality `compareFn` function.
@@ -6424,12 +6375,12 @@ const result = [
 <summary><strong>R.has</strong> source</summary>
 
 ```javascript
-export function has(prop, obj){
+export function has(prop, obj) {
   if (arguments.length === 1) return _obj => has(prop, _obj)
 
   if (!obj) return false
 
-  return obj[ prop ] !== undefined
+  return obj.hasOwnProperty(prop)
 }
 ```
 
@@ -6465,7 +6416,7 @@ test('with non-object', () => {
 ```typescript
 
 hasPath<T>(
-  path: string | readonly string[],
+  path: string | string[],
   input: object
 ): boolean
 ```
@@ -6541,7 +6492,7 @@ test('when false', () => {
 
 ```typescript
 
-head<T>(input: readonly T[]): T | undefined
+head<T>(input: T[]): T | undefined
 ```
 
 It returns the first element of list or string `input`.
@@ -7032,7 +6983,7 @@ R.inc(1) // => 2
 
 ```typescript
 
-includes(valueToFind: string, input: readonly string[] | string): boolean
+includes(valueToFind: string, input: string[] | string): boolean
 ```
 
 If `input` is string, then this method work as native `String.includes`.
@@ -7190,7 +7141,7 @@ const result = [
 
 ```typescript
 
-init<T>(input: readonly T[]): readonly T[]
+init<T>(input: T[]): T[]
 ```
 
 It returns all but the last element of list or string `input`.
@@ -8827,7 +8778,7 @@ test('readme example', async () => {
 
 ```typescript
 
-join<T>(glue: string, list: readonly T[]): string
+join<T>(glue: string, list: T[]): string
 ```
 
 It returns a string of all `list` instances joined with a `glue`.
@@ -8878,7 +8829,7 @@ test('curry', () => {
 
 ```typescript
 
-keys<T extends object>(x: T): readonly (keyof T)[]
+keys<T extends object>(x: T): (keyof T)[]
 ```
 
 It applies `Object.keys` over `x` and returns its keys.
@@ -8978,7 +8929,7 @@ test('with string', () => {
 
 ```typescript
 
-lastIndexOf<T>(target: T, list: readonly T[]): number
+lastIndexOf<T>(target: T, list: T[]): number
 ```
 
 It returns the last index of `target` in `list` array.
@@ -9052,7 +9003,7 @@ test('false', () => {
 
 ```typescript
 
-length<T>(input: readonly T[]): number
+length<T>(input: T[]): number
 ```
 
 It returns the `length` property of list or string `input`.
@@ -9880,11 +9831,20 @@ test('when undefined instead of array', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#map)
 
+### mapArray
+
+```typescript
+
+mapArray<T, U>(fn: IndexedIterator<T, U>, iterable: T[]): U[]
+```
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapArray)
+
 ### mapAsync
 
 ```typescript
 
-mapAsync<T, K>(fn: AsyncIterable<T, K>, list: readonly T[]): Promise<readonly K[]>
+mapAsync<T, K>(fn: AsyncIterable<T, K>, list: T[]): Promise<K[]>
 ```
 
 Sequential asynchronous mapping with `fn` over members of `list`.
@@ -10016,7 +9976,7 @@ test('error', async () => {
 
 ```typescript
 
-mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number, list: readonly T[]): Promise<readonly K[]>
+mapAsyncLimit<T, K>(fn: AsyncIterable<T, K>, limit: number, list: T[]): Promise<K[]>
 ```
 
 It is similar to `R.mapFastAsync` in that it uses `Promise.all` but not over the whole list, rather than with only slice from `list` with length `limit`.
@@ -10135,7 +10095,7 @@ test('fallback to R.mapFastAsync', async () => {
 
 ```typescript
 
-mapFastAsync<T, K>(fn: AsyncIterable<T, K>, list: readonly T[]): Promise<readonly K[]>
+mapFastAsync<T, K>(fn: AsyncIterable<T, K>, list: T[]): Promise<K[]>
 ```
 
 Parrallel asynchronous mapping with `fn` over members of `list`.
@@ -10243,67 +10203,7 @@ test('pass index as second argument', async () => {
 
 ### mapIndexed
 
-```typescript
-
-mapIndexed<T, U>(fn: ObjectIterator<T, U>, iterable: Dictionary<T>): Dictionary<U>
-```
-
 Same as `R.map`, but it passes index as second argument to the iterator, when looping over arrays.
-
-<details>
-
-<summary><strong>R.mapIndexed</strong> source</summary>
-
-```javascript
-import { _isArray } from './_internals/_isArray'
-import { mapArray, mapObject } from './map'
-
-export function mapIndexed(fn, iterable){
-  if (arguments.length === 1){
-    return _iterable => mapIndexed(fn, _iterable)
-  }
-  if (iterable === undefined) return []
-  if (_isArray(iterable)) return mapArray(
-    fn, iterable, true
-  )
-
-  return mapObject(fn, iterable)
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { map } from './map'
-import { mapIndexed } from './mapIndexed'
-
-const iterator = (x, i) => {
-  expect(x).toBeNumber()
-  expect(i).toBeNumber()
-}
-
-test('happy', () => {
-  const list = [ 1, 2, 3 ]
-  mapIndexed(iterator, list)
-  mapIndexed(iterator)(list)
-})
-
-test('with object', () => {
-  const iterator = x => x + 1
-  const obj = { a : 1 }
-  expect(mapIndexed(iterator, obj)).toEqual(map(iterator, obj))
-})
-
-test('with bad input', () => {
-  expect(mapIndexed(iterator, undefined)).toEqual([])
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapIndexed)
 
@@ -10311,7 +10211,7 @@ test('with bad input', () => {
 
 ```typescript
 
-mapKeys<T, U>(changeKeyFn: (x: string) => string, obj: { readonly [key: string]: T}): U
+mapKeys<T, U>(changeKeyFn: (x: string) => string, obj: { [key: string]: T}): U
 ```
 
 It takes an object and returns a new object with changed keys according to `changeKeyFn` function.
@@ -10376,11 +10276,20 @@ test('curried', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapKeys)
 
+### mapObject
+
+```typescript
+
+mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<U>
+```
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapObject)
+
 ### mapToObject
 
 ```typescript
 
-mapToObject<T, U>(fn: (input: T) => object|false, list: readonly T[]): U
+mapToObject<T, U>(fn: (input: T) => object|false, list: T[]): U
 ```
 
 This method allows to generate an object from a list using input function `fn`.
@@ -10496,7 +10405,7 @@ test('bad path', () => {
 
 ```typescript
 
-mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: readonly T[]): Promise<U>
+mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>
 ```
 
 Asynchronous version of `R.mapToObject`
@@ -10586,7 +10495,7 @@ test('with R.composeAsync', async () => {
 
 ```typescript
 
-match(regExpression: RegExp, str: string): readonly string[]
+match(regExpression: RegExp, str: string): string[]
 ```
 
 Curried version of `String.prototype.match` which returns empty array, when there is no match.
@@ -10911,7 +10820,7 @@ test('whenElse', () => {
 
 ```typescript
 
-mean(list: readonly number[]): number
+mean(list: number[]): number
 ```
 
 It returns the mean value of `list` input.
@@ -10961,7 +10870,7 @@ test('with NaN', () => {
 
 ```typescript
 
-median(list: readonly number[]): number
+median(list: number[]): number
 ```
 
 It returns the median value of `list` input.
@@ -11023,7 +10932,7 @@ test('with empty array', () => {
 
 ```typescript
 
-memoize<T, K extends readonly any[]>(fn: (...inputs: K) => T): (...inputs: K) => T
+memoize<T, K extends any[]>(fn: (...inputs: K) => T): (...inputs: K) => T
 ```
 
 When `fn` is called for a second time with the same input, then the cache result is returned instead of calling again `fn`.
@@ -11242,7 +11151,7 @@ test('string as argument', () => {
 
 ```typescript
 
-merge<O1 extends object, O2 extends object>(target: O1, newProps: O2): Merge<O2, O1, 'flat'>
+merge<Output>(target: object, newProps: object): Output
 ```
 
 It creates a copy of `target` object with overidden `newProps` properties.
@@ -11319,7 +11228,7 @@ test('when undefined or null instead of object', () => {
 
 ```typescript
 
-mergeAll<T>(list: readonly object[]): T
+mergeAll<T>(list: object[]): T
 ```
 
 It merges all objects of `list` array sequentially and returns the result.
@@ -11395,7 +11304,7 @@ test('case 2', () => {
 
 ```typescript
 
-mergeDeepRight<O1 extends object, O2 extends object>(x: O1, y: O2): Merge<O2, O1, 'deep'>
+mergeDeepRight<Output>(target: object, newProps: object): Output
 ```
 
 Creates a new object with the own properties of the first object merged with the own properties of the second object. If a key exists in both objects:
@@ -11549,7 +11458,7 @@ test('ramda compatible test 3', () => {
 
 ```typescript
 
-mergeLeft<O1 extends object, O2 extends object>(target: O1, newProps: O2): Merge<O2, O1, 'flat'>
+mergeLeft<Output>(newProps: object, target: object): Output
 ```
 
 Same as `R.merge`, but in opposite direction.
@@ -11743,7 +11652,7 @@ R.modulo(17, 3) // => 2
 
 ```typescript
 
-move<T>(fromIndex: number, toIndex: number, list: readonly T[]): readonly T[]
+move<T>(fromIndex: number, toIndex: number, list: T[]): T[]
 ```
 
 It returns a copy of `list` with exchanged `fromIndex` and `toIndex` elements.
@@ -11854,7 +11763,7 @@ R.negate(420)// => -420
 
 ```typescript
 
-nextIndex(index: number, list: readonly any[]): number
+nextIndex(index: number, list: any[]): number
 ```
 
 It returns the next index of the list.
@@ -11917,7 +11826,7 @@ test('current index is too big', () => {
 
 ```typescript
 
-none<T>(predicate: (x: T) => boolean, list: readonly T[]): boolean
+none<T>(predicate: (x: T) => boolean, list: T[]): boolean
 ```
 
 It returns `true`, if all members of array `list` returns `false`, when applied as argument to `predicate` function.
@@ -12024,7 +11933,7 @@ test('not', () => {
 
 ```typescript
 
-nth<T>(index: number, list: readonly T[]): T | undefined
+nth<T>(index: number, list: T[]): T | undefined
 ```
 
 Curried version of `list[index]`.
@@ -12178,7 +12087,7 @@ describe("brute force", () => {
 
 ```typescript
 
-of<T>(x: T): readonly T[]
+of<T>(x: T): T[]
 ```
 
 ```javascript
@@ -12222,7 +12131,7 @@ test('happy', () => {
 
 ```typescript
 
-ok(...inputs: readonly any[]): (...schemas: readonly any[]) => void | never
+ok(...inputs: any[]): (...schemas: any[]) => void | never
 ```
 
 It checks if `inputs` are following `schemas` specifications according to `R.isValid`.
@@ -12416,7 +12325,7 @@ test('when throws with single input', () => {
 
 ```typescript
 
-omit<T, K extends string>(propsToOmit: readonly K[], obj: T): Omit<T, K>
+omit<T, K extends string>(propsToOmit: K[], obj: T): Omit<T, K>
 ```
 
 It returns a partial copy of an `obj` without `propsToOmit` properties.
@@ -12518,7 +12427,7 @@ test('happy', () => {
 
 ```typescript
 
-once<T extends (...args: readonly any[]) => any>(func: T): T
+once<T extends (...args: any[]) => any>(func: T): T
 ```
 
 It returns a function, which invokes only once `fn` function.
@@ -12757,7 +12666,7 @@ test('index lens', () => {
 
 ```typescript
 
-partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: readonly [V0]): (x1: V1) => T
+partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: [V0]): (x1: V1) => T
 ```
 
 It is very similar to `R.curry`, but you can pass initial arguments when you create the curried function.
@@ -13008,11 +12917,11 @@ test('async function throwing an error', async () => {
 
 partition<T>(
   predicate: Predicate<T>,
-  input: readonly T[]
-): readonly [readonly T[], readonly T[]]
+  input: T[]
+): [T[], T[]]
 ```
 
-It will return array of two objects/arrays according to `predicate` function. The first member holds all instanses of `input` that pass the `predicate` function, while the second member - those who doesn't.
+It will return array of two objects/arrays according to `predicate` function. The first member holds all instances of `input` that pass the `predicate` function, while the second member - those who doesn't.
 
 ```javascript
 const list = [1, 2, 3]
@@ -13053,13 +12962,13 @@ export function partitionObject(predicate, iterable){
   return [ yes, no ]
 }
 
-export function partitionArray(predicate, list){
+export function partitionArray(predicate, list, indexed = false){
   const yes = []
   const no = []
   let counter = -1
 
   while (counter++ < list.length - 1){
-    if (predicate(list[ counter ])){
+    if (indexed ? predicate(list[ counter ], counter) : predicate(list[ counter ])){
       yes.push(list[ counter ])
     } else {
       no.push(list[ counter ])
@@ -13157,11 +13066,69 @@ test('readme example', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partition)
 
+### partitionIndexed
+
+```typescript
+
+partitionIndexed<T>(
+  predicate: IndexedPredicate<T>,
+  input: T[]
+): [T[], T[]]
+```
+
+<details>
+
+<summary><strong>R.partitionIndexed</strong> source</summary>
+
+```javascript
+import { partitionObject, partitionArray } from './partition'
+import { _isArray } from './_internals/_isArray'
+
+export function partitionIndexed(predicate, iterable){
+  if (arguments.length === 1){
+    return listHolder => partitionIndexed(predicate, listHolder)
+  }
+  if (!_isArray(iterable)) return partitionObject(predicate, iterable)
+
+  return partitionArray(predicate, iterable, true)
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { partitionIndexed } from './partitionIndexed'
+
+test('with array', () => {
+  const predicate = (x, i) => {
+    expect(x).toBeNumber()
+    return x > 2
+  }
+    const list = [ 1, 2, 3, 4 ]
+
+  const result = partitionIndexed(predicate, list)
+  const expectedResult = [
+    [ 3, 4 ],
+    [ 1, 2 ],
+  ]
+
+  expect(result).toEqual(expectedResult)
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partitionIndexed)
+
 ### pass
 
 ```typescript
 
-pass(...inputs: readonly any[]): (...rules: readonly any[]) => boolean
+pass(...inputs: any[]): (...rules: any[]) => boolean
 ```
 
 It checks if `inputs` are following `schemas` specifications according to `R.isValid`.
@@ -13300,6 +13267,8 @@ export function path(pathInput, obj){
     if (willReturn === null || willReturn === undefined){
       return undefined
     }
+    if(willReturn[ pathArrValue[ counter ] ] === null) return undefined
+
     willReturn = willReturn[ pathArrValue[ counter ] ]
     counter++
   }
@@ -13341,6 +13310,12 @@ test('path', () => {
   expect(path([ 'foo', 'bar', 'baz' ])(null)).toBeUndefined()
 
   expect(path([ 'foo', 'bar', 'baz' ])({ foo : { bar : 'baz' } })).toBeUndefined()
+})
+
+test("null is not a valid path", () => {
+  expect(
+    path('audio_tracks', {a: 1, audio_tracks: null})
+  ).toBeUndefined()
 })
 ```
 
@@ -13542,7 +13517,7 @@ test('curry case (x,y)(z)', () => {
 
 ```typescript
 
-paths<Input, T>(pathsToSearch: readonly Path[], obj: Input): readonly (T | undefined)[]
+paths<Input, T>(pathsToSearch: Path[], obj: Input): (T | undefined)[]
 ```
 
 It loops over members of `pathsToSearch` as `singlePath` and returns the array produced by `R.path(singlePath, obj)`.
@@ -13660,7 +13635,7 @@ test('returns undefined for items not found', () => {
 
 ```typescript
 
-pick<T, K extends string | number | symbol>(propsToPick: readonly K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>
+pick<T, K extends string | number | symbol>(propsToPick: K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>
 ```
 
 It returns a partial copy of an `input` containing only `propsToPick` properties.
@@ -13816,7 +13791,7 @@ test('with symbol', () => {
 
 ```typescript
 
-pickAll<T, U>(propsToPick: readonly string[], input: T): U
+pickAll<T, U>(propsToPick: string[], input: T): U
 ```
 
 Same as `R.pick` but it won't skip the missing props, i.e. it will assign them to `undefined`.
@@ -13949,7 +13924,7 @@ const result = R.pipe(
 ```typescript
 
 pipeAsync<Out>(
-  ...fns: readonly (Async<any> | Func<any>)[]
+  ...fns: (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>
 ```
 
@@ -14149,7 +14124,7 @@ test('happy', () => {
 
 pipedAsync<T>(
   input: any,
-  ...fns: readonly (Func<any> | Async<any>)[]
+  ...fns: (Func<any> | Async<any>)[]
 ): Promise<T>
 ```
 
@@ -14242,7 +14217,7 @@ test('happy', async () => {
 
 ```typescript
 
-pluck<K extends keyof T, T>(property: K, list: readonly T[]): ReadonlyArray<T[K]>
+pluck<K extends keyof T, T>(property: K, list: T[]): T[K][]
 ```
 
 It returns list of the values of `property` taken from the all objects inside `list`.
@@ -14310,7 +14285,7 @@ test('with number', () => {
 
 ```typescript
 
-prepend<T>(x: T, input: readonly T[]): readonly T[]
+prepend<T>(x: T, input: T[]): T[]
 ```
 
 It adds element `x` at the beginning of `list`.
@@ -14371,7 +14346,7 @@ test('with string instead of array', () => {
 
 ```typescript
 
-prevIndex(index: number, list: readonly any[]): number
+prevIndex(index: number, list: any[]): number
 ```
 
 It returns the next index of the list when the order is descending.
@@ -14704,7 +14679,7 @@ test('with error', async () => {
 
 ```typescript
 
-product(list: readonly number[]): number
+product(list: number[]): number
 ```
 
 ```javascript
@@ -15023,7 +14998,7 @@ test('propOr (currying)', () => {
 
 ```typescript
 
-props<P extends string, T>(propsToPick: readonly P[], obj: Record<P, T>): readonly T[]
+props<P extends string, T>(propsToPick: P[], obj: Record<P, T>): T[]
 ```
 
 It takes list with properties `propsToPick` and returns a list with property values in `obj`.
@@ -15136,7 +15111,7 @@ test('when returns true', () => {
 
 ```typescript
 
-range(startInclusive: number, endExclusive: number): readonly number[]
+range(startInclusive: number, endExclusive: number): number[]
 ```
 
 It returns list of numbers between `startInclusive` to `endExclusive` markers.
@@ -15210,7 +15185,7 @@ test('curry', () => {
 
 ```typescript
 
-reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: readonly T[]): TResult
+reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult
 ```
 
 > :boom: It passes index of the list as third argument to `reducer` function.
@@ -15308,7 +15283,7 @@ test('with undefined as iterable', () => {
 
 ```typescript
 
-reject<T>(predicate: Predicate<T>, list: readonly T[]): readonly T[]
+reject<T>(predicate: Predicate<T>, list: T[]): T[]
 ```
 
 It has the opposite effect of `R.filter`.
@@ -15374,12 +15349,93 @@ test('with object', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#reject)
 
+### rejectIndexed
+
+```typescript
+
+rejectIndexed<T>(predicate: IndexedPredicate<T>): (x: T[]) => T[]
+```
+
+Same as `R.reject`, but it passes index/property as second argument to the predicate, when looping over arrays/objects.
+
+```javascript
+const list = [1, 2, 3, 4]
+const obj = {a: 1, b: 2}
+
+const result = [
+  R.reject((x, index) => x > 1, list)
+  R.reject((x, property) => x > 1, obj)
+]
+// => [[1], {a: 1}]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B1%2C%202%2C%203%2C%204%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.reject((x%2C%20index)%20%3D%3E%20x%20%3E%201%2C%20list)%0A%20%20R.reject((x%2C%20property)%20%3D%3E%20x%20%3E%201%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%5B1%5D%2C%20%7Ba%3A%201%7D%5D">Try this <strong>R.rejectIndexed</strong> example in Rambda REPL</a>
+
+<details>
+
+<summary><strong>R.rejectIndexed</strong> source</summary>
+
+```javascript
+import { filterArray, filterObject } from './filter'
+import { _isArray } from './_internals/_isArray'
+
+export function rejectIndexed(predicate, iterable){
+  if (arguments.length === 1) return _iterable => rejectIndexed(predicate, _iterable)
+
+  if (!iterable) throw new Error(`"${iterable}" is not iterable`)
+  if (_isArray(iterable)) return filterArray((x, i) => !predicate(x, i), iterable, true)
+
+  return filterObject((x, prop) => !predicate(x, prop), iterable, true)
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { rejectIndexed } from './rejectIndexed'
+
+test('with array', () => {
+  expect(rejectIndexed((x, i) => {
+    expect(x).toBeNumber()
+    expect(i).toBeNumber()
+  
+    return x % 2 === 1
+  })([ 1, 2, 3, 4 ])).toEqual([ 2, 4 ])
+})
+
+test('with object', () => {
+  const obj = {
+    a : 1,
+    b : 2,
+    c : 3,
+    d : 4,
+  }
+  expect(rejectIndexed((x, prop) => {
+    expect(x).toBeNumber()
+    expect(prop).toBeString()
+  
+    return x % 2 === 1
+  }, obj)).toEqual({
+    b : 2,
+    d : 4,
+  })
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#rejectIndexed)
+
 ### remove
 
 ```typescript
 
 remove(
-  toRemove: string | RegExp | readonly (string | RegExp)[],
+  toRemove: string | RegExp | (string | RegExp)[],
   text: string
 ): string
 ```
@@ -15511,7 +15567,7 @@ test('with single rule', () => {
 
 ```typescript
 
-removeIndex<T>(index: number, list: readonly T[]): readonly T[]
+removeIndex<T>(index: number, list: T[]): T[]
 ```
 
 It returns a copy of `list` input with removed `index`.
@@ -15529,8 +15585,8 @@ const result = R.removeIndex(1, list)
 <summary><strong>R.removeIndex</strong> source</summary>
 
 ```javascript
-export function removeIndex(list, index){
-  if (arguments.length === 1) return _index => removeIndex(list, _index)
+export function removeIndex(index, list){
+  if (arguments.length === 1) return _list => removeIndex(index, _list)
   if (index <= 0) return list.slice(1)
   if (index >= list.length - 1) return list.slice(0, list.length - 1)
 
@@ -15545,23 +15601,23 @@ export function removeIndex(list, index){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { removeIndex } from './removeIndex'
+import {removeIndex} from './removeIndex'
 
-const list = [ 1, 2, 3, 4 ]
+const list = [1, 2, 3, 4]
 
 test('first or before first index', () => {
-  expect(removeIndex(list, 0)).toEqual([ 2, 3, 4 ])
-  expect(removeIndex(list)(-2)).toEqual([ 2, 3, 4 ])
+  expect(removeIndex(-2, list)).toEqual([2, 3, 4])
+  expect(removeIndex(-2)(list)).toEqual([2, 3, 4])
 })
 
 test('last or after last index', () => {
-  expect(removeIndex(list, 4)).toEqual([ 1, 2, 3 ])
-  expect(removeIndex(list, 10)).toEqual([ 1, 2, 3 ])
+  expect(removeIndex(4, list)).toEqual([1, 2, 3])
+  expect(removeIndex(10, list)).toEqual([1, 2, 3])
 })
 
 test('middle index', () => {
-  expect(removeIndex(list, 1)).toEqual([ 1, 3, 4 ])
-  expect(removeIndex(list, 2)).toEqual([ 1, 2, 4 ])
+  expect(removeIndex(1, list)).toEqual([1, 3, 4])
+  expect(removeIndex(2, list)).toEqual([1, 2, 4])
 })
 ```
 
@@ -15656,7 +15712,7 @@ test('curry', () => {
 
 ```typescript
 
-repeat<T>(x: T): (timesToRepeat: number) => readonly T[]
+repeat<T>(x: T): (timesToRepeat: number) => T[]
 ```
 
 ```javascript
@@ -15776,7 +15832,7 @@ test('3', () => {
 
 ```typescript
 
-replaceAll(patterns: ReadonlyArray<RegExp | string>, replacer: string, input: string): string
+replaceAll(patterns: (RegExp | string)[], replacer: string, input: string): string
 ```
 
 Same as `R.replace` but it accepts array of string and regular expressions instead of a single value.
@@ -15880,7 +15936,7 @@ reset(): void
 
 ```typescript
 
-reverse<T>(input: readonly T[]): readonly T[]
+reverse<T>(input: T[]): T[]
 ```
 
 It returns a reversed copy of list or string `input`.
@@ -16059,7 +16115,7 @@ setter(keyOrObject: string | object, value?: any): void
 
 ```typescript
 
-shuffle<T>(list: readonly T[]): readonly T[]
+shuffle<T>(list: T[]): T[]
 ```
 
 It returns a randomized copy of array.
@@ -16181,7 +16237,7 @@ test('slice', () => {
 
 ```typescript
 
-sort<T>(sortFn: (a: T, b: T) => number, list: readonly T[]): readonly T[]
+sort<T>(sortFn: (a: T, b: T) => number, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortFn` function.
@@ -16257,7 +16313,7 @@ test('it doesn\'t mutate', () => {
 
 ```typescript
 
-sortBy<T>(sortFn: (a: T) => Ord, list: readonly T[]): readonly T[]
+sortBy<T>(sortFn: (a: T) => Ord, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortFn` function.
@@ -16352,7 +16408,7 @@ test('with compose', () => {
 
 ```typescript
 
-sortByPath<T>(sortPath: Path, list: readonly T[]): readonly T[]
+sortByPath<T>(sortPath: Path, list: T[]): T[]
 ```
 
 It returns copy of `list` sorted by `sortPath` value. 
@@ -16428,7 +16484,7 @@ test('with list of strings as path - curried', () => {
 
 ```typescript
 
-sortByProps<T>(sortPaths: readonly string[], list: readonly T[]): readonly T[]
+sortByProps<T>(sortPaths: string[], list: T[]): T[]
 ```
 
 It returns sorted copy of `list` of objects.
@@ -16549,7 +16605,7 @@ test('when list is already sorted', () => {
 
 ```typescript
 
-sortObject<T>(predicate: SortObjectPredicate<T>, input: { readonly [key: string]: T }): { readonly [keyOutput: string]: T }
+sortObject<T>(predicate: SortObjectPredicate<T>, input: { [key: string]: T }): { [keyOutput: string]: T }
 ```
 
 It returns a sorted version of `input` object.
@@ -16660,7 +16716,7 @@ runTests(testData)
 
 ```typescript
 
-split(separator: string | RegExp): (str: string) => readonly string[]
+split(separator: string | RegExp): (str: string) => string[]
 ```
 
 Curried version of `String.prototype.split`
@@ -16716,7 +16772,7 @@ test('curried', () => {
 
 ```typescript
 
-splitAt<T>(index: number, input: readonly T[]): readonly [readonly T[], readonly T[]]
+splitAt<T>(index: number, input: T[]): [T[], T[]]
 ```
 
 It splits string or array at a given index.
@@ -16833,7 +16889,7 @@ test('with bad inputs', () => {
 
 ```typescript
 
-splitEvery<T>(sliceLength: number, input: readonly T[]): readonly (readonly T[])[]
+splitEvery<T>(sliceLength: number, input: T[]): (T[])[]
 ```
 
 It splits `input` into slices of `sliceLength`.
@@ -16912,7 +16968,7 @@ test('with bad input', () => {
 
 ```typescript
 
-splitWhen<T, U>(predicate: Predicate<T>, list: readonly U[]): readonly (readonly U[])[]
+splitWhen<T, U>(predicate: Predicate<T>, list: U[]): (U[])[]
 ```
 
 It splits `list` to two arrays according to a `predicate` function. 
@@ -17087,7 +17143,7 @@ R.subtract(x, y)
 
 ```typescript
 
-sum(list: readonly number[]): number
+sum(list: number[]): number
 ```
 
 ```javascript
@@ -17332,7 +17388,7 @@ test('fallback to default input when no matches', () => {
 
 ```typescript
 
-symmetricDifference<T>(x: readonly T[], y: readonly T[]): readonly T[]
+symmetricDifference<T>(x: T[], y: T[]): T[]
 ```
 
 It returns a merged list of `x` and `y` with all equal elements removed.
@@ -17433,7 +17489,7 @@ export function T(){
 
 ```typescript
 
-tail<T>(input: readonly T[]): readonly T[]
+tail<T>(input: T[]): T[]
 ```
 
 It returns all but the first element of `input`.
@@ -17490,7 +17546,7 @@ test('tail', () => {
 
 ```typescript
 
-take<T>(howMany: number, input: readonly T[]): readonly T[]
+take<T>(howMany: number, input: T[]): T[]
 ```
 
 It returns the first `howMany` elements of `input`.
@@ -17566,7 +17622,7 @@ test('with zero index', () => {
 
 ```typescript
 
-takeLast<T>(howMany: number, input: readonly T[]): readonly T[]
+takeLast<T>(howMany: number, input: T[]): T[]
 ```
 
 It returns the last `howMany` elements of `input`.
@@ -17736,7 +17792,7 @@ test('with string', () => {
 
 ```typescript
 
-takeUntil<T>(predicate: (x: T) => boolean, list: readonly T[]): readonly T[]
+takeUntil<T>(predicate: (x: T) => boolean, list: T[]): T[]
 ```
 
 ```javascript
@@ -18105,7 +18161,7 @@ test('', async () => {
 
 ```typescript
 
-times<T>(fn: (i: number) => T, howMany: number): readonly T[]
+times<T>(fn: (i: number) => T, howMany: number): T[]
 ```
 
 It returns the result of applying function `fn` over members of range array.
@@ -18269,7 +18325,7 @@ test('toLower', () => {
 
 ```typescript
 
-toPairs<S>(obj: { readonly [k: string]: S } | { readonly [k: number]: S }): readonly (readonly [string, S])[]
+toPairs<S>(obj: { [k: string]: S } | { [k: number]: S }): ([string, S])[]
 ```
 
 It transforms an object to a list.
@@ -18415,7 +18471,7 @@ test('toUpper', () => {
 
 ```typescript
 
-transpose<T>(list: readonly (readonly T[])[]): readonly (readonly T[])[]
+transpose<T>(list: (T[])[]): (T[])[]
 ```
 
 ```javascript
@@ -19052,7 +19108,7 @@ test('function inside object 2', () => {
 
 ```typescript
 
-union<T>(x: readonly T[], y: readonly T[]): readonly T[]
+union<T>(x: T[], y: T[]): T[]
 ```
 
 It takes two lists and return a new list containing a merger of both list with removed duplicates. 
@@ -19114,7 +19170,7 @@ test('with list of objects', () => {
 
 ```typescript
 
-uniq<T>(list: readonly T[]): readonly T[]
+uniq<T>(list: T[]): T[]
 ```
 
 It returns a new array containing only one copy of each element of `list`.
@@ -19160,13 +19216,28 @@ export function uniq(list){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { uniq } from './uniq'
+import {uniq} from './uniq'
 
 test('happy', () => {
-  expect(uniq([ 1, 2, 3, 3, 3, 1, 2, 0 ])).toEqual([ 1, 2, 3, 0 ])
-  expect(uniq([ 1, 1, 2, 1 ])).toEqual([ 1, 2 ])
-  expect([ 1, '1' ]).toEqual([ 1, '1' ])
-  expect(uniq([ [ 42 ], [ 42 ] ])).toEqual([ [ 42 ] ])
+  const list = [1, 2, 3, 3, 3, 1, 2, 0]
+  expect(uniq(list)).toEqual([1, 2, 3, 0])
+})
+
+test('with object', () => {
+  const list = [{a: 1}, {a: 2}, {a: 1}]
+  expect(uniq(list)).toEqual([{a: 1}, {a: 2}])
+})
+
+test('with nested array', () => {
+  expect(uniq([[42], [42]])).toEqual([[42]])
+})
+
+test('with falsy values', () => {
+  expect(uniq([undefined, null])).toEqual([undefined, null])
+})
+
+test('can distinct between string and number', () => {
+  expect(uniq([1, '1'])).toEqual([1, '1'])
 })
 ```
 
@@ -19178,7 +19249,7 @@ test('happy', () => {
 
 ```typescript
 
-uniqWith<T, U>(predicate: (x: T, y: T) => boolean, list: readonly T[]): readonly T[]
+uniqWith<T, U>(predicate: (x: T, y: T) => boolean, list: T[]): T[]
 ```
 
 It returns a new array containing only one copy of each element in `list` according to `predicate` function.
@@ -19219,12 +19290,11 @@ export function uniqWith(predicate, list){
   if (arguments.length === 1) return _list => uniqWith(predicate, _list)
 
   let index = -1
-  const len = list.length
   const willReturn = []
 
-  while (++index < len){
+  while (++index < list.length){
     const value = list[ index ]
-    const flag = any(willReturnInstance => predicate(value, willReturnInstance),
+    const flag = any(x => predicate(value, x),
       willReturn)
 
     if (!flag){
@@ -19245,100 +19315,23 @@ export function uniqWith(predicate, list){
 ```javascript
 import { uniqWith } from './uniqWith'
 
+const list = [
+  {a: 1},
+  {a: 1},
+]
+
 test('happy', () => {
-  const input = [
-    {
-      id    : 0,
-      title : 'foo',
-    },
-    {
-      id    : 1,
-      title : 'bar',
-    },
-    {
-      id    : 2,
-      title : 'baz',
-    },
-    {
-      id    : 3,
-      title : 'foo',
-    },
-    {
-      id    : 4,
-      title : 'bar',
-    },
-  ]
+  const fn = (x, y) => x.a === y.a
 
-  const expectedResult = [
-    {
-      id    : 0,
-      title : 'foo',
-    },
-    {
-      id    : 1,
-      title : 'bar',
-    },
-    {
-      id    : 2,
-      title : 'baz',
-    },
-  ]
-
-  const fn = (x, y) => x.title === y.title
-
-  const result = uniqWith(fn, input)
-  const curriedResult = uniqWith(fn)(input)
-
-  expect(result).toEqual(expectedResult)
-
-  expect(curriedResult).toEqual(expectedResult)
+  const result = uniqWith(fn, list)
+  expect(result).toEqual([{a:1}])
 })
 
-test('uniqWith', () => {
-  const input = [
-    {
-      id    : 0,
-      title : 'foo',
-    },
-    {
-      id    : 1,
-      title : 'bar',
-    },
-    {
-      id    : 2,
-      title : 'baz',
-    },
-    {
-      id    : 3,
-      title : 'foo',
-    },
-    {
-      id    : 4,
-      title : 'bar',
-    },
-  ]
+test('curried', () => {
+  const fn = (x, y) => x.a === y.a
 
-  const expectedResult = [
-    {
-      id    : 0,
-      title : 'foo',
-    },
-    {
-      id    : 1,
-      title : 'bar',
-    },
-    {
-      id    : 2,
-      title : 'baz',
-    },
-  ]
-
-  const fn = (x, y) => x.title === y.title
-
-  const result = uniqWith(fn, input)
-  //const result = uniqWith(Ramda.eqBy(Ramda.prop('title')), input)
-
-  expect(result).toEqual(expectedResult)
+  const result = uniqWith(fn)(list)
+  expect(result).toEqual([{a:1}])
 })
 ```
 
@@ -19384,11 +19377,7 @@ export function unless(predicate, whenFalse){
     return _whenFalse => unless(predicate, _whenFalse)
   }
 
-  return input => {
-    if (predicate(input)) return input
-
-    return whenFalse(input)
-  }
+  return input => predicate(input) ? input : whenFalse(input)
 }
 ```
 
@@ -19403,9 +19392,8 @@ import { inc } from './inc'
 import { isNil } from './isNil'
 import { unless } from './unless'
 
-const safeInc = unless(isNil, inc)
-
 test('happy', () => {
+  const safeInc = unless(isNil, inc)
   expect(safeInc(null)).toBeNull()
   expect(safeInc(1)).toBe(2)
 })
@@ -19413,7 +19401,6 @@ test('happy', () => {
 test('curried', () => {
   const safeIncCurried = unless(isNil)(inc)
   expect(safeIncCurried(null)).toBeNull()
-  expect(safeIncCurried(1)).toBe(2)
 })
 ```
 
@@ -19425,7 +19412,7 @@ test('curried', () => {
 
 ```typescript
 
-update<T>(index: number, newValue: T, list: readonly T[]): readonly T[]
+update<T>(index: number, newValue: T, list: T[]): T[]
 ```
 
 It returns a copy of `list` with updated element at `index` with `newValue`.
@@ -19506,7 +19493,7 @@ test('list has no such index', () => {
 
 ```typescript
 
-updateObject<Output>(rules: readonly (readonly [string, any])[], input: object): Output
+updateObject<Output>(rules: ([string, any])[], input: object): Output
 ```
 
 Very similar to `R.assocPath` but it applies list of updates instead of only a single update.
@@ -19604,7 +19591,7 @@ test('curried', () => {
 
 ```typescript
 
-values<T extends object, K extends keyof T>(obj: T): readonly T[K][]
+values<T extends object, K extends keyof T>(obj: T): T[K][]
 ```
 
 With correct input, this is nothing more than `Object.values(obj)`. If `obj` is not an object, then it returns an empty array.
@@ -19803,7 +19790,7 @@ test('curried', () => {
 
 ```typescript
 
-wait<T>(fn: Promise<T>): Promise<readonly [T, Error|undefined]>
+wait<T>(fn: Promise<T>): Promise<[T, Error|undefined]>
 ```
 
 It provides `Golang`-like interface for handling promises.
@@ -20247,7 +20234,7 @@ test('with wrong input', () => {
 
 ```typescript
 
-without<T>(matchAgainst: readonly T[], source: readonly T[]): readonly T[]
+without<T>(matchAgainst: T[], source: T[]): T[]
 ```
 
 It will return a new array, based on all members of `source` list that are not part of `matchAgainst` list.
@@ -20470,7 +20457,7 @@ test('when one argument is truthy and the other is falsy, it should return true'
 
 ```typescript
 
-zip<K, V>(x: readonly K[], y: readonly V[]): readonly KeyValuePair<K, V>[]
+zip<K, V>(x: K[], y: V[]): KeyValuePair<K, V>[]
 ```
 
 It will return a new array containing tuples of equally positions items from both `x` and `y` lists. 
@@ -20561,7 +20548,7 @@ test('should truncate result to length of shorted input list', () => {
 
 ```typescript
 
-zipObj<T, K extends string>(keys: readonly K[], values: readonly T[]): { readonly [P in K]: T }
+zipObj<T, K extends string>(keys: K[], values: T[]): { [P in K]: T }
 ```
 
 It will return a new object with keys of `keys` array and values of `values` array.
@@ -20651,7 +20638,7 @@ test('ignore extra keys', () => {
 
 ```typescript
 
-zipWith<T, U, TResult>(fn: (x: T, y: U) => TResult, list1: readonly T[], list2: readonly U[]): readonly TResult[]
+zipWith<T, U, TResult>(fn: (x: T, y: U) => TResult, list1: T[], list2: U[]): TResult[]
 ```
 
 ```javascript
@@ -20719,13 +20706,38 @@ test('when second list is longer', () => {
 
 ## ❯ CHANGELOG
 
-WIP 7.3.0
+7.3.0
+
+- Expose `immutable.ts` typings which are Rambda typings with `readonly` statements - [Issue #565](https://github.com/selfrefactor/rambda/issues/565), [Rambdax issue #69](https://github.com/selfrefactor/rambdax/issues/69)
+
+- Add `R.rejectIndexed` and `R.partitionIndexed` methods - [Rambdax issue #67](https://github.com/selfrefactor/rambdax/issues/67)
+
+- Expose `R.mapObject`, `R.mapArray`, `R.filterObject` and `R.filterArray` - [Issue #578](https://github.com/selfrefactor/rambda/issues/578)
+
+- `R.has` use `Object.prototype.hasOwnProperty`- [Issue #572](https://github.com/selfrefactor/rambda/issues/572)
+
+- Fix `R.intersection` wrong order compared to Ramda.
+
+- `R.path` wrong return of `null` instead of `undefined` when path value is `null` - [PR #577](https://github.com/selfrefactor/rambda/pull/577)
+
+- Wrong arguments order in `R.removeIndex` - [Issue #66](https://github.com/selfrefactor/rambdax/issues/66)
 
 - Change `R.piped` typings to mimic that of `R.pipe`. Main difference is that `R.pipe` is focused on unary functions.
 
-- Wrong logic where `R.without` use `R.includes` while it should use the array version of `R.includes`
+- Fix wrong logic when `R.without` use `R.includes` while it should use array version of `R.includes`.
 
-- Use uglify plugin for UMD bundle
+- Use uglify plugin for UMD bundle.
+
+- Remove `ts-toolbelt` types from Typescript definitions. Most affected are the following methods, which lose one of its curried definitions:
+
+1. R.maxBy
+2. R.minBy
+3. R.pathEq
+4. R.viewOr
+5. R.when
+6. R.merge
+7. R.mergeDeepRight
+8. R.mergeLeft
 
 7.2.0
 
