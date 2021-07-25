@@ -65,11 +65,9 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 `Rambdax` implements some methods from `Ramda` community projects, such as `R.lensSatisfies`, `R.lensEq` and `R.viewOr`.
 
-### Support
+### Alternative TS definitions
 
-Most of the valid issues are fixed within 2-3 days.
-
-Closing the issue is usually accompanied by publishing a new patch version of `Rambdax` to NPM.
+Alternative TS definitions are available as `rambdax/immutable`. These are Rambdax definitions linted with ESLint `functional/prefer-readonly-type` plugin.
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-rambdaxs-advantages)
 
@@ -77,7 +75,7 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 
 <details>
 <summary>
-  Click to see the full list of 89 Ramda methods not implemented in Rambda 
+  Click to see the full list of 88 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -122,7 +120,6 @@ Closing the issue is usually accompanied by publishing a new patch version of `R
 - lte
 - mapAccum
 - mapAccumRight
-- mapObjIndexed
 - memoizeWith
 - mergeDeepLeft
 - mergeDeepWith
@@ -9777,6 +9774,8 @@ export function mapObject(fn, obj){
   return willReturn
 }
 
+export const mapObjIndexed = mapObject
+
 export function map(fn, list){
   if (arguments.length === 1) return _list => map(fn, _list)
   if (list === undefined) return []
@@ -9797,59 +9796,50 @@ import { map } from './map'
 
 const double = x => x * 2
 
-const sampleObject = {
-  a : 1,
-  b : 2,
-  c : 3,
-  d : 4,
-}
+describe(`with array`, () => {
+  test('happy', () => {
+    expect(map(double, [ 1, 2, 3 ])).toEqual([ 2, 4, 6 ])
+  })
 
-test('with array', () => {
-  expect(map(double, [ 1, 2, 3 ])).toEqual([ 2, 4, 6 ])
+  test('when undefined instead of array', () => {
+    /**
+     * https://github.com/selfrefactor/rambda/issues/77
+     */
+    expect(map(double)(undefined)).toEqual([])
+  })
 })
 
-test('with object', () => {
+describe(`with object`, () => {
   const obj = {
     a : 1,
     b : 2,
   }
 
-  expect(map(double, obj)).toEqual({
-    a : 2,
-    b : 4,
+  test('happy', () => {
+    expect(map(double, obj)).toEqual({
+      a : 2,
+      b : 4,
+    })
   })
-})
-
-test('pass input object as third argument', () => {
-  const obj = {
-    a : 1,
-    b : 2,
-  }
-  const iterator = (
-    val, prop, inputObject
-  ) => {
-    expect(inputObject).toEqual(obj)
-
-    return val * 2
-  }
-
-  expect(map(iterator, obj)).toEqual({
-    a : 2,
-    b : 4,
+  test('property as second and input object as third argument', () => {
+    const obj = {
+      a : 1,
+      b : 2,
+    }
+    const iterator = (
+      val, prop, inputObject
+    ) => {
+      expect(prop).toBeString()
+      expect(inputObject).toEqual(obj)
+  
+      return val * 2
+    }
+  
+    expect(map(iterator)(obj)).toEqual({
+      a : 2,
+      b : 4,
+    })
   })
-})
-
-test('with object passes property as second argument', () => {
-  map((_, prop) => {
-    expect(typeof prop).toEqual('string')
-  })(sampleObject)
-})
-
-/**
- * https://github.com/selfrefactor/rambda/issues/77
- */
-test('when undefined instead of array', () => {
-  expect(map(double, undefined)).toEqual([])
 })
 ```
 
@@ -9861,8 +9851,15 @@ test('when undefined instead of array', () => {
 
 ```typescript
 
-mapArray<T, U>(fn: IndexedIterator<T, U>, iterable: T[]): U[]
+mapArray<T>(fn: Iterator<T, T>, iterable: T[]): T[]
 ```
+
+```javascript
+const result = R.mapArray(x => x + 1, [1, 2])
+// => [2, 3]
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.mapArray(x%20%3D%3E%20x%20%2B%201%2C%20%5B1%2C%202%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%203%5D">Try this <strong>R.mapArray</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapArray)
 
@@ -10309,7 +10306,33 @@ test('curried', () => {
 mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<T>
 ```
 
+```javascript
+const result = R.mapObject(x => x + 1, {a:1, b:2})
+// => {a:2, b:3}
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.mapObject(x%20%3D%3E%20x%20%2B%201%2C%20%7Ba%3A1%2C%20b%3A2%7D)%0A%2F%2F%20%3D%3E%20%7Ba%3A2%2C%20b%3A3%7D">Try this <strong>R.mapObject</strong> example in Rambda REPL</a>
+
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapObject)
+
+### mapObjIndexed
+
+It works the same way as `R.map` does for objects. It is added as Ramda also has this method.
+
+```javascript
+const fn = (val, prop) => {
+  return `${prop}-${val}`
+}
+
+const obj = {a: 1, b: 2}
+
+const result = R.map(mapObjIndexed, obj)
+// => {a: 'a-1', b: 'b-2'}
+```
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20(val%2C%20prop)%20%3D%3E%20%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20R.map(mapObjIndexed%2C%20obj)%0A%2F%2F%20%3D%3E%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D">Try this <strong>R.mapObjIndexed</strong> example in Rambda REPL</a>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapObjIndexed)
 
 ### mapToObject
 
@@ -12026,86 +12049,14 @@ test('with negative index', () => {
 
 ### objOf
 
-```typescript
-
-objOf<T, K extends string>(key: K, value: T): Record<K, T>
-```
-
-It returns a new object with the provided key and value.
+It creates an object with a single key-value pair.
 
 ```javascript
-const result = [
-  R.objOf('foo', 42),
-  R.objOf(null, undefined),
-]
-// => [{foo: 42}, {null: undefined}]
+const result = R.objOf('foo', 'bar')
+// => {foo: 'bar'}
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5B%0A%20%20R.objOf('foo'%2C%2042)%2C%0A%20%20R.objOf(null%2C%20undefined)%2C%0A%5D%0A%2F%2F%20%3D%3E%20%5B%7Bfoo%3A%2042%7D%2C%20%7Bnull%3A%20undefined%7D%5D">Try this <strong>R.objOf</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.objOf</strong> source</summary>
-
-```javascript
-export function objOf(key, value) {
-  if (arguments.length === 1) {
-    return (_value) => objOf(key, _value)
-  }
-  
-  return {
-    [key]: value
-  }
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { objOf } from "./objOf";
-import { objOf as objOfRamda } from "ramda";
-import { compareCombinations } from "./_internals/testUtils";
-
-test("happy", function () {
-  expect(objOf("foo", 42)).toEqual({ foo: 42 });
-});
-
-test("with bad inputs", function () {
-  expect(objOf(null, undefined)).toEqual({ null: undefined });
-});
-
-test("curried", function () {
-  expect(objOf("foo")(42)).toEqual({ foo: 42 });
-});
-
-describe("brute force", () => {
-  const possibleInputs = [0, 1, null, undefined, [], {}];
-
-  compareCombinations({
-    firstInput: possibleInputs,
-    secondInput: possibleInputs,
-    callback: (errorsCounters) => {
-      expect(errorsCounters).toMatchInlineSnapshot(`
-        Object {
-          "ERRORS_MESSAGE_MISMATCH": 0,
-          "ERRORS_TYPE_MISMATCH": 0,
-          "RESULTS_MISMATCH": 0,
-          "SHOULD_NOT_THROW": 0,
-          "SHOULD_THROW": 0,
-        }
-      `);
-    },
-    fn: objOf,
-    fnRamda: objOfRamda,
-  });
-});
-```
-
-</details>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.objOf('foo'%2C%20'bar')%0A%2F%2F%20%3D%3E%20%7Bfoo%3A%20'bar'%7D">Try this <strong>R.objOf</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#objOf)
 
@@ -13137,12 +13088,14 @@ test('with array', () => {
     const list = [ 1, 2, 3, 4 ]
 
   const result = partitionIndexed(predicate, list)
+  const curried = partitionIndexed(predicate)(list)
   const expectedResult = [
     [ 3, 4 ],
     [ 1, 2 ],
   ]
 
   expect(result).toEqual(expectedResult)
+  expect(curried).toEqual(expectedResult)
 })
 ```
 
@@ -20731,6 +20684,12 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+7.4.0
+
+- Add `R.objOf` method
+
+- Add `R.mapObjIndexed` method
 
 7.3.0
 

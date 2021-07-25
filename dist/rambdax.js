@@ -674,6 +674,7 @@ function mapObject(fn, obj) {
 
   return willReturn;
 }
+const mapObjIndexed = mapObject;
 function map(fn, list) {
   if (arguments.length === 1) return _list => map(fn, _list);
   if (list === undefined) return [];
@@ -3646,6 +3647,7 @@ exports.mapFastAsync = mapFastAsync;
 exports.mapFastAsyncFn = mapFastAsyncFn;
 exports.mapIndexed = mapIndexed;
 exports.mapKeys = mapKeys;
+exports.mapObjIndexed = mapObjIndexed;
 exports.mapObject = mapObject;
 exports.mapToObject = mapToObject;
 exports.mapToObjectAsync = mapToObjectAsync;
