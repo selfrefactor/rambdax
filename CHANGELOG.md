@@ -1,3 +1,9 @@
+7.4.0
+
+- Add `R.objOf` method
+
+- Add `R.mapObjIndexed` method
+
 7.3.0
 
 - Add `R.rejectIndexed` and `R.partitionIndexed` methods - [Rambdax issue #67](https://github.com/selfrefactor/rambdax/issues/67)

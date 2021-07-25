@@ -2046,6 +2046,16 @@ export function mapIndexed<T, U, S>(fn: ObjectIterator<T, U>): (iterable: Dictio
 export function mapIndexed<T>(fn: IndexedIterator<T, T>): (iterable: readonly T[]) => readonly T[];
 export function mapIndexed<T>(fn: IndexedIterator<T, T>, iterable: readonly T[]): readonly T[];
 
+export function mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<T>;
+export function mapObject<T, U>(fn: ObjectIterator<T, U>, iterable: Dictionary<T>): Dictionary<U>;
+export function mapObject<T>(fn: ObjectIterator<T, T>): (iterable: Dictionary<T>) => Dictionary<T>;
+export function mapObject<T, U>(fn: ObjectIterator<T, U>): (iterable: Dictionary<T>) => Dictionary<U>;
+
+export function mapArray<T, U>(fn: IndexedIterator<T, U>, iterable: readonly T[]): readonly U[];
+export function mapArray<T, U>(fn: IndexedIterator<T, U>): (iterable: readonly T[]) => readonly U[];
+export function mapArray<T>(fn: IndexedIterator<T, T>): (iterable: readonly T[]) => readonly T[];
+export function mapArray<T>(fn: IndexedIterator<T, T>, iterable: readonly T[]): readonly T[];
+
 /**
  * Same as `R.filter`, but it passes index/property as second argument to the predicate, when looping over arrays/objects.
  */
@@ -2077,23 +2087,16 @@ export function partitionIndexed<T>(
   predicate: (x: T, prop?: string) => boolean
 ): (input: { readonly [key: string]: T}) => readonly [{ readonly [key: string]: T}, { readonly [key: string]: T}];
 
+export function filterObject<T>(predicate: ObjectPredicate<T>): (x: Dictionary<T>) => Dictionary<T>;
+export function filterObject<T>(predicate: ObjectPredicate<T>, x: Dictionary<T>): Dictionary<T>;
+
+export function filterArray<T>(predicate: Predicate<T>): (input: readonly T[]) => readonly T[];
+export function filterArray<T>(predicate: Predicate<T>, input: readonly T[]): readonly T[];
+
 export function forEachIndexed<T>(fn: IndexedIterator<T, void>, list: readonly T[]): readonly T[];
 export function forEachIndexed<T>(fn: IndexedIterator<T, void>): (list: readonly T[]) => readonly T[];
 export function forEachIndexed<T>(fn: ObjectIterator<T, void>, list: Dictionary<T>): Dictionary<T>;
 export function forEachIndexed<T, U>(fn: ObjectIterator<T, void>): (list: Dictionary<T>) => Dictionary<T>;
-
-export function mapArray<T, U>(fn: IndexedIterator<T, U>, iterable: readonly T[]): readonly U[];
-export function mapArray<T, U>(fn: IndexedIterator<T, U>): (iterable: readonly T[]) => readonly U[];
-export function mapArray<T>(fn: IndexedIterator<T, T>): (iterable: readonly T[]) => readonly T[];
-export function mapArray<T>(fn: IndexedIterator<T, T>, iterable: readonly T[]): readonly T[];
-
-export function mapObject<T>(fn: ObjectIterator<T, T>, iterable: Dictionary<T>): Dictionary<U>;
-export function mapObject<T, U>(fn: ObjectIterator<T, U>, iterable: Dictionary<T>): Dictionary<U>;
-export function mapObject<T>(fn: ObjectIterator<T, T>): (iterable: Dictionary<T>) => Dictionary<U>;
-export function mapObject<T, U>(fn: ObjectIterator<T, U>): (iterable: Dictionary<T>) => Dictionary<U>;
-
-export function filterObject<T>(fn: ObjectIterator<T, boolean>, iterable: Dictionary<T>): Dictionary<T>;
-export function filterObject<T>(fn: ObjectIterator<T, boolean>): (iterable: Dictionary<T>) => Dictionary<T>;
 
 /**
  * It returns function that runs `fn` in `try/catch` block. If there was an error, then `fallback` is used to return the result.
