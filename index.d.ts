@@ -1421,8 +1421,6 @@ export function when<T, U>(predicate: (x: T) => boolean): ((whenTrueFn: (a: T) =
 
 /**
  * It returns `true` if all each property in `conditions` returns `true` when applied to corresponding property in `input` object.
- * 
- * `R.equals` is used to determine equality.
  */
 export function where<T, U>(conditions: T, input: U): boolean;
 export function where<T>(conditions: T): <U>(input: U) => boolean;
@@ -1978,8 +1976,8 @@ export function lensEq<T>(lens: Lens, target: T): (input: T[]) => boolean;
  */
 export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean;
 export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
-export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: rray<T>): boolean;
-export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: rray<T>) => boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: T[]): boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: T[]) => boolean;
 
 /**
  * A combination between `R.defaultTo` and `R.view.
