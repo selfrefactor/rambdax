@@ -226,62 +226,67 @@ The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4
 
 method | Rambda | Ramda | Lodash
 --- |--- | --- | ---
- *add* | 96.25% slower | 96.24% slower | 🚀 Fastest
- *adjust* | 🚀 Fastest | 5.52% slower | 🔳
- *all* | 🚀 Fastest | 94.95% slower | 🔳
- *allPass* | 🚀 Fastest | 98.95% slower | 🔳
- *any* | 🚀 Fastest | 98.18% slower | 6.18% slower
- *anyPass* | 🚀 Fastest | 99.09% slower | 🔳
- *append* | 🚀 Fastest | 84.09% slower | 🔳
- *applySpec* | 🚀 Fastest | 75.73% slower | 🔳
- *assoc* | 87.98% slower | 57.39% slower | 🚀 Fastest
- *clone* | 🚀 Fastest | 96.03% slower | 91.75% slower
- *compose* | 🚀 Fastest | 96.45% slower | 77.83% slower
- *converge* | 49.12% slower | 🚀 Fastest | 🔳
- *curry* | 🚀 Fastest | 34.9% slower | 🔳
- *curryN* | 63.32% slower | 🚀 Fastest | 🔳
- *defaultTo* | 🚀 Fastest | 50.3% slower | 🔳
- *drop* | 🚀 Fastest | 97.45% slower | 🔳
- *dropLast* | 🚀 Fastest | 97.07% slower | 🔳
- *equals* | 72.11% slower | 79.48% slower | 🚀 Fastest
- *filter* | 🚀 Fastest | 94.74% slower | 58.18% slower
- *find* | 🚀 Fastest | 98.2% slower | 88.96% slower
- *findIndex* | 🚀 Fastest | 97.97% slower | 79.39% slower
- *flatten* | 6.56% slower | 95.38% slower | 🚀 Fastest
- *ifElse* | 🚀 Fastest | 70.97% slower | 🔳
- *includes* | 🚀 Fastest | 71.7% slower | 🔳
- *indexOf* | 🚀 Fastest | 84.08% slower | 7.86% slower
- *init* | 94.42% slower | 97.55% slower | 🚀 Fastest
- *is* | 🚀 Fastest | 11.72% slower | 🔳
- *isEmpty* | 51.68% slower | 93.82% slower | 🚀 Fastest
- *last* | 🚀 Fastest | 99.64% slower | 1.05% slower
- *lastIndexOf* | 🚀 Fastest | 42.38% slower | 🔳
- *map* | 🚀 Fastest | 69.63% slower | 4.68% slower
- *match* | 🚀 Fastest | 46.75% slower | 🔳
- *merge* | 63.55% slower | 🚀 Fastest | 55.25% slower
- *none* | 🚀 Fastest | 98.22% slower | 🔳
- *omit* | 🚀 Fastest | 70.66% slower | 97.56% slower
- *over* | 🚀 Fastest | 50.77% slower | 🔳
- *path* | 🚀 Fastest | 74.94% slower | 5.72% slower
- *pick* | 🚀 Fastest | 26.29% slower | 86.82% slower
- *prop* | 🚀 Fastest | 89.89% slower | 🔳
- *propEq* | 🚀 Fastest | 95.26% slower | 🔳
- *range* | 95.17% slower | 90.22% slower | 🚀 Fastest
- *reduce* | 52.76% slower | 74.02% slower | 🚀 Fastest
- *repeat* | 85.91% slower | 95.31% slower | 🚀 Fastest
- *replace* | 0.47% slower | 28.13% slower | 🚀 Fastest
- *set* | 🚀 Fastest | 36.26% slower | 🔳
- *sort* | 🚀 Fastest | 63.15% slower | 🔳
- *sortBy* | 🚀 Fastest | 61.57% slower | 88.88% slower
- *split* | 🚀 Fastest | 85.34% slower | 33.69% slower
- *splitEvery* | 🚀 Fastest | 90.18% slower | 🔳
- *take* | 93.44% slower | 98.04% slower | 🚀 Fastest
- *takeLast* | 92.61% slower | 98.83% slower | 🚀 Fastest
- *test* | 🚀 Fastest | 94.42% slower | 🔳
- *type* | 18.91% slower | 🚀 Fastest | 🔳
- *uniq* | 98.98% slower | 96.58% slower | 🚀 Fastest
- *update* | 🚀 Fastest | 38.88% slower | 🔳
- *view* | 🚀 Fastest | 82.21% slower | 🔳
+ *add* | 🚀 Fastest | 21.52% slower | 82.15% slower
+ *adjust* | 8.48% slower | 🚀 Fastest | 🔳
+ *all* | 6.5% slower | 🚀 Fastest | 🔳
+ *allPass* | 🚀 Fastest | 91.64% slower | 🔳
+ *allPass* | 🚀 Fastest | 98.56% slower | 🔳
+ *and* | 🚀 Fastest | 89.09% slower | 🔳
+ *any* | 🚀 Fastest | 92.87% slower | 45.82% slower
+ *anyPass* | 🚀 Fastest | 98.25% slower | 🔳
+ *append* | 🚀 Fastest | 2.07% slower | 🔳
+ *applySpec* | 🚀 Fastest | 80.43% slower | 🔳
+ *assoc* | 72.32% slower | 60.08% slower | 🚀 Fastest
+ *clone* | 🚀 Fastest | 91.86% slower | 86.48% slower
+ *compose* | 🚀 Fastest | 93.76% slower | 72.65% slower
+ *converge* | 78.63% slower | 🚀 Fastest | 🔳
+ *curry* | 🚀 Fastest | 28.86% slower | 🔳
+ *curryN* | 🚀 Fastest | 41.05% slower | 🔳
+ *defaultTo* | 🚀 Fastest | 48.91% slower | 🔳
+ *drop* | 🚀 Fastest | 82.35% slower | 🔳
+ *dropLast* | 🚀 Fastest | 86.74% slower | 🔳
+ *equals* | 58.37% slower | 96.73% slower | 🚀 Fastest
+ *filter* | 6.7% slower | 72.03% slower | 🚀 Fastest
+ *find* | 🚀 Fastest | 85.14% slower | 42.65% slower
+ *findIndex* | 🚀 Fastest | 86.48% slower | 72.27% slower
+ *flatten* | 🚀 Fastest | 95.26% slower | 10.27% slower
+ *ifElse* | 🚀 Fastest | 58.56% slower | 🔳
+ *includes* | 6.14% slower | 🚀 Fastest | 🔳
+ *indexOf* | 🚀 Fastest | 82.37% slower | 🔳
+ *indexOf* | 🚀 Fastest | 82.2% slower | 🔳
+ *init* | 🚀 Fastest | 92.24% slower | 13.3% slower
+ *is* | 🚀 Fastest | 57.69% slower | 🔳
+ *isEmpty* | 🚀 Fastest | 97.14% slower | 54.99% slower
+ *last* | 🚀 Fastest | 93.43% slower | 5.28% slower
+ *lastIndexOf* | 🚀 Fastest | 85.19% slower | 🔳
+ *map* | 🚀 Fastest | 86.6% slower | 11.73% slower
+ *match* | 🚀 Fastest | 44.83% slower | 🔳
+ *merge* | 🚀 Fastest | 12.21% slower | 55.76% slower
+ *none* | 🚀 Fastest | 96.48% slower | 🔳
+ *objOf* | 🚀 Fastest | 38.05% slower | 🔳
+ *omit* | 🚀 Fastest | 69.95% slower | 97.34% slower
+ *over* | 🚀 Fastest | 56.23% slower | 🔳
+ *path* | 37.81% slower | 77.81% slower | 🚀 Fastest
+ *pick* | 🚀 Fastest | 19.07% slower | 80.2% slower
+ *prop* | 🚀 Fastest | 87.95% slower | 🔳
+ *propEq* | 🚀 Fastest | 91.92% slower | 🔳
+ *range* | 🚀 Fastest | 61.8% slower | 57.44% slower
+ *reduce* | 60.48% slower | 77.1% slower | 🚀 Fastest
+ *repeat* | 48.57% slower | 68.98% slower | 🚀 Fastest
+ *replace* | 33.45% slower | 33.99% slower | 🚀 Fastest
+ *set* | 🚀 Fastest | 50.35% slower | 🔳
+ *sort* | 🚀 Fastest | 44.29% slower | 🔳
+ *sortBy* | 🚀 Fastest | 25.29% slower | 56.88% slower
+ *split* | 🚀 Fastest | 55.37% slower | 17.64% slower
+ *splitEvery* | 🚀 Fastest | 71.98% slower | 🔳
+ *take* | 🚀 Fastest | 91.96% slower | 4.72% slower
+ *takeLast* | 🚀 Fastest | 93.39% slower | 19.22% slower
+ *test* | 🚀 Fastest | 82.34% slower | 🔳
+ *type* | 🚀 Fastest | 48.6% slower | 🔳
+ *uniq* | 🚀 Fastest | 88.4% slower | 🔳
+ *uniqWith* | 14.23% slower | 🚀 Fastest | 🔳
+ *update* | 🚀 Fastest | 52.35% slower | 🔳
+ *view* | 🚀 Fastest | 76.15% slower | 🔳
 
 </details>
 
@@ -3677,6 +3682,7 @@ export function difference(a, b){
 
 ```javascript
 import { difference } from './difference'
+import { difference as differenceRamda } from 'ramda'
 
 test('difference', () => {
   const a = [ 1, 2, 3, 4 ]
@@ -3699,7 +3705,8 @@ test('no duplicates in first list', () => {
 })
 
 test('should use R.equals', () => {
-  expect(difference([ NaN ], [ NaN ]).length).toEqual(0)
+  expect(difference([ 1 ], [ 1 ]).length).toEqual(0)
+  expect(differenceRamda([ NaN ], [ NaN ]).length).toEqual(0)
 })
 ```
 
@@ -5043,7 +5050,7 @@ test('bad inputs difference between Ramda and Rambda', () => {
     'Cannot read property \'filter\' of undefined')
 })
 
-test.only('predicate when input is object', () => {
+test('predicate when input is object', () => {
   const obj = {
     a : 1,
     b : 2,
@@ -7029,19 +7036,7 @@ const result = [
 
 ```javascript
 import { _isArray } from './_internals/_isArray'
-import { equals } from './equals'
-
-export function includesArray(valueToFind, input){
-  let index = -1
-
-  while (++index < input.length){
-    if (equals(input[ index ], valueToFind)){
-      return true
-    }
-  }
-
-  return false
-}
+import { _indexOf } from './indexOf'
 
 export function includes(valueToFind, input){
   if (arguments.length === 1) return _input => includes(valueToFind, _input)
@@ -7053,7 +7048,7 @@ export function includes(valueToFind, input){
   }
   if (!_isArray(input)) return false
 
-  return includesArray(valueToFind, input)
+  return _indexOf(valueToFind, input) > -1
 }
 ```
 
@@ -7064,32 +7059,45 @@ export function includes(valueToFind, input){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import R from 'ramda'
-
 import { includes } from './includes'
+import { includes as includesRamda } from 'ramda'
 
-test('includes with string', () => {
+test('with string as iterable', () => {
   const str = 'foo bar'
 
   expect(includes('bar')(str)).toBeTrue()
-  expect(R.includes('bar')(str)).toBeTrue()
+  expect(includesRamda('bar')(str)).toBeTrue()
   expect(includes('never', str)).toBeFalse()
-  expect(R.includes('never', str)).toBeFalse()
+  expect(includesRamda('never', str)).toBeFalse()
 })
 
-test('includes with array', () => {
+test('with array as iterable', () => {
   const arr = [ 1, 2, 3 ]
 
   expect(includes(2)(arr)).toBeTrue()
-  expect(R.includes(2)(arr)).toBeTrue()
+  expect(includesRamda(2)(arr)).toBeTrue()
 
   expect(includes(4, arr)).toBeFalse()
-  expect(R.includes(4, arr)).toBeFalse()
+  expect(includesRamda(4, arr)).toBeFalse()
+})
+
+test('with list of objects as iterable', () => {
+  const arr = [ {a:1}, {b:2}, {c:3} ]
+
+  expect(includes({c:3}, arr)).toBeTrue()
+  expect(includesRamda({c:3}, arr)).toBeTrue()
+})
+
+test('with NaN', () => {
+  const result = includes(NaN, [NaN])
+  const ramdaResult = includesRamda(NaN, [NaN])
+  expect(result).toBeTrue()
+  expect(ramdaResult).toBeTrue()
 })
 
 test('with wrong input that does not throw', () => {
   const result = includes(1, /foo/g)
-  const ramdaResult = R.includes(1, /foo/g)
+  const ramdaResult = includesRamda(1, /foo/g)
   expect(result).toBeFalse()
   expect(ramdaResult).toBeFalse()
 })
@@ -7097,11 +7105,11 @@ test('with wrong input that does not throw', () => {
 test('throws on wrong input - match ramda behaviour', () => {
   expect(() => includes(2, null)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of null')
-  expect(() => R.includes(2, null)).toThrowWithMessage(TypeError,
+  expect(() => includesRamda(2, null)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of null')
   expect(() => includes(2, undefined)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of undefined')
-  expect(() => R.includes(2, undefined)).toThrowWithMessage(TypeError,
+  expect(() => includesRamda(2, undefined)).toThrowWithMessage(TypeError,
     'Cannot read property \'indexOf\' of undefined')
 })
 ```
@@ -7145,6 +7153,8 @@ const result = [
 It returns the index of the first element of `list` equals to `valueToFind`.
 
 If there is no such element, it returns `-1`.
+
+> :boom: It uses `R.equals` for list of objects/arrays or native `indexOf` for any other case.
 
 ```javascript
 const list = [0, 1, 2, 3]
@@ -13044,62 +13054,6 @@ test('readme example', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partition)
 
 ### partitionIndexed
-
-```typescript
-
-partitionIndexed<T>(
-  predicate: IndexedPredicate<T>,
-  input: T[]
-): [T[], T[]]
-```
-
-<details>
-
-<summary><strong>R.partitionIndexed</strong> source</summary>
-
-```javascript
-import { partitionObject, partitionArray } from './partition'
-import { _isArray } from './_internals/_isArray'
-
-export function partitionIndexed(predicate, iterable){
-  if (arguments.length === 1){
-    return listHolder => partitionIndexed(predicate, listHolder)
-  }
-  if (!_isArray(iterable)) return partitionObject(predicate, iterable)
-
-  return partitionArray(predicate, iterable, true)
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { partitionIndexed } from './partitionIndexed'
-
-test('with array', () => {
-  const predicate = (x, i) => {
-    expect(x).toBeNumber()
-    return x > 2
-  }
-    const list = [ 1, 2, 3, 4 ]
-
-  const result = partitionIndexed(predicate, list)
-  const curried = partitionIndexed(predicate)(list)
-  const expectedResult = [
-    [ 3, 4 ],
-    [ 1, 2 ],
-  ]
-
-  expect(result).toEqual(expectedResult)
-  expect(curried).toEqual(expectedResult)
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#partitionIndexed)
 
@@ -19170,20 +19124,17 @@ R.uniq(list)
 <summary><strong>R.uniq</strong> source</summary>
 
 ```javascript
-import { includes } from './includes'
+import { _Set } from './_internals/set'
 
-export function uniq(list){
-  let index = -1
+export function uniq(list) {
+  const set = new _Set()
   const willReturn = []
-
-  while (++index < list.length){
-    const value = list[ index ]
-
-    if (!includes(value, willReturn)){
-      willReturn.push(value)
+  list.forEach(item => {
+    if (set.checkUniqueness(item)) {
+      willReturn.push(item)
     }
-  }
-
+  })
+  
   return willReturn
 }
 ```
@@ -19196,6 +19147,7 @@ export function uniq(list){
 
 ```javascript
 import {uniq} from './uniq'
+import {uniq as uniqRamda} from 'ramda'
 
 test('happy', () => {
   const list = [1, 2, 3, 3, 3, 1, 2, 0]
@@ -19203,12 +19155,15 @@ test('happy', () => {
 })
 
 test('with object', () => {
-  const list = [{a: 1}, {a: 2}, {a: 1}]
+  const list = [{a: 1}, {a: 2}, {a: 1}, {a:2}]
   expect(uniq(list)).toEqual([{a: 1}, {a: 2}])
 })
 
 test('with nested array', () => {
   expect(uniq([[42], [42]])).toEqual([[42]])
+})
+test('with booleans', () => {
+  expect(uniq([[false], [false], [true]])).toEqual([[false], [true]])
 })
 
 test('with falsy values', () => {
@@ -20026,8 +19981,6 @@ where<T, U>(conditions: T, input: U): boolean
 
 It returns `true` if all each property in `conditions` returns `true` when applied to corresponding property in `input` object.
 
-`R.equals` is used to determine equality.
-
 ```javascript
 const condition = R.where({
   a : x => typeof x === "string",
@@ -20235,17 +20188,17 @@ const result = R.without(matchAgainst, source)
 <summary><strong>R.without</strong> source</summary>
 
 ```javascript
-import { includesArray } from './includes'
-import { reduce } from './reduce'
+import {reduce} from './reduce'
+import {_indexOf} from './indexOf'
 
-export function without(matchAgainst, source){
-  if (source === undefined){
+export function without(matchAgainst, source) {
+  if (source === undefined) {
     return _source => without(matchAgainst, _source)
   }
 
   return reduce(
     (prev, current) =>
-    includesArray(current, matchAgainst) ? prev : prev.concat(current),
+      _indexOf(current, matchAgainst) > -1 ? prev : prev.concat(current),
     [],
     source
   )
@@ -20259,24 +20212,34 @@ export function without(matchAgainst, source){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { without } from './without'
+import {without} from './without'
+import {without as withoutRamda} from 'ramda'
 
-test('should return a new list without values in the first argument ', () => {
-  const itemsToOmit = [ 'A', 'B', 'C' ]
-  const collection = [ 'A', 'B', 'C', 'D', 'E', 'F' ]
+test('should return a new list without values in the first argument', () => {
+  const itemsToOmit = ['A', 'B', 'C']
+  const collection = ['A', 'B', 'C', 'D', 'E', 'F']
 
-  expect(without(itemsToOmit, collection)).toEqual([ 'D', 'E', 'F' ])
-  expect(without(itemsToOmit)(collection)).toEqual([ 'D', 'E', 'F' ])
+  expect(without(itemsToOmit, collection)).toEqual(['D', 'E', 'F'])
+  expect(without(itemsToOmit)(collection)).toEqual(['D', 'E', 'F'])
 })
 
-test('ramda bug', () => {
-  expect(
-    without("0:1", ["0", "0:1"])
-  ).toEqual(['0:1'])
+test('with list of objects', () => {
+  const itemsToOmit = [{a: 1}, {c: 3}]
+  const collection = [{a: 1}, {b: 2}, {c: 3}, {d: 4}]
+  const expected = [{b: 2}, {d: 4}]
+
+  expect(without(itemsToOmit, collection)).toEqual(expected)
+  expect(withoutRamda(itemsToOmit, collection)).toEqual(expected)
+})
+
+test('ramda accepts string as target input while rambda throws', () => {
+  expect(withoutRamda('0:1', ['0', '0:1'])).toEqual([])
+  expect(() => without('0:1', ['0', '0:1'])).toThrow()
+  expect(without(['0:1'], ['0', '0:1'])).toEqual(['0'])
 })
 
 test('ramda test', () => {
-  expect(without([ 1, 2 ])([ 1, 2, 1, 3, 4 ])).toEqual([ 3, 4 ])
+  expect(without([1, 2])([1, 2, 1, 3, 4])).toEqual([3, 4])
 })
 ```
 
@@ -20684,6 +20647,21 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+7.4.1
+
+- Fix corrupted Typescript definitions - [Rambdax issue #72](https://github.com/selfrefactor/rambdax/issues/72)
+
+- Fix slow `R.uniq` methods - [Issue #581](https://github.com/selfrefactor/rambda/issues/581)
+
+Fixing `R.uniq` was done by improving `R.indexOf` which has performance implication to all methods importing `R.indexOf`:
+
+- R.includes
+- R.intersection
+- R.difference
+- R.excludes
+- R.symmetricDifference
+- R.union
 
 7.4.0
 

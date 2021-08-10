@@ -1,3 +1,18 @@
+7.4.1
+
+- Fix corrupted Typescript definitions - [Rambdax issue #72](https://github.com/selfrefactor/rambdax/issues/72)
+
+- Fix slow `R.uniq` methods - [Issue #581](https://github.com/selfrefactor/rambda/issues/581)
+
+Fixing `R.uniq` was done by improving `R.indexOf` which has performance implication to all methods importing `R.indexOf`:
+
+- R.includes
+- R.intersection
+- R.difference
+- R.excludes
+- R.symmetricDifference
+- R.union
+
 7.4.0
 
 - Add `R.objOf` method
