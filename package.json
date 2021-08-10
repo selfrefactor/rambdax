@@ -8,7 +8,7 @@
   },
   "typings": "./index.d.ts",
   "main": "./dist/rambdax",
-  "version": "7.4.0",
+  "version": "7.4.1",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.12.13",
