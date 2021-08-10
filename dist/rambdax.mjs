@@ -511,17 +511,35 @@ function delay(ms) {
   });
 }
 
-function includesArray(valueToFind, input) {
-  let index = -1;
+function _indexOf(valueToFind, list) {
+  if (!_isArray(list)) {
+    throw new Error(`Cannot read property 'indexOf' of ${list}`);
+  }
 
-  while (++index < input.length) {
-    if (equals(input[index], valueToFind)) {
-      return true;
+  const typeOfValue = type(valueToFind);
+  if (!['Object', 'Array', 'NaN', 'RegExp'].includes(typeOfValue)) return list.indexOf(valueToFind);
+  let index = -1;
+  let foundIndex = -1;
+  const {
+    length
+  } = list;
+
+  while (++index < length && foundIndex === -1) {
+    if (equals(list[index], valueToFind)) {
+      foundIndex = index;
     }
   }
 
-  return false;
+  return foundIndex;
 }
+function indexOf(valueToFind, list) {
+  if (arguments.length === 1) {
+    return _list => _indexOf(valueToFind, _list);
+  }
+
+  return _indexOf(valueToFind, list);
+}
+
 function includes(valueToFind, input) {
   if (arguments.length === 1) return _input => includes(valueToFind, _input);
 
@@ -534,7 +552,7 @@ function includes(valueToFind, input) {
   }
 
   if (!_isArray(input)) return false;
-  return includesArray(valueToFind, input);
+  return _indexOf(valueToFind, input) > -1;
 }
 
 function excludes(valueToFind, input) {
@@ -2323,18 +2341,53 @@ function converge(fn, transformers) {
 
 const dec = x => x - 1;
 
-function uniq(list) {
-  let index = -1;
-  const willReturn = [];
-
-  while (++index < list.length) {
-    const value = list[index];
-
-    if (!includes(value, willReturn)) {
-      willReturn.push(value);
-    }
+class _Set {
+  constructor() {
+    this.set = new Set();
+    this.items = {};
   }
 
+  checkUniqueness(item) {
+    const type$1 = type(item);
+
+    if (['Null', 'Undefined', 'NaN'].includes(type$1)) {
+      if (type$1 in this.items) {
+        return false;
+      }
+
+      this.items[type$1] = true;
+      return true;
+    }
+
+    if (!['Object', 'Array'].includes(type$1)) {
+      const prevSize = this.set.size;
+      this.set.add(item);
+      return this.set.size !== prevSize;
+    }
+
+    if (!(type$1 in this.items)) {
+      this.items[type$1] = [item];
+      return true;
+    }
+
+    if (_indexOf(item, this.items[type$1]) === -1) {
+      this.items[type$1].push(item);
+      return true;
+    }
+
+    return false;
+  }
+
+}
+
+function uniq(list) {
+  const set = new _Set();
+  const willReturn = [];
+  list.forEach(item => {
+    if (set.checkUniqueness(item)) {
+      willReturn.push(item);
+    }
+  });
   return willReturn;
 }
 
@@ -2619,25 +2672,6 @@ function indexBy(condition, list) {
   }
 
   return toReturn;
-}
-
-function indexOf(valueToFind, list) {
-  if (arguments.length === 1) {
-    return _list => indexOf(valueToFind, _list);
-  }
-
-  let index = -1;
-  const {
-    length
-  } = list;
-
-  while (++index < length) {
-    if (list[index] === valueToFind) {
-      return index;
-    }
-  }
-
-  return -1;
 }
 
 function intersection(listA, listB) {
@@ -3224,7 +3258,7 @@ function without(matchAgainst, source) {
     return _source => without(matchAgainst, _source);
   }
 
-  return reduce((prev, current) => includesArray(current, matchAgainst) ? prev : prev.concat(current), [], source);
+  return reduce((prev, current) => _indexOf(current, matchAgainst) > -1 ? prev : prev.concat(current), [], source);
 }
 
 function xor(a, b) {
@@ -3522,4 +3556,4 @@ function eqPropsFn(prop, obj1, obj2) {
 
 const eqProps = curry(eqPropsFn);
 
-export { DELAY, F, T, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applyDiff, applySpec, assoc, assocPath, both, chain, check, clamp, clone, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, dropLastWhile, dropRepeats, dropRepeatsWith, dropWhile, either, endsWith, eqProps, equals, evolve, evolveArray, evolveObject, excludes, filter, filterArray, filterAsync, filterAsyncFn, filterIndexed, filterObject, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, forEachIndexed, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, includesArray, indexBy, indexOf, init, interpolate, intersection, intersperse, is$1 as is, isEmpty, isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, lensSatisfies, map, mapArray, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapIndexed, mapKeys, mapObjIndexed, mapObject, mapToObject, mapToObjectAsync, mapToObjectAsyncFn, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, move, multiply, negate, nextIndex, none, not, nth, objOf, of, ok, omit, once, or, over, partial, partialCurry, partition, partitionArray, partitionAsync, partitionIndexed, partitionObject, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, pipeAsync, piped, pipedAsync, pluck, prepend, prevIndex, produce, produceAsync, product, prop, propEq, propIs, propOr, props, prototypeToString, random, range, reduce, reject, rejectIndexed, remove, removeAtPath, removeIndex, renameProps, repeat, replace$1 as replace, replaceAll, reset, reverse, schemaToString, set, setter, shuffle, slice, sort, sortBy, sortByPath, sortByProps, sortObject, split, splitAt, splitEvery, splitWhen, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, takeLastWhile, takeUntil, takeWhile, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString, toUpper, transpose, trim, tryCatch, tryCatchAsync, type, union, uniq, uniqWith, unless, update, updateObject, values, view, viewOr, wait, waitFor, when, where, whereEq, without, xnor, xor, zip, zipObj, zipWith };
+export { DELAY, F, T, _indexOf, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, applyDiff, applySpec, assoc, assocPath, both, chain, check, clamp, clone, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, dropLastWhile, dropRepeats, dropRepeatsWith, dropWhile, either, endsWith, eqProps, equals, evolve, evolveArray, evolveObject, excludes, filter, filterArray, filterAsync, filterAsyncFn, filterIndexed, filterObject, find, findIndex, findLast, findLastIndex, flatten, flip, forEach, forEachIndexed, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, interpolate, intersection, intersperse, is$1 as is, isEmpty, isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, lensSatisfies, map, mapArray, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapIndexed, mapKeys, mapObjIndexed, mapObject, mapToObject, mapToObjectAsync, mapToObjectAsyncFn, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, move, multiply, negate, nextIndex, none, not, nth, objOf, of, ok, omit, once, or, over, partial, partialCurry, partition, partitionArray, partitionAsync, partitionIndexed, partitionObject, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, pipeAsync, piped, pipedAsync, pluck, prepend, prevIndex, produce, produceAsync, product, prop, propEq, propIs, propOr, props, prototypeToString, random, range, reduce, reject, rejectIndexed, remove, removeAtPath, removeIndex, renameProps, repeat, replace$1 as replace, replaceAll, reset, reverse, schemaToString, set, setter, shuffle, slice, sort, sortBy, sortByPath, sortByProps, sortObject, split, splitAt, splitEvery, splitWhen, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, takeLastWhile, takeUntil, takeWhile, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString, toUpper, transpose, trim, tryCatch, tryCatchAsync, type, union, uniq, uniqWith, unless, update, updateObject, values, view, viewOr, wait, waitFor, when, where, whereEq, without, xnor, xor, zip, zipObj, zipWith };
