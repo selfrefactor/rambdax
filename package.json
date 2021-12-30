@@ -7,7 +7,6 @@
     "docs": "npx docsify-cli init ./docs"
   },
   "typings": "./index.d.ts",
-  "main": "./dist/rambdax",
   "version": "7.4.1",
   "dependencies": {},
   "devDependencies": {
@@ -39,9 +38,19 @@
   "license": "MIT",
   "author": "self_refactor",
   "description": "Extended version of Rambda - a lightweight, faster alternative to Ramda",
-  "module": "./dist/rambdax.esm.js",
-  "umd": "./dist/rambdax.umd.js",
   "sideEffects": false,
+  "main": "./dist/rambdax.js",
+  "umd": "./dist/rambdax.umd.js",
+  "module": "./dist/rambdax.esm.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/rambdax.esm.js",
+      "require": "./dist/rambdax.js",
+      "default": "./dist/rambdax.js",
+      "types": "./index.d.ts"
+    }
+  },
   "keywords": [
     "ramda",
     "rambda",
