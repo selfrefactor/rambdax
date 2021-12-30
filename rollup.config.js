@@ -7,14 +7,14 @@ const extensions = [ '.js' ]
 
 export default {
   plugins : [
-    replace({ 'process.env.NODE_ENV' : JSON.stringify('production') }),
+    replace({ preventAssignment: true, 'process.env.NODE_ENV' : JSON.stringify('production') }),
     nodeResolve({
       extensions,
       browser: false,
       preferBuiltins : true,
     }),
     cleanup(),
-    babel({ 
+    babel({
       babelHelpers: 'bundled',
         extensions,
         exclude : [ 'node_modules/**' ],
