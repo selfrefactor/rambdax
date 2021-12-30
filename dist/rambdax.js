@@ -2,38 +2,20 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const _isArray = Array.isArray;
-
 function type(input) {
-  const typeOf = typeof input;
-
   if (input === null) {
     return 'Null';
   } else if (input === undefined) {
     return 'Undefined';
-  } else if (typeOf === 'boolean') {
-    return 'Boolean';
-  } else if (typeOf === 'number') {
-    return Number.isNaN(input) ? 'NaN' : 'Number';
-  } else if (typeOf === 'string') {
-    return 'String';
-  } else if (_isArray(input)) {
-    return 'Array';
-  } else if (typeOf === 'symbol') {
-    return 'Symbol';
-  } else if (input instanceof RegExp) {
-    return 'RegExp';
+  } else if (Number.isNaN(input)) {
+    return 'NaN';
   }
 
-  const asStr = input && input.toString ? input.toString() : '';
-  if (['true', 'false'].includes(asStr)) return 'Boolean';
-  if (!Number.isNaN(Number(asStr))) return 'Number';
-  if (asStr.startsWith('async')) return 'Async';
-  if (asStr === '[object Promise]') return 'Promise';
-  if (typeOf === 'function') return 'Function';
-  if (input instanceof String) return 'String';
-  return 'Object';
+  const typeResult = Object.prototype.toString.call(input).slice(8, -1);
+  return typeResult === 'AsyncFunction' ? 'Async' : typeResult;
 }
+
+const _isArray = Array.isArray;
 
 function isTruthy(x) {
   if (_isArray(x)) {
@@ -241,6 +223,10 @@ function assocFn(prop, newValue, obj) {
 
 const assoc = curry(assocFn);
 
+const cloneList = list => {
+  return Array.prototype.slice.call(list);
+};
+
 function assocPathFn(path, newValue, input) {
   const pathArrValue = typeof path === 'string' ? path.split('.').map(x => _isInteger(Number(x)) ? Number(x) : x) : path;
 
@@ -257,7 +243,7 @@ function assocPathFn(path, newValue, input) {
   }
 
   if (_isInteger(index) && _isArray(input)) {
-    const arr = input.slice();
+    const arr = cloneList(input);
     arr[index] = newValue;
     return arr;
   }
@@ -375,6 +361,73 @@ function composeAsync(...inputArguments) {
   };
 }
 
+function _lastIndexOf(valueToFind, list) {
+  if (!_isArray(list)) {
+    throw new Error(`Cannot read property 'indexOf' of ${list}`);
+  }
+
+  const typeOfValue = type(valueToFind);
+  if (!['Object', 'Array', 'NaN', 'RegExp'].includes(typeOfValue)) return list.lastIndexOf(valueToFind);
+  const {
+    length
+  } = list;
+  let index = length;
+  let foundIndex = -1;
+
+  while (--index > -1 && foundIndex === -1) {
+    if (equals(list[index], valueToFind)) {
+      foundIndex = index;
+    }
+  }
+
+  return foundIndex;
+}
+function _indexOf(valueToFind, list) {
+  if (!_isArray(list)) {
+    throw new Error(`Cannot read property 'indexOf' of ${list}`);
+  }
+
+  const typeOfValue = type(valueToFind);
+  if (!['Object', 'Array', 'NaN', 'RegExp'].includes(typeOfValue)) return list.indexOf(valueToFind);
+  let index = -1;
+  let foundIndex = -1;
+  const {
+    length
+  } = list;
+
+  while (++index < length && foundIndex === -1) {
+    if (equals(list[index], valueToFind)) {
+      foundIndex = index;
+    }
+  }
+
+  return foundIndex;
+}
+
+function _arrayFromIterator(iter) {
+  const list = [];
+  let next;
+
+  while (!(next = iter.next()).done) {
+    list.push(next.value);
+  }
+
+  return list;
+}
+
+function _equalsSets(a, b) {
+  if (a.size !== b.size) {
+    return false;
+  }
+
+  const aList = _arrayFromIterator(a.values());
+
+  const bList = _arrayFromIterator(b.values());
+
+  const filtered = aList.filter(aInstance => _indexOf(aInstance, bList) === -1);
+  return filtered.length === 0;
+}
+
 function parseError(maybeError) {
   const typeofError = maybeError.__proto__.toString();
 
@@ -452,6 +505,10 @@ function equals(a, b) {
     return bError[0] ? aError[0] === bError[0] && aError[1] === bError[1] : false;
   }
 
+  if (aType === 'Set') {
+    return _equalsSets(a, b);
+  }
+
   if (aType === 'Object') {
     const aKeys = Object.keys(a);
 
@@ -492,7 +549,7 @@ function debounce(func, ms, immediate = false) {
       timeout = null;
 
       if (!immediate) {
-        func.apply(null, input);
+        return func.apply(null, input);
       }
     };
 
@@ -501,7 +558,7 @@ function debounce(func, ms, immediate = false) {
     timeout = setTimeout(later, ms);
 
     if (callNow) {
-      func.apply(null, input);
+      return func.apply(null, input);
     }
   };
 }
@@ -515,48 +572,19 @@ function delay(ms) {
   });
 }
 
-function _indexOf(valueToFind, list) {
-  if (!_isArray(list)) {
-    throw new Error(`Cannot read property 'indexOf' of ${list}`);
+function includes(valueToFind, iterable) {
+  if (arguments.length === 1) return _iterable => includes(valueToFind, _iterable);
+
+  if (typeof iterable === 'string') {
+    return iterable.includes(valueToFind);
   }
 
-  const typeOfValue = type(valueToFind);
-  if (!['Object', 'Array', 'NaN', 'RegExp'].includes(typeOfValue)) return list.indexOf(valueToFind);
-  let index = -1;
-  let foundIndex = -1;
-  const {
-    length
-  } = list;
-
-  while (++index < length && foundIndex === -1) {
-    if (equals(list[index], valueToFind)) {
-      foundIndex = index;
-    }
+  if (!iterable) {
+    throw new TypeError(`Cannot read property \'indexOf\' of ${iterable}`);
   }
 
-  return foundIndex;
-}
-function indexOf(valueToFind, list) {
-  if (arguments.length === 1) {
-    return _list => _indexOf(valueToFind, _list);
-  }
-
-  return _indexOf(valueToFind, list);
-}
-
-function includes(valueToFind, input) {
-  if (arguments.length === 1) return _input => includes(valueToFind, _input);
-
-  if (typeof input === 'string') {
-    return input.includes(valueToFind);
-  }
-
-  if (!input) {
-    throw new TypeError(`Cannot read property \'indexOf\' of ${input}`);
-  }
-
-  if (!_isArray(input)) return false;
-  return _indexOf(valueToFind, input) > -1;
+  if (!_isArray(iterable)) return false;
+  return _indexOf(valueToFind, iterable) > -1;
 }
 
 function excludes(valueToFind, input) {
@@ -593,12 +621,13 @@ function filterArray(predicate, list, indexed = false) {
   return willReturn;
 }
 function filter(predicate, iterable) {
-  if (arguments.length === 1) {
-    return _iterable => filter(predicate, _iterable);
+  if (arguments.length === 1) return _iterable => filter(predicate, _iterable);
+
+  if (!iterable) {
+    throw new Error('Incorrect iterable input');
   }
 
-  if (!iterable) return [];
-  if (_isArray(iterable)) return filterArray(predicate, iterable);
+  if (_isArray(iterable)) return filterArray(predicate, iterable, false);
   return filterObject(predicate, iterable);
 }
 
@@ -663,6 +692,39 @@ function filterIndexed(predicate, iterable) {
   return filterObject(predicate, iterable);
 }
 
+function findAsyncFn(predicate, list) {
+  return new Promise((resolve, reject) => {
+    let canContinue = true;
+    let found;
+
+    const predicateFn = async (x, i) => {
+      if (!canContinue) return false;
+
+      try {
+        const result = await predicate(x, i);
+
+        if (result) {
+          canContinue = false;
+          found = x;
+        }
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    mapAsync(predicateFn, list).then(() => resolve(found)).catch(reject);
+  });
+}
+function findAsync(predicate, list) {
+  if (arguments.length === 1) {
+    return async _list => findAsync(predicate, _list);
+  }
+
+  return new Promise((resolve, reject) => {
+    findAsyncFn(predicate, list).then(resolve).catch(reject);
+  });
+}
+
 const _keys = Object.keys;
 
 function mapArray(fn, list, isIndexed = false) {
@@ -693,11 +755,15 @@ function mapObject(fn, obj) {
   return willReturn;
 }
 const mapObjIndexed = mapObject;
-function map(fn, list) {
-  if (arguments.length === 1) return _list => map(fn, _list);
-  if (list === undefined) return [];
-  if (_isArray(list)) return mapArray(fn, list);
-  return mapObject(fn, list);
+function map(fn, iterable) {
+  if (arguments.length === 1) return _iterable => map(fn, _iterable);
+
+  if (!iterable) {
+    throw new Error('Incorrect iterable input');
+  }
+
+  if (_isArray(iterable)) return mapArray(fn, iterable);
+  return mapObject(fn, iterable);
 }
 
 function mapIndexed(fn, iterable) {
@@ -794,9 +860,9 @@ function ifElseAsync(condition, ifFn, elseFn) {
   });
 }
 
-const getOccurances = input => input.match(/{{\s*.+?\s*}}/g);
+const getOccurrences = input => input.match(/{{\s*.+?\s*}}/g);
 
-const getOccuranceProp = occurance => occurance.replace(/{{\s*|\s*}}/g, '');
+const getOccurrenceProp = occurrence => occurrence.replace(/{{\s*|\s*}}/g, '');
 
 const replace = ({
   inputHolder,
@@ -813,12 +879,12 @@ function interpolate(input, templateInput) {
     return _templateInput => interpolate(input, _templateInput);
   }
 
-  const occurances = getOccurances(input);
-  if (occurances === null) return input;
+  const occurrences = getOccurrences(input);
+  if (occurrences === null) return input;
   let inputHolder = input;
 
-  for (const occurance of occurances) {
-    const prop = getOccuranceProp(occurance);
+  for (const occurrence of occurrences) {
+    const prop = getOccurrenceProp(occurrence);
     inputHolder = replace({
       inputHolder,
       prop,
@@ -1304,12 +1370,12 @@ function compose(...fns) {
     throw new Error('compose requires at least one argument');
   }
 
-  return (...args) => {
+  return function (...args) {
     const list = fns.slice();
 
     if (list.length > 0) {
       const fn = list.pop();
-      let result = fn(...args);
+      let result = fn.apply(this, args);
 
       while (list.length > 0) {
         result = list.pop()(result);
@@ -1328,8 +1394,7 @@ const replace$1 = curry(replaceFn);
 
 function sort(sortFn, list) {
   if (arguments.length === 1) return _list => sort(sortFn, _list);
-  const clone = list.slice();
-  return clone.sort(sortFn);
+  return cloneList(list).sort(sortFn);
 }
 
 function take(howMany, listOrString) {
@@ -1747,7 +1812,7 @@ function shuffle(arrayRaw) {
 
 function sortBy(sortFn, list) {
   if (arguments.length === 1) return _list => sortBy(sortFn, _list);
-  const clone = list.slice();
+  const clone = cloneList(list);
   return clone.sort((a, b) => {
     const aSortResult = sortFn(a);
     const bSortResult = sortFn(b);
@@ -1888,14 +1953,17 @@ function tapAsync(fn, input) {
 
 function throttle(fn, ms) {
   let wait = false;
+  let result;
   return function (...input) {
     if (!wait) {
-      fn.apply(null, input);
+      result = fn.apply(null, input);
       wait = true;
       setTimeout(() => {
         wait = false;
       }, ms);
     }
+
+    return result;
   };
 }
 
@@ -2013,7 +2081,7 @@ function add(a, b) {
 function adjustFn(index, replaceFn, list) {
   const actualIndex = index < 0 ? list.length + index : index;
   if (index >= list.length || actualIndex < 0) return list;
-  const clone = list.slice();
+  const clone = cloneList(list);
   clone[actualIndex] = replaceFn(clone[actualIndex]);
   return clone;
 }
@@ -2021,11 +2089,11 @@ function adjustFn(index, replaceFn, list) {
 const adjust = curry(adjustFn);
 
 function allPass(predicates) {
-  return input => {
+  return (...input) => {
     let counter = 0;
 
     while (counter < predicates.length) {
-      if (!predicates[counter](input)) {
+      if (!predicates[counter](...input)) {
         return false;
       }
 
@@ -2051,11 +2119,11 @@ function or(a, b) {
 }
 
 function anyPass(predicates) {
-  return input => {
+  return (...input) => {
     let counter = 0;
 
     while (counter < predicates.length) {
-      if (predicates[counter](input)) {
+      if (predicates[counter](...input)) {
         return true;
       }
 
@@ -2069,7 +2137,7 @@ function anyPass(predicates) {
 function append(x, input) {
   if (arguments.length === 1) return _input => append(x, _input);
   if (typeof input === 'string') return input.split('').concat(x);
-  const clone = input.slice();
+  const clone = cloneList(input);
   clone.push(x);
   return clone;
 }
@@ -2439,9 +2507,23 @@ function either(firstPredicate, secondPredicate) {
   return (...input) => Boolean(firstPredicate(...input) || secondPredicate(...input));
 }
 
-function endsWith(target, str) {
-  if (arguments.length === 1) return _str => endsWith(target, _str);
-  return str.endsWith(target);
+function endsWith(target, iterable) {
+  if (arguments.length === 1) return _iterable => endsWith(target, _iterable);
+
+  if (typeof iterable === 'string') {
+    return iterable.endsWith(target);
+  }
+
+  if (!_isArray(target)) return false;
+  const diff = iterable.length - target.length;
+  let correct = true;
+  const filtered = target.filter((x, index) => {
+    if (!correct) return false;
+    const result = equals(x, iterable[index + diff]);
+    if (!result) correct = false;
+    return result;
+  });
+  return filtered.length === target.length;
 }
 
 function F() {
@@ -2530,7 +2612,7 @@ function flipFn(fn) {
       return fn(input[1], input[0], input[2], input[3]);
     }
 
-    throw new Error('R.flip doesn\'t work with arity > 4');
+    throw new Error("R.flip doesn't work with arity > 4");
   };
 }
 
@@ -2564,7 +2646,7 @@ function groupBy(groupFn, list) {
 
 function groupWith(compareFn, list) {
   if (!_isArray(list)) throw new TypeError('list.reduce is not a function');
-  const clone = list.slice();
+  const clone = cloneList(list);
   if (list.length === 1) return [clone];
   const toReturn = [];
   let holder = [];
@@ -2601,12 +2683,12 @@ function has(prop, obj) {
   return obj.hasOwnProperty(prop);
 }
 
-function hasPath(maybePath, obj) {
+function hasPath(pathInput, obj) {
   if (arguments.length === 1) {
-    return objHolder => hasPath(maybePath, objHolder);
+    return objHolder => hasPath(pathInput, objHolder);
   }
 
-  return path(maybePath, obj) !== undefined;
+  return path(pathInput, obj) !== undefined;
 }
 
 function head(listOrString) {
@@ -2628,8 +2710,8 @@ function identical(a, b) {
   return _objectIs$1(a, b);
 }
 
-function identity(input) {
-  return input;
+function identity(x) {
+  return x;
 }
 
 function ifElseFn(condition, onTrue, onFalse) {
@@ -2676,6 +2758,14 @@ function indexBy(condition, list) {
   }
 
   return toReturn;
+}
+
+function indexOf(valueToFind, list) {
+  if (arguments.length === 1) {
+    return _list => _indexOf(valueToFind, _list);
+  }
+
+  return _indexOf(valueToFind, list);
 }
 
 function intersection(listA, listB) {
@@ -2742,25 +2832,18 @@ function last(listOrString) {
   return listOrString[listOrString.length - 1];
 }
 
-function lastIndexOf(target, list) {
-  if (arguments.length === 1) return _list => lastIndexOf(target, _list);
-  let index = list.length;
-
-  while (--index > 0) {
-    if (equals(list[index], target)) {
-      return index;
-    }
+function lastIndexOf(valueToFind, list) {
+  if (arguments.length === 1) {
+    return _list => _lastIndexOf(valueToFind, _list);
   }
 
-  return -1;
+  return _lastIndexOf(valueToFind, list);
 }
 
 function length(x) {
-  if (!x && x !== '' || x.length === undefined) {
-    return NaN;
-  }
-
-  return x.length;
+  if (_isArray(x)) return x.length;
+  if (typeof x === 'string') return x.length;
+  return NaN;
 }
 
 function lens(getter, setter) {
@@ -2778,8 +2861,9 @@ function nth(index, list) {
 }
 
 function updateFn(index, newValue, list) {
-  const arrClone = list.slice();
-  return arrClone.fill(newValue, index, index + 1);
+  const clone = cloneList(list);
+  if (index === -1) return clone.fill(newValue, index);
+  return clone.fill(newValue, index, index + 1);
 }
 
 const update = curry(updateFn);
@@ -2901,7 +2985,7 @@ function moveFn(fromIndex, toIndex, list) {
   }
 
   if (fromIndex > list.length - 1 || toIndex > list.length - 1) return list;
-  const clone = list.slice();
+  const clone = cloneList(list);
   clone[fromIndex] = list[toIndex];
   clone[toIndex] = list[fromIndex];
   return clone;
@@ -2992,8 +3076,8 @@ function paths(pathsToSearch, obj) {
   return pathsToSearch.map(singlePath => path(singlePath, obj));
 }
 
-function pathOrFn(defaultValue, list, obj) {
-  return defaultTo(defaultValue, path(list, obj));
+function pathOrFn(defaultValue, pathInput, obj) {
+  return defaultTo(defaultValue, path(pathInput, obj));
 }
 
 const pathOr = curry(pathOrFn);
@@ -3094,9 +3178,22 @@ function split(separator, str) {
   return str.split(separator);
 }
 
-function startsWith(target, str) {
-  if (arguments.length === 1) return _str => startsWith(target, _str);
-  return str.startsWith(target);
+function startsWith(target, iterable) {
+  if (arguments.length === 1) return _iterable => startsWith(target, _iterable);
+
+  if (typeof iterable === 'string') {
+    return iterable.startsWith(target);
+  }
+
+  if (!_isArray(target)) return false;
+  let correct = true;
+  const filtered = target.filter((x, index) => {
+    if (!correct) return false;
+    const result = equals(x, iterable[index]);
+    if (!result) correct = false;
+    return result;
+  });
+  return filtered.length === target.length;
 }
 
 function subtract(a, b) {
@@ -3186,11 +3283,26 @@ function tryCatch(fn, fallback) {
 
 function union(x, y) {
   if (arguments.length === 1) return _y => union(x, _y);
-  const toReturn = x.slice();
+  const toReturn = cloneList(x);
   y.forEach(yInstance => {
     if (!includes(yInstance, x)) toReturn.push(yInstance);
   });
   return toReturn;
+}
+
+function includesWith(predicate, target, list) {
+  let willReturn = false;
+  let index = -1;
+
+  while (++index < list.length && !willReturn) {
+    const value = list[index];
+
+    if (predicate(target, value)) {
+      willReturn = true;
+    }
+  }
+
+  return willReturn;
 }
 
 function uniqWith(predicate, list) {
@@ -3200,9 +3312,8 @@ function uniqWith(predicate, list) {
 
   while (++index < list.length) {
     const value = list[index];
-    const flag = any(x => predicate(value, x), willReturn);
 
-    if (!flag) {
+    if (!includesWith(predicate, value, willReturn)) {
       willReturn.push(value);
     }
   }
@@ -3550,20 +3661,39 @@ function takeWhile(predicate, iterable) {
   return isArray ? holder : holder.join('');
 }
 
-function eqPropsFn(prop, obj1, obj2) {
-  if (!obj1 || !obj2) {
-    throw new Error('wrong object inputs are passed to R.eqProps');
-  }
-
-  return equals(obj1[prop], obj2[prop]);
+function eqPropsFn(property, objA, objB) {
+  return equals(prop(property, objA), prop(property, objB));
 }
 
 const eqProps = curry(eqPropsFn);
+
+function unapply(fn) {
+  return function (...args) {
+    return fn.call(this, args);
+  };
+}
+
+function apply(fn, args) {
+  if (arguments.length === 1) {
+    return _args => apply(fn, _args);
+  }
+
+  return fn.apply(this, args);
+}
+
+function bind(fn, thisObj) {
+  if (arguments.length === 1) {
+    return _thisObj => bind(fn, _thisObj);
+  }
+
+  return curryN(fn.length, (...args) => fn.apply(thisObj, args));
+}
 
 exports.DELAY = DELAY;
 exports.F = F;
 exports.T = T;
 exports._indexOf = _indexOf;
+exports._lastIndexOf = _lastIndexOf;
 exports.add = add;
 exports.adjust = adjust;
 exports.all = all;
@@ -3579,10 +3709,12 @@ exports.anyPass = anyPass;
 exports.anyTrue = anyTrue;
 exports.anyType = anyType;
 exports.append = append;
+exports.apply = apply;
 exports.applyDiff = applyDiff;
 exports.applySpec = applySpec;
 exports.assoc = assoc;
 exports.assocPath = assocPath;
+exports.bind = bind;
 exports.both = both;
 exports.chain = chain;
 exports.check = check;
@@ -3625,6 +3757,8 @@ exports.filterAsyncFn = filterAsyncFn;
 exports.filterIndexed = filterIndexed;
 exports.filterObject = filterObject;
 exports.find = find;
+exports.findAsync = findAsync;
+exports.findAsyncFn = findAsyncFn;
 exports.findIndex = findIndex;
 exports.findLast = findLast;
 exports.findLastIndex = findLastIndex;
@@ -3801,6 +3935,7 @@ exports.trim = trim;
 exports.tryCatch = tryCatch;
 exports.tryCatchAsync = tryCatchAsync;
 exports.type = type;
+exports.unapply = unapply;
 exports.union = union;
 exports.uniq = uniq;
 exports.uniqWith = uniqWith;
