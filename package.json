@@ -7,7 +7,7 @@
     "docs": "npx docsify-cli init ./docs"
   },
   "typings": "./index.d.ts",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.16.0",
