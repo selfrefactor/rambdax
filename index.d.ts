@@ -1525,9 +1525,9 @@ export function count<T>(searchFor: T): (list: any[]) => number;
 /**
  * It creates a debounced function that delays invoking `fn` until after wait milliseconds `ms` have elapsed since the last time the debounced function was invoked.
  */
-export function debounce<T, U>(fn: (input: T) => U, ms: number, immediate: boolean): (input: T) => void;
-export function debounce<T, Q, U>(fn: (input1: T, input2: Q) => U, ms: number, immediate: boolean): (input1: T, input2: Q) => void;
-export function debounce<T, Q, Z, U>(fn: (input1: T, input2: Q, input3: Z) => U, ms: number, immediate: boolean): (input1: T, input2: Q, input3: Z) => void;
+export function debounce<T, U>(fn: (input: T) => U, ms: number): (input: T) => void;
+export function debounce<T, Q, U>(fn: (input1: T, input2: Q) => U, ms: number): (input1: T, input2: Q) => void;
+export function debounce<T, Q, Z, U>(fn: (input1: T, input2: Q, input3: Z) => U, ms: number): (input1: T, input2: Q, input3: Z) => void;
 
 /**
  * `setTimeout` as a promise that resolves to `R.DELAY` variable after `ms` milliseconds.

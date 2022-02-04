@@ -41,14 +41,20 @@
   "sideEffects": false,
   "main": "./dist/rambdax.js",
   "umd": "./dist/rambdax.umd.js",
-  "module": "./dist/rambdax.esm.js",
+  "module": "./dist/rambdax.mjs",
   "types": "./index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/rambdax.esm.js",
+      "import": "./dist/rambdax.mjs",
       "require": "./dist/rambdax.js",
       "default": "./dist/rambdax.js",
       "types": "./index.d.ts"
+    },
+    "./immutable": {
+      "import": "./immutable.js",
+      "require": "./immutable.js",
+      "default": "./immutable.js",
+      "types": "./immutable.d.ts"
     }
   },
   "keywords": [

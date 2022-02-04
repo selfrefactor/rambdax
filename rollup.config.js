@@ -27,10 +27,6 @@ export default {
       format : 'cjs',
     },
     {
-      file   : './dist/rambdax.esm.js',
-      format : 'es',
-    },
-    {
       file   : './dist/rambdax.mjs',
       format : 'esm',
     },

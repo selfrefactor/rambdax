@@ -1,3 +1,13 @@
+WIP 8.1.0
+
+- Replace `Async` with `Promise` as return type of `R.type`. 
+
+- Remove `isFunction` method
+
+8.0.1
+
+- Rambdax doesn't work with `pnpm` due to wrong export configuration - [Issue #619](https://github.com/selfrefactor/rambda/issues/619)
+
 8.0.0
 
 - Braking change - sync `R.compose`/`R.pipe` with `@types/ramda`. That is significant change so as safeguard, it will lead a major bump. Important - this lead to raising required Typescript version to `4.2.2`. In other words, to use `Rambda` you'll need Typescript version `4.2.2` or newer.

@@ -82,7 +82,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 85 Ramda methods not implemented in Rambda 
+  Click to see the full list of 90 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -93,13 +93,12 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - ascend
 - binary
 - call
+- collectBy
 - comparator
-- composeK
-- composeP
 - composeWith
 - construct
 - constructN
-- contains
+- count
 - countBy
 - descend
 - differenceWith
@@ -132,18 +131,21 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - mergeRight
 - mergeWith
 - mergeWithKey
+- modify
+- modifyPath
 - nAry
+- partialObject
 - nthArg
 - o
+- on
 - otherwise
 - pair
 - partialRight
 - pathSatisfies
 - pickBy
-- pipeK
-- pipeP
 - pipeWith
 - project
+- promap
 - propSatisfies
 - reduceBy
 - reduceRight
@@ -153,6 +155,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - scan
 - sequence
 - sortWith
+- splitWhenever
 - symmetricDifferenceWith
 - andThen
 - toPairsIn
@@ -165,8 +168,10 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - uniqBy
 - unnest
 - until
+- unwind
 - useWith
 - valuesIn
+- whereAny
 - xprod
 - thunkify
 - default
@@ -3082,7 +3087,7 @@ const increment = () => {
 
 const debounced = R.debounce(increment, 1000)
 
-const result = async function(){
+const result = await async function(){
   debounced()
   await R.delay(500)
   debounced()
@@ -3097,7 +3102,7 @@ const result = async function(){
 // `result` resolves to `1`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20increment%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20debounced%20%3D%20R.debounce(increment%2C%201000)%0A%0Aconst%20result%20%3D%20async%20function()%7B%0A%20%20debounced()%0A%20%20await%20R.delay(500)%0A%20%20debounced()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%20%3D%3E%200%0A%0A%20%20await%20R.delay(1200)%0A%20%20console.log(counter)%20%2F%2F%20%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try this <strong>R.debounce</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?let%20counter%20%3D%200%0Aconst%20increment%20%3D%20()%20%3D%3E%20%7B%0A%20%20counter%2B%2B%0A%7D%0A%0Aconst%20debounced%20%3D%20R.debounce(increment%2C%201000)%0A%0Aconst%20result%20%3D%20await%20async%20function()%7B%0A%20%20debounced()%0A%20%20await%20R.delay(500)%0A%20%20debounced()%0A%20%20await%20R.delay(800)%0A%20%20console.log(counter)%20%2F%2F%20%3D%3E%200%0A%0A%20%20await%20R.delay(1200)%0A%20%20console.log(counter)%20%2F%2F%20%3D%3E%201%0A%0A%20%20return%20counter%0A%7D%0A%2F%2F%20%60result%60%20resolves%20to%20%601%60">Try this <strong>R.debounce</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -3138,7 +3143,7 @@ test('happy', async () => {
   let counter = 0
   let aHolder
 
-  const inc = (a) => {
+  const inc = a => {
     aHolder = a
     counter++
   }
@@ -7347,6 +7352,7 @@ export function isType(xType, x) {
 
 ```javascript
 import {isType} from './isType'
+import {delay} from './delay'
 
 const list = [1, 2, 3]
 
@@ -7357,6 +7363,17 @@ test('array', () => {
 
 test('promise', () => {
   expect(isType('Promise', Promise.resolve(1))).toBeTruthy()
+})
+
+test('async', () => {
+  async function fn() {}
+
+  expect(isType('Async', fn)).toBeTruthy()
+})
+
+test('with R.delay', () => {
+  expect(isType('Function', delay)).toBeTruthy()
+  expect(isType('Promise', delay(100))).toBeTruthy()
 })
 ```
 
@@ -9727,11 +9744,11 @@ async function fn(x){
   return x+1
 }
 
-const result = R.mapAsync(fn, [1, 2, 3])
+const result = await R.mapAsync(fn, [1, 2, 3])
 // `result` resolves after 3 seconds to `[2, 3, 4]`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.mapAsync(fn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%60result%60%20resolves%20after%203%20seconds%20to%20%60%5B2%2C%203%2C%204%5D%60">Try this <strong>R.mapAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.mapAsync(fn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%60result%60%20resolves%20after%203%20seconds%20to%20%60%5B2%2C%203%2C%204%5D%60">Try this <strong>R.mapAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -9965,11 +9982,11 @@ async function fn(x){
   return x+1
 }
 
-const result = R.mapFastAsync(fn, [1, 2, 3])
+const result = await R.mapFastAsync(fn, [1, 2, 3])
 // `result` resolves after 1 second to `[2, 3, 4]`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20R.mapFastAsync(fn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%60result%60%20resolves%20after%201%20second%20to%20%60%5B2%2C%203%2C%204%5D%60">Try this <strong>R.mapFastAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?async%20function%20fn(x)%7B%0A%20%20await%20R.delay(1000)%0A%0A%20%20return%20x%2B1%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.mapFastAsync(fn%2C%20%5B1%2C%202%2C%203%5D)%0A%2F%2F%20%60result%60%20resolves%20after%201%20second%20to%20%60%5B2%2C%203%2C%204%5D%60">Try this <strong>R.mapFastAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -13170,7 +13187,7 @@ test('when prop is missing', () => {
 test('with list indexes as props', () => {
   const list = [1, 2, 3]
   const expected = {0: 1, 2: 3}
-  expect(pick([0,2,3], list)).toEqual(expected)
+  expect(pick([0, 2, 3], list)).toEqual(expected)
   expect(pick('0,2,3', list)).toEqual(expected)
 })
 
@@ -13577,7 +13594,7 @@ It accepts input as first argument and series of functions as next arguments. It
 > :boom: Functions that return `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
 
 ```javascript
-const result = R.pipedAsync(
+const result = await R.pipedAsync(
   100,
   async x => {
     await R.delay(100)
@@ -13589,11 +13606,10 @@ const result = R.pipedAsync(
     return delayed + x
   }
 )
-const expected = 'RAMBDAX_DELAY104'
-// `result` resolves to `expected`
+// `result` resolves to `RAMBDAX_DELAY104`
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.pipedAsync(%0A%20%20100%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%2B%202%0A%20%20%7D%2C%0A%20%20R.add(2)%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20const%20delayed%20%3D%20await%20R.delay(100)%0A%20%20%20%20return%20delayed%20%2B%20x%0A%20%20%7D%0A)%0Aconst%20expected%20%3D%20'RAMBDAX_DELAY104'%0A%2F%2F%20%60result%60%20resolves%20to%20%60expected%60">Try this <strong>R.pipedAsync</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20await%20R.pipedAsync(%0A%20%20100%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%2B%202%0A%20%20%7D%2C%0A%20%20R.add(2)%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20const%20delayed%20%3D%20await%20R.delay(100)%0A%20%20%20%20return%20delayed%20%2B%20x%0A%20%20%7D%0A)%0A%2F%2F%20%60result%60%20resolves%20to%20%60RAMBDAX_DELAY104%60">Try this <strong>R.pipedAsync</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -14336,7 +14352,7 @@ export const propIs = curry(propIsFn)
 ```javascript
 import {propIs} from './propIs'
 
-const obj = {a: 1, b:'foo'}
+const obj = {a: 1, b: 'foo'}
 
 test('when true', () => {
   expect(propIs(Number, 'a', obj)).toBeTrue()
@@ -17473,8 +17489,8 @@ import {throttle} from './throttle'
 test('with side effect', async () => {
   let counter = 0
 
-  const incFn = (a) => {
-    counter = counter+a
+  const incFn = a => {
+    counter = counter + a
     return counter
   }
   const incWrapped = throttle(incFn, 1000)
@@ -17485,7 +17501,7 @@ test('with side effect', async () => {
   expect(counter).toBe(2)
 })
 
-test('return result', async() => {
+test('return result', async () => {
   const incWrapped = throttle(inc, 1000)
   const results = []
   results.push(incWrapped(1))
@@ -17494,7 +17510,7 @@ test('return result', async() => {
   results.push(incWrapped(1))
   await delay(500)
   results.push(incWrapped(1))
-  expect(results).toEqual([2,2,2,2])
+  expect(results).toEqual([2, 2, 2, 2])
 })
 ```
 
@@ -17942,14 +17958,6 @@ test('trim', () => {
 
 ### tryCatch
 
-```typescript
-
-tryCatch<T, U>(
-  fn: (input: T) => U,
-  fallback: U
-): (input: T) => U
-```
-
 It returns function that runs `fn` in `try/catch` block. If there was an error, then `fallback` is used to return the result. Note that `fn` can be value or asynchronous/synchronous function(unlike `Ramda` where fallback can only be a synchronous function).
 
 > :boom: Please check the tests of `R.tryCatch` to fully understand how this method works.
@@ -17965,159 +17973,6 @@ const result = [
 ```
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x.foo%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.tryCatch(fn%2C%20false)(null)%2C%0A%20%20R.tryCatch(fn%2C%20false)(%7Bfoo%3A%20'bar'%7D)%0A%5D%0A%2F%2F%20%3D%3E%20%5Bfalse%2C%20'bar'%5D">Try this <strong>R.tryCatch</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.tryCatch</strong> source</summary>
-
-```javascript
-import {isFunction} from './isFunction'
-
-export function tryCatch(fn, fallback) {
-  if (!isFunction(fn)) {
-    throw new Error(`R.tryCatch | fn '${fn}'`)
-  }
-  const passFallback = isFunction(fallback)
-
-  return (...inputs) => {
-    try {
-      return fn(...inputs)
-    } catch (e) {
-      return passFallback ? fallback(e, ...inputs) : fallback
-    }
-  }
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import {tryCatch as tryCatchRamda} from 'ramda'
-
-import {compareCombinations} from './_internals/testUtils'
-import {prop} from './prop'
-import {tryCatch} from './tryCatch'
-
-test('happy', () => {
-  const fn = () => {
-    throw new Error('foo')
-  }
-  const result = tryCatch(fn, () => true)()
-  expect(result).toBeTrue()
-})
-
-test('when fallback is used', () => {
-  const fn = x => x.x
-
-  expect(tryCatch(fn, false)(null)).toBeFalse()
-})
-
-test('with json parse', () => {
-  const good = () => JSON.parse(JSON.stringify({a: 1}))
-  const bad = () => JSON.parse('a{a')
-
-  expect(tryCatch(good, 1)()).toEqual({a: 1})
-  expect(tryCatch(bad, 1)()).toBe(1)
-})
-
-test('when fallback is function', () => {
-  const fn = x => x.x
-
-  expect(tryCatch(fn, () => 1)(null)).toBe(1)
-})
-
-test('when fn is used', () => {
-  const fn = prop('x')
-
-  expect(tryCatch(fn, false)({})).toBe(undefined)
-  expect(tryCatch(fn, false)({x: 1})).toBe(1)
-})
-
-test('fallback receives error object and all initial inputs', () => {
-  function thrower(a, b, c) {
-    void c
-    throw new Error('throwerError')
-  }
-
-  function catchFn(e, a, b, c) {
-    return [e.message, a, b, c].join('|')
-  }
-
-  const willThrow = tryCatch(thrower, catchFn)
-  const result = willThrow('A', 'B', 'C')
-  expect(result).toBe('throwerError|A|B|C')
-})
-
-test('fallback receives error object', () => {
-  function throwFn() {
-    throw new Error(10)
-  }
-
-  function eCatcher(e, a, b) {
-    return e.message
-  }
-
-  const willThrow = tryCatch(throwFn, eCatcher)
-  expect(willThrow([])).toBe('10')
-  expect(willThrow([{}, {}, {}])).toBe('10')
-})
-
-const possibleFns = [
-  null,
-  () => 1,
-  () => 0,
-  () => JSON.parse('{a:1'),
-  () => {
-    const x = {}
-
-    return x.x
-  },
-  x => x.foo,
-  () => {
-    throw new Error('foo')
-  },
-]
-
-const possibleCatchers = [
-  null,
-  e => e.message.length,
-  (e, ...inputs) => `${e.message.length} ${inputs.length}`,
-  () => {
-    throw new Error('bar')
-  },
-]
-
-const possibleInputs = [null, {}, {foo: 1}]
-
-describe('brute force', () => {
-  compareCombinations({
-    returnsFunctionFlag: true,
-    firstInput: possibleFns,
-    callback: errorsCounters => {
-      expect(errorsCounters).toMatchInlineSnapshot(`
-        Object {
-          "ERRORS_MESSAGE_MISMATCH": 0,
-          "ERRORS_TYPE_MISMATCH": 12,
-          "RESULTS_MISMATCH": 0,
-          "SHOULD_NOT_THROW": 0,
-          "SHOULD_THROW": 7,
-          "TOTAL_TESTS": 84,
-        }
-      `)
-    },
-    secondInput: possibleCatchers,
-    thirdInput: possibleInputs,
-    fn: tryCatch,
-    fnRamda: tryCatchRamda,
-  })
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#tryCatch)
 
@@ -20039,6 +19894,16 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+WIP 8.1.0
+
+- Replace `Async` with `Promise` as return type of `R.type`. 
+
+- Remove `isFunction` method
+
+8.0.1
+
+- Rambdax doesn't work with `pnpm` due to wrong export configuration - [Issue #619](https://github.com/selfrefactor/rambda/issues/619)
 
 8.0.0
 
