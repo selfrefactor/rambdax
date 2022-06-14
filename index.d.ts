@@ -21,6 +21,20 @@ interface KeyValuePair<K, V> extends Array<K | V> {
   1: V;
 }
 
+type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...0[]]
+
+type Join<K, P> = K extends string | number ?
+  P extends string | number ?
+    `${K}${"" extends P ? "" : "."}${P}`
+    : never : never;
+
+// Prev, Join, and Paths are based on discussion in SO: https://stackoverflow.com/questions/58434389/typescript-deep-keyof-of-a-nested-object
+type Paths<T, D extends number = 10> = [D] extends [never] ? never : T extends object ?
+  { [K in keyof T]-?: K extends string | number ?
+    `${K}` | (Paths<T[K], Prev[D]> extends infer R ? Join<K, R> : never)
+    : never
+  }[keyof T] : ""
+
 export interface Lens {
   <T, U>(obj: T): U;
   set<T, U>(str: string, obj: T): U;
@@ -124,10 +138,10 @@ type AsyncPredicate<T> = (x: T) => Promise<boolean>;
 type AsyncPredicateIndexed<T> = (x: T, i: number) => Promise<boolean>;
 type AsyncWithProp<T> = (x: any, prop?: string) => Promise<T>;
 
-type ApplyDiffUpdate = {op:'update', path: string, value: any};
-type ApplyDiffAdd = {op:'add', path: string, value: any};
-type ApplyDiffRemove = {op:'remove', path: string};
-type ApplyDiffRule = ApplyDiffUpdate | ApplyDiffAdd | ApplyDiffRemove;
+type ApplyDiffUpdate<T extends string = string> = {op:'update', path: T, value: any};
+type ApplyDiffAdd<T extends string = string> = {op:'add', path: T, value: any};
+type ApplyDiffRemove<T extends string = string> = {op:'remove', path: T};
+type ApplyDiffRule<T extends string = string> = ApplyDiffUpdate<T> | ApplyDiffAdd<T> | ApplyDiffRemove<T>;
 
 
 /**
@@ -1942,7 +1956,7 @@ export function excludes<T>(valueToFind: T): (input: T[]) => boolean;
 /**
  * Very similar to `R.assocPath` but it applies list of updates instead of only a single update.
  * 
- * It return a copy of `obj` input with changed properties according to `rules` input.
+ * It returns a copy of `obj` input with changed properties according to `rules` input.
  * 
  * Each instance of `rules` is a tuple of object path and the new value for this path. If such object path does not exist, then such object path is created.
  * 
@@ -1960,8 +1974,8 @@ export function takeUntil<T>(predicate: (x: T) => boolean): (list: T[]) => T[];
  * Note, that you cannot use `update` operation, if the object path is missing in the input object.
  * Also, you cannot use `add` operation, if the object path has a value.
  */
-export function applyDiff<Output>(rules: ApplyDiffRule[], obj: object): Output;
-export function applyDiff<Output>(rules: ApplyDiffRule[]): ( obj: object) => Output;
+export function applyDiff<Output, Input extends object>(rules: ApplyDiffRule<Paths<Input>>[], obj: Input): Output;
+export function applyDiff<Output, Input extends object>(rules: ApplyDiffRule<Paths<Input>>[]): (obj: Input) => Output;
 
 /**
  * Same as `R.map`, but it passes index as second argument to the iterator, when looping over arrays.
