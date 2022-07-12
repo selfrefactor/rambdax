@@ -29,7 +29,7 @@ type Join<K, P> = K extends string | number ?
     : never : never;
 
 // Prev, Join, and Paths are based on discussion in SO: https://stackoverflow.com/questions/58434389/typescript-deep-keyof-of-a-nested-object
-type Paths<T, D extends number = 10> = [D] extends [never] ? never : T extends object ?
+type Paths<T, D extends number = 15> = [D] extends [never] ? never : T extends object ?
   { [K in keyof T]-?: K extends string | number ?
     `${K}` | (Paths<T[K], Prev[D]> extends infer R ? Join<K, R> : never)
     : never

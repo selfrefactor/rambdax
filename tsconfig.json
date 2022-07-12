@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "allowJs": true
+  },
+  "include": ["src/**/*", "tests/*.spec.ts"],
+  "exclude": ["node_modules", "dist", "tests/*.test-d.ts"]
+}

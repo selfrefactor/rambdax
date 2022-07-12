@@ -45,7 +45,7 @@ function allFalse(...inputs) {
   return true;
 }
 
-function isFalsy(x) {
+function isFalsy$1(x) {
   if (_isArray(x)) {
     return x.length === 0;
   }
@@ -64,10 +64,10 @@ function allTrue(...inputs) {
     const x = inputs[counter];
 
     if (type(x) === 'Function') {
-      if (isFalsy(x())) {
+      if (isFalsy$1(x())) {
         return false;
       }
-    } else if (isFalsy(x)) {
+    } else if (isFalsy$1(x)) {
       return false;
     }
 
@@ -100,10 +100,10 @@ function anyFalse(...inputs) {
     const x = inputs[counter];
 
     if (type(x) === 'Function') {
-      if (isFalsy(x())) {
+      if (isFalsy$1(x())) {
         return true;
       }
-    } else if (isFalsy(x)) {
+    } else if (isFalsy$1(x)) {
       return true;
     }
 
@@ -154,14 +154,9 @@ function ownKeys(object, enumerableOnly) {
 
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
-
-    if (enumerableOnly) {
-      symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      });
-    }
-
-    keys.push.apply(keys, symbols);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
   }
 
   return keys;
@@ -169,19 +164,12 @@ function ownKeys(object, enumerableOnly) {
 
 function _objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
   }
 
   return target;
@@ -860,7 +848,7 @@ const getOccurrences = input => input.match(/{{\s*.+?\s*}}/g);
 
 const getOccurrenceProp = occurrence => occurrence.replace(/{{\s*|\s*}}/g, '');
 
-const replace = ({
+const replace$1 = ({
   inputHolder,
   prop,
   replacer
@@ -881,7 +869,7 @@ function interpolate(input, templateInput) {
 
   for (const occurrence of occurrences) {
     const prop = getOccurrenceProp(occurrence);
-    inputHolder = replace({
+    inputHolder = replace$1({
       inputHolder,
       prop,
       replacer: templateInput[prop]
@@ -1386,7 +1374,7 @@ function replaceFn(pattern, replacer, str) {
   return str.replace(pattern, replacer);
 }
 
-const replace$1 = curry(replaceFn);
+const replace = curry(replaceFn);
 
 function sort(sortFn, list) {
   if (arguments.length === 1) return _list => sort(sortFn, _list);
@@ -1414,8 +1402,8 @@ const stringify = a => {
   if (type(a) === 'String') {
     return a;
   } else if (['Function', 'Async'].includes(type(a))) {
-    const compacted = replace$1(/\s{1,}/g, ' ', a.toString());
-    return replace$1(/\s/g, '_', take(15, compacted));
+    const compacted = replace(/\s{1,}/g, ' ', a.toString());
+    return replace(/\s/g, '_', take(15, compacted));
   } else if (type(a) === 'Object') {
     return JSON.stringify(normalizeObject(a));
   }
@@ -1730,12 +1718,12 @@ function remove(inputs, text) {
   }
 
   if (type(inputs) !== 'Array') {
-    return replace$1(inputs, '', text);
+    return replace(inputs, '', text);
   }
 
   let textCopy = text;
   inputs.forEach(singleInput => {
-    textCopy = replace$1(singleInput, '', textCopy).trim();
+    textCopy = replace(singleInput, '', textCopy).trim();
   });
   return textCopy;
 }
@@ -1877,7 +1865,7 @@ const isEqual = (testValue, matchValue) => {
   return willReturn;
 };
 
-const is = (testValue, matchResult = true) => ({
+const is$1 = (testValue, matchResult = true) => ({
   key: testValue,
   test: matchValue => isEqual(testValue, matchValue) ? matchResult : NO_MATCH_FOUND
 });
@@ -1903,7 +1891,7 @@ class Switchem {
   }
 
   is(testValue, matchResult) {
-    return new Switchem(this.defaultValue, [...this.cases, is(testValue, matchResult)], this.willMatch);
+    return new Switchem(this.defaultValue, [...this.cases, is$1(testValue, matchResult)], this.willMatch);
   }
 
   match(matchValue) {
@@ -1994,7 +1982,7 @@ function updateObject(rules, obj) {
   return clone;
 }
 
-function isFalsy$1(input) {
+function isFalsy(input) {
   return input === undefined || input === null || Number.isNaN(input) === true;
 }
 
@@ -2003,7 +1991,7 @@ function defaultTo(defaultArgument, input) {
     return _input => defaultTo(defaultArgument, _input);
   }
 
-  return isFalsy$1(input) ? defaultArgument : input;
+  return isFalsy(input) ? defaultArgument : input;
 }
 
 function viewOrFn(fallback, lens, input) {
@@ -2786,8 +2774,8 @@ function intersperse(separator, list) {
   return willReturn;
 }
 
-function is$1(targetPrototype, x) {
-  if (arguments.length === 1) return _x => is$1(targetPrototype, _x);
+function is(targetPrototype, x) {
+  if (arguments.length === 1) return _x => is(targetPrototype, _x);
   return x != null && x.constructor === targetPrototype || x instanceof targetPrototype;
 }
 
@@ -3129,7 +3117,7 @@ function propEqFn(propToFind, valueToMatch, obj) {
 const propEq = curry(propEqFn);
 
 function propIsFn(targetPrototype, property, obj) {
-  return is$1(targetPrototype, obj[property]);
+  return is(targetPrototype, obj[property]);
 }
 
 const propIs = curry(propIsFn);
@@ -3685,4 +3673,4 @@ function bind(fn, thisObj) {
   return curryN(fn.length, (...args) => fn.apply(thisObj, args));
 }
 
-export { DELAY, F, T, _indexOf, _lastIndexOf, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, apply, applyDiff, applySpec, assoc, assocPath, bind, both, chain, check, clamp, clone, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, dropLastWhile, dropRepeats, dropRepeatsWith, dropWhile, either, endsWith, eqProps, equals, evolve, evolveArray, evolveObject, excludes, filter, filterArray, filterAsync, filterAsyncFn, filterIndexed, filterObject, find, findAsync, findAsyncFn, findIndex, findLast, findLastIndex, flatten, flip, forEach, forEachIndexed, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, interpolate, intersection, intersperse, is$1 as is, isEmpty, isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, lensSatisfies, map, mapArray, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapIndexed, mapKeys, mapObjIndexed, mapObject, mapToObject, mapToObjectAsync, mapToObjectAsyncFn, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, move, multiply, negate, nextIndex, none, not, nth, objOf, of, ok, omit, once, or, over, partial, partialCurry, partition, partitionArray, partitionAsync, partitionIndexed, partitionObject, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, pipeAsync, piped, pipedAsync, pluck, prepend, prevIndex, produce, produceAsync, product, prop, propEq, propIs, propOr, props, prototypeToString, random, range, reduce, reject, rejectIndexed, remove, removeAtPath, removeIndex, renameProps, repeat, replace$1 as replace, replaceAll, reset, reverse, schemaToString, set, setter, shuffle, slice, sort, sortBy, sortByPath, sortByProps, sortObject, split, splitAt, splitEvery, splitWhen, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, takeLastWhile, takeUntil, takeWhile, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString, toUpper, transpose, trim, tryCatch, tryCatchAsync, type, unapply, union, uniq, uniqWith, unless, update, updateObject, values, view, viewOr, wait, waitFor, when, where, whereEq, without, xnor, xor, zip, zipObj, zipWith };
+export { DELAY, F, T, _indexOf, _lastIndexOf, add, adjust, all, allFalse, allPass, allTrue, allType, always, and, any, anyFalse, anyPass, anyTrue, anyType, append, apply, applyDiff, applySpec, assoc, assocPath, bind, both, chain, check, clamp, clone, complement, compose, composeAsync, concat, cond, converge, count, curry, curryN, debounce, dec, defaultTo, delay, difference, dissoc, divide, drop, dropLast, dropLastWhile, dropRepeats, dropRepeatsWith, dropWhile, either, endsWith, eqProps, equals, evolve, evolveArray, evolveObject, excludes, filter, filterArray, filterAsync, filterAsyncFn, filterIndexed, filterObject, find, findAsync, findAsyncFn, findIndex, findLast, findLastIndex, flatten, flip, forEach, forEachIndexed, fromPairs, fromPrototypeToString, getter, glue, groupBy, groupWith, has, hasPath, head, identical, identity, ifElse, ifElseAsync, inc, includes, indexBy, indexOf, init, interpolate, intersection, intersperse, is, isEmpty, isFunction, isNil, isPromise, isPrototype, isType, isValid, isValidAsync, join, keys, last, lastIndexOf, length, lens, lensEq, lensIndex, lensPath, lensProp, lensSatisfies, map, mapArray, mapAsync, mapAsyncLimit, mapFastAsync, mapFastAsyncFn, mapIndexed, mapKeys, mapObjIndexed, mapObject, mapToObject, mapToObjectAsync, mapToObjectAsyncFn, match, mathMod, max, maxBy, maxByFn, maybe, mean, median, memoize, merge, mergeAll, mergeDeepRight, mergeLeft, min, minBy, minByFn, modulo, move, multiply, negate, nextIndex, none, not, nth, objOf, of, ok, omit, once, or, over, partial, partialCurry, partition, partitionArray, partitionAsync, partitionIndexed, partitionObject, pass, path, pathEq, pathOr, paths, pick, pickAll, pipe, pipeAsync, piped, pipedAsync, pluck, prepend, prevIndex, produce, produceAsync, product, prop, propEq, propIs, propOr, props, prototypeToString, random, range, reduce, reject, rejectIndexed, remove, removeAtPath, removeIndex, renameProps, repeat, replace, replaceAll, reset, reverse, schemaToString, set, setter, shuffle, slice, sort, sortBy, sortByPath, sortByProps, sortObject, split, splitAt, splitEvery, splitWhen, startsWith, subtract, sum, switcher, symmetricDifference, tail, take, takeLast, takeLastWhile, takeUntil, takeWhile, tap, tapAsync, test, throttle, times, toDecimal, toLower, toPairs, toString, toUpper, transpose, trim, tryCatch, tryCatchAsync, type, unapply, union, uniq, uniqWith, unless, update, updateObject, values, view, viewOr, wait, waitFor, when, where, whereEq, without, xnor, xor, zip, zipObj, zipWith };

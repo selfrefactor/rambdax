@@ -23,13 +23,13 @@ interface KeyValuePair<K, V> extends Array<K | V> {
 
 type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ...0[]]
 
-type Join<K, P> = K extends string | number ?
+type Join<K extends string | number | any, P extends string | number | any> = K extends string | number ?
   P extends string | number ?
     `${K}${"" extends P ? "" : "."}${P}`
     : never : never;
 
 // Prev, Join, and Paths are based on discussion in SO: https://stackoverflow.com/questions/58434389/typescript-deep-keyof-of-a-nested-object
-type Paths<T, D extends number = 10> = [D] extends [never] ? never : T extends object ?
+type Paths<T, D extends number = 15> = [D] extends [never] ? never : T extends object ?
   { [K in keyof T]-?: K extends string | number ?
     `${K}` | (Paths<T[K], Prev[D]> extends infer R ? Join<K, R> : never)
     : never
