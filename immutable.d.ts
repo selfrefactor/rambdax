@@ -1,5 +1,7 @@
-export type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise" | "Symbol" | "Set" | "Error";
+export type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise" | "Symbol" | "Set" | "Error" | "Map" | "WeakMap" | "Generator" | "GeneratorFunction" | "BigInt" | "ArrayBuffer";
 
+// used in R.reduce to stop the loop
+export function reduceStopper<T>(input: T) : T
 export type IndexedIterator<T, U> = (x: T, i: number) => U;
 export type Iterator<T, U> = (x: T) => U;
 export type ObjectIterator<T, U> = (x: T, prop: string, inputObj: Dictionary<T>) => U;
@@ -30,7 +32,6 @@ type Arity1Fn = (x: any) => any;
 type Arity2Fn = (x: any, y: any) => any;
 
 type Pred = (...x: readonly any[]) => boolean;
-type SafePred<T> = (...x: readonly T[]) => boolean;
 
 export interface Dictionary<T> {readonly [index: string]: T}
 type Partial<T> = { readonly [P in keyof T]?: T[P]};
@@ -71,6 +72,9 @@ interface AssocPartialOne<K extends keyof any> {
   <T>(val: T): <U>(obj: U) => Record<K, T> & U;
   <T, U>(val: T, obj: U): Record<K, T> & U;
 }
+
+type AnyFunction = (...args: readonly any[]) => unknown;
+type AnyConstructor = new (...args: readonly any[]) => unknown;
 
 // RAMBDAX INTERFACES
 // ============================================
@@ -179,7 +183,7 @@ export function any<T>(predicate: (x: T) => boolean): (list: readonly T[]) => bo
 /**
  * It accepts list of `predicates` and returns a function. This function with its `input` will return `true`, if any of `predicates` returns `true` for this `input`.
  */
-export function anyPass<T>(predicates: readonly SafePred<T>[]): SafePred<T>;
+export function anyPass<T>(predicates: readonly ((x: T) => boolean)[]): (input: T) => boolean;
 
 /**
  * It adds element `x` at the end of `list`.
@@ -187,12 +191,12 @@ export function anyPass<T>(predicates: readonly SafePred<T>[]): SafePred<T>;
 export function append<T>(x: T, list: readonly T[]): readonly T[];
 export function append<T>(x: T): <T>(list: readonly T[]) => readonly T[];
 
-export function applySpec<Spec extends Record<string, (...args: readonly any[]) => any>>(
+export function applySpec<Spec extends Record<string, AnyFunction>>(
   spec: Spec
 ): (
   ...args: Parameters<ValueOfRecord<Spec>>
 ) => { readonly [Key in keyof Spec]: ReturnType<Spec[Key]> };
-export function applySpec<T>(spec: any): (...args: readonly any[]) => T;
+export function applySpec<T>(spec: any): (...args: readonly unknown[]) => T;
 
 /**
  * It makes a shallow clone of `obj` with setting or overriding the property `prop` with `newValue`.
@@ -342,12 +346,12 @@ export function converge(after: ((...a: readonly any[]) => any), fns: readonly (
 /**
  * It expects a function as input and returns its curried version.
  */
-export function curry(fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any;
+export function curry(fn: AnyFunction): (...a: readonly any[]) => any;
 
 /**
  * It returns a curried equivalent of the provided function, with the specified arity.
  */
-export function curryN(length: number, fn: (...args: readonly any[]) => any): (...a: readonly any[]) => any;
+export function curryN(length: number, fn: AnyFunction): (...a: readonly any[]) => any;
 
 /**
  * It decrements a number.
@@ -547,6 +551,11 @@ export function identity<T>(input: T): T;
  * 
  * When `fn`` is called with `input` argument, it will return either `onTrue(input)` or `onFalse(input)` depending on `condition(input)` evaluation.
  */
+export function ifElse<T, TFiltered extends T, TOnTrueResult, TOnFalseResult>(
+  pred: (a: T) => a is TFiltered,
+  onTrue: (a: TFiltered) => TOnTrueResult,
+  onFalse: (a: Exclude<T, TFiltered>) => TOnFalseResult,
+): (a: T) => TOnTrueResult | TOnFalseResult;
 export function ifElse<TArgs extends readonly any[], TOnTrueResult, TOnFalseResult>(fn: (...args: TArgs) => boolean, onTrue: (...args: TArgs) => TOnTrueResult, onFalse: (...args: TArgs) => TOnFalseResult): (...args: TArgs) => TOnTrueResult | TOnFalseResult;
 
 /**
@@ -589,7 +598,7 @@ export function indexOf<T>(valueToFind: T): (list: readonly T[]) => number;
 /**
  * It returns all but the last element of list or string `input`.
  */
-export function init<T>(input: readonly T[]): readonly T[];
+export function init<T extends readonly unknown[]>(input: T): T extends readonly [...infer U, any] ? U : readonly [...T];
 export function init(input: string): string;
 
 /**
@@ -763,10 +772,16 @@ export function mean(list: readonly number[]): number;
 export function median(list: readonly number[]): number;
 
 /**
- * It creates a copy of `target` object with overidden `newProps` properties.
+ * Same as `R.mergeRight`.
  */
 export function merge<A, B>(target: A, newProps: B): A & B
 export function merge<Output>(target: any): (newProps: any) => Output;
+
+/**
+ * It creates a copy of `target` object with overidden `newProps` properties. Previously known as `R.merge` but renamed after Ramda did the same.
+ */
+export function mergeRight<A, B>(target: A, newProps: B): A & B
+export function mergeRight<Output>(target: any): (newProps: any) => Output;
 
 /**
  * It merges all objects of `list` array sequentially and returns the result.
@@ -838,10 +853,14 @@ export function none<T>(predicate: (x: T) => boolean): (list: readonly T[]) => b
 export function not(input: any): boolean;
 
 /**
- * Curried version of `list[index]`.
+ * Curried version of `input[index]`.
  */
-export function nth<T>(index: number, list: readonly T[]): T | undefined;	
-export function nth(index: number): <T>(list: readonly T[]) => T | undefined;
+export function nth(index: number, input: string): string;	
+export function nth<T>(index: number, input: readonly T[]): T | undefined;	
+export function nth(n: number): {
+  <T>(input: readonly T[]): T | undefined;
+  (input: string): string;
+};
 
 /**
  * It creates an object with a single key-value pair.
@@ -852,7 +871,7 @@ export function objOf<K extends string>(key: K): <T>(value: T) => Record<K, T>;
 /**
  * It returns a function, which invokes only once `fn` function.
  */
-export function once<T extends (...args: readonly any[]) => any>(func: T): T;
+export function once<T extends AnyFunction>(func: T): T;
 
 /**
  * It returns a partial copy of an `obj` without `propsToOmit` properties.
@@ -918,7 +937,7 @@ export function pathEq(pathToSearch: Path, target: any): (input: any) => boolean
 export function pathEq(pathToSearch: Path): (target: any) => (input: any) => boolean;
 
 /**
- * It loops over members of `pathsToSearch` as `singlePath` and returns the array produced by `R.path(singlePath, obj)`.
+ * It loops over members of `pathsToSearch` as `singlePath` and returns the array produced by `R.path(singlePath, Record<string, unknown>)`.
  * 
  * Because it calls `R.path`, then `singlePath` can be either string or a list.
  */
@@ -928,7 +947,7 @@ export function paths<T>(pathsToSearch: readonly Path[], obj: any): readonly (T 
 export function paths<T>(pathsToSearch: readonly Path[]): (obj: any) => readonly (T | undefined)[];
 
 /**
- * It reads `obj` input and returns either `R.path(pathToSearch, obj)` result or `defaultValue` input.
+ * It reads `obj` input and returns either `R.path(pathToSearch, Record<string, unknown>)` result or `defaultValue` input.
  */
 export function pathOr<T>(defaultValue: T, pathToSearch: Path, obj: any): T;
 export function pathOr<T>(defaultValue: T, pathToSearch: Path): (obj: any) => T;
@@ -1036,9 +1055,10 @@ export function product(list: readonly number[]): number;
  * 
  * If there is no such property, it returns `undefined`.
  */
-export function prop<P extends keyof T, T>(propToFind: P, obj: T): T[P];
-export function prop<P extends string | number>(p: P): <T>(propToFind: Record<P, T>) => T;
-export function prop<P extends keyof T, T>(p: P): (propToFind: Record<P, T>) => T;
+export function prop<P extends keyof O, O>(propToFind: P, obj: O): O[P];
+export function prop<P extends keyof O, O>(propToFind: P): (obj: O) => O[P];
+export function prop<P extends string | number>(propToFind: P): <T>(obj: Record<P, T>) => T;
+export function prop<P extends string | number, T>(propToFind: P): (obj: Record<P, T>) => T;
 
 /**
  * It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`.
@@ -1053,15 +1073,15 @@ export function propEq<K extends string | number>(propToFind: K): {
 /**
  * It returns `true` if `property` of `obj` is from `target` type.
  */
-export function propIs<C extends (...args: readonly any[]) => any, K extends keyof any>(type: C, name: K, obj: any): obj is Record<K, ReturnType<C>>;
-export function propIs<C extends new (...args: readonly any[]) => any, K extends keyof any>(type: C, name: K, obj: any): obj is Record<K, InstanceType<C>>;
-export function propIs<C extends (...args: readonly any[]) => any, K extends keyof any>(type: C, name: K): (obj: any) => obj is Record<K, ReturnType<C>>;
-export function propIs<C extends new (...args: readonly any[]) => any, K extends keyof any>(type: C, name: K): (obj: any) => obj is Record<K, InstanceType<C>>;
-export function propIs<C extends (...args: readonly any[]) => any>(type: C): {
+export function propIs<C extends AnyFunction, K extends keyof any>(type: C, name: K, obj: any): obj is Record<K, ReturnType<C>>;
+export function propIs<C extends AnyConstructor, K extends keyof any>(type: C, name: K, obj: any): obj is Record<K, InstanceType<C>>;
+export function propIs<C extends AnyFunction, K extends keyof any>(type: C, name: K): (obj: any) => obj is Record<K, ReturnType<C>>;
+export function propIs<C extends AnyConstructor, K extends keyof any>(type: C, name: K): (obj: any) => obj is Record<K, InstanceType<C>>;
+export function propIs<C extends AnyFunction>(type: C): {
     <K extends keyof any>(name: K, obj: any): obj is Record<K, ReturnType<C>>;
     <K extends keyof any>(name: K): (obj: any) => obj is Record<K, ReturnType<C>>;
 };
-export function propIs<C extends new (...args: readonly any[]) => any>(type: C): {
+export function propIs<C extends AnyFunction>(type: C): {
     <K extends keyof any>(name: K, obj: any): obj is Record<K, InstanceType<C>>;
     <K extends keyof any>(name: K): (obj: any) => obj is Record<K, InstanceType<C>>;
 };
@@ -1075,6 +1095,12 @@ export function propOr<T>(defaultValue: T): {
   <P extends string>(property: P, obj: Partial<Record<P, T>> | undefined): T;
   <P extends string>(property: P): (obj: Partial<Record<P, T>> | undefined) => T;
 }
+
+/**
+ * It returns `true` if the object property satisfies a given predicate.
+ */
+export function propSatisfies<T>(predicate: Predicate<T>, property: string, obj: Record<string, T>): boolean;
+export function propSatisfies<T>(predicate: Predicate<T>, property: string): (obj: Record<string, T>) => boolean;
 
 /**
  * It returns list of numbers between `startInclusive` to `endExclusive` markers.
@@ -1181,7 +1207,7 @@ export function T(): boolean;
 /**
  * It returns all but the first element of `input`.
  */
-export function tail<T>(input: readonly T[]): readonly T[];
+export function tail<T extends readonly unknown[]>(input: T): T extends readonly [any, ...infer U] ? U : readonly [...T];
 export function tail(input: string): string;
 
 /**
@@ -1311,7 +1337,7 @@ export function update<T>(index: number, newValue: T, list: readonly T[]): reado
 export function update<T>(index: number, newValue: T): (list: readonly T[]) => readonly T[];
 
 /**
- * With correct input, this is nothing more than `Object.values(obj)`. If `obj` is not an object, then it returns an empty array.
+ * With correct input, this is nothing more than `Object.values(Record<string, unknown>)`. If `obj` is not an object, then it returns an empty array.
  */
 export function values<T extends object, K extends keyof T>(obj: T): readonly T[K][];
 
@@ -1455,8 +1481,83 @@ export function apply<T = any>(fn: (...args: readonly any[]) => T): (args: reado
 /**
  * Creates a function that is bound to a context.
  */
-export function bind<F extends (...args: readonly any[]) => any, T>(fn: F, thisObj: T): (...args: Parameters<F>) => ReturnType<F>;
-export function bind<F extends (...args: readonly any[]) => any, T>(fn: F): (thisObj: T) => (...args: Parameters<F>) => ReturnType<F>;
+export function bind<F extends AnyFunction, T>(fn: F, thisObj: T): (...args: Parameters<F>) => ReturnType<F>;
+export function bind<F extends AnyFunction, T>(fn: F): (thisObj: T) => (...args: Parameters<F>) => ReturnType<F>;
+
+/**
+ * It takes two objects and a function, which will be used when there is an overlap between the keys.
+ */
+export function mergeWith(fn: (x: any, z: any) => any, a: Record<string, unknown>, b: Record<string, unknown>): Record<string, unknown>;
+export function mergeWith<Output>(fn: (x: any, z: any) => any, a: Record<string, unknown>, b: Record<string, unknown>): Output;
+export function mergeWith(fn: (x: any, z: any) => any, a: Record<string, unknown>): (b: Record<string, unknown>) => Record<string, unknown>;
+export function mergeWith<Output>(fn: (x: any, z: any) => any, a: Record<string, unknown>): (b: Record<string, unknown>) => Output;
+export function mergeWith(fn: (x: any, z: any) => any): <U, V>(a: U, b: V) => Record<string, unknown>;
+export function mergeWith<Output>(fn: (x: any, z: any) => any): <U, V>(a: U, b: V) => Output;
+
+/**
+ * It applies list of function to a list of inputs.
+ */
+export function juxt<A extends readonly any[], R1>(fns: readonly [(...a: A) => R1]): (...a: A) => readonly [R1];
+export function juxt<A extends readonly any[], R1, R2>(fns: readonly [(...a: A) => R1, (...a: A) => R2]): (...a: A) => readonly [R1, R2];
+export function juxt<A extends readonly any[], R1, R2, R3>(fns: readonly [(...a: A) => R1, (...a: A) => R2, (...a: A) => R3]): (...a: A) => readonly [R1, R2, R3];
+export function juxt<A extends readonly any[], R1, R2, R3, R4>(fns: readonly [(...a: A) => R1, (...a: A) => R2, (...a: A) => R3, (...a: A) => R4]): (...a: A) => readonly [R1, R2, R3, R4];
+export function juxt<A extends readonly any[], R1, R2, R3, R4, R5>(fns: readonly [(...a: A) => R1, (...a: A) => R2, (...a: A) => R3, (...a: A) => R4, (...a: A) => R5]): (...a: A) => readonly [R1, R2, R3, R4, R5];
+export function juxt<A extends readonly any[], U>(fns: ReadonlyArray<(...args: A) => U>): (...args: A) => readonly U[];
+
+/**
+ * It counts how many times `predicate` function returns `true`, when supplied with iteration of `list`.
+ */
+export function count<T>(predicate: (x: T) => boolean, list: readonly T[]): number;
+export function count<T>(predicate: (x: T) => boolean): (list: readonly T[]) => number;
+
+/**
+ * It counts elements in a list after each instance of the input list is passed through `transformFn` function.
+ */
+export function countBy<T extends unknown>(transformFn: (x: T) => any, list: readonly T[]): Record<string, number>;
+export function countBy<T extends unknown>(transformFn: (x: T) => any): (list: readonly T[]) => Record<string, number>;
+
+export function unwind<T, U>(prop: keyof T, obj: T): readonly U[];
+export function unwind<T, U>(prop: keyof T): (obj: T) => readonly U[];
+
+/**
+ * It passes the two inputs through `unaryFn` and then the results are passed as inputs the the `binaryFn` to receive the final result(`binaryFn(unaryFn(FIRST_INPUT), unaryFn(SECOND_INPUT))`).
+ * 
+ * This method is also known as P combinator.
+ */
+export function on<T, U, R>(binaryFn: (a: U, b: U) => R, unaryFn: (value: T) => U, a: T, b: T): R;
+export function on<T, U, R>(binaryFn: (a: U, b: U) => R, unaryFn: (value: T) => U, a: T): (b: T) => R;
+export function on<T, U, R>(binaryFn: (a: U, b: U) => R, unaryFn: (value: T) => U): {
+    (a: T, b: T): R;
+    (a: T): (b: T) => R;
+};
+
+/**
+ * Same as `R.where`, but it will return `true` if at least one condition check returns `true`.
+ */
+export function whereAny<T, U>(conditions: T, input: U): boolean;
+export function whereAny<T>(conditions: T): <U>(input: U) => boolean;
+export function whereAny<ObjFunc2, U>(conditions: ObjFunc2, input: U): boolean;
+export function whereAny<ObjFunc2>(conditions: ObjFunc2): <U>(input: U) => boolean;
+
+/**
+ * `R.partialObject` is a curry helper designed specifically for functions accepting object as a single argument.
+ * 
+ * Initially the function knows only a part from the whole input object and then `R.partialObject` helps in preparing the function for the second part, when it receives the rest of the input.
+ */
+export function partialObject<Input, PartialInput, Output>(
+  fn: (input: Input) => Output, 
+  partialInput: PartialInput,
+): (input: Pick<Input, Exclude<keyof Input, keyof PartialInput>>) => Output;
+
+export function uniqBy<T, U>(fn: (a: T) => U, list: readonly T[]): readonly T[];
+export function uniqBy<T, U>(fn: (a: T) => U): (list: readonly T[]) => readonly T[];
+
+/**
+ * It changes a property of object on the base of provided path and transformer function.
+ */
+export function modifyPath<T extends Record<string, unknown>>(path: Path, fn: (x: any) => unknown, object: Record<string, unknown>): T;
+export function modifyPath<T extends Record<string, unknown>>(path: Path, fn: (x: any) => unknown): (object: Record<string, unknown>) => T;
+export function modifyPath<T extends Record<string, unknown>>(path: Path): (fn: (x: any) => unknown) => (object: Record<string, unknown>) => T;
 
 // RAMBDAX_MARKER_START
 
@@ -1516,18 +1617,9 @@ export function pipeAsync<Out>(
   ...fns: readonly (Async<any> | Func<any>)[]
 ): (input: any) => Promise<Out>;
 
-/**
- * It counts how many times `searchFor` is within `list` according to `R.equals`.
- */
-export function count<T>(searchFor: T, list: readonly any[]): number;
-export function count<T>(searchFor: T): (list: readonly any[]) => number;
-
-/**
- * It creates a debounced function that delays invoking `fn` until after wait milliseconds `ms` have elapsed since the last time the debounced function was invoked.
- */
-export function debounce<T, U>(fn: (input: T) => U, ms: number): (input: T) => void;
-export function debounce<T, Q, U>(fn: (input1: T, input2: Q) => U, ms: number): (input1: T, input2: Q) => void;
-export function debounce<T, Q, Z, U>(fn: (input1: T, input2: Q, input3: Z) => U, ms: number): (input1: T, input2: Q, input3: Z) => void;
+export function debounce<T, U>(fn: (input: T) => U, ms: number, immediate?: boolean): (input: T) => void;
+export function debounce<T, Q, U>(fn: (input1: T, input2: Q) => U, ms: number, immediate?: boolean): (input1: T, input2: Q) => void;
+export function debounce<T, Q, Z, U>(fn: (input1: T, input2: Q, input3: Z) => U, ms: number, immediate?: boolean): (input1: T, input2: Q, input3: Z) => void;
 
 /**
  * `setTimeout` as a promise that resolves to `R.DELAY` variable after `ms` milliseconds.
@@ -1603,11 +1695,6 @@ export function ifElseAsync<T, K, U>(
   onTrue: (x: T, y: K) => Promise<U>, 
   onFalse: (x: T, y: K) => Promise<U>, 
 ): (x: T, y: K) => Promise<U>;
-
-/**
- * It returns `true` if **R.type** of `input` is `Async` or `Function`.
- */
-export function isFunction(input: any): boolean;
 
 export function isPromise(input: any): boolean;
 
@@ -1693,6 +1780,11 @@ export function maybe<T>(ifRule: VoidInputFunc<boolean>, whenIf: T | Func<T>, wh
 export function memoize<T, K extends readonly any[]>(fn: (...inputs: K) => T): (...inputs: K) => T;
 
 /**
+ * Creates a new function that, when invoked, caches the result of calling fn for a given argument set and returns the result.
+ */
+export function memoizeWith<T, K extends readonly any[]>(keyGen: any, fn: (...inputs: K) => T): (...inputs: K) => T;
+
+/**
  * It returns the next index of the list.
  * 
  * If we have reached the end of the list, then it will return `0`.
@@ -1717,16 +1809,6 @@ export function ok(...inputs: readonly any[]): (...schemas: readonly any[]) => v
  * It checks if `inputs` are following `schemas` specifications according to `R.isValid`.
  */
 export function pass(...inputs: readonly any[]): (...rules: readonly any[]) => boolean;
-
-/**
- * `R.partialCurry` is a curry helper designed specifically for functions accepting object as a single argument.
- * 
- * Initially the function knows only a part from the whole input object and then `R.partialCurry` helps in preparing the function for the second part, when it receives the rest of the input.
- */
-export function partialCurry<Input, PartialInput, Output>(
-  fn: (input: Input) => Output, 
-  partialInput: PartialInput,
-): (input: Pick<Input, Exclude<keyof Input, keyof PartialInput>>) => Output;
 
 /**
  * It is basically `R.pipe`, but instead of passing `input` argument as `R.pipe(...)(input)`, you pass it as the first argument.
@@ -1839,9 +1921,6 @@ export function switcher<T>(valueToMatch: any): Switchem<T>;
 export function tapAsync<T>(fn: Func<any> | Promise<any>, input: T): T;
 export function tapAsync<T>(fn: Func<any> | Promise<any>): (input: T) => T;
 
-/**
- * It creates a throttled function that invokes `fn` maximum once for a `period` of milliseconds.
- */
 export function throttle<T, U>(fn: (input: T) => U, ms: number): (input: T) => U;
 export function throttle<T, Q, U>(fn: (input1: T, input2: Q) => U, ms: number): (input1: T, input2: Q) => U;
 export function throttle<T, Q, Z, U>(fn: (input1: T, input2: Q, input3: Z) => U, ms: number): (input1: T, input2: Q, input3: Z) => U;
@@ -1942,7 +2021,7 @@ export function excludes<T>(valueToFind: T): (input: readonly T[]) => boolean;
 /**
  * Very similar to `R.assocPath` but it applies list of updates instead of only a single update.
  * 
- * It return a copy of `obj` input with changed properties according to `rules` input.
+ * It returns a copy of `obj` input with changed properties according to `rules` input.
  * 
  * Each instance of `rules` is a tuple of object path and the new value for this path. If such object path does not exist, then such object path is created.
  * 
@@ -2050,6 +2129,32 @@ export function findAsync<T>(predicate: (x: T) => Promise<boolean>): (list: read
  */
 export function xnor(x: boolean, y: boolean): boolean;
 export function xnor(y: boolean): (y: boolean) => boolean;
+
+export function deletePath<T>(path: string): T;
+
+export function mapcat<T>(x: T): T;
+
+/**
+ * It transforms object to object where each value is represented with its path.
+ */
+export function flattenObject(x: Record<string, unknown>): Record<string, unknown>;
+export function flattenObject<T>(x: Record<string, T>): Record<string, T>;
+
+/**
+ * It returns `true` if all of `target` object properties are `R.equal` to `compareTo` object.
+ */
+export function contains<T, U>(target: T, compareTo: U): boolean;
+export function contains<T, U>(target: T): (compareTo: U) => boolean;
+
+/**
+ * Same as `R.partialObject`.
+ * 
+ * When `Ramda` introduced `R.partialObject`, `Rambdax` already had such method, i.e. `R.partialCurry`. So this method is kept for backward compatibility.
+ */
+export function partialCurry<Input, PartialInput, Output>(
+  fn: (input: Input) => Output, 
+  partialInput: PartialInput,
+): (input: Pick<Input, Exclude<keyof Input, keyof PartialInput>>) => Output;
 
 // RAMBDAX_MARKER_END
 // ============================================
