@@ -1,5 +1,3 @@
-export * from './src/_consumeTypings.test'
-export * from './src/_typings.test'
 export * from './src/allFalse'
 export * from './src/allTrue'
 export * from './src/allType'

@@ -3,6 +3,7 @@
   "scripts": {
     "build:main": "NODE_ENV=build rollup -c rollup.config.mjs",
     "build:web": "NODE_ENV=build rollup -c rollup.web.config.mjs",
+    "clean": "rm src/_consumeTypings.test.js && rm src/_typings.test.js",
     "build": "yarn build:main&&yarn build:web",
     "docs": "npx docsify-cli init ./docs"
   },
