@@ -24,13 +24,13 @@
   },
   "files": [
     "dist",
-		"src",
-		"README.md",
-		"CHANGELOG.md",
-		"index.d.ts",
-		"immutable.d.ts",
-		"rambdax.js",
-		"immutable.js"
+    "src",
+    "README.md",
+    "CHANGELOG.md",
+    "index.d.ts",
+    "immutable.d.ts",
+    "rambdax.js",
+    "immutable.js"
   ],
   "repository": {
     "type": "git",
@@ -40,24 +40,24 @@
   "author": "self_refactor",
   "description": "Extended version of Rambda - a lightweight, faster alternative to Ramda",
   "sideEffects": false,
-	"main": "./dist/rambdax.js",
-	"umd": "./dist/rambdax.umd.js",
-	"module": "./rambdax.js",
+  "main": "./dist/rambdax.js",
+  "umd": "./dist/rambdax.umd.js",
+  "module": "./rambdax.js",
   "types": "./index.d.ts",
   "exports": {
-		".": {
-			"import": "./rambdax.js",
-			"require": "./dist/rambdax.js",
-			"default": "./dist/rambdax.js",
-			"types": "./index.d.ts"
-		},
-		"./immutable": {
-			"import": "./immutable.js",
-			"require": "./immutable.js",
-			"default": "./immutable.js",
-			"types": "./immutable.d.ts"
-		}
-	},
+    ".": {
+      "import": "./rambdax.js",
+      "require": "./dist/rambdax.js",
+      "default": "./dist/rambdax.js",
+      "types": "./index.d.ts"
+    },
+    "./immutable": {
+      "import": "./immutable.js",
+      "require": "./immutable.js",
+      "default": "./immutable.js",
+      "types": "./immutable.d.ts"
+    }
+  },
   "keywords": [
     "ramda",
     "rambda",

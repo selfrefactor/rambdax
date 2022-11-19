@@ -23,7 +23,7 @@ export default {
   input  : 'rambdax.js',
   output : [
     {
-      file   : './dist/rambda.js',
+      file   : './dist/rambdax.js',
       format : 'cjs',
     },
     // unused due to tree-shaking issues
