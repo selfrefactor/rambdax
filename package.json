@@ -1,8 +1,8 @@
 {
   "name": "rambdax",
   "scripts": {
-    "build:main": "NODE_ENV=build rollup -c rollup.config.js",
-    "build:web": "NODE_ENV=build rollup -c rollup.web.config.js",
+    "build:main": "NODE_ENV=build rollup -c rollup.config.mjs",
+    "build:web": "NODE_ENV=build rollup -c rollup.web.config.mjs",
     "build": "yarn build:main&&yarn build:web",
     "docs": "npx docsify-cli init ./docs"
   },
@@ -10,26 +10,27 @@
   "version": "8.1.0",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "7.18.9",
-    "@babel/plugin-proposal-object-rest-spread": "7.18.9",
-    "@babel/preset-env": "7.18.9",
-    "@rollup/plugin-babel": "5.3.1",
-    "@rollup/plugin-commonjs": "22.0.1",
-    "@rollup/plugin-json": "4.1.0",
-    "@rollup/plugin-node-resolve": "13.3.0",
-    "@rollup/plugin-replace": "4.0.0",
-    "rollup": "2.77.2",
+    "@babel/core": "7.20.2",
+    "@babel/plugin-proposal-object-rest-spread": "7.20.2",
+    "@babel/preset-env": "7.20.2",
+    "@rollup/plugin-babel": "6.0.2",
+    "@rollup/plugin-commonjs": "23.0.2",
+    "@rollup/plugin-node-resolve": "15.0.1",
+    "@rollup/plugin-replace": "5.0.1",
+    "rollup": "3.2.5",
     "rollup-plugin-uglify": "6.0.4",
     "rollup-plugin-cleanup": "3.2.1",
     "rollup-plugin-sourcemaps": "0.6.3"
   },
   "files": [
     "dist",
-    "src",
-    "CHANGELOG.md",
-    "immutable.d.ts",
-    "immutable.js",
-    "index.d.ts"
+		"src",
+		"README.md",
+		"CHANGELOG.md",
+		"index.d.ts",
+		"immutable.d.ts",
+		"rambdax.js",
+		"immutable.js"
   ],
   "repository": {
     "type": "git",
@@ -39,24 +40,24 @@
   "author": "self_refactor",
   "description": "Extended version of Rambda - a lightweight, faster alternative to Ramda",
   "sideEffects": false,
-  "main": "./dist/rambdax.js",
-  "umd": "./dist/rambdax.umd.js",
-  "module": "./dist/rambdax.mjs",
+	"main": "./dist/rambdax.js",
+	"umd": "./dist/rambdax.umd.js",
+	"module": "./rambdax.js",
   "types": "./index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/rambdax.mjs",
-      "require": "./dist/rambdax.js",
-      "default": "./dist/rambdax.js",
-      "types": "./index.d.ts"
-    },
-    "./immutable": {
-      "import": "./immutable.js",
-      "require": "./immutable.js",
-      "default": "./immutable.js",
-      "types": "./immutable.d.ts"
-    }
-  },
+		".": {
+			"import": "./rambdax.js",
+			"require": "./dist/rambdax.js",
+			"default": "./dist/rambdax.js",
+			"types": "./index.d.ts"
+		},
+		"./immutable": {
+			"import": "./immutable.js",
+			"require": "./immutable.js",
+			"default": "./immutable.js",
+			"types": "./immutable.d.ts"
+		}
+	},
   "keywords": [
     "ramda",
     "rambda",

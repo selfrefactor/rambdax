@@ -14,7 +14,7 @@ export default {
       preferBuiltins : true,
     }),
     cleanup(),
-    babel({
+    babel({ 
       babelHelpers: 'bundled',
         extensions,
         exclude : [ 'node_modules/**' ],
@@ -23,12 +23,13 @@ export default {
   input  : 'rambdax.js',
   output : [
     {
-      file   : './dist/rambdax.js',
+      file   : './dist/rambda.js',
       format : 'cjs',
     },
-    {
-      file   : './dist/rambdax.mjs',
-      format : 'esm',
-    },
+    // unused due to tree-shaking issues
+    // {
+    //   file   : './dist/rambda.mjs',
+    //   format : 'esm',
+    // },
   ],
 }
