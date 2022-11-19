@@ -1,3 +1,9 @@
+9.0.0
+
+From this release, CHANGELOG will simply refer to the `Rambda` version linked to the release, instead of listing `Rambda` changes here as well. In this case, the version referring to this release is `7.3.0`.
+
+- Breaking change due to renaming of `R.mapFastAsync` to `R.mapParallelAsync` and `R.mapAsyncLimit` to `R.mapParallelAsyncWithLimit`.
+
 8.1.0
 
 - Breaking change due to renaming of `R.partialCurry` to `R.partialObject`.
