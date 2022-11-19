@@ -996,19 +996,6 @@ export function map<T, U, S>(fn: ObjectIterator<T, U>): (iterable: Dictionary<T>
 export function map<T>(fn: Iterator<T, T>): (iterable: readonly T[]) => readonly T[];
 export function map<T>(fn: Iterator<T, T>, iterable: readonly T[]): readonly T[];
 
-/**
- * It asynchronously iterates over a list using `Promise.allSettled`.
- */
-export function mapAllSettled<T, K>(fn: AsyncIterable<T, K>, list: readonly T[]): Promise<readonly Resolved<K>[]>;
-export function mapAllSettled<T, K>(fn: AsyncIterableIndexed<T, K>, list: readonly T[]): Promise<readonly Resolved<K>[]>;
-export function mapAllSettled<T, K>(fn: AsyncIterable<T, K>) : ( list: readonly T[]) => Promise<readonly Resolved<K>[]>;
-export function mapAllSettled<T, K>(fn: AsyncIterableIndexed<T, K>) : ( list: readonly T[]) => Promise<readonly Resolved<K>[]>;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
-
 export function mapArray<T>(fn: Iterator<T, T>, iterable: readonly T[]): readonly T[];
 export function mapArray<T, U>(fn: Iterator<T, U>, iterable: readonly T[]): readonly U[];
 export function mapArray<T, U>(fn: Iterator<T, U>): (iterable: readonly T[]) => readonly U[];
@@ -1353,6 +1340,11 @@ export function partialCurry<Input, PartialInput, Output>(
   fn: (input: Input) => Output, 
   partialInput: PartialInput,
 ): (input: Pick<Input, Exclude<keyof Input, keyof PartialInput>>) => Output;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
 
 /**
  * `R.partialObject` is a curry helper designed specifically for functions accepting object as a single argument.

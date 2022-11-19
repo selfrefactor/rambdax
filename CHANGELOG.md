@@ -4,8 +4,6 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 - Breaking change due to renaming of `R.mapFastAsync` to `R.mapParallelAsync` and `R.mapAsyncLimit` to `R.mapParallelAsyncWithLimit`.
 
-- Add `R.mapAllSettled`
-
 8.1.0
 
 - Breaking change due to renaming of `R.partialCurry` to `R.partialObject`.

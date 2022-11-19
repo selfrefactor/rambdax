@@ -1095,19 +1095,6 @@ function lensSatisfiesFn(predicate, lens, input) {
 }
 const lensSatisfies = curry(lensSatisfiesFn);
 
-async function mapAllSettledFn(fn, arr) {
-  const promised = arr.map((a, i) => fn(a, i));
-  return Promise.allSettled(promised);
-}
-function mapAllSettled(fn, arr) {
-  if (arguments.length === 1) {
-    return async holder => mapAllSettledFn(fn, holder);
-  }
-  return new Promise((resolve, reject) => {
-    mapAllSettledFn(fn, arr).then(resolve).catch(reject);
-  });
-}
-
 function mapKeys(changeKeyFn, obj) {
   if (arguments.length === 1) return _obj => mapKeys(changeKeyFn, _obj);
   const toReturn = {};
@@ -3599,8 +3586,6 @@ exports.lensPath = lensPath;
 exports.lensProp = lensProp;
 exports.lensSatisfies = lensSatisfies;
 exports.map = map;
-exports.mapAllSettled = mapAllSettled;
-exports.mapAllSettledFn = mapAllSettledFn;
 exports.mapArray = mapArray;
 exports.mapAsync = mapAsync;
 exports.mapIndexed = mapIndexed;
