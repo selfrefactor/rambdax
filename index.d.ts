@@ -7,7 +7,7 @@ export type Iterator<T, U> = (x: T) => U;
 export type ObjectIterator<T, U> = (x: T, prop: string, inputObj: Dictionary<T>) => U;
 type Ord = number | string | boolean | Date;
 type Path = string | (number | string)[];
-type RamdaPath = (number | string)[];
+export type RamdaPath = (number | string)[];
 type Predicate<T> = (x: T) => boolean;
 export type IndexedPredicate<T> = (x: T, i: number) => boolean;
 export type ObjectPredicate<T> = (x: T, prop: string, inputObj: Dictionary<T>) => boolean;
@@ -678,7 +678,7 @@ export function fromPairs<V>(listOfPairs: ([number, V])[]): { [index: number]: V
 export function fromPairs<V>(listOfPairs: ([string, V])[]): { [index: string]: V };
 
 /**
- * The set of methods `R.setter`, `R.getter` and `R.reset` allow different parts of your logic to access comminicate indirectly via shared cache object.
+ * The set of methods `R.setter`, `R.getter` and `R.reset` allow different parts of your logic to access communicate indirectly via shared cache object.
  * 
  * Usually these methods show that you might need to refactor to classes. Still, they can be helpful meanwhile.
  * 
@@ -837,7 +837,7 @@ export function init<T extends unknown[]>(input: T): T extends readonly [...infe
 export function init(input: string): string;
 
 /**
- * It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
+ * It generates a new string from `inputWithTags` by replacing all `{{x}}` occurrences with values provided by `templateArguments`.
  */
 export function interpolate(inputWithTags: string, templateArguments: object): string;
 export function interpolate(inputWithTags: string): (templateArguments: object) => string;
@@ -1155,7 +1155,7 @@ export function mergeLeft<Output>(newProps: object, target: object): Output;
 export function mergeLeft<Output>(newProps: object): (target: object) => Output;
 
 /**
- * It creates a copy of `target` object with overidden `newProps` properties. Previously known as `R.merge` but renamed after Ramda did the same.
+ * It creates a copy of `target` object with overwritten `newProps` properties. Previously known as `R.merge` but renamed after Ramda did the same.
  */
 export function mergeRight<A, B>(target: A, newProps: B): A & B
 export function mergeRight<Output>(target: any): (newProps: any) => Output;
@@ -1192,8 +1192,6 @@ export function modify<K extends string, A, P>(
   prop: K,
   fn: (a: A) => P,
 ): <T extends Record<K, A>>(target: T) => Omit<T, K> & Record<K, P>;
-
-// RAMBDAX_MARKER_START
 
 /**
  * It changes a property of object on the base of provided path and transformer function.
@@ -1434,6 +1432,7 @@ export function path<
 export function path<T>(pathToSearch: string, obj: any): T | undefined;
 export function path<T>(pathToSearch: string): (obj: any) => T | undefined;
 export function path<T>(pathToSearch: RamdaPath): (obj: any) => T | undefined;
+export function path<T>(pathToSearch: RamdaPath, obj: any): T | undefined;
 
 /**
  * It returns `true` if `pathToSearch` of `input` object is equal to `target` value.
@@ -1466,7 +1465,7 @@ export function paths<T>(pathsToSearch: Path[]): (obj: any) => (T | undefined)[]
  * 
  * `input` can be either an object or an array.
  * 
- * String anotation of `propsToPick` is one of the differences between `Rambda` and `Ramda`.
+ * String annotation of `propsToPick` is one of the differences between `Rambda` and `Ramda`.
  */
 export function pick<T, K extends string | number | symbol>(propsToPick: K[], input: T): Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
 export function pick<K extends string | number | symbol>(propsToPick: K[]): <T>(input: T) => Pick<T, Exclude<keyof T, Exclude<keyof T, K>>>;
@@ -1944,7 +1943,7 @@ export function takeWhile<T>(fn: Predicate<T>): (iterable: T[]) => T[];
 /**
  * It applies function `fn` to input `x` and returns `x`.
  * 
- * One use case is debuging in the middle of `R.compose`.
+ * One use case is debugging in the middle of `R.compose`.
  */
 export function tap<T>(fn: (x: T) => void, input: T): T;
 export function tap<T>(fn: (x: T) => void): (input: T) => T;
@@ -2054,6 +2053,11 @@ export function union<T>(x: T[]): (y: T[]) => T[];
  */
 export function uniq<T>(list: T[]): T[];
 
+/**
+ * It applies uniqueness to input list based on function that defines what to be used for comparison between elements.
+ * 
+ * `R.equals` is used to determine equality.
+ */
 export function uniqBy<T, U>(fn: (a: T) => U, list: T[]): T[];
 export function uniqBy<T, U>(fn: (a: T) => U): (list: T[]) => T[];
 
@@ -2076,6 +2080,11 @@ export function unless<T, U>(predicate: (x: T) => boolean, whenFalseFn: (x: T) =
 export function unless<T, U>(predicate: (x: T) => boolean, whenFalseFn: (x: T) => U): (x: T) => T | U;
 export function unless<T>(predicate: (x: T) => boolean, whenFalseFn: (x: T) => T, x: T): T;
 export function unless<T>(predicate: (x: T) => boolean, whenFalseFn: (x: T) => T): (x: T) => T;
+
+export function unnest(list: unknown[]): unknown[];
+export function unnest<T>(list: unknown[]): T;
+
+// RAMBDAX_MARKER_START
 
 export function unwind<T, U>(prop: keyof T, obj: T): U[];
 export function unwind<T, U>(prop: keyof T): (obj: T) => U[];
@@ -2123,7 +2132,7 @@ export function wait<T>(fn: Promise<T>): Promise<[T, Error|undefined]>;
 export function wait<T>(fn: (x: any) => Promise<T>): Promise<[T, Error|undefined]>;
 
 /**
- * It returns `true`, if `condition` returns `true` within `howLong` milisececonds time period.
+ * It returns `true`, if `condition` returns `true` within `howLong` milliseconds time period.
  * 
  * The method accepts an optional third argument `loops`(default to 10), which is the number of times `waitForTrueCondition` will be evaluated for `howLong` period. Once this function returns a value different from `false`, this value will be the final result.
  * 
