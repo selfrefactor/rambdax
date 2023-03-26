@@ -84,7 +84,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 77 Ramda methods not implemented in Rambda 
+  Click to see the full list of 76 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
@@ -157,7 +157,6 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - uncurryN
 - unfold
 - unionWith
-- unnest
 - until
 - useWith
 - valuesIn
@@ -3316,11 +3315,11 @@ It returns the uniq set of all elements in the first list `a` not contained in t
 const a = [ 1, 2, 3, 4 ]
 const b = [ 3, 4, 5, 6 ]
 
-const result = difference(a, b)
+const result = R.difference(a, b)
 // => [ 1, 2 ]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20a%20%3D%20%5B%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20b%20%3D%20%5B%203%2C%204%2C%205%2C%206%20%5D%0A%0Aconst%20result%20%3D%20difference(a%2C%20b)%0A%2F%2F%20%3D%3E%20%5B%201%2C%202%20%5D">Try this <strong>R.difference</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20a%20%3D%20%5B%201%2C%202%2C%203%2C%204%20%5D%0Aconst%20b%20%3D%20%5B%203%2C%204%2C%205%2C%206%20%5D%0A%0Aconst%20result%20%3D%20R.difference(a%2C%20b)%0A%2F%2F%20%3D%3E%20%5B%201%2C%202%20%5D">Try this <strong>R.difference</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -5588,7 +5587,7 @@ It transforms a `listOfPairs` to an object.
 getter<T>(keyOrKeys: string | string[] | undefined): T
 ```
 
-The set of methods `R.setter`, `R.getter` and `R.reset` allow different parts of your logic to access comminicate indirectly via shared cache object. 
+The set of methods `R.setter`, `R.getter` and `R.reset` allow different parts of your logic to access communicate indirectly via shared cache object. 
 
 Usually these methods show that you might need to refactor to classes. Still, they can be helpful meanwhile.
 
@@ -6717,7 +6716,7 @@ test('with string', () => {
 interpolate(inputWithTags: string, templateArguments: object): string
 ```
 
-It generages a new string from `inputWithTags` by replacing all `{{x}}` occurances with values provided by `templateArguments`.
+It generates a new string from `inputWithTags` by replacing all `{{x}}` occurrences with values provided by `templateArguments`.
 
 ```javascript
 const inputWithTags = 'foo is {{bar}} even {{a}} more'
@@ -10846,8 +10845,6 @@ export function mergeDeepRight(target, source){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { mergeDeepRight as mergeDeepRightRamda } from 'ramda'
-
 import { mergeDeepRight } from './mergeDeepRight.js'
 
 const student = {
@@ -10863,6 +10860,23 @@ const teacher = {
   contact : { email : 'baz@example.com' },
   songs   : { title : 'Remains the same' },
 }
+
+test('when merging object with lists inside them', () => {
+  const a = {
+    a : [ 1, 2, 3 ],
+    b : [ 4, 5, 6 ],
+  }
+  const b = {
+    a : [ 7, 8, 9 ],
+    b : [ 10, 11, 12 ],
+  }
+  const result = mergeDeepRight(a, b)
+  const expected = {
+    a : [ 7, 8, 9 ],
+    b : [ 10, 11, 12 ],
+  }
+  expect(result).toEqual(expected)
+})
 
 test('happy', () => {
   const result = mergeDeepRight(student, teacher)
@@ -11040,7 +11054,7 @@ test('when undefined or null instead of object', () => {
 
 ### mergeRight
 
-It creates a copy of `target` object with overidden `newProps` properties. Previously known as `R.merge` but renamed after Ramda did the same.
+It creates a copy of `target` object with overwritten `newProps` properties. Previously known as `R.merge` but renamed after Ramda did the same.
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20target%20%3D%20%7B%20'foo'%3A%200%2C%20'bar'%3A%201%20%7D%0Aconst%20newProps%20%3D%20%7B%20'foo'%3A%207%20%7D%0A%0Aconst%20result%20%3D%20R.mergeRight(target%2C%20newProps)%0A%2F%2F%20%3D%3E%20%7B%20'foo'%3A%207%2C%20'bar'%3A%201%20%7D">Try this <strong>R.mergeRight</strong> example in Rambda REPL</a>
 
@@ -13209,7 +13223,7 @@ It returns a partial copy of an `input` containing only `propsToPick` properties
 
 `input` can be either an object or an array.
 
-String anotation of `propsToPick` is one of the differences between `Rambda` and `Ramda`.
+String annotation of `propsToPick` is one of the differences between `Rambda` and `Ramda`.
 
 > :boom: When using this method with `TypeScript`, it is much easier to pass `propsToPick` as an array. If passing a string, you will need to explicitly declare the output type.
 
@@ -17264,17 +17278,16 @@ export function takeLastWhile(predicate, input){
     return _input => takeLastWhile(predicate, _input)
   }
   if (input.length === 0) return input
-  let found = false
+
   const toReturn = []
   let counter = input.length
 
-  while (!found || counter === 0){
-    counter--
-    if (predicate(input[ counter ]) === false){
-      found = true
-    } else if (!found){
-      toReturn.push(input[ counter ])
+  while (counter){
+    const item = input[ --counter ]
+    if (!predicate(item)){
+      break
     }
+    toReturn.push(item)
   }
 
   return isArray(input) ? toReturn.reverse() : toReturn.reverse().join('')
@@ -17300,13 +17313,13 @@ test('happy', () => {
 })
 
 test('predicate is always true', () => {
-  const predicate = x => x > 0
+  const predicate = () => true
   const result = takeLastWhile(predicate)(list)
   expect(result).toEqual(list)
 })
 
 test('predicate is always false', () => {
-  const predicate = x => x < 0
+  const predicate = () => false
   const result = takeLastWhile(predicate, list)
   expect(result).toEqual([])
 })
@@ -17406,7 +17419,7 @@ tap<T>(fn: (x: T) => void, input: T): T
 
 It applies function `fn` to input `x` and returns `x`. 
 
-One use case is debuging in the middle of `R.compose`.
+One use case is debugging in the middle of `R.compose`.
 
 ```javascript
 const list = [1, 2, 3]
@@ -18422,7 +18435,11 @@ test('can distinct between string and number', () => {
 
 ### uniqBy
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.uniqBy(Math.abs%2C%20%5B%20-2%2C%201%2C%200%2C%20-1%2C%202%20%5D)%0A%0A%2F%2F%20%3D%3E%20%5B-2%2C%201%2C%200%5D">Try this <strong>R.uniqBy</strong> example in Rambda REPL</a>
+It applies uniqueness to input list based on function that defines what to be used for comparison between elements.
+
+`R.equals` is used to determine equality.
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%7Ba%3A1%7D%2C%20%7Ba%3A2%7D%2C%20%7Ba%3A1%7D%5D%0Aconst%20result%20%3D%20R.uniqBy(x%20%3D%3E%20x%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B%7Ba%3A1%7D%2C%20%7Ba%3A2%7D%5D">Try this <strong>R.uniqBy</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#uniqBy)
 
@@ -18604,6 +18621,10 @@ test('curried', () => {
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#unless)
+
+### unnest
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#unnest)
 
 ### unwind
 
@@ -19080,7 +19101,7 @@ waitFor(
 ): () => Promise<boolean>
 ```
 
-It returns `true`, if `condition` returns `true` within `howLong` milisececonds time period.
+It returns `true`, if `condition` returns `true` within `howLong` milliseconds time period.
 
 The method accepts an optional third argument `loops`(default to 10), which is the number of times `waitForTrueCondition` will be evaluated for `howLong` period. Once this function returns a value different from `false`, this value will be the final result. 
 
@@ -19953,6 +19974,10 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+9.1.0
+
+- Sync with `Rambda` version `7.5.0`
 
 9.0.0
 
