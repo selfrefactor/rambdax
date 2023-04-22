@@ -1,3 +1,7 @@
+9.1.1
+
+Add missing fix for `type: module` imports.
+
 9.1.0
 
 - Sync with `Rambda` version `7.5.0`
