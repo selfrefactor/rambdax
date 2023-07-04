@@ -84,11 +84,12 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 76 Ramda methods not implemented in Rambda 
+  Click to see the full list of 80 Ramda methods not implemented in Rambda 
 </summary>
 
 - __
 - addIndex
+- addIndexRight
 - ap
 - aperture
 - applyTo
@@ -103,6 +104,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - descend
 - differenceWith
 - dissocPath
+- dropRepeatsBy
 - empty
 - eqBy
 - forEachObjIndexed
@@ -116,6 +118,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - invert
 - invertObj
 - invoker
+- isNotNil
 - keysIn
 - lift
 - liftN
@@ -148,6 +151,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - sequence
 - sortWith
 - splitWhenever
+- swap
 - symmetricDifferenceWith
 - andThen
 - toPairsIn
@@ -219,7 +223,7 @@ There are methods which are benchmarked only with `Ramda` and `Rambda`(i.e. no `
 
 Note that some of these methods, are called with and without curring. This is done in order to give more detailed performance feedback.
 
-The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.28.0).
+The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.29.0).
 
 </summary>
 
@@ -295,6 +299,8 @@ method | Rambda | Ramda | Lodash
 
 ## ❯ Used by
 
+- [ESLint plugin Mocha](https://www.npmjs.com/package/eslint-plugin-mocha)
+
 - [WatermelonDB](https://github.com/Nozbe/WatermelonDB)
 
 - [Walmart Canada](https://www.walmart.ca) reported by [w-b-dev](https://github.com/w-b-dev) 
@@ -333,14 +339,14 @@ adjust<T>(index: number, replaceFn: (x: T) => T, list: T[]): T[]
 It replaces `index` in array `list` with the result of `replaceFn(list[i])`.
 
 ```javascript
-R.adjust(
+const result = R.adjust(
   0,
   a => a + 1,
   [0, 100]
 ) // => [1, 100]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?R.adjust(%0A%20%200%2C%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%20%5B0%2C%20100%5D%0Aconst%20result%20%3D%20)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try this <strong>R.adjust</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.adjust(%0A%20%200%2C%0A%20%20a%20%3D%3E%20a%20%2B%201%2C%0A%20%20%5B0%2C%20100%5D%0A)%20%2F%2F%20%3D%3E%20%5B1%2C%20100%5D">Try this <strong>R.adjust</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -1384,7 +1390,7 @@ test('applies function to argument list', () => {
 
 test('provides no way to specify context', () => {
   const obj = {
-    method : function (){
+    method (){
       return this === obj
     },
   }
@@ -2104,6 +2110,22 @@ test('string can be used as path input', () => {
     d : 3,
   }
   expect(result).toEqual(expected)
+})
+
+test('difference with ramda - doesn\'t overwrite primitive values with keys in the path', () => {
+  const obj = { a : 'str' }
+  const result = assocPath(
+    [ 'a', 'b' ], 42, obj
+  )
+
+  expect(result).toEqual({
+    a : {
+      0 : 's',
+      1 : 't',
+      2 : 'r',
+      b : 42,
+    },
+  })
 })
 
 test('bug', () => {
@@ -3755,7 +3777,7 @@ test('case 2', () => {
 
 ```typescript
 
-endsWith(target: string, iterable: string): boolean
+endsWith<T extends string>(question: T, str: string): boolean
 ```
 
 When iterable is a string, then it behaves as `String.prototype.endsWith`.
@@ -5048,12 +5070,12 @@ import { propEq } from './propEq.js'
 const list = [ { a : 1 }, { a : 2 }, { a : 3 } ]
 
 test('happy', () => {
-  const fn = propEq('a', 2)
+  const fn = propEq(2, 'a')
   expect(find(fn, list)).toEqual({ a : 2 })
 })
 
 test('with curry', () => {
-  const fn = propEq('a', 4)
+  const fn = propEq(4, 'a')
   expect(find(fn)(list)).toBeUndefined()
 })
 
@@ -5129,11 +5151,9 @@ import { propEq } from './propEq.js'
 const list = [ { a : 1 }, { a : 2 }, { a : 3 } ]
 
 test('happy', () => {
-  expect(findIndex(propEq('a', 2), list)).toBe(1)
-
-  expect(findIndex(propEq('a', 1))(list)).toBe(0)
-
-  expect(findIndex(propEq('a', 4))(list)).toEqual(-1)
+  expect(findIndex(propEq(2, 'a'), list)).toBe(1)
+  expect(findIndex(propEq(1, 'a'))(list)).toBe(0)
+  expect(findIndex(propEq(4, 'a'))(list)).toBe(-1)
 })
 ```
 
@@ -5328,7 +5348,7 @@ test('ramda 1', () => {
 })
 
 test('ramda 2', () => {
-  expect(findLastIndex(even, [ 'zing' ])).toEqual(-1)
+  expect(findLastIndex(even, [ 'zing' ])).toBe(-1)
 })
 
 test('ramda 3', () => {
@@ -5336,7 +5356,7 @@ test('ramda 3', () => {
 })
 
 test('ramda 4', () => {
-  expect(findLastIndex(even, [])).toEqual(-1)
+  expect(findLastIndex(even, [])).toBe(-1)
 })
 ```
 
@@ -6512,7 +6532,7 @@ It increments a number.
 
 ```typescript
 
-includes(valueToFind: string, input: string[] | string): boolean
+includes<T extends string>(valueToFind: T, input: string): boolean
 ```
 
 If `input` is string, then this method work as native `String.includes`.
@@ -7183,7 +7203,7 @@ function getRuleAndType(schema, requirementRaw){
   const { rule, parsed } = fromPrototypeToString(ruleRaw)
 
   return {
-    rule     : rule,
+    rule,
     ruleType : parsed ? 'String' : typeIs,
   }
 }
@@ -8353,7 +8373,7 @@ test('happy', () => {
 
 ```typescript
 
-last(str: string): string
+last(input: string): string
 ```
 
 It returns the last element of `input`, as the `input` can be either a string or an array.
@@ -8464,13 +8484,13 @@ test('with NaN', () => {
 })
 
 test('will throw with bad input', () => {
-  expect(lastIndexOfRamda([], true)).toEqual(-1)
+  expect(lastIndexOfRamda([], true)).toBe(-1)
   expect(() => indexOf([], true)).toThrowErrorMatchingInlineSnapshot('"indexOf is not defined"')
 })
 
 test('without list of objects - no R.equals', () => {
   expect(lastIndexOf(3, [ 1, 2, 3, 4 ])).toBe(2)
-  expect(lastIndexOf(10)([ 1, 2, 3, 4 ])).toEqual(-1)
+  expect(lastIndexOf(10)([ 1, 2, 3, 4 ])).toBe(-1)
 })
 
 test('list of objects uses R.equals', () => {
@@ -9782,7 +9802,8 @@ export function mapParallelAsyncWithLimit(
   return new Promise((resolve, reject) => {
     mapParallelAsyncWithLimitFn(
       iterable, limit, list
-    ).then(resolve)
+    )
+      .then(resolve)
       .catch(reject)
   })
 }
@@ -10789,6 +10810,29 @@ test('case 2', () => {
     baz : 3,
   })
 })
+
+describe('acts as if nil values are simply empty objects', () => {
+  it('if the first object is nil', () => {
+    expect(mergeAll([ null, { foo : 1 }, { foo : 2 }, { bar : 2 } ])).toEqual({
+      foo : 2,
+      bar : 2,
+    })
+  })
+
+  it('if the last object is nil', () => {
+    expect(mergeAll([ { foo : 1 }, { foo : 2 }, { bar : 2 }, undefined ])).toEqual({
+      foo : 2,
+      bar : 2,
+    })
+  })
+
+  it('if an intermediate object is nil', () => {
+    expect(mergeAll([ { foo : 1 }, { foo : 2 }, null, { bar : 2 } ])).toEqual({
+      foo : 2,
+      bar : 2,
+    })
+  })
+})
 ```
 
 </details>
@@ -11088,8 +11132,10 @@ const result = R.mergeWith(
 import { curry } from './curry.js'
 
 function mergeWithFn(
-  mergeFn, a, b
+  mergeFn, aInput, bInput
 ){
+  const a = aInput ?? {}
+  const b = bInput ?? {}
   const willReturn = {}
 
   Object.keys(a).forEach(key => {
@@ -11144,6 +11190,39 @@ test('happy', () => {
     b      : true,
   }
   expect(result).toEqual(expected)
+})
+
+// https://github.com/ramda/ramda/pull/3222/files#diff-d925d9188b478d2f1d4b26012c6dddac374f9e9d7a336604d654b9a113bfc857
+describe('acts as if nil values are simply empty objects', () => {
+  it('if the first object is nil and the second empty', () => {
+    expect(mergeWith(
+      concat, undefined, {}
+    )).toEqual({})
+  })
+
+  it('if the first object is empty and the second nil', () => {
+    expect(mergeWith(
+      concat, {}, null
+    )).toEqual({})
+  })
+
+  it('if both objects are nil', () => {
+    expect(mergeWith(
+      concat, undefined, null
+    )).toEqual({})
+  })
+
+  it('if the first object is not empty and the second is nil', () => {
+    expect(mergeWith(
+      concat, { a : 'a' }, null
+    )).toEqual({ a : 'a' })
+  })
+
+  it('if the first object is nil and the second is not empty', () => {
+    expect(mergeWith(
+      concat, undefined, { a : 'a' }
+    )).toEqual({ a : 'a' })
+  })
 })
 ```
 
@@ -11557,47 +11636,24 @@ test('when false curried', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#none)
 
-### nop
+### noop
 
 ```typescript
 
-nop(): void
+noop(): void
 ```
-
-It returns `undefined`.
-
-```javascript
-const result = R.nop()
-// => undefined
-```
-
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.nop()%0A%2F%2F%20%3D%3E%20undefined">Try this <strong>R.nop</strong> example in Rambda REPL</a>
 
 <details>
 
-<summary><strong>R.nop</strong> source</summary>
+<summary><strong>R.noop</strong> source</summary>
 
 ```javascript
-export function nop(){}
+export function noop(){}
 ```
 
 </details>
 
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { nop } from './nop.js'
-
-test('call', () => {
-  expect(nop).not.toThrow()
-})
-```
-
-</details>
-
-[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#nop)
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#noop)
 
 ### not
 
@@ -12832,12 +12888,7 @@ const result = [
 ```javascript
 import { createPath } from './_internals/createPath.js'
 
-export function path(pathInput, obj){
-  if (arguments.length === 1) return _obj => path(pathInput, _obj)
-
-  if (obj === null || obj === undefined){
-    return undefined
-  }
+export function pathFn(pathInput, obj){
   let willReturn = obj
   let counter = 0
 
@@ -12854,6 +12905,16 @@ export function path(pathInput, obj){
   }
 
   return willReturn
+}
+
+export function path(pathInput, obj){
+  if (arguments.length === 1) return _obj => path(pathInput, _obj)
+
+  if (obj === null || obj === undefined){
+    return undefined
+  }
+
+  return pathFn(pathInput, obj)
 }
 ```
 
@@ -14357,7 +14418,7 @@ test('prop', () => {
 
 ```typescript
 
-propEq<K extends string | number>(propToFind: K, valueToMatch: any, obj: Record<K, any>): boolean
+propEq<K extends string | number>(valueToMatch: any, propToFind: K, obj: Record<K, any>): boolean
 ```
 
 It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`.
@@ -14388,7 +14449,7 @@ import { equals } from './equals.js'
 import { prop } from './prop.js'
 
 function propEqFn(
-  propToFind, valueToMatch, obj
+  valueToMatch, propToFind, obj
 ){
   if (!obj) return false
 
@@ -14405,14 +14466,16 @@ export const propEq = curry(propEqFn)
 <summary><strong>Tests</strong></summary>
 
 ```javascript
+import { BAR, FOO } from './_internals/testUtils.js'
 import { propEq } from './propEq.js'
 
 test('happy', () => {
-  expect(propEq('foo', 'bar')({ foo : 'bar' })).toBeTrue()
-  expect(propEq('foo', 'bar')({ foo : 'baz' })).toBeFalse()
-  expect(propEq('foo')('bar')({ foo : 'baz' })).toBeFalse()
+  const obj = { [ FOO ] : BAR }
+  expect(propEq(BAR, FOO)(obj)).toBeTrue()
+  expect(propEq(1, FOO)(obj)).toBeFalse()
+  expect(propEq(1)(FOO)(obj)).toBeFalse()
   expect(propEq(
-    'foo', 'bar', null
+    1, 1, null
   )).toBeFalse()
 })
 
@@ -15256,7 +15319,7 @@ test('repeat', () => {
 
 ```typescript
 
-replace(strOrRegex: RegExp | string, replacer: string, str: string): string
+replace(strOrRegex: RegExp | string, replacer: RegExpReplacer, str: string): string
 ```
 
 It replaces `strOrRegex` found in `str` with `replacer`.
@@ -15297,20 +15360,24 @@ import { replace } from './replace.js'
 
 test('happy', () => {
   expect(replace(
-    'foo', 'yes', 'foo bar baz'
-  )).toBe('yes bar baz')
+    /\s/g, '|', 'foo bar baz'
+  )).toBe('foo|bar|baz')
 })
 
-test('1', () => {
-  expect(replace(/\s/g)('|')('foo bar baz')).toBe('foo|bar|baz')
-})
+test('with function as replacer input', () => {
+  expect(replace(
+    /\s/g,
+    (
+      match, offset, str
+    ) => {
+      expect(match).toBe(' ')
+      expect([ 3, 7 ].includes(offset)).toBeTrue()
+      expect(str).toBe('foo bar baz')
 
-test('2', () => {
-  expect(replace(/\s/g)('|', 'foo bar baz')).toBe('foo|bar|baz')
-})
-
-test('3', () => {
-  expect(replace(/\s/g, '|')('foo bar baz')).toBe('foo|bar|baz')
+      return '|'
+    },
+    'foo bar baz'
+  )).toBe('foo|bar|baz')
 })
 ```
 
@@ -15373,25 +15440,21 @@ export const replaceAll = curry(replaceAllFn)
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { replaceAll } from './replaceAll.js'
+import {replaceAll} from './replaceAll.js'
 
 const replacer = '|'
-const patterns = [ /foo/g, 'bar' ]
+const patterns = [/foo/g, 'bar']
 const input = 'foo bar baz foo bar'
 
 test('happy', () => {
-  const result = replaceAll(
-    patterns, replacer, input
-  )
+  const result = replaceAll(patterns, replacer, input)
   const expected = '| | baz | bar'
 
   expect(result).toEqual(expected)
 })
 
 test('throws when wrong patterns', () => {
-  expect(() => replaceAll(
-    {}, replacer, input
-  ))
+  expect(() => replaceAll({}, replacer, input))
     .toThrowErrorMatchingInlineSnapshot(`
     "Failed R.ok -
     reason: {"input":{},"schema":"array"}
@@ -15401,9 +15464,7 @@ test('throws when wrong patterns', () => {
 })
 
 test('throws when wrong input', () => {
-  expect(() => replaceAll(
-    patterns, replacer, []
-  ))
+  expect(() => replaceAll(patterns, replacer, []))
     .toThrowErrorMatchingInlineSnapshot(`
     "Failed R.ok -
     reason: {"input":[],"schema":"string"}
@@ -15413,9 +15474,7 @@ test('throws when wrong input', () => {
 })
 
 test('throws when wrong replacer', () => {
-  expect(() => replaceAll(
-    patterns, null, input
-  ))
+  expect(() => replaceAll(patterns, null, input))
     .toThrowErrorMatchingInlineSnapshot(`
     "Failed R.ok -
     reason: {"input":null,"schema":"string"}
@@ -15464,10 +15523,9 @@ const result = [
 <summary><strong>R.reverse</strong> source</summary>
 
 ```javascript
-export function reverse(listOrString){
-  if (typeof listOrString === 'string'){
-    return listOrString.split('').reverse()
-      .join('')
+export function reverse(listOrString) {
+  if (typeof listOrString === 'string') {
+    return listOrString.split('').reverse().join('')
   }
 
   const clone = listOrString.slice()
@@ -15483,22 +15541,22 @@ export function reverse(listOrString){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { reverse } from './reverse.js'
+import {reverse} from './reverse.js'
 
 test('happy', () => {
-  expect(reverse([ 1, 2, 3 ])).toEqual([ 3, 2, 1 ])
+  expect(reverse([1, 2, 3])).toEqual([3, 2, 1])
 })
 
 test('with string', () => {
   expect(reverse('baz')).toBe('zab')
 })
 
-test('it doesn\'t mutate', () => {
-  const arr = [ 1, 2, 3 ]
+test("it doesn't mutate", () => {
+  const arr = [1, 2, 3]
 
-  expect(reverse(arr)).toEqual([ 3, 2, 1 ])
+  expect(reverse(arr)).toEqual([3, 2, 1])
 
-  expect(arr).toEqual([ 1, 2, 3 ])
+  expect(arr).toEqual([1, 2, 3])
 })
 ```
 
@@ -15533,16 +15591,12 @@ const result = [
 <summary><strong>R.set</strong> source</summary>
 
 ```javascript
-import { always } from './always.js'
-import { curry } from './curry.js'
-import { over } from './over.js'
+import {always} from './always.js'
+import {curry} from './curry.js'
+import {over} from './over.js'
 
-function setFn(
-  lens, replacer, x
-){
-  return over(
-    lens, always(replacer), x
-  )
+function setFn(lens, replacer, x) {
+  return over(lens, always(replacer), x)
 }
 
 export const set = curry(setFn)
@@ -15555,43 +15609,39 @@ export const set = curry(setFn)
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { assoc } from './assoc.js'
-import { lens } from './lens.js'
-import { lensIndex } from './lensIndex.js'
-import { lensPath } from './lensPath.js'
-import { prop } from './prop.js'
-import { set } from './set.js'
+import {assoc} from './assoc.js'
+import {lens} from './lens.js'
+import {lensIndex} from './lensIndex.js'
+import {lensPath} from './lensPath.js'
+import {prop} from './prop.js'
+import {set} from './set.js'
 
 const testObject = {
-  foo : 'bar',
-  baz : {
-    a : 'x',
-    b : 'y',
+  foo: 'bar',
+  baz: {
+    a: 'x',
+    b: 'y',
   },
 }
 
 test('assoc lens', () => {
   const assocLens = lens(prop('foo'), assoc('foo'))
-  const result = set(
-    assocLens, 'FOO', testObject
-  )
+  const result = set(assocLens, 'FOO', testObject)
   const expected = {
     ...testObject,
-    foo : 'FOO',
+    foo: 'FOO',
   }
   expect(result).toEqual(expected)
 })
 
 test('path lens', () => {
   const pathLens = lensPath('baz.a')
-  const result = set(
-    pathLens, 'z', testObject
-  )
+  const result = set(pathLens, 'z', testObject)
   const expected = {
     ...testObject,
-    baz : {
-      a : 'z',
-      b : 'y',
+    baz: {
+      a: 'z',
+      b: 'y',
     },
   }
   expect(result).toEqual(expected)
@@ -15600,10 +15650,8 @@ test('path lens', () => {
 test('index lens', () => {
   const indexLens = lensIndex(0)
 
-  const result = set(
-    indexLens, 3, [ 1, 2 ]
-  )
-  expect(result).toEqual([ 3, 2 ])
+  const result = set(indexLens, 3, [1, 2])
+  expect(result).toEqual([3, 2])
 })
 ```
 
@@ -16574,7 +16622,7 @@ test('with bad inputs', () => {
 
 ```typescript
 
-startsWith(target: string, str: string): boolean
+startsWith<T extends string>(question: T, input: string): boolean
 ```
 
 When iterable is a string, then it behaves as `String.prototype.startsWith`.
@@ -16603,17 +16651,17 @@ const result = [
 import { isArray } from './_internals/isArray.js'
 import { equals } from './equals.js'
 
-export function startsWith(target, iterable){
+export function startsWith(question, iterable){
   if (arguments.length === 1)
-    return _iterable => startsWith(target, _iterable)
+    return _iterable => startsWith(question, _iterable)
 
   if (typeof iterable === 'string'){
-    return iterable.startsWith(target)
+    return iterable.startsWith(question)
   }
-  if (!isArray(target)) return false
+  if (!isArray(question)) return false
 
   let correct = true
-  const filtered = target.filter((x, index) => {
+  const filtered = question.filter((x, index) => {
     if (!correct) return false
     const result = equals(x, iterable[ index ])
     if (!result) correct = false
@@ -16621,7 +16669,7 @@ export function startsWith(target, iterable){
     return result
   })
 
-  return filtered.length === target.length
+  return filtered.length === question.length
 }
 ```
 
@@ -18628,7 +18676,7 @@ test('curried', () => {
 
 ### unwind
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%20%5B2%2C%203%5D%2C%0A%7D%0Aconst%20result%20%3D%20unwind('b'%2C%20Record%3Cstring%2C%20unknown%3E)%0Aconst%20expected%20%3D%20%5B%7Ba%3A1%2C%20b%3A2%7D%2C%20%7Ba%3A1%2C%20b%3A3%7D%5D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.unwind</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7B%0A%20%20a%3A%201%2C%0A%20%20b%3A%20%5B2%2C%203%5D%2C%0A%7D%0Aconst%20result%20%3D%20R.unwind('b'%2C%20obj)%0Aconst%20expected%20%3D%20%5B%7Ba%3A1%2C%20b%3A2%7D%2C%20%7Ba%3A1%2C%20b%3A3%7D%5D%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%60expected%60">Try this <strong>R.unwind</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#unwind)
 
@@ -19560,7 +19608,7 @@ test('with list of objects', () => {
 })
 
 test('ramda accepts string as target input while rambda throws', () => {
-  expect(withoutRamda('0:1', [ '0', '0:1' ])).toEqual([])
+  expect(withoutRamda('0:1', [ '0', '0:1' ])).toEqual([ '0:1' ])
   expect(() =>
     without('0:1', [ '0', '0:1' ])).toThrowErrorMatchingInlineSnapshot('"Cannot read property \'indexOf\' of 0:1"')
   expect(without([ '0:1' ], [ '0', '0:1' ])).toEqual([ '0' ])
@@ -19974,6 +20022,18 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+10.0.0
+
+- Sync with `Rambda` version `8.0.0`
+
+- Add `R.omitPaths` - [Issue #681](https://github.com/selfrefactor/rambda/issues/681)
+
+- Add `R.noop`
+
+9.1.1
+
+Add missing fix for `type: module` imports.
 
 9.1.0
 

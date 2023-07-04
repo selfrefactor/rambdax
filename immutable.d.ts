@@ -1,6 +1,23 @@
-export type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise" | "Symbol" | "Set" | "Error" | "Map" | "WeakMap" | "Generator" | "GeneratorFunction" | "BigInt" | "ArrayBuffer";
+export type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise" | "Symbol" | "Set" | "Error" | "Map" | "WeakMap" | "Generator" | "GeneratorFunction" | "BigInt" | "ArrayBuffer" | "Date"
 
-// used in R.reduce to stop the loop
+
+type LastArrayElement<ValueType extends readonly unknown[]> =
+	ValueType extends readonly [infer ElementType]
+		? ElementType
+		: ValueType extends readonly [infer _, ...infer Tail]
+			? LastArrayElement<Tail>
+			: ValueType extends ReadonlyArray<infer ElementType>
+				? ElementType
+				: never;
+type FirstArrayElement<ValueType extends readonly unknown[]> =
+	ValueType extends readonly [infer ElementType]
+		? ElementType
+		: ValueType extends readonly [...infer Head, infer _]
+			? FirstArrayElement<Head>
+			: ValueType extends ReadonlyArray<infer ElementType>
+				? ElementType
+				: never;
+
 export function reduceStopper<T>(input: T) : T
 export type IndexedIterator<T, U> = (x: T, i: number) => U;
 export type Iterator<T, U> = (x: T) => U;
@@ -39,8 +56,7 @@ type Pred = (...x: readonly any[]) => boolean;
 export interface Dictionary<T> {readonly [index: string]: T}
 type Partial<T> = { readonly [P in keyof T]?: T[P]};
 
-type Evolvable<E extends Evolver> = { readonly   [P in keyof E]?: Evolved<E[P]>;
-};
+type Evolvable<E extends Evolver> = { readonly[P in keyof E]?: Evolved<E[P]>};
 
 type Evolver<T extends Evolvable<any> = any> = { readonly   [key in keyof Partial<T>]: ((value: T[key]) => T[key]) | (T[key] extends Evolvable<any> ? Evolver<T[key]> : never);
 };
@@ -78,6 +94,19 @@ interface AssocPartialOne<K extends keyof any> {
 
 type AnyFunction = (...args: readonly any[]) => unknown;
 type AnyConstructor = new (...args: readonly any[]) => unknown;
+
+type RegExpReplacerFn =
+  | ((m: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, p8: string, offset: number, s: string, groups?: Record<string, string>) => string)
+  | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, p8: string, p9: string, offset: number, s: string, groups?: Record<string, string>) => string)
+type RegExpReplacer = string | RegExpReplacerFn
 
 // RAMBDAX INTERFACES
 // ============================================
@@ -538,10 +567,10 @@ export function either(firstPredicate: Pred): (secondPredicate: Pred) => Pred;
  * When iterable is a string, then it behaves as `String.prototype.endsWith`.
  * When iterable is a list, then it uses R.equals to determine if the target list ends in the same way as the given target.
  */
-export function endsWith(target: string, iterable: string): boolean;
-export function endsWith(target: string): (iterable: string) => boolean;
-export function endsWith<T>(target: readonly T[], list: readonly T[]): boolean;
-export function endsWith<T>(target: readonly T[]): (list: readonly T[]) => boolean;
+export function endsWith<T extends string>(question: T, str: string): boolean;
+export function endsWith<T extends string>(question: T): (str: string) => boolean;
+export function endsWith<T>(question: readonly T[], list: readonly T[]): boolean;
+export function endsWith<T>(question: readonly T[]): (list: readonly T[]) => boolean;
 
 /**
  * It returns `true` if property `prop` in `obj1` is equal to property `prop` in `obj2` according to `R.equals`.
@@ -732,7 +761,7 @@ export function hasPath<T>(
  */
 export function head(input: string): string;
 export function head(emptyList: readonly []): undefined;
-export function head<T>(input: readonly T[]): T | undefined;
+export function head<T extends readonly unknown[]>(array: T): FirstArrayElement<T>
 
 /**
  * It returns `true` if its arguments `a` and `b` are identical.
@@ -803,8 +832,8 @@ export function inc(x: number): number;
  * 
  * If `input` is array, then `R.equals` is used to define if `valueToFind` belongs to the list.
  */
-export function includes(valueToFind: string, input: readonly string[] | string): boolean;
-export function includes(valueToFind: string): (input: readonly string[] | string) => boolean;
+export function includes<T extends string>(valueToFind: T, input: string): boolean;
+export function includes<T extends string>(valueToFind: T): (input: string) => boolean;
 export function includes<T>(valueToFind: T, input: readonly T[]): boolean;
 export function includes<T>(valueToFind: T): (input: readonly T[]) => boolean;
 
@@ -919,9 +948,9 @@ export function keys<T>(x: T): readonly string[];
 /**
  * It returns the last element of `input`, as the `input` can be either a string or an array.
  */
-export function last(str: string): string;
+export function last(input: string): string;
 export function last(emptyList: readonly []): undefined;
-export function last<T extends any>(list: readonly T[]): T | undefined;
+export function last<T extends readonly unknown[]>(array: T): LastArrayElement<T>
 
 /**
  * It returns the last index of `target` in `list` array.
@@ -1237,10 +1266,12 @@ export function nextIndex(index: number, list: readonly any[]): number;
 export function none<T>(predicate: (x: T) => boolean, list: readonly T[]): boolean;
 export function none<T>(predicate: (x: T) => boolean): (list: readonly T[]) => boolean;
 
-/**
- * It returns `undefined`.
- */
-export function nop(): void;
+export function noop(): void;
+
+// RAMBDAX_MARKER_END
+// ============================================
+
+export as namespace R
 
 /**
  * It returns a boolean negated version of `input`.
@@ -1338,11 +1369,6 @@ export function partialCurry<Input, PartialInput, Output>(
   fn: (input: Input) => Output, 
   partialInput: PartialInput,
 ): (input: Pick<Input, Exclude<keyof Input, keyof PartialInput>>) => Output;
-
-// RAMBDAX_MARKER_END
-// ============================================
-
-export as namespace R
 
 /**
  * `R.partialObject` is a curry helper designed specifically for functions accepting object as a single argument.
@@ -1645,11 +1671,11 @@ export function prop<P extends keyof never, T>(propToFind: P): {
 /**
  * It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`.
  */
-export function propEq<K extends string | number>(propToFind: K, valueToMatch: any, obj: Record<K, any>): boolean;
-export function propEq<K extends string | number>(propToFind: K, valueToMatch: any): (obj: Record<K, any>) => boolean;
-export function propEq<K extends string | number>(propToFind: K): {
-  (valueToMatch: any, obj: Record<K, any>): boolean;
-  (valueToMatch: any): (obj: Record<K, any>) => boolean;
+export function propEq<K extends string | number>(valueToMatch: any, propToFind: K, obj: Record<K, any>): boolean;
+export function propEq<K extends string | number>(valueToMatch: any, propToFind: K): (obj: Record<K, any>) => boolean;
+export function propEq(valueToMatch: any): {
+  <K extends string | number>(propToFind: K, obj: Record<K, any>): boolean;
+  <K extends string | number>(propToFind: K): (obj: Record<K, any>) => boolean;
 };
 
 /**
@@ -1752,9 +1778,9 @@ export function repeat<T>(x: T, timesToRepeat: number): readonly T[];
 /**
  * It replaces `strOrRegex` found in `str` with `replacer`.
  */
-export function replace(strOrRegex: RegExp | string, replacer: string, str: string): string;
-export function replace(strOrRegex: RegExp | string, replacer: string): (str: string) => string;
-export function replace(strOrRegex: RegExp | string): (replacer: string) => (str: string) => string;
+export function replace(strOrRegex: RegExp | string, replacer: RegExpReplacer, str: string): string;
+export function replace(strOrRegex: RegExp | string, replacer: RegExpReplacer): (str: string) => string;
+export function replace(strOrRegex: RegExp | string): (replacer: RegExpReplacer) => (str: string) => string;
 
 /**
  * Same as `R.replace` but it accepts array of string and regular expressions instead of a single value.
@@ -1869,10 +1895,10 @@ export function splitWhen<T>(predicate: Predicate<T>): <U>(list: readonly U[]) =
  * When iterable is a string, then it behaves as `String.prototype.startsWith`.
  * When iterable is a list, then it uses R.equals to determine if the target list starts in the same way as the given target.
  */
-export function startsWith(target: string, str: string): boolean;
-export function startsWith(target: string): (str: string) => boolean;
-export function startsWith<T>(target: readonly T[], list: readonly T[]): boolean;
-export function startsWith<T>(target: readonly T[]): (list: readonly T[]) => boolean;
+export function startsWith<T extends string>(question: T, input: string): boolean;
+export function startsWith<T extends string>(question: T): (input: string) => boolean;
+export function startsWith<T>(question: readonly T[], input: readonly T[]): boolean;
+export function startsWith<T>(question: readonly T[]): (input: readonly T[]) => boolean;
 
 /**
  * Curried version of `x - y`
