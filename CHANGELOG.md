@@ -1,3 +1,9 @@
+10.1.0
+
+- Simplify logic of R.pipeAsync/R.composeAsync/R.pipedAsync - [MR #698](https://github.com/selfrefactor/rambda/pull/698)
+
+- Sync with `Rambda` version `8.6.0`
+
 10.0.0
 
 - Sync with `Rambda` version `8.0.0`
@@ -44,7 +50,7 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 - Replace `Async` with `Promise` as return type of `R.type`.
 
-- Add new types as Typescript output for `R.type` - "Map", "WeakMap", "Generator", "GeneratorFunction", "BigInt", "ArrayBuffer"
+- Add new types as TypeScript output for `R.type` - "Map", "WeakMap", "Generator", "GeneratorFunction", "BigInt", "ArrayBuffer"
 
 - Add new methods after `Ramda` version upgrade to `0.28.0`:
 
@@ -75,7 +81,7 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 8.0.0
 
-- Breaking change - sync `R.compose`/`R.pipe` with `@types/ramda`. That is significant change so as safeguard, it will lead a major bump. Important - this lead to raising required Typescript version to `4.2.2`. In other words, to use `Rambda` you'll need Typescript version `4.2.2` or newer.
+- Breaking change - sync `R.compose`/`R.pipe` with `@types/ramda`. That is significant change so as safeguard, it will lead a major bump. Important - this lead to raising required TypeScript version to `4.2.2`. In other words, to use `Rambda` you'll need TypeScript version `4.2.2` or newer.
 
 Related commit in `@types/ramda` - https://github.com/DefinitelyTyped/DefinitelyTyped/commit/286eff4f76d41eb8f091e7437eabd8a60d97fc1f#diff-4f74803fa83a81e47cb17a7d8a4e46a7e451f4d9e5ce2f1bd7a70a72d91f4bc1
 
@@ -149,7 +155,7 @@ There are several other changes in `@types/ramda` as stated in [this comment](ht
 
 7.4.1
 
-- Fix corrupted Typescript definitions - [Rambdax issue #72](https://github.com/selfrefactor/rambdax/issues/72)
+- Fix corrupted TypeScript definitions - [Rambdax issue #72](https://github.com/selfrefactor/rambdax/issues/72)
 
 - Fix slow `R.uniq` methods - [Issue #581](https://github.com/selfrefactor/rambda/issues/581)
 
@@ -190,7 +196,7 @@ Fixing `R.uniq` was done by improving `R.indexOf` which has performance implicat
 
 - Use uglify plugin for UMD bundle.
 
-- Remove `ts-toolbelt` types from Typescript definitions. Most affected are the following methods, which lose one of its curried definitions:
+- Remove `ts-toolbelt` types from TypeScript definitions. Most affected are the following methods, which lose one of its curried definitions:
 
 1. R.maxBy
 2. R.minBy
@@ -227,7 +233,7 @@ Fixing `R.uniq` was done by improving `R.indexOf` which has performance implicat
 
 - Close [Issue #559](https://github.com/selfrefactor/rambda/issues/559) - improve `R.propOr` typings
 
-- Close [Issue #560](https://github.com/selfrefactor/rambda/issues/560) - apply immutable lint to Typescript definitions
+- Close [Issue #560](https://github.com/selfrefactor/rambda/issues/560) - apply immutable lint to TypeScript definitions
 
 - Close [Issue #553](https://github.com/selfrefactor/rambda/issues/553) - fix problem with curried typings of `R.prop`
 
@@ -245,7 +251,7 @@ Fixing `R.uniq` was done by improving `R.indexOf` which has performance implicat
 
 7.0.1
 
-- Fix missing `Evolved` declaration in Typescript definition
+- Fix missing `Evolved` declaration in TypeScript definition
 
 7.0.0
 
@@ -283,7 +289,7 @@ Fixing `R.uniq` was done by improving `R.indexOf` which has performance implicat
 
 - Add `R.splitWhen`
 
-- Close [Issue #547](https://github.com/selfrefactor/rambda/issues/547) - restore `readonly` declaration in Rambda Typescript definitions.
+- Close [Issue #547](https://github.com/selfrefactor/rambda/issues/547) - restore `readonly` declaration in Rambda TypeScript definitions.
 
 - `R.append`/`R.prepend` now work only with arrays just like Ramda. Previous behaviour was for them to work with both arrays and strings.
 
@@ -317,7 +323,7 @@ Fixing `R.uniq` was done by improving `R.indexOf` which has performance implicat
 
 - Simplify `R.forEach` typings
 
-- Remove `ReadonlyArray<T>` pattern from Typescript definitions - not enough value for the noise  it adds.
+- Remove `ReadonlyArray<T>` pattern from TypeScript definitions - not enough value for the noise  it adds.
 
 - Fix typing of `R.reject` as it wrongly declares that with object, it pass property to predicate.
 
@@ -475,7 +481,7 @@ Add `R.cond`
 
 - Extend `R.template` without introducing breaking change
 
-3.5.0 Sync with `Rambda` - add methods descriptions to Typescript definitions
+3.5.0 Sync with `Rambda` - add methods descriptions to TypeScript definitions
 
 3.4.0 Sync with `Rambda` and close [Issue #42](https://github.com/selfrefactor/rambdax/pull/42)
 
@@ -515,7 +521,7 @@ Also with this versions, typings tests are provided and several definitions are 
 
 2.15.0 Several changes
 
-- Typescript definitions have been updated and typings tests are introduced
+- TypeScript definitions have been updated and typings tests are introduced
 
 - `R.mapAsync` and `R.mapFastAsync` pass index as second argument
 
@@ -605,7 +611,7 @@ Also with this versions, typings tests are provided and several definitions are 
 1.5.5 Add `R.maybe` method
 
 - Fix errors caugth by `DeepScan` service
-- Fix Typescript definitions for `R.then` and `R.otherwise`
+- Fix TypeScript definitions for `R.then` and `R.otherwise`
 - `R.change` increase nesting level to 4
 
 1.4.1 `R.isValid` didn't work with `Number` prototype

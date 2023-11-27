@@ -1,6 +1,5 @@
 export type RambdaTypes = "Object" | "Number" | "Boolean" | "String" | "Null" | "Array" | "RegExp" | "NaN" | "Function" | "Undefined" | "Async" | "Promise" | "Symbol" | "Set" | "Error" | "Map" | "WeakMap" | "Generator" | "GeneratorFunction" | "BigInt" | "ArrayBuffer" | "Date"
 
-
 type LastArrayElement<ValueType extends readonly unknown[]> =
 	ValueType extends readonly [infer ElementType]
 		? ElementType
@@ -23,6 +22,7 @@ export type IndexedIterator<T, U> = (x: T, i: number) => U;
 export type Iterator<T, U> = (x: T) => U;
 export type ObjectIterator<T, U> = (x: T, prop: string, inputObj: Dictionary<T>) => U;
 type Ord = number | string | boolean | Date;
+type Ordering = -1 | 0 | 1;
 type Path = string | (number | string)[];
 export type RamdaPath = (number | string)[];
 type Predicate<T> = (x: T) => boolean;
@@ -55,6 +55,9 @@ type Pred = (...x: any[]) => boolean;
 
 export interface Dictionary<T> {[index: string]: T}
 type Partial<T> = { [P in keyof T]?: T[P]};
+
+type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+export type Tuple<T, N extends number> = N extends N ? (number extends N ? T[] : _TupleOf<T, N, []>) : never;
 
 type Evolvable<E extends Evolver> = {[P in keyof E]?: Evolved<E[P]>};
 
@@ -91,6 +94,9 @@ interface AssocPartialOne<K extends keyof any> {
   <T>(val: T): <U>(obj: U) => Record<K, T> & U;
   <T, U>(val: T, obj: U): Record<K, T> & U;
 }
+type AtLeastOneFunctionsFlowFromRightToLeft<TArgs extends any[], TResult> =
+    | [(...args: any) => TResult, ...Array<(args: any) => any>, (...args: TArgs) => any]
+    | [(...args: TArgs) => TResult];
 
 type AnyFunction = (...args: any[]) => unknown;
 type AnyConstructor = new (...args: any[]) => unknown;
@@ -107,6 +113,9 @@ type RegExpReplacerFn =
   | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, p8: string, offset: number, s: string, groups?: Record<string, string>) => string)
   | ((m: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, p8: string, p9: string, offset: number, s: string, groups?: Record<string, string>) => string)
 type RegExpReplacer = string | RegExpReplacerFn
+
+/** `TSuper`, when `TSuper` is a supertype of `T`; otherwise `never`. */
+type IsFirstSubtypeOfSecond<First, Second> = (First extends Second ? Second : never);
 
 // RAMBDAX INTERFACES
 // ============================================
@@ -177,6 +186,12 @@ export function T(): boolean;
  */
 export function add(a: number, b: number): number;
 export function add(a: number): (b: number) => number;
+
+export function addIndex(originalFn: any): (fn: any) => (list: any[]) => any[];
+export function addIndex(originalFn: any): (fn: any, list: any[]) => any[];
+
+export function addIndexRight(originalFn: any): (fn: any) => (list: any[]) => any[];
+export function addIndexRight(originalFn: any): (fn: any, list: any[]) => any[];
 
 /**
  * It replaces `index` in array `list` with the result of `replaceFn(list[i])`.
@@ -255,11 +270,20 @@ export function anyTrue(...input: any[]): boolean;
  */
 export function anyType(targetType: RambdaTypes): (...input: any[]) => boolean;
 
+export function ap<T, U>(fns: Array<(a: T) => U>[], vs: T[]): U[];
+export function ap<T, U>(fns: Array<(a: T) => U>): (vs: T[]) => U[];
+export function ap<R, A, B>(fn: (r: R, a: A) => B, fn1: (r: R) => A): (r: R) => B;
+
+export function aperture<N extends number, T>(n: N, list: T[]): Array<Tuple<T, N>> | [];
+export function aperture<N extends number>(n: N): <T>(list: T[]) => Array<Tuple<T, N>> | [];
+
 /**
- * It adds element `x` at the end of `list`.
+ * It adds element `x` at the end of `iterable`.
  */
-export function append<T>(x: T, list: T[]): T[];
-export function append<T>(x: T): <T>(list: T[]) => T[];
+export function append<T>(xToAppend: T, iterable: T[]): T[];
+export function append<T, U>(xToAppend: T, iterable: IsFirstSubtypeOfSecond<T, U>[]) : U[];
+export function append<T>(xToAppend: T): <U>(iterable: IsFirstSubtypeOfSecond<T, U>[]) => U[];
+export function append<T>(xToAppend: T): (iterable: T[]) => T[];
 
 /**
  * It applies function `fn` to the list of arguments.
@@ -285,6 +309,12 @@ export function applySpec<Spec extends Record<string, AnyFunction>>(
 ) => { [Key in keyof Spec]: ReturnType<Spec[Key]> };
 export function applySpec<T>(spec: any): (...args: unknown[]) => T;
 
+export function applyTo<T, U>(el: T, fn: (t: T) => U): U;
+export function applyTo<T>(el: T): <U>(fn: (t: T) => U) => U;
+
+export function ascend<T>(fn: (obj: T) => Ord, a: T, b: T): Ordering;
+export function ascend<T>(fn: (obj: T) => Ord): (a: T, b: T) => Ordering;
+
 /**
  * It makes a shallow clone of `obj` with setting or overriding the property `prop` with `newValue`.
  */
@@ -298,6 +328,8 @@ export function assoc<K extends string>(prop: K): AssocPartialOne<K>;
 export function assocPath<Output>(path: Path, newValue: any, obj: object): Output;
 export function assocPath<Output>(path: Path, newValue: any): (obj: object) => Output;
 export function assocPath<Output>(path: Path): (newValue: any) => (obj: object) => Output;
+
+export function binary<T extends (...arg: any[]) => any>(fn: T): (...args: any[]) => ReturnType<T>;
 
 /**
  * Creates a function that is bound to a context.
@@ -314,6 +346,8 @@ export function both(pred1: Pred, pred2: Pred): Pred;
 export function both<T>(pred1: Predicate<T>, pred2: Predicate<T>): Predicate<T>;
 export function both<T>(pred1: Predicate<T>): (pred2: Predicate<T>) => Predicate<T>;
 export function both(pred1: Pred): (pred2: Pred) => Pred;
+
+export function call<T extends (...args: any[]) => any>(fn: T, ...args: Parameters<T>): ReturnType<T>;
 
 /**
  * The method is also known as `flatMap`.
@@ -336,6 +370,11 @@ export function clamp(min: number, max: number): (input: number) => number;
  */
 export function clone<T>(input: T): T;
 export function clone<T>(input: T[]): T[];
+
+export function collectBy<T, K extends PropertyKey>(keyFn: (value: T) => K, list: T[]): T[][];
+export function collectBy<T, K extends PropertyKey>(keyFn: (value: T) => K): (list: T[]) => T[][];
+
+export function comparator<T>(pred: (a: T, b: T) => boolean): (x: T, y: T) => Ordering;
 
 /**
  * It returns `inverted` version of `origin` function that accept `input` as argument.
@@ -413,14 +452,82 @@ export function compose<TArgs extends any[], R1>(
 ): (...args: TArgs) => R1;
 
 /**
- * Asynchronous version of `R.compose`
+ * Asynchronous version of `R.compose`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
  */
-export function composeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>;
-export function composeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>;
+export function composeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
+  ...func: [
+      fnLast: (a: any) => TResult,
+      ...func: Array<(a: any) => any>,
+      f7: (a: Awaited<R6>) => R7,
+      f6: (a: Awaited<R5>) => R6,
+      f5: (a: Awaited<R4>) => R5,
+      f4: (a: Awaited<R3>) => R4,
+      f3: (a: Awaited<R2>) => R3,
+      f2: (a: Awaited<R1>) => R2,
+      f1: (a: Awaited<TArg>) => R1
+  ]
+): (a: TArg | Promise<TArg>) => TResult; // fallback overload if number of composed functions greater than 7
+export function composeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
+  f7: (a: Awaited<R6>) => R7,
+  f6: (a: Awaited<R5>) => R6,
+  f5: (a: Awaited<R4>) => R5,
+  f4: (a: Awaited<R3>) => R4,
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R7;
+export function composeAsync<TArg, R1, R2, R3, R4, R5, R6, R7>(
+  f7: (a: Awaited<R6>) => R7,
+  f6: (a: Awaited<R5>) => R6,
+  f5: (a: Awaited<R4>) => R5,
+  f4: (a: Awaited<R3>) => R4,
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R7;
+export function composeAsync<TArg, R1, R2, R3, R4, R5, R6>(
+  f6: (a: Awaited<R5>) => R6,
+  f5: (a: Awaited<R4>) => R5,
+  f4: (a: Awaited<R3>) => R4,
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R6;
+export function composeAsync<TArg, R1, R2, R3, R4, R5>(
+  f5: (a: Awaited<R4>) => R5,
+  f4: (a: Awaited<R3>) => R4,
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R5;
+export function composeAsync<TArg, R1, R2, R3, R4>(
+  f4: (a: Awaited<R3>) => R4,
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R4;
+export function composeAsync<TArg, R1, R2, R3>(
+  f3: (a: Awaited<R2>) => R3,
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R3;
+export function composeAsync<TArg, R1, R2>(
+  f2: (a: Awaited<R1>) => R2,
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R2;
+export function composeAsync<TArg, R1>(
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R1;
+
+export function composeWith<TArgs extends any[], TResult>(
+  transformer: (fn: (...args: any[]) => any, intermediatResult: any) => any,
+  fns: AtLeastOneFunctionsFlowFromRightToLeft<TArgs, TResult>,
+): (...args: TArgs) => TResult;
+export function composeWith(
+  transformer: (fn: (...args: any[]) => any, intermediatResult: any) => any,
+): <TArgs extends any[], TResult>(
+  fns: AtLeastOneFunctionsFlowFromRightToLeft<TArgs, TResult>,
+) => (...args: TArgs) => TResult;
 
 /**
  * It returns a new string or array, which is the result of merging `x` and `y`.
@@ -496,7 +603,8 @@ export function defaultTo<T>(defaultValue: T): (input: T | null | undefined) => 
  */
 export function delay(ms: number): Promise<'RAMBDAX_DELAY'>;
 
-export function deletePath<T>(path: string): T;
+export function descend<T>(fn: (obj: T) => Ord, a: T, b: T): Ordering;
+export function descend<T>(fn: (obj: T) => Ord): (a: T, b: T) => Ordering;
 
 /**
  * It returns the uniq set of all elements in the first list `a` not contained in the second list `b`.
@@ -506,11 +614,27 @@ export function deletePath<T>(path: string): T;
 export function difference<T>(a: T[], b: T[]): T[];
 export function difference<T>(a: T[]): (b: T[]) => T[];
 
+export function differenceWith<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+  list1: T1[],
+  list2: T2[],
+): T1[];
+export function differenceWith<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+): (list1: T1[], list2: T2[]) => T1[];
+export function differenceWith<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+  list1: T1[],
+): (list2: T2[]) => T1[];
+
 /**
  * It returns a new object that does not contain property `prop`.
  */
 export function dissoc<T extends object, K extends keyof T>(prop: K, obj: T): Omit<T, K>;
 export function dissoc<K extends string | number>(prop: K): <T extends object>(obj: T) => Omit<T, K>;
+
+export function dissocPath<T>(path: Path, obj: any): T;
+export function dissocPath<T>(path: Path): (obj: any) => T;
 
 export function divide(x: number, y: number): number;
 export function divide(x: number): (y: number) => number;
@@ -545,6 +669,12 @@ export function dropLastWhile<T>(predicate: (x: T) => boolean): <T>(iterable: T[
  */
 export function dropRepeats<T>(list: T[]): T[];
 
+export function dropRepeatsBy<T, U>(fn: (a: T) => U, list: T[]): T[];
+export function dropRepeatsBy<T, U>(
+  fn: (a: T) => U
+): (list: T[]) => T[];
+export function dropRepeatsBy(fn: any): <T>(list: T[]) => T[];
+
 export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean, list: T[]): T[];
 export function dropRepeatsWith<T>(predicate: (x: T, y: T) => boolean): (list: T[]) => T[];
 
@@ -563,6 +693,8 @@ export function either<T>(firstPredicate: Predicate<T>, secondPredicate: Predica
 export function either<T>(firstPredicate: Predicate<T>): (secondPredicate: Predicate<T>) => Predicate<T>;
 export function either(firstPredicate: Pred): (secondPredicate: Pred) => Pred;
 
+export function empty<T>(x: T): T;
+
 /**
  * When iterable is a string, then it behaves as `String.prototype.endsWith`.
  * When iterable is a list, then it uses R.equals to determine if the target list ends in the same way as the given target.
@@ -571,6 +703,13 @@ export function endsWith<T extends string>(question: T, str: string): boolean;
 export function endsWith<T extends string>(question: T): (str: string) => boolean;
 export function endsWith<T>(question: T[], list: T[]): boolean;
 export function endsWith<T>(question: T[]): (list: T[]) => boolean;
+
+export function eqBy<T>(fn: (a: T) => unknown, a: T, b: T): boolean;
+export function eqBy<T>(fn: (a: T) => unknown, a: T): (b: T) => boolean;
+export function eqBy<T>(fn: (a: T) => unknown): {
+  (a: T, b: T): boolean;
+  (a: T): (b: T) => boolean;
+};
 
 /**
  * It returns `true` if property `prop` in `obj1` is equal to property `prop` in `obj2` according to `R.equals`.
@@ -677,12 +816,6 @@ export function findLastIndex<T>(predicate: (x: T) => boolean): (list: T[]) => n
 export function flatten<T>(list: any[]): T[];
 
 /**
- * It transforms object to object where each value is represented with its path.
- */
-export function flattenObject(x: Record<string, unknown>): Record<string, unknown>;
-export function flattenObject<T>(x: Record<string, T>): Record<string, T>;
-
-/**
  * It returns function which calls `fn` with exchanged first and second argument.
  */
 export function flip<T, U, TResult>(fn: (arg0: T, arg1: U) => TResult): (arg1: U, arg0?: T) => TResult;
@@ -699,6 +832,11 @@ export function forEachIndexed<T>(fn: IndexedIterator<T, void>, list: T[]): T[];
 export function forEachIndexed<T>(fn: IndexedIterator<T, void>): (list: T[]) => T[];
 export function forEachIndexed<T>(fn: ObjectIterator<T, void>, list: Dictionary<T>): Dictionary<T>;
 export function forEachIndexed<T, U>(fn: ObjectIterator<T, void>): (list: Dictionary<T>) => Dictionary<T>;
+
+export function forEachObjIndexed<T>(fn: (value: T[keyof T], key: keyof T, obj: T) => void, obj: T): T;
+export function forEachObjIndexed<T>(fn: (value: T[keyof T], key: keyof T, obj: T) => void): (obj: T) => T;
+
+// RAMBDAX_MARKER_START
 
 /**
  * It transforms a `listOfPairs` to an object.
@@ -759,8 +897,10 @@ export function hasPath<T>(
 /**
  * It returns the first element of list or string `input`.
  */
-export function head(input: string): string;
-export function head(emptyList: []): undefined;
+export function head(str: string): string;
+export function head(str: ''): undefined;
+export function head<T>(list: never[]): undefined;
+export function head<T extends unknown[]>(array: T): FirstArrayElement<T>
 export function head<T extends readonly unknown[]>(array: T): FirstArrayElement<T>
 
 /**
@@ -942,14 +1082,16 @@ export function juxt<A extends any[], U>(fns: Array<(...args: A) => U>): (...arg
 /**
  * It applies `Object.keys` over `x` and returns its keys.
  */
-export function keys<T extends object>(x: T): (keyof T)[];
+export function keys<T extends object>(x: T): (keyof T & string)[];
 export function keys<T>(x: T): string[];
 
 /**
  * It returns the last element of `input`, as the `input` can be either a string or an array.
  */
-export function last(input: string): string;
-export function last(emptyList: []): undefined;
+export function last(str: ''): undefined;
+export function last(str: string): string;
+export function last(list: never[]): undefined;
+export function last<T extends unknown[]>(array: T): LastArrayElement<T>
 export function last<T extends readonly unknown[]>(array: T): LastArrayElement<T>
 
 /**
@@ -1355,10 +1497,19 @@ export function over(lens: Lens): <T>(fn: Arity1Fn, value: T[]) => T[];
 export function partial<V0, V1, T>(fn: (x0: V0, x1: V1) => T, args: [V0]): (x1: V1) => T;
 export function partial<V0, V1, V2, T>(fn: (x0: V0, x1: V1, x2: V2) => T, args: [V0, V1]): (x2: V2) => T;
 export function partial<V0, V1, V2, T>(fn: (x0: V0, x1: V1, x2: V2) => T, args: [V0]): (x1: V1, x2: V2) => T;
-export function partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1, V2]): (x2: V3) => T;
-export function partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0, V1]): (x2: V2, x3: V3) => T;
-export function partial<V0, V1, V2, V3, T>(fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T, args: [V0]): (x1: V1, x2: V2, x3: V3) => T;
-export function partial<T>(fn: (...a: any[]) => T, args: any[]): (...x: any[]) => T;
+export function partial<V0, V1, V2, V3, T>(
+  fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T,
+  args: [V0, V1, V2],
+): (x2: V3) => T;
+export function partial<V0, V1, V2, V3, T>(
+  fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T,
+  args: [V0, V1],
+): (x2: V2, x3: V3) => T;
+export function partial<V0, V1, V2, V3, T>(
+  fn: (x0: V0, x1: V1, x2: V2, x3: V3) => T,
+  args: [V0],
+): (x1: V1, x2: V2, x3: V3) => T;
+export function partial<T>(fn: (...a: any[]) => T, args: any[]): (...a: any[]) => T;
 
 /**
  * Same as `R.partialObject`.
@@ -1569,14 +1720,63 @@ export function pipe<TArgs extends any[], R1>(
 ): (...args: TArgs) => R1;
 
 /**
- * Asynchronous version of `R.pipe`
+ * Asynchronous version of `R.pipe`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
  */
-export function pipeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>;
-export function pipeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>;
+export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
+  ...funcs: [
+      f1: (a: Awaited<TArg>) => R1,
+      f2: (a: Awaited<R1>) => R2,
+      f3: (a: Awaited<R2>) => R3,
+      f4: (a: Awaited<R3>) => R4,
+      f5: (a: Awaited<R4>) => R5,
+      f6: (a: Awaited<R5>) => R6,
+      f7: (a: Awaited<R6>) => R7,
+      ...func: Array<(a: any) => any>,
+      fnLast: (a: any) => TResult
+  ]
+): (a: TArg | Promise<TArg>) => TResult;  // fallback overload if number of piped functions greater than 7
+export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2,
+  f3: (a: Awaited<R2>) => R3,
+  f4: (a: Awaited<R3>) => R4,
+  f5: (a: Awaited<R4>) => R5,
+  f6: (a: Awaited<R5>) => R6,
+  f7: (a: Awaited<R6>) => R7
+): (a: TArg | Promise<TArg>) => R7;
+export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2,
+  f3: (a: Awaited<R2>) => R3,
+  f4: (a: Awaited<R3>) => R4,
+  f5: (a: Awaited<R4>) => R5,
+  f6: (a: Awaited<R5>) => R6
+): (a: TArg | Promise<TArg>) => R6;
+export function pipeAsync<TArg, R1, R2, R3, R4, R5>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2,
+  f3: (a: Awaited<R2>) => R3,
+  f4: (a: Awaited<R3>) => R4,
+  f5: (a: Awaited<R4>) => R5
+): (a: TArg | Promise<TArg>) => R5;
+export function pipeAsync<TArg, R1, R2, R3, R4>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2,
+  f3: (a: Awaited<R2>) => R3,
+  f4: (a: Awaited<R3>) => R4
+): (a: TArg | Promise<TArg>) => R4;
+export function pipeAsync<TArg, R1, R2, R3>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2,
+  f3: (a: Awaited<R2>) => R3
+): (a: TArg | Promise<TArg>) => R3;
+export function pipeAsync<TArg, R1, R2>(
+  f1: (a: Awaited<TArg>) => R1,
+  f2: (a: Awaited<R1>) => R2
+): (a: TArg | Promise<TArg>) => R2;
+export function pipeAsync<TArg, R1>(
+  f1: (a: Awaited<TArg>) => R1
+): (a: TArg | Promise<TArg>) => R1;
 
 /**
  * It is basically `R.pipe`, but instead of passing `input` argument as `R.pipe(...)(input)`, you pass it as the first argument.
@@ -1591,12 +1791,16 @@ export function piped<A, B, C, D, E, F, G, H>(input: A, fn0: (x: A) => B, fn1: (
 export function piped<A, B, C, D, E, F, G, H, I>(input: A, fn0: (x: A) => B, fn1: (x: B) => C, fn2: (x: C) => D, fn3: (x: D) => E, fn4: (x: E) => F, fn5: (x: F) => G, fn6: (x: G) => H, fn7: (x: H) => I) : I;
 
 /**
- * It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
+ * It accepts input as first argument and series of functions as next arguments. It is same as `R.piped` but with support for asynchronous functions like `R.pipeAsync`.
  */
-export function pipedAsync<T>(
-  input: any,
-  ...fns: (Func<any> | Async<any>)[]
-): Promise<T>;
+export function pipedAsync<A, B>(input: A, fn0: (x: Awaited<A>) => B) : B;
+export function pipedAsync<A, B, C>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C) : C;
+export function pipedAsync<A, B, C, D>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D) : D;
+export function pipedAsync<A, B, C, D, E>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D, fn3: (x: Awaited<D>) => E) : E;
+export function pipedAsync<A, B, C, D, E, F>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D, fn3: (x: Awaited<D>) => E, fn4: (x: Awaited<E>) => F) : F;
+export function pipedAsync<A, B, C, D, E, F, G>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D, fn3: (x: Awaited<D>) => E, fn4: (x: Awaited<E>) => F, fn5: (x: Awaited<F>) => G) : G;
+export function pipedAsync<A, B, C, D, E, F, G, H>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D, fn3: (x: Awaited<D>) => E, fn4: (x: Awaited<E>) => F, fn5: (x: Awaited<F>) => G, fn6: (x: Awaited<G>) => H) : H;
+export function pipedAsync<A, B, C, D, E, F, G, H, I>(input: A, fn0: (x: Awaited<A>) => B, fn1: (x: Awaited<B>) => C, fn2: (x: Awaited<C>) => D, fn3: (x: Awaited<D>) => E, fn4: (x: Awaited<E>) => F, fn5: (x: Awaited<F>) => G, fn6: (x: Awaited<G>) => H, fn7: (x: Awaited<H>) => I) : I;
 
 /**
  * It returns list of the values of `property` taken from the all objects inside `list`.
@@ -1609,8 +1813,10 @@ export function pluck(property: number): <T>(list: { [k: number]: T }[]) => T[];
 /**
  * It adds element `x` at the beginning of `list`.
  */
-export function prepend<T>(x: T, input: T[]): T[];
-export function prepend<T>(x: T): (input: T[]) => T[];
+export function prepend<T>(xToPrepend: T, iterable: T[]): T[];
+export function prepend<T, U>(xToPrepend: T, iterable: IsFirstSubtypeOfSecond<T, U>[]) : U[];
+export function prepend<T>(xToPrepend: T): <U>(iterable: IsFirstSubtypeOfSecond<T, U>[]) => U[];
+export function prepend<T>(xToPrepend: T): (iterable: T[]) => T[];
 
 /**
  * It returns the next index of the list when the order is descending.
@@ -1656,17 +1862,10 @@ export function product(list: number[]): number;
  * 
  * If there is no such property, it returns `undefined`.
  */
-export function prop<P extends keyof never, T>(propToFind: P, value: T): Prop<T, P>;
-export function prop<P extends keyof never>(propToFind: P): {
-    <T>(value: Record<P, T>): T;
-    <T>(value: T): Prop<T, P>;
-};
-export function prop<P extends keyof T, T>(propToFind: P): {
-    (value: T): Prop<T, P>;
-};
-export function prop<P extends keyof never, T>(propToFind: P): {
-    (value: Record<P, T>): T;
-};
+export function prop<_, P extends keyof never, T>(p: P, value: T): Prop<T, P>;
+export function prop<V>(p: keyof never, value: unknown): V;
+export function prop<_, P extends keyof never>(p: P): <T>(value: T) => Prop<T, P>;
+export function prop<V>(p: keyof never): (value: unknown) => V;
 
 /**
  * It returns true if `obj` has property `propToFind` and its value is equal to `valueToMatch`.
@@ -1726,8 +1925,8 @@ export function range(startInclusive: number): (endExclusive: number) => number[
 
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult, list: T[]): TResult;
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResult, initialValue: TResult, list: T[]): TResult;
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
-export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i?: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
+export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
 
 /**
  * It has the opposite effect of `R.filter`.
@@ -2109,8 +2308,6 @@ export function unless<T>(predicate: (x: T) => boolean, whenFalseFn: (x: T) => T
 
 export function unnest(list: unknown[]): unknown[];
 export function unnest<T>(list: unknown[]): T;
-
-// RAMBDAX_MARKER_START
 
 export function unwind<T, U>(prop: keyof T, obj: T): U[];
 export function unwind<T, U>(prop: keyof T): (obj: T) => U[];
