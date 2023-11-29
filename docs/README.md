@@ -84,7 +84,7 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 0 Ramda methods not implemented in Rambda and their status.
+  Click to see the full list of 57 Ramda methods not implemented in Rambda and their status.
 </summary>
 
 - gt
@@ -1421,8 +1421,7 @@ export function append(x, input){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-// import { append } from './append.js'
-import { append } from 'ramda'
+import { append } from './append.js'
 
 test('happy', () => {
   expect(append('tests', [ 'write', 'more' ])).toEqual([
@@ -19621,7 +19620,7 @@ test('when second list is longer', () => {
 
 10.1.0
 
-- Simplify logic of R.pipeAsync/R.composeAsync/R.pipedAsync - [MR #698](https://github.com/selfrefactor/rambda/pull/698)
+- Simplify TypeScript logic of `R.pipeAsync/R.composeAsync/R.pipedAsync` - [MR #698](https://github.com/selfrefactor/rambda/pull/698)
 
 - Sync with `Rambda` version `8.6.0`
 
