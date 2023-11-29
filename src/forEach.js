@@ -1,34 +1,19 @@
 import { isArray } from './_internals/isArray.js'
-import { keys } from './_internals/keys.js'
+import { forEachObjIndexedFn } from './forEachObjIndexed.js'
 
-export function forEach(fn, list){
+export function forEach(fn, iterable){
   if (arguments.length === 1) return _list => forEach(fn, _list)
+  if (iterable === undefined) return
 
-  if (list === undefined){
-    return
-  }
-
-  if (isArray(list)){
+  if (isArray(iterable)){
     let index = 0
-    const len = list.length
+    const len = iterable.length
 
     while (index < len){
-      fn(list[ index ])
+      fn(iterable[ index ])
       index++
     }
-  } else {
-    let index = 0
-    const listKeys = keys(list)
-    const len = listKeys.length
+  } else return forEachObjIndexedFn(fn, iterable)
 
-    while (index < len){
-      const key = listKeys[ index ]
-      fn(
-        list[ key ], key, list
-      )
-      index++
-    }
-  }
-
-  return list
+  return iterable
 }

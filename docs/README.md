@@ -43,13 +43,13 @@ You can test this example in <a href="https://rambda.now.sh?const%20result%20%3D
 
 ## ❯ Rambdax's advantages
 
-### Typescript included
+### TypeScript included
 
-Typescript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
+TypeScript definitions are included in the library, in comparison to **Ramda**, where you need to additionally install `@types/ramda`.
 
-Still, you need to be aware that functional programming features in `Typescript` are in development, which means that using **R.compose/R.pipe** can be problematic.
+Still, you need to be aware that functional programming features in `TypeScript` are in development, which means that using **R.compose/R.pipe** can be problematic.
 
-Important - Rambdax version `9.0.0`(or higher) requires Typescript version `4.3.3`(or higher).
+Important - Rambdax version `9.0.0`(or higher) requires TypeScript version `4.3.3`(or higher).
 
 ### Dot notation for `R.path`, `R.paths`, `R.assocPath` and `R.lensPath`
 
@@ -84,30 +84,9 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 80 Ramda methods not implemented in Rambda 
+  Click to see the full list of 57 Ramda methods not implemented in Rambda and their status.
 </summary>
 
-- __
-- addIndex
-- addIndexRight
-- ap
-- aperture
-- applyTo
-- ascend
-- binary
-- call
-- collectBy
-- comparator
-- composeWith
-- construct
-- constructN
-- descend
-- differenceWith
-- dissocPath
-- dropRepeatsBy
-- empty
-- eqBy
-- forEachObjIndexed
 - gt
 - gte
 - hasIn
@@ -155,8 +134,6 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - symmetricDifferenceWith
 - andThen
 - toPairsIn
-- transduce
-- traverse
 - unary
 - uncurryN
 - unfold
@@ -168,6 +145,12 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 - thunkify
 - default
 
+  Most of above methods are in progress to be added to **Rambda**. The following methods are not going to be added:
+- __ - placeholder method allows user to further customize the method call. While, it seems useful initially, the price is too high in terms of complexity for TypeScript definitions. If it is not easy exressable in TypeScript, it is not worth it as **Rambda** is a TypeScript first library.
+- construct - Using classes is not very functional programming oriented.
+- constructN - same as above
+- transduce - currently is out of focus
+- traverse - same as above
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-missing-ramda-methods)
@@ -185,7 +168,7 @@ https://unpkg.com/rambdax@CURRENT_VERSION/dist/rambdax.umd.js
 - with deno
 
 ```
-import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambdax/master/dist/rambdax.esm.js'
+import {add} from "https://deno.land/x/rambda/mod.ts";
 ```
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-install)
@@ -208,7 +191,7 @@ import {compose, add} from 'https://raw.githubusercontent.com/selfrefactor/rambd
 
 - Error handling, when wrong inputs are provided, may not be the same. This difference will be better documented once all brute force tests are completed.
 
-- Typescript definitions between `rambda` and `@types/ramda` may vary.
+- TypeScript definitions between `rambda` and `@types/ramda` may vary.
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-differences-between-rambda-and-ramda)
 
@@ -223,7 +206,7 @@ There are methods which are benchmarked only with `Ramda` and `Rambda`(i.e. no `
 
 Note that some of these methods, are called with and without curring. This is done in order to give more detailed performance feedback.
 
-The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.29.0).
+The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.29.1).
 
 </summary>
 
@@ -231,8 +214,8 @@ method | Rambda | Ramda | Lodash
 --- |--- | --- | ---
  *add* | 🚀 Fastest | 21.52% slower | 82.15% slower
  *adjust* | 8.48% slower | 🚀 Fastest | 🔳
- *all* | 🚀 Fastest | 1.81% slower | 🔳
- *allPass* | 🚀 Fastest | 91.09% slower | 🔳
+ *all* | 🚀 Fastest | 7.18% slower | 🔳
+ *allPass* | 🚀 Fastest | 88.25% slower | 🔳
  *allPass* | 🚀 Fastest | 98.56% slower | 🔳
  *and* | 🚀 Fastest | 89.09% slower | 🔳
  *any* | 🚀 Fastest | 92.87% slower | 45.82% slower
@@ -241,7 +224,7 @@ method | Rambda | Ramda | Lodash
  *applySpec* | 🚀 Fastest | 80.43% slower | 🔳
  *assoc* | 72.32% slower | 60.08% slower | 🚀 Fastest
  *clone* | 🚀 Fastest | 91.86% slower | 86.48% slower
- *compose* | 🚀 Fastest | 32.45% slower | 13.68% slower
+ *compose* | 6.07% slower | 16.89% slower | 🚀 Fastest
  *converge* | 78.63% slower | 🚀 Fastest | 🔳
  *curry* | 🚀 Fastest | 28.86% slower | 🔳
  *curryN* | 🚀 Fastest | 41.05% slower | 🔳
@@ -252,10 +235,10 @@ method | Rambda | Ramda | Lodash
  *filter* | 6.7% slower | 72.03% slower | 🚀 Fastest
  *find* | 🚀 Fastest | 85.14% slower | 42.65% slower
  *findIndex* | 🚀 Fastest | 86.48% slower | 72.27% slower
- *flatten* | 6.56% slower | 86.64% slower | 🚀 Fastest
+ *flatten* | 🚀 Fastest | 85.68% slower | 3.57% slower
  *ifElse* | 🚀 Fastest | 58.56% slower | 🔳
- *includes* | 🚀 Fastest | 84.63% slower | 🔳
- *indexOf* | 🚀 Fastest | 76.63% slower | 🔳
+ *includes* | 🚀 Fastest | 81.64% slower | 🔳
+ *indexOf* | 🚀 Fastest | 80.17% slower | 🔳
  *indexOf* | 🚀 Fastest | 82.2% slower | 🔳
  *init* | 🚀 Fastest | 92.24% slower | 13.3% slower
  *is* | 🚀 Fastest | 57.69% slower | 🔳
@@ -271,7 +254,7 @@ method | Rambda | Ramda | Lodash
  *over* | 🚀 Fastest | 56.23% slower | 🔳
  *path* | 37.81% slower | 77.81% slower | 🚀 Fastest
  *pick* | 🚀 Fastest | 19.07% slower | 80.2% slower
- *pipe* | 0.87% slower | 🚀 Fastest | 🔳
+ *pipe* | 🚀 Fastest | 0.11% slower | 🔳
  *prop* | 🚀 Fastest | 87.95% slower | 🔳
  *propEq* | 🚀 Fastest | 91.92% slower | 🔳
  *range* | 🚀 Fastest | 61.8% slower | 57.44% slower
@@ -287,8 +270,9 @@ method | Rambda | Ramda | Lodash
  *takeLast* | 🚀 Fastest | 93.39% slower | 19.22% slower
  *test* | 🚀 Fastest | 82.34% slower | 🔳
  *type* | 🚀 Fastest | 48.6% slower | 🔳
- *uniq* | 🚀 Fastest | 90.24% slower | 🔳
- *uniqWith* | 18.09% slower | 🚀 Fastest | 🔳
+ *uniq* | 🚀 Fastest | 84.9% slower | 🔳
+ *uniqBy* | 51.93% slower | 🚀 Fastest | 🔳
+ *uniqWith* | 8.29% slower | 🚀 Fastest | 🔳
  *uniqWith* | 14.23% slower | 🚀 Fastest | 🔳
  *update* | 🚀 Fastest | 52.35% slower | 🔳
  *view* | 🚀 Fastest | 76.15% slower | 🔳
@@ -328,6 +312,18 @@ It adds `a` and `b`.
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.add(2%2C%203)%20%2F%2F%20%3D%3E%20%205">Try this <strong>R.add</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#add)
+
+### addIndex
+
+> :boom: TS typings are oversimplified
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#addIndex)
+
+### addIndexRight
+
+> :boom: TS typings are oversimplified
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#addIndexRight)
 
 ### adjust
 
@@ -1270,14 +1266,125 @@ test('when false', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#anyType)
 
+### ap
+
+```typescript
+
+ap<T, U>(fns: Array<(a: T) => U>[], vs: T[]): U[]
+```
+
+<details>
+
+<summary><strong>R.ap</strong> source</summary>
+
+```javascript
+export function ap(functions, input){
+  if (arguments.length === 1){
+    return _inputs => ap(functions, _inputs)
+  }
+
+  return functions.reduce((acc, fn) => [ ...acc, ...input.map(fn) ], [])
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { ap } from './ap.js'
+
+function mult2(x){
+  return x * 2
+}
+function plus3(x){
+  return x + 3
+}
+
+test('happy', () => {
+  expect(ap([ mult2, plus3 ], [ 1, 2, 3 ])).toEqual([ 2, 4, 6, 4, 5, 6 ])
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ap)
+
+### aperture
+
+```typescript
+
+aperture<N extends number, T>(n: N, list: T[]): Array<Tuple<T, N>> | []
+```
+
+<details>
+
+<summary><strong>R.aperture</strong> source</summary>
+
+```javascript
+export function aperture(step, list){
+  if (arguments.length === 1){
+    return _list => aperture(step, _list)
+  }
+  if (step > list.length) return []
+  let idx = 0
+  const limit = list.length - (step - 1)
+  const acc = new Array(limit)
+  while (idx < limit){
+    acc[ idx ] = list.slice(idx, idx + step)
+    idx += 1
+  }
+
+  return acc
+}
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { aperture } from './aperture.js'
+
+const list = [ 1, 2, 3, 4, 5, 6, 7 ]
+
+test('happy', () => {
+  expect(aperture(1, list)).toEqual([ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ], [ 7 ] ])
+  expect(aperture(2, list)).toEqual([
+    [ 1, 2 ],
+    [ 2, 3 ],
+    [ 3, 4 ],
+    [ 4, 5 ],
+    [ 5, 6 ],
+    [ 6, 7 ],
+  ])
+  expect(aperture(3, list)).toEqual([
+    [ 1, 2, 3 ],
+    [ 2, 3, 4 ],
+    [ 3, 4, 5 ],
+    [ 4, 5, 6 ],
+    [ 5, 6, 7 ],
+  ])
+  expect(aperture(8, list)).toEqual([])
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#aperture)
+
 ### append
 
 ```typescript
 
-append<T>(x: T, list: T[]): T[]
+append<T>(xToAppend: T, iterable: T[]): T[]
 ```
 
-It adds element `x` at the end of `list`.
+It adds element `x` at the end of `iterable`.
 
 ```javascript
 const x = 'foo'
@@ -1436,7 +1543,7 @@ const expected = {a: {b: 2, d: 4}}
 
 ```javascript
 import { createPath } from './_internals/createPath.js'
-import { assocPath } from './assocPath.js'
+import { assocPathFn } from './assocPath.js'
 import { path as pathModule } from './path.js'
 const ALLOWED_OPERATIONS = [ 'remove', 'add', 'update' ]
 
@@ -1450,23 +1557,23 @@ export function removeAtPath(path, obj){
   if (len === 3) return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ]
   if (len === 4) return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ]
   if (len === 5) return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ]
-  if (len === 6){
+  if (len === 6)
     return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ][ p[ 5 ] ]
-  }
-  if (len === 7){
+
+  if (len === 7)
     return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ][ p[ 5 ] ][ p[ 6 ] ]
-  }
-  if (len === 8){
+
+  if (len === 8)
     return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ][ p[ 5 ] ][ p[ 6 ] ][ p[ 7 ] ]
-  }
-  if (len === 9){
+
+  if (len === 9)
     return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ][ p[ 5 ] ][ p[ 6 ] ][ p[ 7 ] ][ p[ 8 ] ]
-  }
-  if (len === 10){
+
+  if (len === 10)
     return delete obj[ p[ 0 ] ][ p[ 1 ] ][ p[ 2 ] ][ p[ 3 ] ][ p[ 4 ] ][ p[ 5 ] ][ p[ 6 ] ][ p[ 7 ] ][ p[ 8 ] ][
       p[ 9 ]
     ]
-  }
+
 }
 
 export function applyDiff(rules, obj){
@@ -1479,22 +1586,27 @@ export function applyDiff(rules, obj){
     if (op === 'add' && path && value !== undefined){
       if (pathModule(path, obj)) return
 
-      return clone = assocPath(
+      clone = assocPathFn(
         path, value, clone
       )
+
+      return
     }
 
     if (op === 'remove'){
       if (pathModule(path, obj) === undefined) return
 
-      return removeAtPath(path, clone)
+      removeAtPath(path, clone)
+
+      return
     }
     if (op === 'update' && path && value !== undefined){
       if (pathModule(path, obj) === undefined) return
 
-      return clone = assocPath(
+      clone = assocPathFn(
         path, value, clone
       )
+
     }
   })
 
@@ -1545,13 +1657,12 @@ test('update operation', () => {
       value : 3,
     },
   ]
-  const result = applyDiff(rules, {
+  expect(applyDiff(rules, {
     a : {
       b : 1,
       c : [ 1, 2 ],
     },
-  })
-  expect(result).toEqual({
+  })).toEqual({
     a : {
       b : 3,
       c : [ 1, 3 ],
@@ -1999,6 +2110,14 @@ test('restructure json object', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#applySpec)
 
+### applyTo
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#applyTo)
+
+### ascend
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ascend)
+
 ### assoc
 
 It makes a shallow clone of `obj` with setting or overriding the property `prop` with `newValue`.
@@ -2037,21 +2156,17 @@ R.assocPath(path, newValue, Record<string, unknown>)
 
 ```javascript
 import { cloneList } from './_internals/cloneList.js'
+import { createPath } from './_internals/createPath.js'
 import { isArray } from './_internals/isArray.js'
-import { isInteger } from './_internals/isInteger.js'
-import { assoc } from './assoc.js'
+import { isIndexInteger } from './_internals/isInteger.js'
+import { assocFn } from './assoc.js'
 import { curry } from './curry.js'
 
-function assocPathFn(
+export function assocPathFn(
   path, newValue, input
 ){
-  const pathArrValue =
-    typeof path === 'string' ?
-      path.split('.').map(x => isInteger(Number(x)) ? Number(x) : x) :
-      path
-  if (pathArrValue.length === 0){
-    return newValue
-  }
+  const pathArrValue = createPath(path)
+  if (pathArrValue.length === 0) return newValue
 
   const index = pathArrValue[ 0 ]
   if (pathArrValue.length > 1){
@@ -2061,7 +2176,7 @@ function assocPathFn(
       !input.hasOwnProperty(index)
 
     const nextInput = condition ?
-      isInteger(pathArrValue[ 1 ]) ?
+      isIndexInteger(pathArrValue[ 1 ]) ?
         [] :
         {} :
       input[ index ]
@@ -2073,14 +2188,14 @@ function assocPathFn(
     )
   }
 
-  if (isInteger(index) && isArray(input)){
+  if (isIndexInteger(index) && isArray(input)){
     const arr = cloneList(input)
     arr[ index ] = newValue
 
     return arr
   }
 
-  return assoc(
+  return assocFn(
     index, newValue, input
   )
 }
@@ -2095,21 +2210,45 @@ export const assocPath = curry(assocPathFn)
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { assocPath } from './assocPath.js'
+import { assocPathFn } from './assocPath.js'
+
+test.only('happy', () => {
+  const path = 'a.c.1'
+  const input = {
+    a : {
+      b : 1,
+      c : [ 1, 2 ],
+    },
+  }
+  assocPathFn(
+    path, 3, input
+  )
+  expect(input).toEqual({
+    a : {
+      b : 1,
+      c : [ 1, 2 ],
+    },
+  })
+})
 
 test('string can be used as path input', () => {
   const testObj = {
     a : [ { b : 1 }, { b : 2 } ],
     d : 3,
   }
-  const result = assocPath(
+  const result1 = assocPathFn(
+    [ 'a', 0, 'b' ], 10, testObj
+  )
+  const result2 = assocPathFn(
     'a.0.b', 10, testObj
   )
+
   const expected = {
     a : [ { b : 10 }, { b : 2 } ],
     d : 3,
   }
-  expect(result).toEqual(expected)
+  expect(result1).toEqual(expected)
+  expect(result2).toEqual(expected)
 })
 
 test('difference with ramda - doesn\'t overwrite primitive values with keys in the path', () => {
@@ -2275,6 +2414,10 @@ test('happy', () => {
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#assocPath)
+
+### binary
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#binary)
 
 ### bind
 
@@ -2505,6 +2648,10 @@ test('skip evaluation of the second expression', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#both)
 
+### call
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#call)
+
 ### chain
 
 ```typescript
@@ -2636,6 +2783,14 @@ It creates a deep copy of the `input`, which may contain (nested) Arrays and Obj
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#clone)
 
+### collectBy
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#collectBy)
+
+### comparator
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#comparator)
+
 ### complement
 
 It returns `inverted` version of `origin` function that accept `input` as argument.
@@ -2656,130 +2811,15 @@ It performs right-to-left function composition.
 
 ### composeAsync
 
-```typescript
-
-composeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>
-```
-
-Asynchronous version of `R.compose`
-
-> :boom: It doesn't work with promises or function returning promises such as `const foo = input => new Promise(...)`.
-
-```javascript
-const add = async x => {
-  await R.delay(100)
-  return x + 1
-}
-const multiply = async x => {
-  await R.delay(100)
-  return x * 2 
-}
-
-const result = await R.composeAsync(
-  add,
-  multiply
-)(1)
-// `result` resolves to `3`
-```
+Asynchronous version of `R.compose`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20multiply%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20*%202%20%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.composeAsync(%0A%20%20add%2C%0A%20%20multiply%0A)(1)%0A%2F%2F%20%60result%60%20resolves%20to%20%603%60">Try this <strong>R.composeAsync</strong> example in Rambda REPL</a>
 
-<details>
-
-<summary><strong>R.composeAsync</strong> source</summary>
-
-```javascript
-import { type } from './type.js'
-
-export function composeAsync(...inputArguments){
-  return async function (startArgument){
-    let argumentsToPass = startArgument
-
-    while (inputArguments.length !== 0){
-      const fn = inputArguments.pop()
-
-      argumentsToPass = fn(argumentsToPass)
-      if (type(argumentsToPass) === 'Promise'){
-        argumentsToPass = await argumentsToPass
-      }
-    }
-
-    return argumentsToPass
-  }
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { composeAsync } from './composeAsync.js'
-import { delay } from './delay.js'
-
-async function identity(x){
-  await delay(100)
-
-  return x
-}
-
-test('happy', async () => {
-  const fn1 = async x => {
-    await delay(100)
-
-    return x.map(xx => xx + 1)
-  }
-  const fn2 = async x => {
-    await delay(100)
-
-    return x.map(xx => xx * 2)
-  }
-  const result = await composeAsync(fn1,
-    fn2)(await Promise.all([ identity(1), identity(2), identity(3) ]))
-
-  expect(result).toEqual([ 3, 5, 7 ])
-})
-
-const delayFn = ms =>
-  new Promise(resolve => {
-    resolve(ms + 1)
-  })
-
-test('with function returning promise', async () => {
-  const result = await composeAsync(
-    x => x,
-    x => x + 1,
-    delayFn,
-    x => x
-  )(1)
-
-  expect(result).toBe(3)
-})
-
-test('throw error', async () => {
-  const fn = async () => {
-    await delay(1)
-    JSON.parse('{foo')
-  }
-
-  let didThrow = false
-  try {
-    await composeAsync(fn, x => x + 1)(20)
-  } catch (e){
-    didThrow = true
-  }
-
-  expect(didThrow).toBeTrue()
-})
-```
-
-</details>
-
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#composeAsync)
+
+### composeWith
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#composeWith)
 
 ### concat
 
@@ -3232,95 +3272,9 @@ test('usage with variables', async () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#delay)
 
-### deletePath
+### descend
 
-```typescript
-
-deletePath<T>(path: string): T
-```
-
-<details>
-
-<summary><strong>R.deletePath</strong> source</summary>
-
-```javascript
-import { createPath } from './_internals/createPath.js'
-import { assocPath } from './assocPath.js'
-import { path as pathModule } from './path.js'
-
-function removeProperty(prop, obj){
-  const toReturn = {}
-
-  Object.keys(obj).forEach(key => {
-    if (key === prop) return
-    toReturn[ key ] = obj[ key ]
-  })
-
-  return toReturn
-}
-
-export function deletePath(pathInput, obj){
-  if (arguments.length === 1){
-    return _obj => deletePath(pathInput, _obj)
-  }
-  const path = createPath(pathInput)
-  if (path.length === 0){
-    return obj
-  }
-  if (path.length === 1){
-    return removeProperty(path[ 0 ], obj)
-  }
-  const lastIndex = path.length - 1
-  const newPath = path.filter((item, i) => i !== lastIndex)
-  const found = pathModule(newPath, obj)
-  if (!found) return obj
-
-  const newValue = deletePath(path[ lastIndex ], found)
-
-  return assocPath(
-    newPath, newValue, obj
-  )
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { deletePath } from './deletePath.js'
-
-test('happy', () => {
-  const obj = {
-    a : 1,
-    b : {
-      c : 2,
-      d : {
-        e : 3,
-        f : 4,
-      },
-    },
-  }
-  const expected = {
-    a : 1,
-    b : {
-      c : 2,
-      d : {
-        e : 3,
-        f : 4,
-      },
-    },
-  }
-  const result = deletePath('a.b.d.e', obj)
-  expect(result).toEqual(expected)
-})
-```
-
-</details>
-
-[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#deletePath)
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#descend)
 
 ### difference
 
@@ -3399,6 +3353,70 @@ test('should use R.equals', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#difference)
 
+### differenceWith
+
+```typescript
+
+differenceWith<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+  list1: T1[],
+  list2: T2[],
+): T1[]
+```
+
+<details>
+
+<summary><strong>R.differenceWith</strong> source</summary>
+
+```javascript
+import { curry } from './curry.js'
+import { _indexOf } from './equals.js'
+
+export function differenceWithFn(
+  fn, a, b
+){
+  const willReturn = []
+  const [ first, second ] = a.length > b.length ? [ a, b ] : [ b, a ]
+
+  first.forEach(item => {
+    const hasItem = second.some(secondItem => fn(item, secondItem))
+    if (!hasItem && _indexOf(item, willReturn) === -1){
+      willReturn.push(item)
+    }
+  })
+
+  return willReturn
+}
+
+export const differenceWith = curry(differenceWithFn)
+```
+
+</details>
+
+<details>
+
+<summary><strong>Tests</strong></summary>
+
+```javascript
+import { differenceWith } from './differenceWith.js'
+
+test('happy', () => {
+  const foo = [ { a : 1 }, { a : 2 }, { a : 3 } ]
+  const bar = [ { a : 3 }, { a : 4 } ]
+  const fn = function (r, s){
+    return r.a === s.a
+  }
+  const result = differenceWith(
+    fn, foo, bar
+  )
+  expect(result).toEqual([ { a : 1 }, { a : 2 } ])
+})
+```
+
+</details>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#differenceWith)
+
 ### dissoc
 
 It returns a new object that does not contain property `prop`.
@@ -3406,6 +3424,10 @@ It returns a new object that does not contain property `prop`.
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.dissoc('b'%2C%20%7Ba%3A%201%2C%20b%3A%202%2C%20c%3A%203%7D)%0A%2F%2F%20%3D%3E%20%7Ba%3A%201%2C%20c%3A%203%7D">Try this <strong>R.dissoc</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dissoc)
+
+### dissocPath
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dissocPath)
 
 ### divide
 
@@ -3661,6 +3683,10 @@ describe('brute force', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropRepeats)
 
+### dropRepeatsBy
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#dropRepeatsBy)
+
 ### dropRepeatsWith
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20list%20%3D%20%5B%7Ba%3A1%2Cb%3A2%7D%2C%20%7Ba%3A1%2Cb%3A3%7D%2C%20%7Ba%3A2%2C%20b%3A4%7D%5D%0Aconst%20result%20%3D%20R.dropRepeatsWith(R.prop('a')%2C%20list)%0A%0A%2F%2F%20%3D%3E%20%5B%7Ba%3A1%2Cb%3A2%7D%2C%20%7Ba%3A2%2C%20b%3A4%7D%5D">Try this <strong>R.dropRepeatsWith</strong> example in Rambda REPL</a>
@@ -3772,6 +3798,10 @@ test('case 2', () => {
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#either)
+
+### empty
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#empty)
 
 ### endsWith
 
@@ -3896,6 +3926,10 @@ describe('brute force', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#endsWith)
 
+### eqBy
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#eqBy)
+
 ### eqProps
 
 It returns `true` if property `prop` in `obj1` is equal to property `prop` in `obj2` according to `R.equals`.
@@ -3933,43 +3967,39 @@ import { isArray } from './_internals/isArray.js'
 import { type } from './type.js'
 
 export function _lastIndexOf(valueToFind, list){
-  if (!isArray(list)){
+  if (!isArray(list))
     throw new Error(`Cannot read property 'indexOf' of ${ list }`)
-  }
+
   const typeOfValue = type(valueToFind)
-  if (![ 'Object', 'Array', 'NaN', 'RegExp' ].includes(typeOfValue))
+  if (![ 'Array', 'NaN', 'Object', 'RegExp' ].includes(typeOfValue))
     return list.lastIndexOf(valueToFind)
 
   const { length } = list
   let index = length
   let foundIndex = -1
 
-  while (--index > -1 && foundIndex === -1){
-    if (equals(list[ index ], valueToFind)){
+  while (--index > -1 && foundIndex === -1)
+    if (equals(list[ index ], valueToFind))
       foundIndex = index
-    }
-  }
 
   return foundIndex
 }
 
 export function _indexOf(valueToFind, list){
-  if (!isArray(list)){
+  if (!isArray(list))
     throw new Error(`Cannot read property 'indexOf' of ${ list }`)
-  }
+
   const typeOfValue = type(valueToFind)
-  if (![ 'Object', 'Array', 'NaN', 'RegExp' ].includes(typeOfValue))
+  if (![ 'Array', 'NaN', 'Object', 'RegExp' ].includes(typeOfValue))
     return list.indexOf(valueToFind)
 
   let index = -1
   let foundIndex = -1
   const { length } = list
 
-  while (++index < length && foundIndex === -1){
-    if (equals(list[ index ], valueToFind)){
+  while (++index < length && foundIndex === -1)
+    if (equals(list[ index ], valueToFind))
       foundIndex = index
-    }
-  }
 
   return foundIndex
 }
@@ -3977,17 +4007,16 @@ export function _indexOf(valueToFind, list){
 function _arrayFromIterator(iter){
   const list = []
   let next
-  while (!(next = iter.next()).done){
+  while (!(next = iter.next()).done)
     list.push(next.value)
-  }
 
   return list
 }
 
-function _equalsSets(a, b){
-  if (a.size !== b.size){
+function _compareSets(a, b){
+  if (a.size !== b.size)
     return false
-  }
+
   const aList = _arrayFromIterator(a.values())
   const bList = _arrayFromIterator(b.values())
 
@@ -3996,11 +4025,11 @@ function _equalsSets(a, b){
   return filtered.length === 0
 }
 
-function parseError(maybeError){
-  const typeofError = maybeError.__proto__.toString()
-  if (![ 'Error', 'TypeError' ].includes(typeofError)) return []
+function compareErrors(a, b){
+  if (a.message !== b.message) return false
+  if (a.toString !== b.toString) return false
 
-  return [ typeofError, maybeError.message ]
+  return a.toString() === b.toString()
 }
 
 function parseDate(maybeDate){
@@ -4021,40 +4050,36 @@ export function equals(a, b){
   const aType = type(a)
 
   if (aType !== type(b)) return false
-  if (aType === 'Function'){
+  if (aType === 'Function')
     return a.name === undefined ? false : a.name === b.name
-  }
 
-  if ([ 'NaN', 'Undefined', 'Null' ].includes(aType)) return true
+  if ([ 'NaN', 'Null', 'Undefined' ].includes(aType)) return true
 
-  if (aType === 'Number'){
+  if ([ 'BigInt', 'Number' ].includes(aType)){
     if (Object.is(-0, a) !== Object.is(-0, b)) return false
 
     return a.toString() === b.toString()
   }
 
-  if ([ 'String', 'Boolean' ].includes(aType)){
+  if ([ 'Boolean', 'String' ].includes(aType))
     return a.toString() === b.toString()
-  }
 
   if (aType === 'Array'){
     const aClone = Array.from(a)
     const bClone = Array.from(b)
 
-    if (aClone.toString() !== bClone.toString()){
+    if (aClone.toString() !== bClone.toString())
       return false
-    }
 
     let loopArrayFlag = true
     aClone.forEach((aCloneInstance, aCloneIndex) => {
-      if (loopArrayFlag){
+      if (loopArrayFlag)
         if (
           aCloneInstance !== bClone[ aCloneIndex ] &&
           !equals(aCloneInstance, bClone[ aCloneIndex ])
-        ){
+        )
           loopArrayFlag = false
-        }
-      }
+
     })
 
     return loopArrayFlag
@@ -4063,34 +4088,31 @@ export function equals(a, b){
   const aRegex = parseRegex(a)
   const bRegex = parseRegex(b)
 
-  if (aRegex[ 0 ]){
+  if (aRegex[ 0 ])
     return bRegex[ 0 ] ? aRegex[ 1 ] === bRegex[ 1 ] : false
-  } else if (bRegex[ 0 ]) return false
+  else if (bRegex[ 0 ]) return false
 
   const aDate = parseDate(a)
   const bDate = parseDate(b)
 
-  if (aDate[ 0 ]){
+  if (aDate[ 0 ])
     return bDate[ 0 ] ? aDate[ 1 ] === bDate[ 1 ] : false
-  } else if (bDate[ 0 ]) return false
+  else if (bDate[ 0 ]) return false
 
-  const aError = parseError(a)
-  const bError = parseError(b)
+  if (a instanceof Error){
+    if (!(b instanceof Error)) return false
 
-  if (aError[ 0 ]){
-    return bError[ 0 ] ?
-      aError[ 0 ] === bError[ 0 ] && aError[ 1 ] === bError[ 1 ] :
-      false
+    return compareErrors(a, b)
   }
-  if (aType === 'Set'){
-    return _equalsSets(a, b)
-  }
+
+  if (aType === 'Set')
+    return _compareSets(a, b)
+
   if (aType === 'Object'){
     const aKeys = Object.keys(a)
 
-    if (aKeys.length !== Object.keys(b).length){
+    if (aKeys.length !== Object.keys(b).length)
       return false
-    }
 
     let loopObjectFlag = true
     aKeys.forEach(aKeyInstance => {
@@ -4098,9 +4120,9 @@ export function equals(a, b){
         const aValue = a[ aKeyInstance ]
         const bValue = b[ aKeyInstance ]
 
-        if (aValue !== bValue && !equals(aValue, bValue)){
+        if (aValue !== bValue && !equals(aValue, bValue))
           loopObjectFlag = false
-        }
+
       }
     })
 
@@ -4187,6 +4209,7 @@ test('new Error', () => {
   expect(equals(new Error('XXX'), new Error('YYY'))).toBeFalse()
   expect(equals(new Error('XXX'), new Error('XXX'))).toBeTrue()
   expect(equals(new Error('XXX'), new TypeError('YYY'))).toBeFalse()
+  expect(equals(new Error('XXX'), new Error('XXX'))).toBeTrue()
 })
 
 test('with dates', () => {
@@ -4215,8 +4238,8 @@ test('ramda spec', () => {
     b : 3,
   },
   {
-    b : 3,
     a : 2,
+    b : 3,
   })).toBeTrue()
 
   expect(equals({
@@ -4312,8 +4335,8 @@ test('various examples', () => {
     b : 2,
   },
   {
-    b : 2,
     a : 1,
+    b : 2,
   })).toBeTrue()
 
   expect(equals({
@@ -4339,8 +4362,8 @@ test('various examples', () => {
     b : 2,
   },
   {
-    b : 2,
     a : 1,
+    b : 2,
     c : 3,
   })).toBeFalse()
 
@@ -4352,8 +4375,8 @@ test('various examples', () => {
   },
   {
     x : {
-      b : 2,
       a : 1,
+      b : 2,
       c : 3,
     },
   })).toBeFalse()
@@ -4363,8 +4386,8 @@ test('various examples', () => {
     b : 2,
   },
   {
-    b : 3,
     a : 1,
+    b : 3,
   })).toBeFalse()
 
   expect(equals({ a : { b : { c : 1 } } }, { a : { b : { c : 1 } } })).toBeTrue()
@@ -4413,26 +4436,32 @@ test('with negative zero', () => {
   expect(equals(-0, 1)).toBeFalse()
 })
 
-const possibleInputs = variousTypes
+test('with big int', () => {
+  const a = BigInt(9007199254740991)
+  const b = BigInt(9007199254740991)
+  const c = BigInt(7007199254740991)
+  expect(equals(a, b)).toBeTrue()
+  expect(equals(a, c)).toBeFalse()
+})
 
 describe('brute force', () => {
   compareCombinations({
+    callback : errorsCounters => {
+      expect(errorsCounters).toMatchInlineSnapshot(`
+{
+  "ERRORS_MESSAGE_MISMATCH": 0,
+  "ERRORS_TYPE_MISMATCH": 0,
+  "RESULTS_MISMATCH": 8,
+  "SHOULD_NOT_THROW": 0,
+  "SHOULD_THROW": 0,
+  "TOTAL_TESTS": 289,
+}
+`)
+    },
+    firstInput  : variousTypes,
     fn          : equals,
     fnRamda     : equalsRamda,
-    firstInput  : possibleInputs,
-    secondInput : possibleInputs,
-    callback    : errorsCounters => {
-      expect(errorsCounters).toMatchInlineSnapshot(`
-        {
-          "ERRORS_MESSAGE_MISMATCH": 0,
-          "ERRORS_TYPE_MISMATCH": 0,
-          "RESULTS_MISMATCH": 5,
-          "SHOULD_NOT_THROW": 4,
-          "SHOULD_THROW": 0,
-          "TOTAL_TESTS": 289,
-        }
-      `)
-    },
+    secondInput : variousTypes,
   })
 })
 ```
@@ -5436,12 +5465,6 @@ test('readme example', () => {
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#flatten)
 
-### flattenObject
-
-It transforms object to object where each value is represented with its path.
-
-[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#flattenObject)
-
 ### flip
 
 It returns function which calls `fn` with exchanged first and second argument.
@@ -5481,38 +5504,23 @@ result // => [1, 2]
 
 ```javascript
 import { isArray } from './_internals/isArray.js'
-import { keys } from './_internals/keys.js'
+import { forEachObjIndexedFn } from './forEachObjIndexed.js'
 
-export function forEach(fn, list){
+export function forEach(fn, iterable){
   if (arguments.length === 1) return _list => forEach(fn, _list)
+  if (iterable === undefined) return
 
-  if (list === undefined){
-    return
-  }
-
-  if (isArray(list)){
+  if (isArray(iterable)){
     let index = 0
-    const len = list.length
+    const len = iterable.length
 
     while (index < len){
-      fn(list[ index ])
+      fn(iterable[ index ])
       index++
     }
-  } else {
-    let index = 0
-    const listKeys = keys(list)
-    const len = listKeys.length
+  } else return forEachObjIndexedFn(fn, iterable)
 
-    while (index < len){
-      const key = listKeys[ index ]
-      fn(
-        list[ key ], key, list
-      )
-      index++
-    }
-  }
-
-  return list
+  return iterable
 }
 ```
 
@@ -5591,6 +5599,10 @@ test('returns the input', () => {
 ### forEachIndexed
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#forEachIndexed)
+
+### forEachObjIndexed
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#forEachObjIndexed)
 
 ### fromPairs
 
@@ -6055,7 +6067,7 @@ test('when false', () => {
 
 ```typescript
 
-head(input: string): string
+head(str: string): string
 ```
 
 It returns the first element of list or string `input`.
@@ -8330,7 +8342,7 @@ test('happy', () => {
 
 ```typescript
 
-keys<T extends object>(x: T): (keyof T)[]
+keys<T extends object>(x: T): (keyof T & string)[]
 ```
 
 It applies `Object.keys` over `x` and returns its keys.
@@ -8373,7 +8385,7 @@ test('happy', () => {
 
 ```typescript
 
-last(input: string): string
+last(str: ''): undefined
 ```
 
 It returns the last element of `input`, as the `input` can be either a string or an array.
@@ -9699,6 +9711,7 @@ export function mapParallelAsync(fn, arr){
 <summary><strong>Tests</strong></summary>
 
 ```javascript
+import { willFailAssertion } from './_internals/testUtils.js'
 import { composeAsync } from './composeAsync.js'
 import { delay } from './delay.js'
 import { map } from './map.js'
@@ -9733,12 +9746,13 @@ test('composeAsync', async () => {
 
 test('error', async () => {
   try {
-    const fn = async x => {
+    const fn = async () => {
       JSON.parse('{:')
     }
-    const result = await mapParallelAsync(fn, [ 1, 2, 3 ])
+    await mapParallelAsync(fn, [ 1, 2, 3 ])
+    willFailAssertion()
   } catch (err){
-    expect(err.message).toBe('Unexpected token : in JSON at position 1')
+    expect(err.message).toBeTruthy()
   }
 })
 
@@ -10639,98 +10653,9 @@ test('string as argument', () => {
 
 ### memoizeWith
 
-```typescript
-
-memoizeWith<T, K extends any[]>(keyGen: any, fn: (...inputs: K) => T): (...inputs: K) => T
-```
-
 Creates a new function that, when invoked, caches the result of calling fn for a given argument set and returns the result.
 
-```javascript
-const keyGen = (a,b) => a + b
-let result = 0
-const fn = (a,b) =>{
-  result++
-
-  return a + b
-}
-const memoized = R.memoizeWith(keyGen, fn)
-memoized(1, 2)
-memoized(1, 2)
-
-// => `result` is equal to `1`
-```
-
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20keyGen%20%3D%20(a%2Cb)%20%3D%3E%20a%20%2B%20b%0Alet%20result%20%3D%200%0Aconst%20fn%20%3D%20(a%2Cb)%20%3D%3E%7B%0A%20%20result%2B%2B%0A%0A%20%20return%20a%20%2B%20b%0A%7D%0Aconst%20memoized%20%3D%20R.memoizeWith(keyGen%2C%20fn)%0Amemoized(1%2C%202)%0Amemoized(1%2C%202)%0Aconst%20result%20%3D%20%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%601%60">Try this <strong>R.memoizeWith</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.memoizeWith</strong> source</summary>
-
-```javascript
-export function memoizeWith(keyGen, fn){
-  if (arguments.length === 1){
-    return _fn => memoizeWith(keyGen, _fn)
-  }
-  const cache = new Map()
-
-  return function (){
-    const key = keyGen.apply(this, arguments)
-    if (!cache.has(key)){
-      cache.set(key, fn.apply(this, arguments))
-    }
-
-    return cache.get(key)
-  }
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { memoizeWith } from './memoizeWith.js'
-
-test('calculates the value for a given input only once', () => {
-  let ctr = 0
-  const fib = memoizeWith(x => x,
-    n => {
-      ctr += 1
-
-      return n < 2 ? n : fib(n - 2) + fib(n - 1)
-    })
-  const result = fib(10)
-  expect(result).toBe(55)
-  expect(ctr).toBe(11)
-})
-
-test('handles multiple parameters', () => {
-  const f = memoizeWith((
-    a, b, c
-  ) => a + b + c,
-  (
-    a, b, c
-  ) => a + ', ' + b + c)
-
-  expect(f(
-    'Hello', 'World', '!'
-  )).toBe('Hello, World!')
-  expect(f(
-    'Goodbye', 'Cruel World', '!!!'
-  )).toBe('Goodbye, Cruel World!!!')
-  expect(f(
-    'Hello', 'how are you', '?'
-  )).toBe('Hello, how are you?')
-  expect(f(
-    'Hello', 'World', '!'
-  )).toBe('Hello, World!')
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#memoizeWith)
 
@@ -11131,7 +11056,7 @@ const result = R.mergeWith(
 ```javascript
 import { curry } from './curry.js'
 
-function mergeWithFn(
+export function mergeWithFn(
   mergeFn, aInput, bInput
 ){
   const a = aInput ?? {}
@@ -11139,21 +11064,15 @@ function mergeWithFn(
   const willReturn = {}
 
   Object.keys(a).forEach(key => {
-    if (b[ key ] === undefined){
-      willReturn[ key ] = a[ key ]
-    } else {
-      willReturn[ key ] = mergeFn(a[ key ], b[ key ])
-    }
+    if (b[ key ] === undefined) willReturn[ key ] = a[ key ]
+    else willReturn[ key ] = mergeFn(a[ key ], b[ key ])
   })
 
   Object.keys(b).forEach(key => {
     if (willReturn[ key ] !== undefined) return
 
-    if (a[ key ] === undefined){
-      willReturn[ key ] = b[ key ]
-    } else {
-      willReturn[ key ] = mergeFn(a[ key ], b[ key ])
-    }
+    if (a[ key ] === undefined) willReturn[ key ] = b[ key ]
+    else willReturn[ key ] = mergeFn(a[ key ], b[ key ])
   })
 
   return willReturn
@@ -11170,10 +11089,10 @@ export const mergeWith = curry(mergeWithFn)
 
 ```javascript
 import { concat } from './concat.js'
-import { mergeWith } from './mergeWith.js'
+import { mergeWithFn } from './mergeWith.js'
 
 test('happy', () => {
-  const result = mergeWith(
+  const result = mergeWithFn(
     concat,
     {
       a      : true,
@@ -11186,8 +11105,8 @@ test('happy', () => {
   )
   const expected = {
     a      : true,
-    values : [ 10, 20, 15, 35 ],
     b      : true,
+    values : [ 10, 20, 15, 35 ],
   }
   expect(result).toEqual(expected)
 })
@@ -11195,31 +11114,31 @@ test('happy', () => {
 // https://github.com/ramda/ramda/pull/3222/files#diff-d925d9188b478d2f1d4b26012c6dddac374f9e9d7a336604d654b9a113bfc857
 describe('acts as if nil values are simply empty objects', () => {
   it('if the first object is nil and the second empty', () => {
-    expect(mergeWith(
+    expect(mergeWithFn(
       concat, undefined, {}
     )).toEqual({})
   })
 
   it('if the first object is empty and the second nil', () => {
-    expect(mergeWith(
+    expect(mergeWithFn(
       concat, {}, null
     )).toEqual({})
   })
 
   it('if both objects are nil', () => {
-    expect(mergeWith(
+    expect(mergeWithFn(
       concat, undefined, null
     )).toEqual({})
   })
 
   it('if the first object is not empty and the second is nil', () => {
-    expect(mergeWith(
+    expect(mergeWithFn(
       concat, { a : 'a' }, null
     )).toEqual({ a : 'a' })
   })
 
   it('if the first object is nil and the second is not empty', () => {
-    expect(mergeWith(
+    expect(mergeWithFn(
       concat, undefined, { a : 'a' }
     )).toEqual({ a : 'a' })
   })
@@ -12051,22 +11970,20 @@ const result = [
 
 ```javascript
 import { createPath } from './_internals/createPath.js'
+import { includes } from './_internals/includes.js'
 
 export function omit(propsToOmit, obj){
   if (arguments.length === 1) return _obj => omit(propsToOmit, _obj)
 
-  if (obj === null || obj === undefined){
+  if (obj === null || obj === undefined)
     return undefined
-  }
 
   const propsToOmitValue = createPath(propsToOmit, ',')
   const willReturn = {}
 
-  for (const key in obj){
-    if (!propsToOmitValue.includes(key)){
+  for (const key in obj)
+    if (!includes(key, propsToOmitValue))
       willReturn[ key ] = obj[ key ]
-    }
-  }
 
   return willReturn
 }
@@ -12095,18 +12012,17 @@ test('with string as condition', () => {
   expect(resultCurry).toEqual(expectedResult)
 })
 
-test('with null', () => {
-  expect(omit('a,b', null)).toBeUndefined()
+test.only('with number as property to omit', () => {
+  const obj = {
+    1 : 1,
+    b : 2,
+  }
+  const result = omit([ 1 ], obj)
+  expect(result).toEqual({ b : 2 })
 })
 
-test('doesn\'t work with number as property', () => {
-  expect(omit([ 42 ], {
-    a  : 1,
-    42 : 2,
-  })).toEqual({
-    42 : 2,
-    a  : 1,
-  })
+test('with null', () => {
+  expect(omit('a,b', null)).toBeUndefined()
 })
 
 test('happy', () => {
@@ -12363,15 +12279,21 @@ finalFn('Bar') // =>  'Hello, Foo Bar!'
 <summary><strong>R.partial</strong> source</summary>
 
 ```javascript
+import { isArray } from './_internals/isArray.js'
+
 export function partial(fn, ...args){
   const len = fn.length
 
+  // If a single array argument is given, those are the args (a la Ramda).
+  // Otherwise, the variadic arguments are the args.
+  const argList = args.length === 1 && isArray(args[0]) ? args[0] : args
+
   return (...rest) => {
-    if (args.length + rest.length >= len){
-      return fn(...args, ...rest)
+    if (argList.length + rest.length >= len){
+      return fn(...argList, ...rest)
     }
 
-    return partial(fn, ...[ ...args, ...rest ])
+    return partial(fn, ...[ ...argList, ...rest ])
   }
 }
 ```
@@ -12389,7 +12311,7 @@ import { type } from './type.js'
 const greet = (
   salutation, title, firstName, lastName
 ) =>
-  salutation + ', ' + title + ' ' + firstName + ' ' + lastName + '!'
+  [salutation, title, firstName, lastName]
 
 test('happy', () => {
   const canPassAnyNumberOfArguments = partial(
@@ -12401,8 +12323,8 @@ test('happy', () => {
 
   expect(type(fn)).toBe('Function')
 
-  expect(fn('bar')).toBe('Hello, Ms. foo bar!')
-  expect(sayHelloRamda('foo', 'bar')).toBe('Hello, Ms. foo bar!')
+  expect(fn('bar')).toStrictEqual(['Hello', 'Ms.', 'foo', 'bar'])
+  expect(sayHelloRamda('foo', 'bar')).toStrictEqual(['Hello', 'Ms.', 'foo', 'bar'])
 })
 
 test('extra arguments are ignored', () => {
@@ -12415,7 +12337,7 @@ test('extra arguments are ignored', () => {
 
   expect(fn(
     'bar', 1, 2
-  )).toBe('Hello, Ms. foo bar!')
+  )).toStrictEqual(['Hello', 'Ms.', 'foo', 'bar'])
 })
 
 test('when array is input', () => {
@@ -12443,7 +12365,7 @@ test('ramda spec', () => {
   const sayHello = partial(greet, 'Hello')
   const sayHelloToMs = partial(sayHello, 'Ms.')
 
-  expect(sayHelloToMs('Jane', 'Jones')).toBe('Hello, Ms. Jane Jones!')
+  expect(sayHelloToMs('Jane', 'Jones')).toStrictEqual(['Hello', 'Ms.', 'Jane', 'Jones'])
 })
 ```
 
@@ -13428,10 +13350,10 @@ test('works with list as input and number as props - props to pick is a string',
 test('with symbol', () => {
   const symbolProp = Symbol('s')
   expect(pick([ symbolProp ], { [ symbolProp ] : 'a' })).toMatchInlineSnapshot(`
-    {
-      Symbol(s): "a",
-    }
-  `)
+{
+  Symbol(s): "a",
+}
+`)
 })
 ```
 
@@ -13564,130 +13486,9 @@ It performs left-to-right function composition.
 
 ### pipeAsync
 
-```typescript
-
-pipeAsync<Out>(
-  ...fns: (Async<any> | Func<any>)[]
-): (input: any) => Promise<Out>
-```
-
-Asynchronous version of `R.pipe`
-
-> :boom: It doesn't work with promises or function returning promises such as `const foo = input => new Promise(...)`.
-
-```javascript
-const add = async x => {
-  await R.delay(100)
-  return x + 1
-}
-const multiply = async x => {
-  await R.delay(100)
-  return x * 2 
-}
-
-const result = await R.pipeAsync(
-  add,
-  multiply
-)(1)
-// `result` resolves to `4`
-```
+Asynchronous version of `R.pipe`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20multiply%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20*%202%20%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.pipeAsync(%0A%20%20add%2C%0A%20%20multiply%0A)(1)%0A%2F%2F%20%60result%60%20resolves%20to%20%604%60">Try this <strong>R.pipeAsync</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.pipeAsync</strong> source</summary>
-
-```javascript
-import { type } from './type.js'
-
-export function pipeAsync(...inputArguments){
-  return async function (startArgument){
-    let argumentsToPass = startArgument
-
-    while (inputArguments.length !== 0){
-      const fn = inputArguments.shift()
-
-      argumentsToPass = fn(argumentsToPass)
-      if (type(argumentsToPass) === 'Promise'){
-        argumentsToPass = await argumentsToPass
-      }
-    }
-
-    return argumentsToPass
-  }
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { delay } from './delay.js'
-import { equals } from './equals.js'
-import { map } from './map.js'
-import { pipeAsync } from './pipeAsync.js'
-
-async function identity(x){
-  await delay(100)
-
-  return x
-}
-
-test('happy', async () => {
-  const fn1 = async x => {
-    await delay(100)
-
-    return x.map(xx => xx + 1)
-  }
-  const fn2 = async x => {
-    await delay(100)
-
-    return x.map(xx => xx * 2)
-  }
-  const result = await pipeAsync(fn1,
-    fn2)(await Promise.all([ identity(1), identity(2), identity(3) ]))
-
-  expect(result).toEqual([ 4, 6, 8 ])
-})
-
-const delayFn = ms =>
-  new Promise(resolve => {
-    resolve(ms + 1)
-  })
-
-test('with function returning promise', async () => {
-  const result = await pipeAsync(
-    x => x,
-    x => x + 1,
-    delayFn,
-    x => x
-  )(1)
-
-  expect(result).toBe(3)
-})
-
-test('throw error', async () => {
-  const fn = async () => {
-    await delay(1)
-    JSON.parse('{foo')
-  }
-
-  let didThrow = false
-  try {
-    await pipeAsync(x => x, fn)(20)
-  } catch (e){
-    didThrow = true
-  }
-
-  expect(didThrow).toBeTrue()
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pipeAsync)
 
@@ -13756,95 +13557,9 @@ test('happy', () => {
 
 ### pipedAsync
 
-```typescript
-
-pipedAsync<T>(
-  input: any,
-  ...fns: (Func<any> | Async<any>)[]
-): Promise<T>
-```
-
-It accepts input as first argument and series of functions as next arguments. It is same as `R.pipe` but with support for asynchronous functions.
-
-> :boom: Functions that return `Promise` will be handled as regular function not asynchronous. Such example is `const foo = input => new Promise(...)`.
-
-```javascript
-const result = await R.pipedAsync(
-  100,
-  async x => {
-    await R.delay(100)
-    return x + 2
-  },
-  R.add(2),
-  async x => {
-    const delayed = await R.delay(100)
-    return delayed + x
-  }
-)
-// `result` resolves to `RAMBDAX_DELAY104`
-```
+It accepts input as first argument and series of functions as next arguments. It is same as `R.piped` but with support for asynchronous functions like `R.pipeAsync`.
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20await%20R.pipedAsync(%0A%20%20100%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20await%20R.delay(100)%0A%20%20%20%20return%20x%20%2B%202%0A%20%20%7D%2C%0A%20%20R.add(2)%2C%0A%20%20async%20x%20%3D%3E%20%7B%0A%20%20%20%20const%20delayed%20%3D%20await%20R.delay(100)%0A%20%20%20%20return%20delayed%20%2B%20x%0A%20%20%7D%0A)%0A%2F%2F%20%60result%60%20resolves%20to%20%60RAMBDAX_DELAY104%60">Try this <strong>R.pipedAsync</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.pipedAsync</strong> source</summary>
-
-```javascript
-import { type } from './type.js'
-
-export async function pipedAsync(...inputs){
-  const [ input, ...fnList ] = inputs
-
-  let argumentsToPass = input
-
-  while (fnList.length !== 0){
-    const fn = fnList.shift()
-    const typeFn = type(fn)
-
-    if (typeFn === 'Promise'){
-      argumentsToPass = await fn(argumentsToPass)
-    } else {
-      argumentsToPass = fn(argumentsToPass)
-    }
-  }
-
-  return argumentsToPass
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { add } from './add.js'
-import { delay } from './delay.js'
-import { pipedAsync } from './pipedAsync.js'
-
-const fn1 = async x => {
-  await delay(100)
-
-  return x + 2
-}
-const fn2 = async x => {
-  await delay(100)
-
-  return x + 3
-}
-
-test('happy', async () => {
-  const result = await pipedAsync(
-    1, fn1, add(2), fn2
-  )
-
-  expect(result).toBe(8)
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#pipedAsync)
 
@@ -13920,7 +13635,7 @@ test('with number', () => {
 
 ```typescript
 
-prepend<T>(x: T, input: T[]): T[]
+prepend<T>(xToPrepend: T, iterable: T[]): T[]
 ```
 
 It adds element `x` at the beginning of `list`.
@@ -14361,7 +14076,7 @@ test('bad input', () => {
 
 ```typescript
 
-prop<P extends keyof never, T>(propToFind: P, value: T): Prop<T, P>
+prop<_, P extends keyof never, T>(p: P, value: T): Prop<T, P>
 ```
 
 It returns the value of property `propToFind` in `obj`.
@@ -14986,133 +14701,13 @@ Same as `R.reject`, but it passes index/property as second argument to the predi
 
 ### remove
 
-```typescript
-
-remove(
-  toRemove: string | RegExp | (string | RegExp)[],
-  text: string
-): string
-```
-
 It will remove all `toRemove` entries from `text` sequentially. 
 
 `toRemove` argument can be either a list of strings/regular expressions or a single string/regular expression.
 
 > :boom: This is the only case where Rambdax exports clashes with Ramda API, as Ramda has `remove` method. If `Rambda.remove` is introduced, then this method will be renamed.
 
-```javascript
-const result = R.remove(
-  ['foo','bar'],
-  'foo bar baz foo'
-)
-// => 'baz foo'
-```
-
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.remove(%0A%20%20%5B'foo'%2C'bar'%5D%2C%0A%20%20'foo%20bar%20baz%20foo'%0A)%0A%2F%2F%20%3D%3E%20'baz%20foo'">Try this <strong>R.remove</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.remove</strong> source</summary>
-
-```javascript
-import { replace } from './replace.js'
-import { type } from './type.js'
-
-export function remove(inputs, text){
-  if (arguments.length === 1){
-    return textHolder => remove(inputs, textHolder)
-  }
-
-  if (type(text) !== 'String'){
-    throw new Error(`R.remove requires string not ${ type(text) }`)
-  }
-
-  if (type(inputs) !== 'Array'){
-    return replace(
-      inputs, '', text
-    )
-  }
-
-  let textCopy = text
-
-  inputs.forEach(singleInput => {
-    textCopy = replace(
-      singleInput, '', textCopy
-    ).trim()
-  })
-
-  return textCopy
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { remove } from './remove.js'
-
-test('happy', () => {
-  const inputs = [ /foo/, /not\shere/, /also/, 'bar' ]
-  const text = 'foo bar baz foo'
-
-  const result = remove(inputs)(text)
-  const expectedResult = 'baz foo'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('with strings + curry', () => {
-  const inputs = [ 'foo', 'bar' ]
-  const text = 'foo bar baz foo'
-
-  const result = remove(inputs)(text)
-  const expectedResult = 'baz foo'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('with strings and regex', () => {
-  const inputs = [ /foo/g, 'bar' ]
-  const text = 'foo bar baz foo'
-
-  const result = remove(inputs, text)
-  const expectedResult = 'baz'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('text is not string', () => {
-  const inputs = [ /foo/g, 'bar' ]
-  const text = null
-
-  expect(() => remove(inputs, text)).toThrowErrorMatchingInlineSnapshot('"R.remove requires string not Null"')
-})
-
-test('with regexes', () => {
-  const inputs = [ /foo/g, /bar/ ]
-  const text = 'foo bar baz foo'
-
-  const result = remove(inputs, text)
-  const expectedResult = 'baz'
-
-  expect(result).toEqual(expectedResult)
-})
-
-test('with single rule', () => {
-  const inputs = /foo/g
-  const text = 'foo bar baz foo'
-
-  const result = remove(inputs, text)
-  const expectedResult = ' bar baz '
-
-  expect(result).toEqual(expectedResult)
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#remove)
 
@@ -20023,6 +19618,12 @@ test('when second list is longer', () => {
 
 ## ❯ CHANGELOG
 
+10.1.0
+
+- Simplify TypeScript logic of `R.pipeAsync/R.composeAsync/R.pipedAsync` - [MR #698](https://github.com/selfrefactor/rambda/pull/698)
+
+- Sync with `Rambda` version `8.6.0`
+
 10.0.0
 
 - Sync with `Rambda` version `8.0.0`
@@ -20049,25 +19650,27 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 ## ❯ Additional info
 
-> Most influential contributors
+> Most influential contributors(in alphabetical order)
 
-- [@farwayer](https://github.com/farwayer) - improving performance in R.find, R.filter; give the idea how to make benchmarks more reliable;
+- ![farwayer avatar](https://avatars.githubusercontent.com/farwayer) [@farwayer](https://github.com/farwayer) - improving performance in R.find, R.filter; give the idea how to make benchmarks more reliable;
 
-- [@thejohnfreeman](https://github.com/thejohnfreeman) - add R.assoc, R.chain;
+- ![thejohnfreeman avatar](https://avatars.githubusercontent.com/thejohnfreeman) [@thejohnfreeman](https://github.com/thejohnfreeman) - add R.assoc, R.chain;
 
-- [@helmuthdu](https://github.com/helmuthdu) - add R.clone; help improve code style;
+- ![peeja avatar](https://avatars.githubusercontent.com/peeja) [@peeja](https://github.com/peeja) - add several methods and fix mutiple issues; provides great MR documentation
 
-- [@jpgorman](https://github.com/jpgorman) - add R.zip, R.reject, R.without, R.addIndex;
+- ![helmuthdu avatar](https://avatars.githubusercontent.com/helmuthdu) [@helmuthdu](https://github.com/helmuthdu) - add R.clone; help improve code style;
 
-- [@ku8ar](https://github.com/ku8ar) - add R.slice, R.propOr, R.identical, R.propIs and several math related methods; introduce the idea to display missing Ramda methods;
+- ![jpgorman avatar](https://avatars.githubusercontent.com/jpgorman) [@jpgorman](https://github.com/jpgorman) - add R.zip, R.reject, R.without, R.addIndex;
 
-- [@romgrk](https://github.com/romgrk) - add R.groupBy, R.indexBy, R.findLast, R.findLastIndex;
+- ![ku8ar avatar](https://avatars.githubusercontent.com/ku8ar) [@ku8ar](https://github.com/ku8ar) - add R.slice, R.propOr, R.identical, R.propIs and several math related methods; introduce the idea to display missing Ramda methods;
 
-- [@squidfunk](https://github.com/squidfunk) - add R.assocPath, R.symmetricDifference, R.difference, R.intersperse;
+- ![romgrk avatar](https://avatars.githubusercontent.com/romgrk) [@romgrk](https://github.com/romgrk) - add R.groupBy, R.indexBy, R.findLast, R.findLastIndex;
 
-- [@synthet1c](https://github.com/synthet1c) - add all lenses methods; add R.applySpec, R.converge;
+- ![squidfunk avatar](https://avatars.githubusercontent.com/squidfunk) [@squidfunk](https://github.com/squidfunk) - add R.assocPath, R.symmetricDifference, R.difference, R.intersperse;
 
-- [@vlad-zhukov](https://github.com/vlad-zhukov) - help with configuring Rollup, Babel; change export file to use ES module exports;
+- ![synthet1c avatar](https://avatars.githubusercontent.com/synthet1c) [@synthet1c](https://github.com/synthet1c) - add all lenses methods; add R.applySpec, R.converge;
+
+- ![vlad-zhukov avatar](https://avatars.githubusercontent.com/vlad-zhukov) [@vlad-zhukov](https://github.com/vlad-zhukov) - help with configuring Rollup, Babel; change export file to use ES module exports;
 
 > Rambda references
 
@@ -20079,19 +19682,15 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 > Links to Rambda
 
-- [https://mailchi.mp/webtoolsweekly/web-tools-280](Web Tools Weekly)
-
 - [https://github.com/stoeffel/awesome-fp-js](awesome-fp-js)
+
+- [ https://mailchi.mp/webtoolsweekly/web-tools-280 ]( Web Tools Weekly #280 )
 
 - [https://github.com/docsifyjs/awesome-docsify](awesome-docsify)
 
 > Deprecated from `Used by` section
 
 - [SAP's Cloud SDK](https://github.com/SAP/cloud-sdk) - This repo doesn't uses `Rambda` since *October/2020* [commit that removes Rambda](https://github.com/SAP/cloud-sdk/commit/b29b4f915c4e4e9c2441e7b6b67cf83dac1fdac3)
-
-> Releases
-
-[Rambda's releases](https://github.com/selfrefactor/rambda/releases) before **6.4.0** were used mostly for testing purposes.
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-additional-info)
 
@@ -20114,7 +19713,7 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
             </td>
             <td width="20%" align="center">
                 <h4>Useful Javascript libraries</h4>
-                <a href="https://github.com/selfrefactor/useful-javascript-libraries">Large collection of JavaScript,Typescript and Angular related repos links</a>
+                <a href="https://github.com/selfrefactor/useful-javascript-libraries">Large collection of JavaScript,TypeScript and Angular related repos links</a>
             </td>
             <td width="20%" align="center">
                 <h4>Run-fn</h4>
