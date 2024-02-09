@@ -42,11 +42,10 @@ interface KeyValuePair<K, V> extends Array<K | V> {
   0: K;
   1: V;
 }
+export type Functor<A> = { map: <B>(fn: (a: A) => B) => Functor<B>; [key: string]: any };
+export type Lens<S, A> = (functorFactory: (a: A) => Functor<A>) => (s: S) => Functor<S>;
 
-export interface Lens {
-  <T, U>(obj: T): U;
-  set<T, U>(str: string, obj: T): U;
-}
+export type ObjPred<T = unknown> = (value: any, key: unknown extends T ? string : keyof T) => boolean;
 
 type Arity1Fn = (x: any) => any;
 type Arity2Fn = (x: any, y: any) => any;
@@ -147,12 +146,12 @@ interface SchemaAsync {
   [key: string]: Promise<boolean>;
 }
 
-interface IsValid {
+export interface IsValid {
   input: object;
   schema: Schema;
 }
 
-interface IsValidAsync {
+export interface IsValidAsync {
   input: object;
   schema: Schema | SchemaAsync;
 }
@@ -174,8 +173,6 @@ type ApplyDiffAdd = {op:'add', path: string, value: any};
 type ApplyDiffRemove = {op:'remove', path: string};
 type ApplyDiffRule = ApplyDiffUpdate | ApplyDiffAdd | ApplyDiffRemove;
 
-type Resolved<T> = {status: 'fulfilled', value: T} | {status: 'rejected', reason: string|Error}
-
 
 export function F(): boolean;
 
@@ -190,6 +187,9 @@ export function add(a: number): (b: number) => number;
 export function addIndex(originalFn: any): (fn: any) => (list: any[]) => any[];
 export function addIndex(originalFn: any): (fn: any, list: any[]) => any[];
 
+/**
+ * Same as `R.addIndex`, but it will passed indexes are decreasing, instead of increasing.
+ */
 export function addIndexRight(originalFn: any): (fn: any) => (list: any[]) => any[];
 export function addIndexRight(originalFn: any): (fn: any, list: any[]) => any[];
 
@@ -270,10 +270,16 @@ export function anyTrue(...input: any[]): boolean;
  */
 export function anyType(targetType: RambdaTypes): (...input: any[]) => boolean;
 
+/**
+ * It takes a list of functions and a list of values. Then it returns a list of values obtained by applying each function to each value.
+ */
 export function ap<T, U>(fns: Array<(a: T) => U>[], vs: T[]): U[];
 export function ap<T, U>(fns: Array<(a: T) => U>): (vs: T[]) => U[];
 export function ap<R, A, B>(fn: (r: R, a: A) => B, fn1: (r: R) => A): (r: R) => B;
 
+/**
+ * It returns a new list, composed of consecutive `n`-tuples from a `list`.
+ */
 export function aperture<N extends number, T>(n: N, list: T[]): Array<Tuple<T, N>> | [];
 export function aperture<N extends number>(n: N): <T>(list: T[]) => Array<Tuple<T, N>> | [];
 
@@ -374,6 +380,9 @@ export function clone<T>(input: T[]): T[];
 export function collectBy<T, K extends PropertyKey>(keyFn: (value: T) => K, list: T[]): T[][];
 export function collectBy<T, K extends PropertyKey>(keyFn: (value: T) => K): (list: T[]) => T[][];
 
+/**
+ * It returns a comparator function that can be used in `sort` method.
+ */
 export function comparator<T>(pred: (a: T, b: T) => boolean): (x: T, y: T) => Ordering;
 
 /**
@@ -836,8 +845,6 @@ export function forEachIndexed<T, U>(fn: ObjectIterator<T, void>): (list: Dictio
 export function forEachObjIndexed<T>(fn: (value: T[keyof T], key: keyof T, obj: T) => void, obj: T): T;
 export function forEachObjIndexed<T>(fn: (value: T[keyof T], key: keyof T, obj: T) => void): (obj: T) => T;
 
-// RAMBDAX_MARKER_START
-
 /**
  * It transforms a `listOfPairs` to an object.
  */
@@ -877,11 +884,18 @@ export function groupWith<T>(compareFn: (x: T, y: T) => boolean): (input: T[]) =
 export function groupWith<T>(compareFn: (x: T, y: T) => boolean, input: T[]): (T[])[];
 export function groupWith<T>(compareFn: (x: T, y: T) => boolean, input: string): string[];
 
+export function gt<T>(x: T): T;
+
+export function gte<T>(x: T): T;
+
 /**
  * It returns `true` if `obj` has property `prop`.
  */
 export function has<T>(prop: string, obj: T): boolean;
 export function has(prop: string): <T>(obj: T) => boolean;
+
+export function hasIn(searchProperty: string): <T>(obj: T) => boolean;
+export function hasIn<T>(searchProperty: string, obj: T): boolean;
 
 /**
  * It will return true, if `input` object has truthy `path`(calculated with `R.path`).
@@ -1006,6 +1020,26 @@ export function init<T extends unknown[]>(input: T): T extends readonly [...infe
 export function init(input: string): string;
 
 /**
+ * It returns a new list by applying a `predicate` function to all elements of `list1` and `list2` and keeping only these elements where `predicate` returns `true`.
+ */
+export function innerJoin<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+): (list1: T1[], list2: T2[]) => T1[];
+export function innerJoin<T1, T2>(
+  pred: (a: T1, b: T2) => boolean,
+  list1: T1[],
+): (list2: T2[]) => T1[];
+export function innerJoin<T1, T2>(pred: (a: T1, b: T2) => boolean, list1: T1[], list2: T2[]): T1[];
+
+export function insert(index: number): <T>(itemToInsert: T, list: T[]) => T[];
+export function insert<T>(index: number, itemToInsert: T): (list: T[]) => T[];
+export function insert<T>(index: number, itemToInsert: T, list: T[]): T[];
+
+export function insertAll(index: number): <T>(itemsToInsert: T[], list: T[]) => T[];
+export function insertAll<T>(index: number, itemsToInsert: T[]): (list: T[]) => T[];
+export function insertAll<T>(index: number, itemsToInsert: T[], list: T[]): T[];
+
+/**
  * It generates a new string from `inputWithTags` by replacing all `{{x}}` occurrences with values provided by `templateArguments`.
  */
 export function interpolate(inputWithTags: string, templateArguments: object): string;
@@ -1040,6 +1074,8 @@ export function isEmpty<T>(x: T): boolean;
  * It returns `true` if `x` is either `null` or `undefined`.
  */
 export function isNil(x: any): x is null | undefined;
+
+export function isNotNil<T>(value: T): value is NonNullable<T>;
 
 export function isPromise(input: any): boolean;
 
@@ -1116,36 +1152,66 @@ export function length<T>(input: T[]): number;
  * 
  * The setter should not mutate the data structure.
  */
-export function lens<T, U, V>(getter: (s: T) => U, setter: (a: U, s: T) => V): Lens;
+export function lens<S, A>(getter: (s: S) => A, setter: (a: A, s: S) => S): Lens<S, A>;
 
 /**
  * It returns `true` if data structure focused by the given lens equals to the `target` value.
  * 
  * `R.equals` is used to determine equality.
  */
-export function lensEq<T, U>(lens: Lens, target: T, input: U): boolean;
-export function lensEq<T, U>(lens: Lens, target: T):  (input: U) => boolean;
-export function lensEq<T>(lens: Lens, target: T, input: T[]): boolean;
-export function lensEq<T>(lens: Lens, target: T): (input: T[]) => boolean;
+export function lensEq(lens: Function, value: any, data: any): boolean;
+export function lensEq(lens: Function, value: any): (data: any) => boolean;
+export function lensEq(lens: Function): (value: any) => (data: any) => boolean;
 
 /**
  * It returns a lens that focuses on specified `index`.
  */
-export function lensIndex(index: number): Lens;
+export function lensIndex<A>(n: number): Lens<A[], A>;
+export function lensIndex<A extends any[], N extends number>(n: N): Lens<A, A[N]>;
 
 /**
  * It returns a lens that focuses on specified `path`.
  */
-export function lensPath(path: RamdaPath): Lens;
-export function lensPath(path: string): Lens;
+export function lensPath<S, K0 extends keyof S = keyof S>(path: [K0]): Lens<S, S[K0]>;
+export function lensPath<S, K0 extends keyof S = keyof S, K1 extends keyof S[K0] = keyof S[K0]>(
+  path: [K0, K1],
+): Lens<S, S[K0][K1]>;
+export function lensPath<
+  S,
+  K0 extends keyof S = keyof S,
+  K1 extends keyof S[K0] = keyof S[K0],
+  K2 extends keyof S[K0][K1] = keyof S[K0][K1]
+>(path: [K0, K1, K2]): Lens<S, S[K0][K1][K2]>;
+export function lensPath<
+  S,
+  K0 extends keyof S = keyof S,
+  K1 extends keyof S[K0] = keyof S[K0],
+  K2 extends keyof S[K0][K1] = keyof S[K0][K1],
+  K3 extends keyof S[K0][K1][K2] = keyof S[K0][K1][K2]
+>(path: [K0, K1, K2, K3]): Lens<S, S[K0][K1][K2][K3]>;
+export function lensPath<
+  S,
+  K0 extends keyof S = keyof S,
+  K1 extends keyof S[K0] = keyof S[K0],
+  K2 extends keyof S[K0][K1] = keyof S[K0][K1],
+  K3 extends keyof S[K0][K1][K2] = keyof S[K0][K1][K2],
+  K4 extends keyof S[K0][K1][K2][K3] = keyof S[K0][K1][K2][K3]
+>(path: [K0, K1, K2, K3, K4]): Lens<S, S[K0][K1][K2][K3][K4]>;
+export function lensPath<
+  S,
+  K0 extends keyof S = keyof S,
+  K1 extends keyof S[K0] = keyof S[K0],
+  K2 extends keyof S[K0][K1] = keyof S[K0][K1],
+  K3 extends keyof S[K0][K1][K2] = keyof S[K0][K1][K2],
+  K4 extends keyof S[K0][K1][K2][K3] = keyof S[K0][K1][K2][K3],
+  K5 extends keyof S[K0][K1][K2][K3][K4] = keyof S[K0][K1][K2][K3][K4]
+>(path: [K0, K1, K2, K3, K4, K5]): Lens<S, S[K0][K1][K2][K3][K4][K5]>;
+export function lensPath<S = any, A = any>(path: Path): Lens<S, A>;
 
 /**
  * It returns a lens that focuses on specified property `prop`.
  */
-export function lensProp(prop: string): {
-  <T, U>(obj: T): U;
-  set<T, U, V>(val: T, obj: U): V;
-};
+export function lensProp<S, K extends keyof S = keyof S>(prop: K): Lens<S, S[K]>;
 
 /**
  * It returns `true` if data structure focused by the given lens satisfies the predicate.
@@ -1154,6 +1220,8 @@ export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, in
 export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: T[]): boolean;
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: T[]) => boolean;
+
+export function lt<T>(x: T): T;
 
 /**
  * It returns the result of looping through `iterable` with `fn`.
@@ -1309,6 +1377,11 @@ export function merge<Output>(target: any): (newProps: any) => Output;
  */
 export function mergeAll<T>(list: object[]): T;
 export function mergeAll(list: object[]): object;
+
+export function mergeDeepLeft<Output>(newProps: object, target: object): Output;
+export function mergeDeepLeft<Output>(newProps: object): (target: object) => Output;
+
+// RAMBDAX_MARKER_START
 
 /**
  * Creates a new object with the own properties of the first object merged with the own properties of the second object. If a key exists in both objects:
@@ -1481,12 +1554,12 @@ export function or<T>(a: T): <U>(b: U) => T | U;
 /**
  * It returns a copied **Object** or **Array** with modified value received by applying function `fn` to `lens` focus.
  */
-export function over<T>(lens: Lens, fn: Arity1Fn, value: T): T;
-export function over<T>(lens: Lens, fn: Arity1Fn, value: T[]): T[];
-export function over(lens: Lens, fn: Arity1Fn): <T>(value: T) => T;
-export function over(lens: Lens, fn: Arity1Fn): <T>(value: T[]) => T[];
-export function over(lens: Lens): <T>(fn: Arity1Fn, value: T) => T;
-export function over(lens: Lens): <T>(fn: Arity1Fn, value: T[]) => T[];
+export function over<S, A>(lens: Lens<S, A>): {
+  (fn: (a: A) => A): (value: S) => S;
+  (fn: (a: A) => A, value: S): S;
+};
+export function over<S, A>(lens: Lens<S, A>, fn: (a: A) => A): (value: S) => S;
+export function over<S, A>(lens: Lens<S, A>, fn: (a: A) => A, value: S): S;
 
 /**
  * It is very similar to `R.curry`, but you can pass initial arguments when you create the curried function.
@@ -1627,6 +1700,9 @@ export function pathOr<T>(defaultValue: T, pathToSearch: Path, obj: any): T;
 export function pathOr<T>(defaultValue: T, pathToSearch: Path): (obj: any) => T;
 export function pathOr<T>(defaultValue: T): (pathToSearch: Path) => (obj: any) => T;
 
+export function pathSatisfies<T, U>(pred: (val: T) => boolean, path: Path): (obj: U) => boolean;
+export function pathSatisfies<T, U>(pred: (val: T) => boolean, path: Path, obj: U): boolean;
+
 /**
  * It loops over members of `pathsToSearch` as `singlePath` and returns the array produced by `R.path(singlePath, Record<string, unknown>)`.
  * 
@@ -1659,6 +1735,9 @@ export function pickAll<T, U>(propsToPicks: string[], input: T): U;
 export function pickAll(propsToPicks: string[]): <T, U>(input: T) => U;
 export function pickAll<T, U>(propsToPick: string, input: T): U;
 export function pickAll<T, U>(propsToPick: string): (input: T) => U;
+
+export function pickBy<T>(pred: ObjPred<T>): <U, V extends T>(obj: V) => U;
+export function pickBy<T, U>(pred: ObjPred<T>, obj: T): U;
 
 /**
  * It performs left-to-right function composition.
@@ -1928,6 +2007,25 @@ export function reduce<T, TResult>(reducer: (prev: TResult, current: T) => TResu
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult): (initialValue: TResult, list: T[]) => TResult;
 export function reduce<T, TResult>(reducer: (prev: TResult, current: T, i: number) => TResult, initialValue: TResult): (list: T[]) => TResult;
 
+export function reduceBy<T, TResult>(
+  valueFn: (acc: TResult, elem: T) => TResult,
+): (a: TResult, b: (elem: T) => string, c: T[]) => { [index: string]: TResult }
+export function reduceBy<T, TResult>(
+  valueFn: (acc: TResult, elem: T) => TResult,
+  acc: TResult,
+): (a: (elem: T) => string, b: T[]) => { [index: string]: TResult }
+export function reduceBy<T, TResult>(
+  valueFn: (acc: TResult, elem: T) => TResult,
+  acc: TResult,
+  keyFn: (elem: T) => string,
+): (list: T[]) => { [index: string]: TResult };
+export function reduceBy<T, TResult>(
+  valueFn: (acc: TResult, elem: T) => TResult,
+  acc: TResult,
+  keyFn: (elem: T) => string,
+  list: T[],
+): { [index: string]: TResult };
+
 /**
  * It has the opposite effect of `R.filter`.
  */
@@ -1999,9 +2097,12 @@ export function reverse(input: string): string;
 /**
  * It returns a copied **Object** or **Array** with modified `lens` focus set to `replacer` value.
  */
-export function set<T, U>(lens: Lens, replacer: U, obj: T): T;
-export function set<U>(lens: Lens, replacer: U): <T>(obj: T) => T;
-export function set(lens: Lens): <T, U>(replacer: U, obj: T) => T;
+export function set<S, A>(lens: Lens<S, A>): {
+  (a: A): (obj: S) => S
+  (a: A, obj: S): S
+};
+export function set<S, A>(lens: Lens<S, A>, a: A): (obj: S) => S;
+export function set<S, A>(lens: Lens<S, A>, a: A, obj: S): S;
 
 export function setter(keyOrObject: string | object, value?: any): void;
 
@@ -2056,6 +2157,9 @@ export function sortByProps(sortPaths: string[]): <T>(list: T[]) => T[];
 export function sortObject<T>(predicate: SortObjectPredicate<T>, input: { [key: string]: T }): { [keyOutput: string]: T };
 export function sortObject<T>(predicate: SortObjectPredicate<T>): (input: { [key: string]: T }) => { [keyOutput: string]: T };
 
+export function sortWith<T>(fns: Array<(a: T, b: T) => number>): (list: T[]) => T[];
+export function sortWith<T>(fns: Array<(a: T, b: T) => number>, list: T[]): T[];
+
 /**
  * Curried version of `String.prototype.split`
  */
@@ -2106,6 +2210,9 @@ export function subtract(x: number, y: number): number;
 export function subtract(x: number): (y: number) => number;
 
 export function sum(list: number[]): number;
+
+export function swap(indexA: number, indexB: number): <T>(list: T[]) => T[];
+export function swap<T>(indexA: number, indexB: number, list: T[]): T[];
 
 /**
  * Edited fork of [Switchem](https://github.com/planttheidea/switchem) library.
@@ -2338,8 +2445,8 @@ export function values<T extends object, K extends keyof T>(obj: T): T[K][];
 /**
  * It returns the value of `lens` focus over `target` object.
  */
-export function view<T, U>(lens: Lens): (target: T) => U;
-export function view<T, U>(lens: Lens, target: T): U;
+export function view<S, A>(lens: Lens<S, A>): (obj: S) => A;
+export function view<S, A>(lens: Lens<S, A>, obj: S): A;
 
 /**
  * A combination between `R.defaultTo` and `R.view.
@@ -2382,6 +2489,10 @@ export function waitFor<T>(
   loops?: number
 ): (input: T) => Promise<boolean>;
 
+/**
+ * It pass `input` to `predicate` function and if the result is `true`, it will return the result of `whenTrueFn(input)`.
+ * If the `predicate` returns `false`, then it will simply return `input`.
+ */
 export function when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U, input: T): T | U;
 export function when<T, U>(predicate: (x: T) => boolean, whenTrueFn: (a: T) => U): (input: T) => T | U;
 export function when<T, U>(predicate: (x: T) => boolean): ((whenTrueFn: (a: T) => U) => (input: T) => T | U);
