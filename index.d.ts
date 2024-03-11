@@ -1302,14 +1302,14 @@ export function mapParallelAsyncWithLimit<T, K>(fn: AsyncIterableIndexed<T, K>, 
  * 
  * All of returned objects will be merged to generate the final result.
  */
-export function mapToObject<T, U>(fn: (input: T) => object|false, list: T[]): U;
-export function mapToObject<T, U>(fn: (input: T) => object|false): (list: T[]) => U;
+export function mapToObject<T, U extends object>(fn: (input: T) => U|false, list: T[]): U;
+export function mapToObject<T, U extends object>(fn: (input: T) => U|false): (list: T[]) => U;
 
 /**
  * Asynchronous version of `R.mapToObject`
  */
-export function mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>;
-export function mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>): (list: T[]) => Promise<U>;
+export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>, list: T[]): Promise<U>;
+export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>): (list: T[]) => Promise<U>;
 
 export function mapcat<T>(x: T): T;
 
