@@ -884,9 +884,11 @@ export function groupWith<T>(compareFn: (x: T, y: T) => boolean): (input: T[]) =
 export function groupWith<T>(compareFn: (x: T, y: T) => boolean, input: T[]): (T[])[];
 export function groupWith<T>(compareFn: (x: T, y: T) => boolean, input: string): string[];
 
-export function gt<T>(x: T): T;
+export function gt<T, U>(x: T, y: U): boolean;
+export function gt<T, U>(x: T): (y: U) => boolean;
 
-export function gte<T>(x: T): T;
+export function gte<T, U>(x: T, y: U): boolean;
+export function gte<T, U>(x: T): (y: U) => boolean;
 
 /**
  * It returns `true` if `obj` has property `prop`.
@@ -1221,7 +1223,8 @@ export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: T[]): boolean;
 export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: T[]) => boolean;
 
-export function lt<T>(x: T): T;
+export function lt<T, U>(x: T, y: U): boolean;
+export function lt<T, U>(x: T): (y: U) => boolean;
 
 /**
  * It returns the result of looping through `iterable` with `fn`.
@@ -1302,14 +1305,18 @@ export function mapParallelAsyncWithLimit<T, K>(fn: AsyncIterableIndexed<T, K>, 
  * 
  * All of returned objects will be merged to generate the final result.
  */
-export function mapToObject<T, U extends object>(fn: (input: T) => U|false, list: T[]): U;
-export function mapToObject<T, U extends object>(fn: (input: T) => U|false): (list: T[]) => U;
+export function mapToObject<T, U extends object>(fn: (input: T) => U|false, list: readonly T[]): U;
+export function mapToObject<T, U extends object>(fn: (input: T) => U|false): (list: readonly T[]) => U;
+export function mapToObject<T, U>(fn: (input: T) => object|false, list: T[]): U;
+export function mapToObject<T, U>(fn: (input: T) => object|false): (list: T[]) => U;
 
 /**
  * Asynchronous version of `R.mapToObject`
  */
-export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>, list: T[]): Promise<U>;
-export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>): (list: T[]) => Promise<U>;
+export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>, list: readonly T[]): Promise<U>;
+export function mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>): (list: readonly T[]) => Promise<U>;
+export function mapToObjectAsync<T, U>(fn: (input: T) => object|false, list: T[]): U;
+export function mapToObjectAsync<T, U>(fn: (input: T) => object|false): (list: T[]) => U;
 
 export function mapcat<T>(x: T): T;
 
@@ -1543,7 +1550,7 @@ export function on<T, U, R>(binaryFn: (a: U, b: U) => R, unaryFn: (value: T) => 
 /**
  * It returns a function, which invokes only once `fn` function.
  */
-export function once<T extends AnyFunction>(func: T): T;
+export function once<T extends AnyFunction, C = unknown>(fn: T, context?: C): T;
 
 /**
  * Logical OR

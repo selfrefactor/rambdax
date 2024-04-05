@@ -1,3 +1,7 @@
+11.1.0
+
+- Sync with `Rambda` version `9.2.0`
+
 11.0.0
 
 - Sync with `Rambda` version `9.1.0`

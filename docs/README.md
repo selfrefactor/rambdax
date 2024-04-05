@@ -4103,6 +4103,8 @@ function parseRegex(maybeRegex){
 export function equals(a, b){
   if (arguments.length === 1) return _b => equals(a, _b)
 
+  if (Object.is(a, b)) return true
+
   const aType = type(a)
 
   if (aType !== type(b)) return false
@@ -4507,7 +4509,7 @@ describe('brute force', () => {
 {
   "ERRORS_MESSAGE_MISMATCH": 0,
   "ERRORS_TYPE_MISMATCH": 0,
-  "RESULTS_MISMATCH": 8,
+  "RESULTS_MISMATCH": 0,
   "SHOULD_NOT_THROW": 0,
   "SHOULD_THROW": 0,
   "TOTAL_TESTS": 289,
@@ -7025,6 +7027,12 @@ export function isEmpty(input){
     return false
   if (!input) return true
 
+  if (type(input.isEmpty) === 'Function') {
+	return input.isEmpty();
+  } else if (input.isEmpty) {
+	return !!input.isEmpty;
+  }
+
   if (inputType === 'Object'){
     return Object.keys(input).length === 0
   }
@@ -7059,6 +7067,10 @@ test('happy', () => {
   expect(isEmpty(0)).toBeFalse()
   expect(isEmpty(NaN)).toBeFalse()
   expect(isEmpty([ '' ])).toBeFalse()
+  expect(isEmpty({ isEmpty: false})).toBeFalse()
+  expect(isEmpty({ isEmpty: () => false})).toBeFalse()
+  expect(isEmpty({ isEmpty: true})).toBeTrue()
+  expect(isEmpty({ isEmpty: () => true})).toBeTrue()
 })
 ```
 
@@ -9831,7 +9843,7 @@ test('fallback to R.mapFastAsync', async () => {
 
 ```typescript
 
-mapToObject<T, U>(fn: (input: T) => object|false, list: T[]): U
+mapToObject<T, U extends object>(fn: (input: T) => U|false, list: readonly T[]): U
 ```
 
 This method allows to generate an object from a list using input function `fn`.
@@ -9952,7 +9964,7 @@ test('bad path', () => {
 
 ```typescript
 
-mapToObjectAsync<T, U>(fn: (input: T) => Promise<object|false>, list: T[]): Promise<U>
+mapToObjectAsync<T, U extends object>(fn: (input: T) => Promise<U|false>, list: readonly T[]): Promise<U>
 ```
 
 Asynchronous version of `R.mapToObject`
@@ -10371,221 +10383,9 @@ test('with empty array', () => {
 
 ### memoize
 
-```typescript
-
-memoize<T, K extends any[]>(fn: (...inputs: K) => T): (...inputs: K) => T
-```
-
 When `fn` is called for a second time with the same input, then the cache result is returned instead of calling again `fn`.
 
-```javascript
-let result = 0
-const fn = (a,b) =>{
-  result++
-
-  return a + b
-}
-const memoized = R.memoize(fn)
-memoized(1, 2)
-memoized(1, 2)
-
-// => `result` is equal to `1`
-```
-
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?let%20result%20%3D%200%0Aconst%20fn%20%3D%20(a%2Cb)%20%3D%3E%7B%0A%20%20result%2B%2B%0A%0A%20%20return%20a%20%2B%20b%0A%7D%0Aconst%20memoized%20%3D%20R.memoize(fn)%0Amemoized(1%2C%202)%0Amemoized(1%2C%202)%0Aconst%20result%20%3D%20%0A%2F%2F%20%3D%3E%20%60result%60%20is%20equal%20to%20%601%60">Try this <strong>R.memoize</strong> example in Rambda REPL</a>
-
-<details>
-
-<summary><strong>R.memoize</strong> source</summary>
-
-```javascript
-import { compose } from './compose.js'
-import { map } from './map.js'
-import { replace } from './replace.js'
-import { sort } from './sort.js'
-import { take } from './take.js'
-import { type } from './type.js'
-
-const cache = {}
-
-const normalizeObject = obj => {
-  const sortFn = (a, b) => a > b ? 1 : -1
-  const willReturn = {}
-  compose(map(prop => willReturn[ prop ] = obj[ prop ]),
-    sort(sortFn))(Object.keys(obj))
-
-  return willReturn
-}
-
-const stringify = a => {
-  const aType = type(a)
-  if (aType === 'String'){
-    return a
-  } else if ([ 'Function', 'Promise' ].includes(aType)){
-    const compacted = replace(
-      /\s{1,}/g, ' ', a.toString()
-    )
-
-    return replace(
-      /\s/g, '_', take(15, compacted)
-    )
-  } else if (aType === 'Object'){
-    return JSON.stringify(normalizeObject(a))
-  }
-
-  return JSON.stringify(a)
-}
-
-const generateProp = (fn, ...inputArguments) => {
-  let propString = ''
-  inputArguments.forEach(inputArgument => {
-    propString += `${ stringify(inputArgument) }_`
-  })
-
-  return `${ propString }${ stringify(fn) }`
-}
-// with weakmaps
-export function memoize(fn, ...inputArguments){
-  if (arguments.length === 1){
-    return (...inputArgumentsHolder) => memoize(fn, ...inputArgumentsHolder)
-  }
-
-  const prop = generateProp(fn, ...inputArguments)
-  if (prop in cache) return cache[ prop ]
-
-  if (type(fn) === 'Async'){
-    return new Promise(resolve => {
-      fn(...inputArguments).then(result => {
-        cache[ prop ] = result
-        resolve(result)
-      })
-    })
-  }
-
-  const result = fn(...inputArguments)
-  cache[ prop ] = result
-
-  return result
-}
-```
-
-</details>
-
-<details>
-
-<summary><strong>Tests</strong></summary>
-
-```javascript
-import { memoize } from './memoize.js'
-
-test('memoize function without input arguments', () => {
-  const fn = () => 4
-  const memoized = memoize(fn)
-  expect(typeof memoized()).toBe('function')
-})
-
-test('happy', () => {
-  let counter = 0
-
-  const fn = ({ a, b, c }) => {
-    counter++
-
-    return a + b - c
-  }
-  const memoized = memoize(fn)
-  expect(memoized({
-    a : 1,
-    c : 3,
-    b : 2,
-  })).toBe(0)
-  expect(counter).toBe(1)
-  expect(memoized({
-    c : 3,
-    a : 1,
-    b : 2,
-  })).toBe(0)
-  expect(counter).toBe(1)
-})
-
-test('normal function', () => {
-  let counter = 0
-  const fn = (a, b) => {
-    counter++
-
-    return a + b
-  }
-  const memoized = memoize(fn)
-  expect(memoized(1, 2)).toBe(3)
-  expect(memoized(1, 2)).toBe(3)
-  expect(memoized(1, 2)).toBe(3)
-  expect(counter).toBe(1)
-  expect(memoized(2, 2)).toBe(4)
-  expect(counter).toBe(2)
-  expect(memoized(1, 2)).toBe(3)
-  expect(counter).toBe(2)
-})
-
-test('async function', async () => {
-  let counter = 0
-  const delay = ms =>
-    new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
-  const fn = async (
-    ms, a, b
-  ) => {
-    await delay(ms)
-    counter++
-
-    return a + b
-  }
-
-  const memoized = memoize(fn)
-  await expect(memoized(
-    100, 1, 2
-  )).resolves.toBe(3)
-  await expect(memoized(
-    100, 1, 2
-  )).resolves.toBe(3)
-  await expect(memoized(
-    100, 1, 2
-  )).resolves.toBe(3)
-  expect(counter).toBe(1)
-  await expect(memoized(
-    100, 2, 2
-  )).resolves.toBe(4)
-  expect(counter).toBe(2)
-  await expect(memoized(
-    100, 1, 2
-  )).resolves.toBe(3)
-  expect(counter).toBe(2)
-})
-
-test('string as argument', () => {
-  let count = 0
-  const foo = 'foo'
-  const tester = memoize(n => {
-    count++
-
-    return `${ n }bar`
-  })
-  tester(foo)
-  tester(foo)
-  tester(foo)
-
-  expect(tester(foo)).toBe('foobar')
-
-  expect(count).toBe(1)
-
-  tester('baz')
-
-  expect(tester('baz')).toBe('bazbar')
-
-  expect(count).toBe(2)
-})
-```
-
-</details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#memoize)
 
@@ -11919,7 +11719,7 @@ This method is also known as P combinator.
 
 ```typescript
 
-once<T extends AnyFunction>(func: T): T
+once<T extends AnyFunction, C = unknown>(fn: T, context?: C): T
 ```
 
 It returns a function, which invokes only once `fn` function.
@@ -11998,6 +11798,17 @@ test('happy path', () => {
     10, 20, 30
   )).toBe(60)
   expect(addOneOnce(40)).toBe(60)
+})
+
+test('with context', () => {
+  const context = { name: 'fris' }
+  const getNameOnce = once(function (){
+    return this.name
+  }, context)
+
+  expect(getNameOnce()).toBe('fris')
+  expect(getNameOnce()).toBe('fris')
+  expect(getNameOnce()).toBe('fris')
 })
 ```
 
@@ -18138,13 +17949,17 @@ const result = [
 <summary><strong>R.unless</strong> source</summary>
 
 ```javascript
-export function unless(predicate, whenFalse){
-  if (arguments.length === 1){
-    return _whenFalse => unless(predicate, _whenFalse)
-  }
+import { curry } from './curry.js'
 
-  return input => predicate(input) ? input : whenFalse(input)
+function unlessFn(
+  predicate, whenFalseFn, input
+){
+  if (predicate(input)) return input
+
+  return whenFalseFn(input)
 }
+
+export const unless = curry(unlessFn)
 ```
 
 </details>
@@ -18167,6 +17982,11 @@ test('happy', () => {
 test('curried', () => {
   const safeIncCurried = unless(isNil)(inc)
   expect(safeIncCurried(null)).toBeNull()
+})
+
+test('with 3 inputs', () => {
+  let result = unless(x => x.startsWith('/'), x=> x.concat('/'), '/api')
+  expect(result).toBe('/api')
 })
 ```
 
@@ -19553,6 +19373,10 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+11.1.0
+
+- Sync with `Rambda` version `9.2.0`
 
 11.0.0
 
