@@ -6,10 +6,10 @@
     "clean": "rm src/_consumeTypings.test.js && rm src/_typings.test.js",
     "build": "yarn build:main&&yarn build:web",
     "docs": "npx docsify-cli init ./docs",
-		"before": "yarn build && yarn docs"
+    "before": "yarn build && yarn docs"
   },
   "typings": "./index.d.ts",
-  "version": "11.0.0",
+  "version": "11.1.0",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.24.4",
