@@ -1,5 +1,7 @@
 11.1.0
 
+- Improve `R.mapToObject` types - [Issue #96](https://github.com/selfrefactor/rambdax/issues/96)
+
 - Sync with `Rambda` version `9.2.0`
 
 11.0.0
