@@ -9121,7 +9121,7 @@ test('get (set(set s v1) v2) === v2', () => {
 
 ```typescript
 
-lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean
+lensSatisfies<PredicateInput, Input>(predicate: (x: PredicateInput) => boolean, lens: Lens<PredicateInput, Input>, input: Input): boolean
 ```
 
 It returns `true` if data structure focused by the given lens satisfies the predicate.
@@ -18333,7 +18333,7 @@ test('happy', () => {
 
 ```typescript
 
-viewOr<Input, Output>(fallback: Output, lens: Lens, input: Input): Output
+viewOr<Input, Output>(fallback: Output, lens: Lens<Input, Output>, input: Input): Output
 ```
 
 A combination between `R.defaultTo` and `R.view.
@@ -19374,7 +19374,13 @@ test('when second list is longer', () => {
 
 ## ❯ CHANGELOG
 
+11.1.1
+
+Fix broken build due to changes to TypeScript definitions for lenses.
+
 11.1.0
+
+- Improve `R.mapToObject` types - [Issue #96](https://github.com/selfrefactor/rambdax/issues/96)
 
 - Sync with `Rambda` version `9.2.0`
 

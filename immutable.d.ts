@@ -1218,10 +1218,10 @@ export function lensProp<S, K extends keyof S = keyof S>(prop: K): Lens<S, S[K]>
 /**
  * It returns `true` if data structure focused by the given lens satisfies the predicate.
  */
-export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens, input: U): boolean;
-export function lensSatisfies<T, U>(predicate: (x: T) => boolean, lens: Lens): (input: U) => boolean;
-export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens, input: readonly T[]): boolean;
-export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens): (input: readonly T[]) => boolean;
+export function lensSatisfies<PredicateInput, Input>(predicate: (x: PredicateInput) => boolean, lens: Lens<PredicateInput, Input>, input: Input): boolean;
+export function lensSatisfies<PredicateInput, Input>(predicate: (x: PredicateInput) => boolean, lens: Lens<PredicateInput, Input>): (input: Input) => boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens<readonly T[], T>, input: readonly T[]): boolean;
+export function lensSatisfies<T>(predicate: (x: T) => boolean, lens: Lens<readonly T[], T>): (input: readonly T[]) => boolean;
 
 export function lt<T, U>(x: T, y: U): boolean;
 export function lt<T, U>(x: T): (y: U) => boolean;
@@ -2458,9 +2458,8 @@ export function view<S, A>(lens: Lens<S, A>, obj: S): A;
 /**
  * A combination between `R.defaultTo` and `R.view.
  */
-export function viewOr<Input, Output>(fallback: Output, lens: Lens, input: Input): Output;
-export function viewOr<Input, Output>(fallback: Output, lens: Lens): (input: Input) =>  Output;
-export function viewOr<Input, Output>(fallback: Output): (lens: Lens) => (input: Input) =>  Output;
+export function viewOr<Input, Output>(fallback: Output, lens: Lens<Input, Output>, input: Input): Output;
+export function viewOr<Input, Output>(fallback: Output, lens: Lens<Input, Output>): (input: Input) =>  Output;
 
 /**
  * It provides `Golang`-like interface for handling promises.
