@@ -1124,13 +1124,13 @@ export function keys<T extends object>(x: T): (keyof T & string)[];
 export function keys<T>(x: T): string[];
 
 /**
- * It returns the last element of `input`, as the `input` can be either a string or an array.
+ * It returns the last element of `input`, as the `input` can be either a string or an array. Returns undefined if array has length 0.
  */
 export function last(str: ''): undefined;
 export function last(str: string): string;
 export function last(list: never[]): undefined;
-export function last<T extends unknown[]>(array: T): LastArrayElement<T>
-export function last<T extends readonly unknown[]>(array: T): LastArrayElement<T>
+export function last<T extends unknown[]>(array: T): LastArrayElement<T> | undefined
+export function last<T extends readonly unknown[]>(array: T): LastArrayElement<T> | undefined
 
 /**
  * It returns the last index of `target` in `list` array.
