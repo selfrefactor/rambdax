@@ -10,7 +10,7 @@
     "before": "yarn build && yarn docs"
   },
   "typings": "./index.d.ts",
-  "version": "11.1.0",
+  "version": "11.1.1",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.24.7",
@@ -28,7 +28,6 @@
   "files": [
     "dist",
     "src",
-    "README.md",
     "CHANGELOG.md",
     "index.d.ts",
     "immutable.d.ts",
