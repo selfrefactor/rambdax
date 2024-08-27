@@ -1,3 +1,9 @@
+11.2.0
+
+- `R.throttle` TS typings now support no argument case for function input.
+
+- Sync with `Rambda` version `9.3.0`
+
 11.1.1
 
 Fix broken build due to changes to TypeScript definitions for lenses.

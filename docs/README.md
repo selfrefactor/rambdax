@@ -4,10 +4,11 @@ Extended version of Rambda(utility library) - [Documentation](https://selfrefact
 
 `Rambda` is smaller and faster  alternative to the popular functional programming library **Ramda**. - [Documentation](https://selfrefactor.github.io/rambda/#/)
 
-[![CircleCI](https://circleci.com/gh/selfrefactor/rambda/tree/master.svg?style=svg)](https://circleci.com/gh/selfrefactor/rambda/tree/master)
+[![install size](https://packagephobia.com/badge?p=rambdax)](https://packagephobia.com/result?p=rambdax)
+[![GitHub contributors](https://img.shields.io/github/contributors/selfrefactor/rambdax.svg)](https://github.com/selfrefactor/rambdax/graphs/contributors)
 [![codecov](https://codecov.io/gh/selfrefactor/rambda/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambda)
 ![Library size](https://img.shields.io/bundlephobia/minzip/rambdax)
-[![install size](https://packagephobia.com/badge?p=rambdax)](https://packagephobia.com/result?p=rambdax)
+[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/rambda)
 
 ## ❯ Differences between Rambda and Rambdax
 
@@ -81,6 +82,12 @@ R.pick('a,b', {a: 1 , b: 2, c: 3} })
 
 If the project is written in Javascript, then `go to source definition` action will lead you to actual implementation of the method.
 
+### Deno support
+
+```
+import * as R from "https://deno.land/x/rambdax/mod.ts";
+```
+
 ### Alternative TS definitions
 
 Alternative TS definitions are available as `rambdax/immutable`. These are Rambdax definitions linted with ESLint `functional/prefer-readonly-type` plugin.
@@ -91,59 +98,57 @@ Alternative TS definitions are available as `rambdax/immutable`. These are Rambd
 
 <details>
 <summary>
-  Click to see the full list of 43 Ramda methods not implemented in Rambda and their status.
+  Click to see the full list of 46 Ramda methods not implemented in Rambda and their status.
 </summary>
 
-- into
-- invert
+- construct - Using classes is not very functional programming oriented.
+- constructN - same as above
+- into - no support for transducer as it is overly complex to implement, understand and read.
+- invert - overly complicated and limited use case
 - invertObj
 - invoker
-- keysIn
+- keysIn - we shouldn't encourage extending object with `.prototype` 
 - lift
 - liftN
-- mapAccum
+- mapAccum - `Ramda` example doesn't looks convincing
 - mapAccumRight
-- memoizeWith
-- mergeDeepWith
+- memoizeWith - hard to imagine its usage in context of `R.pipe`/`R.compose`
+- mergeDeepWith - limited use case
 - mergeDeepWithKey
 - mergeWithKey
-- nAry
-- nthArg
-- o
-- otherwise
-- pair
-- partialRight
-- pathSatisfies
+- nAry - hard to argument about and hard to create meaningful TypeScript definitions
+- nthArg - limited use case
+- o - enough TypeScript issues with `R.pipe`/`R.compose` to add more composition methods
+- otherwise - naming is confusing
+- pair - `left-pad` types of debacles happens partially because of such methods that should not be hidden, bur rather part of your code base even if they need to exist.
+- partialRight - I dislike `R.partial`, so I don't want to add more methods that are based on it
 - pipeWith
-- project
+- project - naming is confusing, but also limited use case
 - promap
-- reduceRight
-- reduceWhile
+- reduceRight - I find `right/left` methods confusing so I added them only where it makes sense.
+- reduceWhile - functions with 4 inputs - I think that even 3 is too much
 - reduced
-- remove
-- scan
+- remove - nice name but it is too generic. Also, `Rambdax` has such method and there it works very differently
+- scan - hard to explain
 - sequence
 - splitWhenever
 - symmetricDifferenceWith
 - andThen
 - toPairsIn
-- unary
-- uncurryN
-- unfold
-- unionWith
-- until
-- useWith
-- valuesIn
-- xprod
-- thunkify
-- default
-
-  Most of above methods are in progress to be added to **Rambda**. The following methods are not going to be added:
-- __ - placeholder method allows user to further customize the method call. While, it seems useful initially, the price is too high in terms of complexity for TypeScript definitions. If it is not easy exressable in TypeScript, it is not worth it as **Rambda** is a TypeScript first library.
-- construct - Using classes is not very functional programming oriented.
-- constructN - same as above
 - transduce - currently is out of focus
 - traverse - same as above
+- unary
+- uncurryN
+- unfold - similar to `R.scan` and I find that it doesn't help with readability
+- unionWith - why it has its usage, I want to limit number of methods that accept more than 2 arguments
+- until
+- useWith - hard to explain
+- valuesIn
+- xprod - limited use case
+- thunkify
+- __ - placeholder method allows user to further customize the method call. While, it seems useful initially, the price is too high in terms of complexity for TypeScript definitions. If it is not easy exressable in TypeScript, it is not worth it as **Rambda** is a TypeScript first library.
+
+The following methods are not going to be added(reason for exclusion is provided as a comment):
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#-missing-ramda-methods)
@@ -199,7 +204,7 @@ There are methods which are benchmarked only with `Ramda` and `Rambda`(i.e. no `
 
 Note that some of these methods, are called with and without curring. This is done in order to give more detailed performance feedback.
 
-The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.29.1).
+The benchmarks results are produced from latest versions of *Rambda*, *Lodash*(4.17.21) and *Ramda*(0.30.1).
 
 </summary>
 
@@ -6146,7 +6151,7 @@ test('when false', () => {
 head(str: string): string
 ```
 
-It returns the first element of list or string `input`.
+It returns the first element of list or string `input`. It returns `undefined` if array has length of 0.
 
 ```javascript
 const result = [
@@ -7027,12 +7032,6 @@ export function isEmpty(input){
     return false
   if (!input) return true
 
-  if (type(input.isEmpty) === 'Function') {
-	return input.isEmpty();
-  } else if (input.isEmpty) {
-	return !!input.isEmpty;
-  }
-
   if (inputType === 'Object'){
     return Object.keys(input).length === 0
   }
@@ -7067,10 +7066,6 @@ test('happy', () => {
   expect(isEmpty(0)).toBeFalse()
   expect(isEmpty(NaN)).toBeFalse()
   expect(isEmpty([ '' ])).toBeFalse()
-  expect(isEmpty({ isEmpty: false})).toBeFalse()
-  expect(isEmpty({ isEmpty: () => false})).toBeFalse()
-  expect(isEmpty({ isEmpty: true})).toBeTrue()
-  expect(isEmpty({ isEmpty: () => true})).toBeTrue()
 })
 ```
 
@@ -7128,6 +7123,15 @@ test('happy', () => {
 </details>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isNil)
+
+### isNotEmpty
+
+```typescript
+
+isNotEmpty<T>(value: T[]): value is NonEmptyArray<T>
+```
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#isNotEmpty)
 
 ### isNotNil
 
@@ -8500,7 +8504,7 @@ test('happy', () => {
 last(str: ''): undefined
 ```
 
-It returns the last element of `input`, as the `input` can be either a string or an array.
+It returns the last element of `input`, as the `input` can be either a string or an array. It returns `undefined` if array has length of 0.
 
 ```javascript
 const result = [
@@ -9196,6 +9200,12 @@ test('with R.lensPath', () => {
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5BR.lt(2%2C%201)%2C%20R.lt(2%2C%203)%5D%0A%2F%2F%20%3D%3E%20%5Bfalse%2C%20true%5D">Try this <strong>R.lt</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lt)
+
+### lte
+
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20%5BR.lte(2%2C%201)%2C%20R.lte(2%2C%202)%2C%20R.lte(2%2C%203)%5D%0A%2F%2F%20%3D%3E%20%5Bfalse%2C%20true%2C%20true%5D">Try this <strong>R.lte</strong> example in Rambda REPL</a>
+
+[![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#lte)
 
 ### map
 
@@ -10913,11 +10923,7 @@ It returns the lesser value between `x` and `y` according to `compareFn` functio
 
 ```typescript
 
-modify<T extends object, K extends keyof T, P>(
-  prop: K,
-  fn: (a: T[K]) => P,
-  obj: T,
-): Omit<T, K> & Record<K, P>
+modify<K extends PropertyKey, T>(prop: K, fn: (value: T) => T): <U extends Record<K, T>>(object: U) => U
 ```
 
 ```javascript
@@ -16964,7 +16970,7 @@ test('throws if first argument is not regex', () => {
 
 ```typescript
 
-throttle<T, U>(fn: (input: T) => U, ms: number): (input: T) => U
+throttle<T>(fn: () => T, ms: number): () => T
 ```
 
 ```javascript
@@ -19374,6 +19380,12 @@ test('when second list is longer', () => {
 
 ## ❯ CHANGELOG
 
+11.2.0
+
+- `R.throttle` TS typings now support no argument case for function input.
+
+- Sync with `Rambda` version `9.3.0`
+
 11.1.1
 
 Fix broken build due to changes to TypeScript definitions for lenses.
@@ -19454,11 +19466,11 @@ From this release, CHANGELOG will simply refer to the `Rambda` version linked to
 
 > Links to Rambda
 
-- [https://github.com/stoeffel/awesome-fp-js](awesome-fp-js)
+- [awesome-fp-js](https://github.com/stoeffel/awesome-fp-js)
 
-- [ https://mailchi.mp/webtoolsweekly/web-tools-280 ]( Web Tools Weekly #280 )
+- [Web Tools Weekly #280](https://mailchi.mp/webtoolsweekly/web-tools-280)
 
-- [https://github.com/docsifyjs/awesome-docsify](awesome-docsify)
+- [awesome-docsify](https://github.com/docsifyjs/awesome-docsify)
 
 > Deprecated from `Used by` section
 

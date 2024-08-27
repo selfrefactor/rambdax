@@ -126,6 +126,14 @@ function anyType(targetType) {
   };
 }
 
+function _defineProperty(e, r, t) {
+  return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
 function ownKeys(e, r) {
   var t = Object.keys(e);
   if (Object.getOwnPropertySymbols) {
@@ -160,20 +168,6 @@ function _toPrimitive(t, r) {
 function _toPropertyKey(t) {
   var i = _toPrimitive(t, "string");
   return "symbol" == typeof i ? i : i + "";
-}
-function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
 }
 
 function _isInteger(n) {
@@ -1226,11 +1220,6 @@ function lensSatisfiesFn(predicate, lens, input) {
   return Boolean(predicate(view(lens, input)));
 }
 const lensSatisfies = curry(lensSatisfiesFn);
-
-function lte(a, b) {
-  if (arguments.length === 1) return _b => lte(a, _b);
-  return a <= b;
-}
 
 function mapKeys(changeKeyFn, obj) {
   if (arguments.length === 1) return _obj => mapKeys(changeKeyFn, _obj);
@@ -2976,11 +2965,6 @@ function isEmpty(input) {
   const inputType = type(input);
   if (['Undefined', 'NaN', 'Number', 'Null'].includes(inputType)) return false;
   if (!input) return true;
-  if (type(input.isEmpty) === 'Function') {
-    return input.isEmpty();
-  } else if (input.isEmpty) {
-    return !!input.isEmpty;
-  }
   if (inputType === 'Object') {
     return Object.keys(input).length === 0;
   }
@@ -2992,6 +2976,10 @@ function isEmpty(input) {
 
 function isNil(x) {
   return x === undefined || x === null;
+}
+
+function isNotEmpty(input) {
+  return !isEmpty(input);
 }
 
 function isNotNil(input) {
@@ -3060,6 +3048,11 @@ function lensProp(key) {
 function lt(a, b) {
   if (arguments.length === 1) return _b => lt(a, _b);
   return a < b;
+}
+
+function lte(a, b) {
+  if (arguments.length === 1) return _b => lte(a, _b);
+  return a <= b;
 }
 
 function match(pattern, input) {
@@ -3907,6 +3900,7 @@ exports.intoFn = intoFn;
 exports.is = is;
 exports.isEmpty = isEmpty;
 exports.isNil = isNil;
+exports.isNotEmpty = isNotEmpty;
 exports.isNotNil = isNotNil;
 exports.isPromise = isPromise;
 exports.isPrototype = isPrototype;
