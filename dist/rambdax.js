@@ -303,9 +303,7 @@ const reduce = curry(reduceFn);
 const reduceStopper = value => new ReduceStopper(value);
 
 function pipeAsync(...fnList) {
-  return function (startArgument) {
-    return reduce(async (value, fn) => fn(await value), startArgument, fnList);
-  };
+  return startArgument => reduce(async (value, fn) => fn(await value), startArgument, fnList);
 }
 
 function composeAsync(...fnList) {
@@ -746,210 +744,6 @@ function interpolate(input, templateInput) {
   return inputHolder;
 }
 
-function _arity(n, fn) {
-  switch (n) {
-    case 0:
-      return function () {
-        return fn.apply(this, arguments);
-      };
-    case 1:
-      return function (_1) {
-        return fn.apply(this, arguments);
-      };
-    case 2:
-      return function (_1, _2) {
-        return fn.apply(this, arguments);
-      };
-    case 3:
-      return function (_1, _2, _3) {
-        return fn.apply(this, arguments);
-      };
-    case 4:
-      return function (_1, _2, _3, _4) {
-        return fn.apply(this, arguments);
-      };
-    case 5:
-      return function (_1, _2, _3, _4, _5) {
-        return fn.apply(this, arguments);
-      };
-    case 6:
-      return function (_1, _2, _3, _4, _5, _6) {
-        return fn.apply(this, arguments);
-      };
-    case 7:
-      return function (_1, _2, _3, _4, _5, _6, _7) {
-        return fn.apply(this, arguments);
-      };
-    case 8:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8) {
-        return fn.apply(this, arguments);
-      };
-    case 9:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9) {
-        return fn.apply(this, arguments);
-      };
-    default:
-      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) {
-        return fn.apply(this, arguments);
-      };
-  }
-}
-
-function _curryN(n, cache, fn) {
-  return function () {
-    let ci = 0;
-    let ai = 0;
-    const cl = cache.length;
-    const al = arguments.length;
-    const args = new Array(cl + al);
-    while (ci < cl) {
-      args[ci] = cache[ci];
-      ci++;
-    }
-    while (ai < al) {
-      args[cl + ai] = arguments[ai];
-      ai++;
-    }
-    const remaining = n - args.length;
-    return args.length >= n ? fn.apply(this, args) : _arity(remaining, _curryN(n, args, fn));
-  };
-}
-function curryN(n, fn) {
-  if (arguments.length === 1) return _fn => curryN(n, _fn);
-  if (n > 10) {
-    throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
-  }
-  return _arity(n, _curryN(n, [], fn));
-}
-
-function bind(fn, thisObj) {
-  if (arguments.length === 1) {
-    return _thisObj => bind(fn, _thisObj);
-  }
-  return curryN(fn.length, (...args) => fn.apply(thisObj, args));
-}
-
-function identity(x) {
-  return x;
-}
-
-const symIterator = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
-function _xArrayReduce(xf, acc, list) {
-  let idx = 0;
-  const len = list.length;
-  while (idx < len) {
-    var _acc;
-    acc = xf['@@transducer/step'](acc, list[idx]);
-    if ((_acc = acc) !== null && _acc !== void 0 && _acc['@@transducer/reduced']) {
-      acc = acc['@@transducer/value'];
-      break;
-    }
-    idx += 1;
-  }
-  return xf['@@transducer/result'](acc);
-}
-function _createReduce(arrayReduce, methodReduce, iterableReduce) {
-  return function _reduce(xf, acc, list) {
-    if (_isArrayLike(list)) {
-      return arrayReduce(xf, acc, list);
-    }
-    if (list == null) {
-      return acc;
-    }
-    if (list[symIterator] != null) {
-      return iterableReduce(xf, acc, list[symIterator]());
-    }
-    if (typeof list.next === 'function') {
-      return iterableReduce(xf, acc, list);
-    }
-    if (typeof list.reduce === 'function') {
-      return methodReduce(xf, acc, list, 'reduce');
-    }
-    throw new TypeError('reduce: list must be array or iterable');
-  };
-}
-function _xIterableReduce(xf, acc, iter) {
-  let step = iter.next();
-  while (!step.done) {
-    var _acc2;
-    acc = xf['@@transducer/step'](acc, step.value);
-    if ((_acc2 = acc) !== null && _acc2 !== void 0 && _acc2['@@transducer/reduced']) {
-      acc = acc['@@transducer/value'];
-      break;
-    }
-    step = iter.next();
-  }
-  return xf['@@transducer/result'](acc);
-}
-function _xMethodReduce(xf, acc, obj, methodName) {
-  return xf['@@transducer/result'](obj[methodName](bind(xf['@@transducer/step'], xf), acc));
-}
-const _xReduce = _createReduce(_xArrayReduce, _xMethodReduce, _xIterableReduce);
-function _isTransformer(obj) {
-  return obj != null && typeof obj['@@transducer/step'] === 'function';
-}
-function _isArrayLike(x) {
-  if (isArray(x)) {
-    return true;
-  }
-  if (!x) {
-    return false;
-  }
-  if (typeof x !== 'object') {
-    return false;
-  }
-  if (typeof x === 'string') {
-    return false;
-  }
-  if (x.length === 0) {
-    return true;
-  }
-  if (x.length > 0) {
-    return x.hasOwnProperty(0) && x.hasOwnProperty(x.length - 1);
-  }
-  return false;
-}
-const _stepCatArray = {
-  '@@transducer/init': Array,
-  '@@transducer/step': (xs, x) => {
-    xs.push(x);
-    return xs;
-  },
-  '@@transducer/result': identity
-};
-const _stepCatString = {
-  '@@transducer/init': String,
-  '@@transducer/step': (a, b) => a + b,
-  '@@transducer/result': identity
-};
-const _stepCatObject = {
-  '@@transducer/init': Object,
-  '@@transducer/step': (result, input) => Object.assign(result, _isArrayLike(input) ? {
-    [input[0]]: input[1]
-  } : input),
-  '@@transducer/result': identity
-};
-function _stepCat(obj) {
-  if (_isTransformer(obj)) {
-    return obj;
-  }
-  if (_isArrayLike(obj)) {
-    return _stepCatArray;
-  }
-  if (typeof obj === 'string') {
-    return _stepCatString;
-  }
-  if (typeof obj === 'object') {
-    return _stepCatObject;
-  }
-  throw new Error(`Cannot create transformer for ${obj}`);
-}
-function intoFn(acc, transducer, list) {
-  const xf = transducer(_isTransformer(acc) ? acc : _stepCat(acc));
-  return _xReduce(xf, xf['@@transducer/init'](), list);
-}
-const into = curry(intoFn);
-
 function isPromise(x) {
   return type(x) === 'Promise';
 }
@@ -1376,6 +1170,55 @@ function maybe(ifRule, whenIf, whenElse) {
   const whenIfInput = ifRule && type(whenIf) === 'Function' ? whenIf() : whenIf;
   const whenElseInput = !ifRule && type(whenElse) === 'Function' ? whenElse() : whenElse;
   return ifRule ? whenIfInput : whenElseInput;
+}
+
+function _arity(n, fn) {
+  switch (n) {
+    case 0:
+      return function () {
+        return fn.apply(this, arguments);
+      };
+    case 1:
+      return function (_1) {
+        return fn.apply(this, arguments);
+      };
+    case 2:
+      return function (_1, _2) {
+        return fn.apply(this, arguments);
+      };
+    case 3:
+      return function (_1, _2, _3) {
+        return fn.apply(this, arguments);
+      };
+    case 4:
+      return function (_1, _2, _3, _4) {
+        return fn.apply(this, arguments);
+      };
+    case 5:
+      return function (_1, _2, _3, _4, _5) {
+        return fn.apply(this, arguments);
+      };
+    case 6:
+      return function (_1, _2, _3, _4, _5, _6) {
+        return fn.apply(this, arguments);
+      };
+    case 7:
+      return function (_1, _2, _3, _4, _5, _6, _7) {
+        return fn.apply(this, arguments);
+      };
+    case 8:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8) {
+        return fn.apply(this, arguments);
+      };
+    case 9:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9) {
+        return fn.apply(this, arguments);
+      };
+    default:
+      return function (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) {
+        return fn.apply(this, arguments);
+      };
+  }
 }
 
 function _pipe(f, g) {
@@ -2021,6 +1864,33 @@ function _concat(set1, set2) {
   return result;
 }
 
+function _curryN(n, cache, fn) {
+  return function () {
+    let ci = 0;
+    let ai = 0;
+    const cl = cache.length;
+    const al = arguments.length;
+    const args = new Array(cl + al);
+    while (ci < cl) {
+      args[ci] = cache[ci];
+      ci++;
+    }
+    while (ai < al) {
+      args[cl + ai] = arguments[ai];
+      ai++;
+    }
+    const remaining = n - args.length;
+    return args.length >= n ? fn.apply(this, args) : _arity(remaining, _curryN(n, args, fn));
+  };
+}
+function curryN(n, fn) {
+  if (arguments.length === 1) return _fn => curryN(n, _fn);
+  if (n > 10) {
+    throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
+  }
+  return _arity(n, _curryN(n, [], fn));
+}
+
 function addIndex(originalFunction, initialIndexFn = () => 0, loopIndexChange = x => x + 1) {
   return curryN(originalFunction.length, function () {
     const origFn = arguments[0];
@@ -2212,6 +2082,13 @@ function binary(fn) {
   return (a, b) => fn(a, b);
 }
 
+function bind(fn, thisObj) {
+  if (arguments.length === 1) {
+    return _thisObj => bind(fn, _thisObj);
+  }
+  return curryN(fn.length, (...args) => fn.apply(thisObj, args));
+}
+
 function both(f, g) {
   if (arguments.length === 1) return _g => both(f, _g);
   return (...input) => f(...input) && g(...input);
@@ -2268,6 +2145,10 @@ function complement(fn) {
 function head(listOrString) {
   if (typeof listOrString === 'string') return listOrString[0] || '';
   return listOrString[0];
+}
+
+function identity(x) {
+  return x;
 }
 
 function reverse(listOrString) {
@@ -3895,8 +3776,6 @@ exports.insertFn = insertFn;
 exports.interpolate = interpolate;
 exports.intersection = intersection;
 exports.intersperse = intersperse;
-exports.into = into;
-exports.intoFn = intoFn;
 exports.is = is;
 exports.isEmpty = isEmpty;
 exports.isNil = isNil;
