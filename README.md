@@ -2139,7 +2139,7 @@ test('restructure json object', () => {
 
 ### ascend
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.sort(%0A%20%20R.ascend(x%20%3D%3E%20x)%2C%0A%20%20%5B2%2C%201%5D%0A)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.ascend</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.sort(R.descend(x%20%3D%3E%20x)%2C%20%5B2%2C%201%5D)%0A%2F%2F%20%3D%3E%20%5B1%2C%202%5D">Try this <strong>R.ascend</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#ascend)
 
@@ -2169,11 +2169,11 @@ const path = 'b.c'
 const newValue = 2
 const obj = { a: 1 }
 
-R.assocPath(path, newValue, Record<string, unknown>)
+const result = R.assocPath(path, newValue, obj)
 // => { a : 1, b : { c : 2 }}
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20path%20%3D%20'b.c'%0Aconst%20newValue%20%3D%202%0Aconst%20obj%20%3D%20%7B%20a%3A%201%20%7D%0A%0Aconst%20result%20%3D%20R.assocPath(path%2C%20newValue%2C%20Record%3Cstring%2C%20unknown%3E)%0A%2F%2F%20%3D%3E%20%7B%20a%20%3A%201%2C%20b%20%3A%20%7B%20c%20%3A%202%20%7D%7D">Try this <strong>R.assocPath</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20path%20%3D%20'b.c'%0Aconst%20newValue%20%3D%202%0Aconst%20obj%20%3D%20%7B%20a%3A%201%20%7D%0A%0Aconst%20result%20%3D%20R.assocPath(path%2C%20newValue%2C%20obj)%0A%2F%2F%20%3D%3E%20%7B%20a%20%3A%201%2C%20b%20%3A%20%7B%20c%20%3A%202%20%7D%7D">Try this <strong>R.assocPath</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -2237,7 +2237,7 @@ export const assocPath = curry(assocPathFn)
 ```javascript
 import { assocPathFn } from './assocPath.js'
 
-test.only('happy', () => {
+test('happy', () => {
   const path = 'a.c.1'
   const input = {
     a : {
@@ -2278,7 +2278,7 @@ test('string can be used as path input', () => {
 
 test('difference with ramda - doesn\'t overwrite primitive values with keys in the path', () => {
   const obj = { a : 'str' }
-  const result = assocPath(
+  const result = assocPathFn(
     [ 'a', 'b' ], 42, obj
   )
 
@@ -2292,35 +2292,14 @@ test('difference with ramda - doesn\'t overwrite primitive values with keys in t
   })
 })
 
-test('bug', () => {
-  /*
-    https://github.com/selfrefactor/rambda/issues/524
-  */
-  const state = {}
-
-  const withDateLike = assocPath(
-    [ 'outerProp', '2020-03-10' ],
-    { prop : 2 },
-    state
-  )
-  const withNumber = assocPath(
-    [ 'outerProp', '5' ], { prop : 2 }, state
-  )
-
-  const withDateLikeExpected = { outerProp : { '2020-03-10' : { prop : 2 } } }
-  const withNumberExpected = { outerProp : { 5 : { prop : 2 } } }
-  expect(withDateLike).toEqual(withDateLikeExpected)
-  expect(withNumber).toEqual(withNumberExpected)
-})
-
 test('adds a key to an empty object', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     [ 'a' ], 1, {}
   )).toEqual({ a : 1 })
 })
 
 test('adds a key to a non-empty object', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'b', 2, { a : 1 }
   )).toEqual({
     a : 1,
@@ -2329,7 +2308,7 @@ test('adds a key to a non-empty object', () => {
 })
 
 test('adds a nested key to a non-empty object', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'b.c', 2, { a : 1 }
   )).toEqual({
     a : 1,
@@ -2337,9 +2316,9 @@ test('adds a nested key to a non-empty object', () => {
   })
 })
 
-test('adds a nested key to a nested non-empty object - curry case 1', () => {
-  expect(assocPath('b.d',
-    3)({
+test('adds a nested key to a nested non-empty object', () => {
+  expect(assocPathFn('b.d',
+    3,{
     a : 1,
     b : { c : 2 },
   })).toEqual({
@@ -2351,74 +2330,58 @@ test('adds a nested key to a nested non-empty object - curry case 1', () => {
   })
 })
 
-test('adds a key to a non-empty object - curry case 1', () => {
-  expect(assocPath('b', 2)({ a : 1 })).toEqual({
+test('adds a key to a non-empty object', () => {
+  expect(assocPathFn('b', 2, { a : 1 })).toEqual({
     a : 1,
     b : 2,
   })
 })
 
-test('adds a nested key to a non-empty object - curry case 1', () => {
-  expect(assocPath('b.c', 2)({ a : 1 })).toEqual({
+test('adds a nested key to a non-empty object', () => {
+  expect(assocPathFn('b.c', 2, { a : 1 })).toEqual({
     a : 1,
     b : { c : 2 },
   })
 })
 
-test('adds a key to a non-empty object - curry case 2', () => {
-  expect(assocPath('b')(2, { a : 1 })).toEqual({
-    a : 1,
-    b : 2,
-  })
-})
-
-test('adds a key to a non-empty object - curry case 3', () => {
-  const result = assocPath('b')(2)({ a : 1 })
-
-  expect(result).toEqual({
-    a : 1,
-    b : 2,
-  })
-})
-
 test('changes an existing key', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', 2, { a : 1 }
   )).toEqual({ a : 2 })
 })
 
 test('undefined is considered an empty object', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', 1, undefined
   )).toEqual({ a : 1 })
 })
 
 test('null is considered an empty object', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', 1, null
   )).toEqual({ a : 1 })
 })
 
 test('value can be null', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', null, null
   )).toEqual({ a : null })
 })
 
 test('value can be undefined', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', undefined, null
   )).toEqual({ a : undefined })
 })
 
 test('assignment is shallow', () => {
-  expect(assocPath(
+  expect(assocPathFn(
     'a', { b : 2 }, { a : { c : 3 } }
   )).toEqual({ a : { b : 2 } })
 })
 
 test('empty array as path', () => {
-  const result = assocPath(
+  const result = assocPathFn(
     [], 3, {
       a : 1,
       b : 2,
@@ -2429,7 +2392,7 @@ test('empty array as path', () => {
 
 test('happy', () => {
   const expected = { foo : { bar : { baz : 42 } } }
-  const result = assocPath(
+  const result = assocPathFn(
     [ 'foo', 'bar', 'baz' ], 42, { foo : null }
   )
   expect(result).toEqual(expected)
@@ -3313,7 +3276,7 @@ test('usage with variables', async () => {
 
 ### descend
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?R.sort(%0A%20%20R.descend(x%20%3D%3E%20x)%2C%0A%20%20%5B1%2C%202%5D%0Aconst%20result%20%3D%20)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%5D">Try this <strong>R.descend</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20result%20%3D%20R.sort(R.descend(x%20%3D%3E%20x)%2C%20%5B1%2C%202%5D)%0A%2F%2F%20%3D%3E%20%5B2%2C%201%5D">Try this <strong>R.descend</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#descend)
 
@@ -3428,7 +3391,7 @@ export function differenceWithFn(
   fn, a, b
 ){
   const willReturn = []
-  const [ first, second ] = a.length > b.length ? [ a, b ] : [ b, a ]
+  const [ first, second ] = a.length >= b.length ? [ a, b ] : [ b, a ]
 
   first.forEach(item => {
     const hasItem = second.some(secondItem => fn(item, secondItem))
@@ -3450,19 +3413,21 @@ export const differenceWith = curry(differenceWithFn)
 <summary><strong>Tests</strong></summary>
 
 ```javascript
-import { differenceWith } from './differenceWith.js'
+import { differenceWith } from './differenceWith.js';
 
-test('happy', () => {
-  const foo = [ { a : 1 }, { a : 2 }, { a : 3 } ]
-  const bar = [ { a : 3 }, { a : 4 } ]
-  const fn = function (r, s){
-    return r.a === s.a
-  }
-  const result = differenceWith(
-    fn, foo, bar
-  )
-  expect(result).toEqual([ { a : 1 }, { a : 2 } ])
-})
+const fn = (a, b) => a.x === b.x;
+
+test('same length of list', () => {
+	const result = differenceWith(fn, [{ x: 1 }, { x: 2 }], [{ x: 1 }, { x: 3 }]);
+	expect(result).toEqual([{ x: 2 }]);
+});
+
+test('different length of list', () => {
+	const foo = [{ x: 1 }, { x: 2 }, { x: 3 }];
+	const bar = [{ x: 3 }, { x: 4 }];
+	const result = differenceWith(fn, foo, bar);
+	expect(result).toEqual([{ x: 1 }, { x: 2 }]);
+});
 ```
 
 </details>
@@ -5982,7 +5947,7 @@ It splits `list` according to a provided `groupFn` function and returns an objec
 
 It returns separated version of list or string `input`, where separation is done with equality `compareFn` function.
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20compareFn%20%3D%20(x%2C%20y)%20%3D%3E%20x%20%3D%3D%3D%20y%0Aconst%20list%20%3D%20%5B1%2C%202%2C%202%2C%201%2C%201%2C%202%5D%0A%0Aconst%20result%20%3D%20R.groupWith(isConsecutive%2C%20list)%0A%2F%2F%20%3D%3E%20%5B%5B1%5D%2C%20%5B2%2C2%5D%2C%20%5B1%2C1%5D%2C%20%5B2%5D%5D">Try this <strong>R.groupWith</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20isConsecutive%20%3D%20(x%2C%20y)%20%3D%3E%20x%20%3D%3D%3D%20y%0Aconst%20list%20%3D%20%5B1%2C%202%2C%202%2C%201%2C%201%2C%202%5D%0A%0Aconst%20result%20%3D%20R.groupWith(isConsecutive%2C%20list)%0A%2F%2F%20%3D%3E%20%5B%5B1%5D%2C%20%5B2%2C2%5D%2C%20%5B1%2C1%5D%2C%20%5B2%5D%5D">Try this <strong>R.groupWith</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#groupWith)
 
@@ -6293,10 +6258,9 @@ function ifElseFn(
   condition, onTrue, onFalse
 ){
   return (...input) => {
-    const conditionResult =
+		const conditionResult =
       typeof condition === 'boolean' ? condition : condition(...input)
-
-    if (conditionResult === true){
+    if (Boolean(conditionResult) ){
       return onTrue(...input)
     }
 
@@ -6319,6 +6283,7 @@ import { has } from './has.js'
 import { identity } from './identity.js'
 import { ifElse } from './ifElse.js'
 import { prop } from './prop.js'
+import * as R from 'ramda'
 
 const condition = has('foo')
 const v = function (a){
@@ -6405,6 +6370,17 @@ test('simple arity of 2', () => {
     condition, onTrue, onFalse
   )(1, 10)
   expect(result).toBe(12)
+})
+
+test('bug 750', () => {
+	const value = 34;
+
+	let result = ifElse(
+	R.identity,
+	R.always('true'),
+	R.always('false')
+	)(value)
+	expect(result).toBe('true')
 })
 ```
 
@@ -9229,13 +9205,13 @@ const iterable = [1, 2]
 const obj = {a: 1, b: 2}
 
 const result = [ 
-  R.map(fn, list),
-  R.map(fnWhenObject, Record<string, unknown>)
+  R.map(fn, iterable),
+  R.map(fnWhenObject, obj)
 ]
-// => [ [1, 4], {a: 'a-1', b: 'b-2'}]
+// => [ [2, 4], {a: 'a-1', b: 'b-2'}]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20*%202%0Aconst%20fnWhenObject%20%3D%20(val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20iterable%20%3D%20%5B1%2C%202%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20%5B%20%0A%20%20R.map(fn%2C%20list)%2C%0A%20%20R.map(fnWhenObject%2C%20Record%3Cstring%2C%20unknown%3E)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%20%5B1%2C%204%5D%2C%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D%5D">Try this <strong>R.map</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20x%20%3D%3E%20x%20*%202%0Aconst%20fnWhenObject%20%3D%20(val%2C%20prop)%3D%3E%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20iterable%20%3D%20%5B1%2C%202%5D%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20%5B%20%0A%20%20R.map(fn%2C%20iterable)%2C%0A%20%20R.map(fnWhenObject%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B%20%5B2%2C%204%5D%2C%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D%5D">Try this <strong>R.map</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -9614,7 +9590,7 @@ const result = R.mapObject(x => x + 1, {a:1, b:2})
 
 It works the same way as `R.map` does for objects. It is added as Ramda also has this method.
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20(val%2C%20prop)%20%3D%3E%20%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20R.map(mapObjIndexed%2C%20Record%3Cstring%2C%20unknown%3E)%0A%2F%2F%20%3D%3E%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D">Try this <strong>R.mapObjIndexed</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20fn%20%3D%20(val%2C%20prop)%20%3D%3E%20%7B%0A%20%20return%20%60%24%7Bprop%7D-%24%7Bval%7D%60%0A%7D%0A%0Aconst%20obj%20%3D%20%7Ba%3A%201%2C%20b%3A%202%7D%0A%0Aconst%20result%20%3D%20R.mapObjIndexed(fn%2C%20obj)%0A%2F%2F%20%3D%3E%20%7Ba%3A%20'a-1'%2C%20b%3A%20'b-2'%7D">Try this <strong>R.mapObjIndexed</strong> example in Rambda REPL</a>
 
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#mapObjIndexed)
 
@@ -12478,14 +12454,14 @@ const pathToSearch = 'a.b'
 const pathToSearchList = ['a', 'b']
 
 const result = [
-  R.path(pathToSearch, Record<string, unknown>),
-  R.path(pathToSearchList, Record<string, unknown>),
-  R.path('a.b.c.d', Record<string, unknown>)
+  R.path(pathToSearch, obj),
+  R.path(pathToSearchList, obj),
+  R.path('a.b.c.d', obj)
 ]
 // => [1, 1, undefined]
 ```
 
-<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7Ba%3A%20%7Bb%3A%201%7D%7D%0Aconst%20pathToSearch%20%3D%20'a.b'%0Aconst%20pathToSearchList%20%3D%20%5B'a'%2C%20'b'%5D%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.path(pathToSearch%2C%20Record%3Cstring%2C%20unknown%3E)%2C%0A%20%20R.path(pathToSearchList%2C%20Record%3Cstring%2C%20unknown%3E)%2C%0A%20%20R.path('a.b.c.d'%2C%20Record%3Cstring%2C%20unknown%3E)%0A%5D%0A%2F%2F%20%3D%3E%20%5B1%2C%201%2C%20undefined%5D">Try this <strong>R.path</strong> example in Rambda REPL</a>
+<a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20obj%20%3D%20%7Ba%3A%20%7Bb%3A%201%7D%7D%0Aconst%20pathToSearch%20%3D%20'a.b'%0Aconst%20pathToSearchList%20%3D%20%5B'a'%2C%20'b'%5D%0A%0Aconst%20result%20%3D%20%5B%0A%20%20R.path(pathToSearch%2C%20obj)%2C%0A%20%20R.path(pathToSearchList%2C%20obj)%2C%0A%20%20R.path('a.b.c.d'%2C%20obj)%0A%5D%0A%2F%2F%20%3D%3E%20%5B1%2C%201%2C%20undefined%5D">Try this <strong>R.path</strong> example in Rambda REPL</a>
 
 <details>
 
@@ -12553,10 +12529,12 @@ test('works with string instead of array', () => {
 
 test('path', () => {
   expect(path([ 'foo', 'bar', 'baz' ])({ foo : { bar : { baz : 'yes' } } })).toBe('yes')
-
   expect(path([ 'foo', 'bar', 'baz' ])(null)).toBeUndefined()
-
   expect(path([ 'foo', 'bar', 'baz' ])({ foo : { bar : 'baz' } })).toBeUndefined()
+})
+
+test('with number string in between', () => {
+	expect(path(['a','1','b'], {a: [{b: 1}, {b: 2}]})).toBe(2)
 })
 
 test('null is not a valid path', () => {
@@ -13182,7 +13160,7 @@ It performs left-to-right function composition.
 
 ### pipeAsync
 
-Asynchronous version of `R.pipe`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
+Asynchronous version of `R.pipe`, but it accepts only one argument as input(instead of multiple as regular `pipe`). It `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
 
 <a title="redirect to Rambda Repl site" href="https://rambda.now.sh?const%20add%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20%2B%201%0A%7D%0Aconst%20multiply%20%3D%20async%20x%20%3D%3E%20%7B%0A%20%20await%20R.delay(100)%0A%20%20return%20x%20*%202%20%0A%7D%0A%0Aconst%20result%20%3D%20await%20R.pipeAsync(%0A%20%20add%2C%0A%20%20multiply%0A)(1)%0A%2F%2F%20%60result%60%20resolves%20to%20%604%60">Try this <strong>R.pipeAsync</strong> example in Rambda REPL</a>
 
@@ -19378,6 +19356,12 @@ test('when second list is longer', () => {
 [![---------------](https://raw.githubusercontent.com/selfrefactor/rambda/master/files/separator.png)](#zipWith)
 
 ## ❯ CHANGELOG
+
+11.3.0
+
+- Fix `deno` release
+
+- Sync with `Rambda` version `9.4.0`
 
 11.2.0
 

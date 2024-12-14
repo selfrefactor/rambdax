@@ -1,3 +1,9 @@
+11.3.0
+
+- Fix `deno` release
+
+- Sync with `Rambda` version `9.4.0`
+
 11.2.0
 
 - `R.throttle` TS typings now support no argument case for function input.

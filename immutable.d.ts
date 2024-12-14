@@ -876,10 +876,8 @@ export function glue(input: string, glueString?: string): string;
 /**
  * It splits `list` according to a provided `groupFn` function and returns an object.
  */
-export function groupBy<T>(groupFn: (x: T) => string, list: readonly T[]): { readonly [index: string]: readonly T[] };
-export function groupBy<T>(groupFn: (x: T) => string): (list: readonly T[]) => { readonly [index: string]: readonly T[] };
-export function groupBy<T, U>(groupFn: (x: T) => string, list: readonly T[]): U;
-export function groupBy<T, U>(groupFn: (x: T) => string): (list: readonly T[]) => U;
+export function groupBy<T, K extends string = string>(fn: (a: T) => K): (list: readonly T[]) => Partial<Record<K, readonly T[]>>;
+export function groupBy<T, K extends string = string>(fn: (a: T) => K, list: readonly T[]): Partial<Record<K, readonly T[]>>;
 
 /**
  * It returns separated version of list or string `input`, where separation is done with equality `compareFn` function.
@@ -1817,7 +1815,7 @@ export function pipe<TArgs extends readonly any[], R1>(
 ): (...args: TArgs) => R1;
 
 /**
- * Asynchronous version of `R.pipe`. `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
+ * Asynchronous version of `R.pipe`, but it accepts only one argument as input(instead of multiple as regular `pipe`). It `await`s the result of each function before passing it to the next. Returns a `Promise` of the result.
  */
 export function pipeAsync<TArg, R1, R2, R3, R4, R5, R6, R7, TResult>(
   ...funcs: readonly [

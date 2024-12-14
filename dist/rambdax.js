@@ -2301,7 +2301,7 @@ function difference(a, b) {
 
 function differenceWithFn(fn, a, b) {
   const willReturn = [];
-  const [first, second] = a.length > b.length ? [a, b] : [b, a];
+  const [first, second] = a.length >= b.length ? [a, b] : [b, a];
   first.forEach(item => {
     const hasItem = second.some(secondItem => fn(item, secondItem));
     if (!hasItem && _indexOf(item, willReturn) === -1) {
@@ -2743,7 +2743,7 @@ function identical(a, b) {
 function ifElseFn(condition, onTrue, onFalse) {
   return (...input) => {
     const conditionResult = typeof condition === 'boolean' ? condition : condition(...input);
-    if (conditionResult === true) {
+    if (Boolean(conditionResult)) {
       return onTrue(...input);
     }
     return onFalse(...input);
