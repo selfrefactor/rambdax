@@ -10,7 +10,7 @@
     "before": "yarn build && yarn docs"
   },
   "typings": "./index.d.ts",
-  "version": "11.2.0",
+  "version": "11.3.0",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.26.0",
