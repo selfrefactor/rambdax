@@ -7,7 +7,7 @@
     "build": "yarn build:main&&yarn build:web"
   },
   "typings": "./index.d.ts",
-  "version": "11.3.0",
+  "version": "11.3.1",
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.26.0",
