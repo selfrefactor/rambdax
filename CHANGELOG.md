@@ -1,8 +1,12 @@
+11.3.1
+
+- Sync with `Rambda` version `9.4.2`
+
 11.3.0
 
 - Fix `deno` release
 
-- Sync with `Rambda` version `9.4.0`
+- Sync with `Rambda` version `9.4.1`
 
 11.2.0
 

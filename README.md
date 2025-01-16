@@ -16439,7 +16439,7 @@ test('tail', () => {
 
 ```typescript
 
-take<T>(howMany: number, input: T[]): T[]
+take<T>(howMany: number, input: T): T extends string ? string : T
 ```
 
 It returns the first `howMany` elements of `input`.
@@ -16515,7 +16515,7 @@ test('with zero index', () => {
 
 ```typescript
 
-takeLast<T>(howMany: number, input: T[]): T[]
+takeLast<T>(howMany: number, input: T): T extends string ? string : T
 ```
 
 It returns the last `howMany` elements of `input`.
@@ -19357,11 +19357,15 @@ test('when second list is longer', () => {
 
 ## ❯ CHANGELOG
 
+11.3.1
+
+- Sync with `Rambda` version `9.4.2`
+
 11.3.0
 
 - Fix `deno` release
 
-- Sync with `Rambda` version `9.4.0`
+- Sync with `Rambda` version `9.4.1`
 
 11.2.0
 

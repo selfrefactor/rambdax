@@ -4,10 +4,7 @@
     "build:main": "NODE_ENV=build rollup -c rollup.config.mjs",
     "build:web": "NODE_ENV=build rollup -c rollup.web.config.mjs",
     "clean": "rm src/_consumeTypings.test.js && rm src/_typings.test.js",
-    "build": "yarn build:main&&yarn build:web",
-    "docs": "npx docsify-cli init ./docs && yarn fix-docsify",
-    "fix-docsify": "cd ../rambda-scripts && yarn fix-docsify:rambdax",
-    "before": "yarn build && yarn docs"
+    "build": "yarn build:main&&yarn build:web"
   },
   "typings": "./index.d.ts",
   "version": "11.3.0",
