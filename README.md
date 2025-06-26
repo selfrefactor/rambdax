@@ -9,6 +9,11 @@ Extended version of Rambda(utility library) - [Documentation](https://selfrefact
 [![codecov](https://codecov.io/gh/selfrefactor/rambda/branch/master/graph/badge.svg)](https://codecov.io/gh/selfrefactor/rambda)
 ![Library size](https://img.shields.io/bundlephobia/minzip/rambdax)
 
+## Status
+
+Some methods are moved in `Rambda` version 10.0.0 and now this library in not in active development, but please feel free to file issue for any bug that you find.
+My suggestion is to look at `Rambda` as now it holds most of the important methods of `Rambdax`.
+
 ## ❯ Differences between Rambda and Rambdax
 
 Rambdax passthrough all [Rambda](https://github.com/selfrefactor/rambda) methods and introduce some new functions.
